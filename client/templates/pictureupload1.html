@@ -1,0 +1,40 @@
+
+
+<form id="uploadForm1"
+      enctype="multipart/form-data"
+      action="/api/photo"
+      method="post">
+
+
+              <span class="btn btn-primary btn-file" ng-show="showPicture1" >
+
+
+ תמונת פרופיל
+              <input id="fileInputElementfirst"
+                     data-classIcon="icon-plus"
+                     data-buttonText="בחר תמונה"
+                     name="images",
+                     accept="image/jpeg"
+                     type="file"
+                     multiple="false"
+                     data-ng-model="theFile1"
+                     onchange="angular.element(this).scope().fileNameChanged1()"
+                      />
+                  </span>
+
+  <button type="button" ng-click="enablePictureDisplay(1,false)"  ng-show="showPicture1" class="btn btn-primary">מחק</button>
+
+
+    <div class="hearts" >
+        <img id="img1"
+             data-toggle="tooltip"
+             data-placement="top"
+             title="לחץ להפוך תמונה"
+             ng-click="roate(1)"
+             src="{{imageSrc1}}"
+             ng-show="showPicture1"
+             ng-style="{'width': pictureWidth , 'height': pictureHeight }"
+             class="pictures"/>
+    </div>
+
+</form>

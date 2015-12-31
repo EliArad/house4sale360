@@ -1,12 +1,12 @@
 {
-  "name": "reallove",
-  "description": "real love search",
+  "name": "yad2vr",
+  "description": "relaste vr",
   "main": "server.js",
   "authors": [
     "Eli Arad"
   ],
   "license": "ISC",
-  "homepage": "https://github.com/EliArad/reallove",
+  "homepage": "https://github.com/EliArad/yad2vr",
   "moduleType": [],
   "private": true,
   "ignore": [

@@ -1,7 +1,7 @@
 var gulp = require('gulp');
 var jshint = require('gulp-jshint');
 var jscs = require('gulp-jscs');
-var jsFiles = ['*.js', 'appmodules/homepage/server/**/*.js'];
+var jsFiles = ['*.js', 'server/**/*.js'];
 var nodemon = require('gulp-nodemon');
 gulp.task('style', function () {
     return gulp.src(jsFiles).
@@ -16,7 +16,7 @@ gulp.task('serve', ['style'], function () {
         script: 'app.js',
         delayTime: 1,
         env: {
-            'PORT': 8000
+            'PORT': 3000
         },
         watch: jsFiles
     };

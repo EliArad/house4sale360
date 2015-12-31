@@ -4,9 +4,9 @@ var express = require('express'),
   bodyParser = require('body-parser'),
   moment = require('moment');
 args = require('yargs').argv;
+var util = require('util');
 
-
-var cors = require('./appmodules/homepage/server/common/cors');
+var cors = require('./server/common/cors');
 
 //var demofile = './uploads/' + '566408969e8d1b71d0982d20' + "/raw/5.jpg";
 //var demofile1 = './uploads/' + '566408969e8d1b71d0982d20' + "/raw/6.jpg";
@@ -32,7 +32,7 @@ var path = require('path'),
   fs = require('fs');
 const bearerToken = require('express-bearer-token');
 var app = express();
-var jwtauth = require('./appmodules/homepage/server/common/jwtauth');
+var jwtauth = require('./server/common/jwtauth');
 
 var http = require('http');
 var server = http.createServer(app);
@@ -52,56 +52,13 @@ app.use(function (req, res, next) {
 });
 
 
-/*
- app.use(bearerToken(), function(req,res, next)
- {
-
- console.log("bearerToken");
- //console.log("token: " + req.token);
- if (typeof req.token == 'undefined')
- {
- console.log("no token");
- req.foundToken = false;
- return next();
- }
- req.foundToken = true;
-
- //console.log("token found");
-
- try {
- var decoded = jwt.verify(req.token, secret);
- req.idFromToken = decoded.sub;
- console.log("the user id from the token is: " + decoded.sub);
- membersModel.membersModel.findOne({'registrationObjectId': decoded.sub}, function (err, member) {
- if (err) {
- res.status(500).send("middleware did not found the id" + err);
- }
- else if (member) {
- req.member = member;
- //console.log("found member");
- } else {
- res.status(404).send('no book found');
- }
- next();
- });
- }
- catch(err)
- {
- console.log(err);
- req.foundToken = false;
- return next();
- }
- });
- */
 
 
-var myhelper = require('./appmodules/homepage/server/modules/myhelpers');
+var myhelper = require('./server/modules/myhelpers');
 
 var mkdirp = require('mkdirp');
 var jwt = require('jsonwebtoken');
-var secret = require('./appmodules/homepage/server/common/config').secret;
-var mongoose = require('mongoose');
-var db = mongoose.connect('mongodb://localhost/reallove');
+var secret = require('./server/common/config').secret;
 
 
 mkdirp('./mypage/', function (err) {
@@ -117,30 +74,21 @@ mkdirp('./uploadsvideo/', function (err) {
 });
 //console.log(__dirname);
 
-var membersModel = require('./appmodules/homepage/server/models/members');
-var registrationModule = require('./appmodules/homepage/server/models/registration');
 
-var regSchema = registrationModule.regSchema;
-var regModel = registrationModule.regModel;
+//var notifyServerModule = require('./server/modules/MailNotify');
+//var notifyServer = new notifyServerModule(io, lastonlineModel, usersFunction, membersModel.membersModel);
 
-var usersFunction = require('./appmodules/homepage/server/modules/users')(regModel, membersModel.membersModel);
+//var membersControllerModule = require('./server/controller/members');
+//var membersController = new membersControllerModule(membersModel.membersModel);
 
-var lastonlineModel = require('./appmodules/homepage/server/models/lastonline').LastonlineModel;
-var notifyServerModule = require('./appmodules/homepage/server/modules/MailNotify');
-var notifyServer = new notifyServerModule(io, lastonlineModel, usersFunction, membersModel.membersModel);
-
-var videopermissionModel = require('./appmodules/homepage/server/models/videopermissions').videoPermissionsModel;
-var membersControllerModule = require('./appmodules/homepage/server/controller/members');
-var membersController = new membersControllerModule(membersModel.membersModel);
-
-var registerControllerModule = require('./appmodules/homepage/server/controller/register');
-var registerController = new registerControllerModule(regModel, usersFunction);
-
-var membersRouter = require('./appmodules/homepage/server/routes/members')(membersController, membersModel.membersModel, registerController, regModel);
-var getmembersRouters = membersRouter.routes;
+var registerControllerModule = require('./server/controller/register');
 
 
-port = args.port || 8000;
+//var membersRouter = require('./server/routes/members')(membersController, membersModel.membersModel, registerController);
+//var getmembersRouters = membersRouter.routes;
+
+
+port = args.port || 3000;
 
 app.use(bodyParser({
   limit: '50mb'
@@ -153,49 +101,32 @@ app.use(bodyParser.json());
 
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-/*
- const MongoStore = require('connect-mongo')(session);
- app.use(session({
- secret: 'eeee',
- saveUninitialized: true,
- resave: true,
- store: new MongoStore({
- mongooseConnection: mongoose.connecion
- })
- }));
- */
-/*
- app.use(cookieParser());
 
- require('./config/passport')(app);
- */
+//var commandsRoutes = require('./server/routes/commands')(app, notifyServer, usersFunction, videopermissionModel);
+//var generalRoutes = require('./server/routes/general')(app);
+//var getGeneralRoutes = generalRoutes.routes;
 
-var commandsRoutes = require('./appmodules/homepage/server/routes/commands')(app, notifyServer, usersFunction, videopermissionModel);
-var generalRoutes = require('./appmodules/homepage/server/routes/general')(app);
-var getGeneralRoutes = generalRoutes.routes;
+//var registerRoutes = require('./server/routes/register')(registerController, regModel);
+//var mailRoutes = require('./server/routes/mail');
+//var mypageRoutes = require('./server/routes/mypage');
+//var dbsearchRoutes = require('./server/routes/dbsearch');
+//var adminRoutes = require('./server/routes/admin')(notifyServer);
+//var chatRoutes = require('./server/routes/chat')(app, notifyServer, membersModel.membersModel);
+//var onlineRoutes = require('./server/routes/online');
 
-var registerRoutes = require('./appmodules/homepage/server/routes/register')(registerController, regModel);
-var mailRoutes = require('./appmodules/homepage/server/routes/mail');
-var mypageRoutes = require('./appmodules/homepage/server/routes/mypage');
-var dbsearchRoutes = require('./appmodules/homepage/server/routes/dbsearch');
-var adminRoutes = require('./appmodules/homepage/server/routes/admin')(notifyServer);
-var chatRoutes = require('./appmodules/homepage/server/routes/chat')(app, notifyServer, membersModel.membersModel);
-var onlineRoutes = require('./appmodules/homepage/server/routes/online');
+//app.use('/api/members', getmembersRouters);
+//app.use('/api/register', registerRoutes.routes);
+//app.use('/api/mail', mailRoutes);
+//app.use('/api/mypage', mypageRoutes);
+//app.use('/api/dbsearch', dbsearchRoutes);
+//app.use('/api/admin', adminRoutes.router);
+//app.use('/api/online', onlineRoutes);
+//app.use('/api/general', jwtauth, getGeneralRoutes);
 
-
-app.use('/api/members', getmembersRouters);
-app.use('/api/register', registerRoutes.routes);
-app.use('/api/mail', mailRoutes);
-app.use('/api/mypage', mypageRoutes);
-app.use('/api/dbsearch', dbsearchRoutes);
-app.use('/api/admin', adminRoutes.router);
-app.use('/api/online', onlineRoutes);
-app.use('/api/general', jwtauth, getGeneralRoutes);
-
-var createNewMember = require("./appmodules/homepage/server/modules/createNewMember")(membersModel.membersModel);
+//var createNewMember = require("./server/modules/createNewMember")(membersModel.membersModel);
 
 // we send the app to this module
-var mailverify = require('./appmodules/homepage/server/modules/nodemailer')(app, regModel, createNewMember);
+//var mailverify = require('./server/modules/nodemailer')(app, regModel, createNewMember);
 
 
 app.use(
@@ -203,12 +134,11 @@ app.use(
   express.static(__dirname) //where your static content is located in your filesystem
 );
 
+//var loginCtrl = require('./server/controller/login');
+//loginCtrl.setModel(regModel, membersModel.membersModel);
+//app.post('/api/login', loginCtrl.login);
 
-var loginCtrl = require('./appmodules/homepage/server/controller/login');
-loginCtrl.setModel(regModel, membersModel.membersModel);
-app.post('/api/login', loginCtrl.login);
 
-var util = require('util');
 
 app.post('/api/upload', bodyParser({
   limit: '15mb'
@@ -389,8 +319,6 @@ app.post('/api/uploadvideo', bodyParser({
     res.status(404).send(e);
     return;
   }
-
-
 });
 
 
@@ -418,45 +346,5 @@ app.post('*', function (req, res) {
   res.send(500, 'error 5000');
 });
 
-
-testConnection(lastonlineModel, io);
-
-function testConnection(lastonlineModel, io) {
-
-  var lastOnlineKnown = -1;
-  setInterval(function () {
-    //console.log(lastonlineModel);
-    lastonlineModel.find({isOnline: true}).exec(function (err, results) {
-
-      if (lastOnlineKnown != results.length) {
-        lastOnlineKnown = results.length;
-        for (var i = 0; i < results.length; i++) {
-          try {
-            io.sockets.connected[results[i].clientId].emit('testconnection');
-            //console.log('ok   ' + results[i].clientId);
-          }
-          catch (e) {
-            //console.log(e + results[i].clientId);
-            results[i].isOnline = false;
-            results[i].save(function (err) {
-            });
-          }
-        }
-
-        lastonlineModel.find({isOnline: true}).exec(function (err, users) {
-          if (!err) {
-            var count = users.length;
-            //console.log('!!!!!!!!!number of online users: ' + count);
-            io.emit('onlinecount', count);
-          }
-        });
-      }
-    });
-  }, 10000, lastonlineModel, io);
-}
-
-
 server.listen(port);
 console.log("Running on port " + port);
-
-
