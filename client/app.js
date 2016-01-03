@@ -13,13 +13,13 @@ var app = angular
     'ngResource',
     'ngFileUpload',
     'ui.bootstrap',
-    'ui.checkbox',
-    'checklist-model',
+
+
     'angular-carousel',
     'swipe',
     'ui.router',
     'jkuri.gallery',
-    'pretty-checkable',
+
     'ui.select',
     'ngSanitize',
     'ngIdle',
@@ -36,27 +36,14 @@ var app = angular
 
 
   ]).constant("myConfig", {
-        "url": "http://192.168.22.32:8000",
+        "url": "http://192.168.22.32:3000",
         'timeoutSeconds': 1200,
         'idletimeSeconds': 1100,
         "MaxPicturesForMember": 14,
-        getcities: function ($http, callback) {
-            console.log(cities);
+        getcities: function ($http) {
             if (!cities.length) {
-                console.log("cities constant");
-                var url = 'http://192.168.22.32:8000/api/getcities';
-                $http.get(url).then(function (result) {
-                    //console.log(result);
-                    cities = result;
-                    callback(null, cities);
-                }).catch(function (result) {
-                    console.log("error");
-                    callback("error", result);
-                });
-            } else {
-                callback(null, cities);
+                var url = 'http://192.168.22.32:3000/api/getcities';
+                return $http.get(url);
             }
-
-
         }
     })

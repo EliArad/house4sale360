@@ -17,30 +17,36 @@
     <link rel="stylesheet" href="client/styles/main.css">
     <link rel="stylesheet" href="client/styles/styles.css">
     <link rel="stylesheet" href="client/styles/waitlogin.css">
-    <link rel="stylesheet" href="client/styles/csscheckbox.css">
+
     <!--<link rel="stylesheet" href="client/styles/animation.css">-->
     <!--<link rel="stylesheet" href="client/styles/viewanimation.css">-->
     <link rel="stylesheet" href="client/styles/detailsandmypic.css">
 
+
     <!--<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />-->
-    <link rel="stylesheet" href="//cdn.rawgit.com/morteza/bootstrap-rtl/master/dist/css/bootstrap-rtl.min.css" />
     <link rel="stylesheet" href="client/styles/bootstrap-orange.css" />
+    <link rel="stylesheet" href="bower_components/bootstrap-select/dist/css/bootstrap-select.css" />
+    <link rel="stylesheet" href="//cdn.rawgit.com/morteza/bootstrap-rtl/master/dist/css/bootstrap-rtl.min.css" />
+
+
+
+
     <link rel="stylesheet" href="client/styles/animate.css" />
     <link rel="stylesheet" href="bower_components/angular-motion/dist/angular-motion.min.css" />
     <link rel="stylesheet" href="client/styles/picturesstyle.css">
     <link rel="stylesheet" href="client/styles/responsivemail.css">
     <link rel="stylesheet" href="bower_components/jquery-ui/themes/base/jquery-ui.min.css" />
     <link rel="stylesheet" href="client/styles/bootstrapautogrid.css" />
-    <link rel="stylesheet" href="bower_components/angular-pretty-checkable/dist/pretty-checkable.css" />
+
     <link rel="stylesheet" href="//blueimp.github.io/Gallery/css/blueimp-gallery.min.css">
     <link rel="stylesheet" type="text/css" href="bower_components/ngGallery/src/css/ngGallery.css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="bower_components/angular-carousel/dist/angular-carousel.min.css" />
     <link rel="stylesheet" href="bower_components/bootstrap-vertical-tabs/bootstrap.vertical-tabs.min.css">
     <link rel="stylesheet" href="bower_components/ui-select/dist/select.min.css">
     <link rel="stylesheet" href="client/styles/last.css" />
     <link rel="stylesheet" href="client/styles/fontrules.css">
-
+    <link rel="stylesheet" href="client/styles/badgebox.css">
     <!-- endbuild -->
 </head>
 
@@ -100,11 +106,16 @@
 
     <script src="client/vr/valiant360/jquery.valiant360.min.js"></script>
     <link rel="stylesheet" type="text/css" href="client/vr/valiant360/css/valiant360.css" />
-
     <script src="bower_components/angular/angular.js"></script>
-    <script src="node_modules/socket.io-client/socket.io.js"></script>
 
+
+
+    <script src="node_modules/socket.io-client/socket.io.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+
+
+
     <script src="bower_components/angular-animate/angular-animate.js"></script>
     <script src="bower_components/angular-aria/angular-aria.js"></script>
     <script src="bower_components/angular-cookies/angular-cookies.js"></script>
@@ -116,12 +127,12 @@
     <script src="bower_components/angular-swipe/dist/angular-swipe.min.js"></script>
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="bower_components/ui-select/dist/select.min.js"></script>
-    <script src="bower_components/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js"></script>
+
 
 
 
     <script src="bower_components/ng-password-strength/dist/scripts/ng-password-strength.min.js"></script>
-    <script src="bower_components/angular-pretty-checkable/dist/angular-pretty-checkable.min.js"></script>
+
     <script src="bower_components/lodash/lodash.min.js"></script>
     <script type="text/javascript" src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
     <script type="text/javascript" src="bower_components/ng-file-upload/ng-file-upload-shim.min.js"></script>
@@ -136,7 +147,7 @@
     <script src="bower_components/videogular-overlay-play/vg-overlay-play.js"></script>
     <script src="bower_components/videogular-poster/vg-poster.js"></script>
     <script src="bower_components/videogular-buffering/vg-buffering.js"></script>
-    <script src="bower_components/checklist-model/checklist-model.js"></script>
+
     <script src="bower_components/ng-idle/angular-idle.min.js"></script>
     <script type="text/javascript" src="bower_components/angular-msgbox/angular-msgbox.js"></script>
 
@@ -144,8 +155,6 @@
 <script src="bower_components/video.js/dist/video-js.min.css"></script>
 <script src="bower_components/video.js/dist/video.min.js"></script>
 -->
-
-
 
 
     <!-- endbower -->
@@ -161,8 +170,12 @@
     <script src="client/controllers/RegistrationController.js"></script>
     <script src="client/controllers/AboutController.js"></script>
     <script src="client/controllers/MainController.js"></script>
-    <script src="client/services/Registration.js"></script>
+    <script src="client/controllers/renthouseController.js"></script>
+    <script src="client/controllers/salehouseController.js"></script>
 
+
+    <script src="client/services/Registration.js"></script>
+    <script src="client/directives/validinput.js"></script>
     <script src="client/directives/bootstrapmodal.js"></script>
     <script src="client/directives/appdirectives.js "></script>
     <script src="client/directives/fileuploader.js"></script>
@@ -204,9 +217,7 @@
     <!--  JQuery plugins-->
     <!-- endbuild -->
 
-
     <!--  THETA VIEWER -->
-
 
 
 

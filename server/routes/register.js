@@ -6,7 +6,7 @@ var secret = require('../common/config').secret;
 var myhelper = require('../modules/myhelpers');
 
 
-var routes = function (registerController, regModel) {
+var routes = function (sqlserver,registerController) {
 
     var Router = express.Router();
 
@@ -15,7 +15,7 @@ var routes = function (registerController, regModel) {
             //console.log("register middleware " + req.params.registerId);
             var d = new Date();
             console.log(d);
-            var decoded = jwt.verify(req.params.registerId, secret);
+            //var decoded = jwt.verify(req.params.registerId, secret);
 
         }),
 

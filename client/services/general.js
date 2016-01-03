@@ -1,24 +1,36 @@
-app.factory("general", function($http, $q){
+app.factory("general", function($http, $q,myConfig){
+
+
+  var getStreets = function (code) {
+    var url = myConfig.url+ '/api/getStreets';
+    return $http.post(url, {code:code});
+  }
+
+  var getSchonot = function (code) {
+    var url = myConfig.url+ '/api/getSchonot';
+    return $http.post(url, {code:code});
+  }
 
   var sendMail = function(mailParams)
   {
-
-    return $http.post("/api/send",mailParams).
+    return $http.post(myConfig + "/api/send",mailParams).
       then(sendResponseData).
       catch(sendResponseError);
   }
   function sendResponseData(response)
   {
-    console.log(response.data);
+
     return response.data;
   }
   function sendResponseError(response)
   {
-    console.log("error from send " + response);
+
     return $q.reject("error from send " + response.status);
   }
 
   return{
-    sendMail: sendMail
+    sendMail: sendMail,
+    getStreets:getStreets,
+    getSchonot:getSchonot
   };
 });

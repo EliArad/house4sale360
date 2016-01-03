@@ -10,8 +10,27 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
     url: '/login',
     templateUrl: '/client/views/login.html',
     controller: 'LoginController'
+  }).state('main', {
+    url: '/main',
+    templateUrl: '/client/views/main.html',
+    controller: 'MainController'
+  }).state('logout', {
+    url: '/logout',
+    controller: 'LogoutController'
+  }).state('advertisehousesale', {
+    url: '/advertisehousecsale',
+    templateUrl: '/client/views/salehouse.html',
+    controller: 'salehouseController'
+  }).state('advertisehouserent', {
+    url: '/advertisehouserent',
+    templateUrl: '/client/views/renthouse.html',
+    controller: 'renthouseController'
   });
 
-    $httpProvider.interceptors.push('authIntercepter');
+
+
+
+
+  $httpProvider.interceptors.push('authIntercepter');
 
 });

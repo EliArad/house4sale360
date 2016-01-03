@@ -27,8 +27,6 @@
             </span>
                         </a>
                     </li>
-
-
                     <li ng-if="!isAuthenticated" ui-sref-active="active">
                         <a ui-sref="login">
                             <span class="glyphicon glyphicon-log-in">
@@ -92,7 +90,8 @@
             </ul>
           </li>
           -->
-                    <li ng-if="isAuthenticated" ui-sref-active="active"><a ui-sref="memberdetails">כל הפרטים האישיים</a></li>
+                    <li ng-if="isAuthenticated" ui-sref-active="active"><a ui-sref="advertisehousesale">מכירה</a></li>
+                    <li ng-if="isAuthenticated" ui-sref-active="active"><a ui-sref="advertisehouserent">השכרה </a></li>
                 </ul>
             </div>
         </div>

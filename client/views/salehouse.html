@@ -1,0 +1,201 @@
+<style>
+    label {
+        font-weight: normal !important;
+        text-align: right;
+    }
+
+
+    .btn-default:active, .btn-default.active, .btn-default:visited
+    .btn-default:active:hover, .btn-default.active:hover {
+        color: gray;
+        background-color: white;
+    }
+
+    .btn-default {
+        color: gray;
+        background-color: white;
+    }
+
+    .btn-default:hover {
+        color: gray;
+        background-color: white
+    }
+
+    .btn-default:focus {
+        color: gray;
+        background-color: white
+    }
+
+    .ui-select-bootstrap .ui-select-toggle > .caret {
+        right: initial;
+        left: 10px;
+        /* or any other value - it should be the same as the original right value */
+    }
+
+    .ui-select-bootstrap > .ui-select-match > .btn {
+        text-align: right !important;
+        direction: rtl;
+        background-color: white;
+        color: black;
+    }
+
+    .ui-select-bootstrap > .ui-select-choices > .btn > span.pull-left {
+        float: right !important;
+    }
+
+    .ui-select-bootstrap > .ui-select-match > .btn > span.pull-left {
+        float: right !important;
+    }
+</style>
+
+
+<div class="container" ng-controller="salehouseController as vm">
+
+    <div ng-show="vm.showwaitcircle" ng-include="'/client/templates/waitcircle.html'">
+    </div>
+
+
+    <div class="form-horizontal">
+        <form role="form">
+
+            <div class="row">
+                <div class="col-md-4">
+
+                    <div class="form-group" ng-class="{ 'has-error': form.propertyType.$error.required }">
+                        <label class="control-label col-sm-3" for="propertyType">סוג הנכס</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" placeholder="בחר את סוג הנכס למכירה"
+                                    name="propertyType"
+                                    ng-model="propertyType">
+                                <option>דירה</option>
+                                <option>דירת גן</option>
+                                <option>דירת גג/פנטהאוז</option>
+                                <option>סטודיו</option>
+                                <option>מרתף/פרטר</option>
+                                <option>דופלקס</option>
+                                <option>טריפלקס</option>
+                                <option>דו משפחתי</option>
+                                <option>יחידת דיור</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group" ng-class="{ 'has-error': form.city.$error.required }">
+                        <label class="control-label col-sm-3" for="propertyType">עיר</label>
+                        <div class="col-sm-9">
+                            <ui-select id="city"
+                                       on-select="getcity(vm.card.city)"
+                                       ng-change="calczodiacsign()" theme="bootstrap" ng-model="vm.card.city"
+                                       required>
+                                <ui-select-match placeholder="בחר עיר">
+                                    <span ng-bind="$select.selected.city"></span>
+                                </ui-select-match>
+                                <ui-select-choices repeat="city in vm.cities |filter : $select.search">
+                                    <span ng-bind-html="city.city | highlight : $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group" ng-class="{ 'has-error': form.area.$error.required }">
+                        <label class="control-label col-sm-3" for="">אזור</label>
+                        <div class="col-sm-9">
+                        <span ng-if="shownapa">
+                            {{ vm.card.area }}
+                            &nbsp;
+                            נפת
+                            &nbsp;
+                            {{ vm.card.napa }}
+                            <!--{{ vm.card.code }}-->
+                        </span>
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-class="{ 'has-error': form.street.$error.required }">
+                        <label class="control-label col-sm-3" for="street">רחוב</label>
+                        <div class="col-sm-9">
+                            <ui-select id="street"
+                                       on-select="getstreet(vm.card.street)"
+                                       ng-change="calczodiacsign()" theme="bootstrap" ng-model="vm.card.street"
+                                       required>
+                                <ui-select-match placeholder="בחר רחוב">
+                                    <span ng-bind="$select.selected.name"></span>
+                                </ui-select-match>
+                                <ui-select-choices repeat="street in vm.streets |filter : $select.search">
+                                    <span ng-bind-html="street.name | highlight : $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group" ng-class="{ 'has-error': form.neighborhood.$error.required }">
+                        <label class="control-label col-sm-3" for="neighborhood">שכונה</label>
+                        <div class="col-sm-9">
+                            <ui-select id="neighborhood"
+                                       on-select="getneighborhood(vm.card.neighborhood)"
+                                       ng-change="" theme="bootstrap" ng-model="vm.card.neighborhood"
+                                       required>
+                                <ui-select-match placeholder="בחר שכונה">
+                                    <span ng-bind="$select.selected.name"></span>
+                                </ui-select-match>
+                                <ui-select-choices repeat="n in vm.neighborhoods |filter : $select.search">
+                                    <span ng-bind-html="n.name | highlight : $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="form-group" ng-class="{ 'has-error': form.housenumber.$error.required }">
+                        <label class="control-label col-sm-3" for="housenumber">מספר הבית</label>
+                        <div class="col-sm-9">
+                            <input type="number" name="housenumber"
+                                   place-holder="גודל דירה כולל מרפסת וגינה" class="form-control"
+                                   ng-model="vm.card.housenumber">
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-class="{ 'has-error': form.yearsofproperty.$error.required }">
+                        <label class="control-label col-sm-3" for="yearsofproperty">בן כמה הנכס</label>
+                        <div class="col-sm-9">
+                            <input type="number" name="yearsofproperty"
+                                   placeholder="כמה שנים הנכס קיים בשנים" class="form-control"
+                                   ng-model="vm.card.yearsofproperty">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="floor">קומה</label>
+                        <div class="col-sm-4">
+                            <select name="fromfloor" class="form-control" ng-model="vm.card.fromfloor"
+                                    ng-model="vm.card.floor" ng-class="{ 'has-error': form.fromfloor.$error.required }">
+                                <option ng-repeat="item in vm.numberfloors" value="{{item}}">{{item}}</option>
+                            </select>
+                        </div>
+                        <label class="control-label col-sm-1" for="fromfloor">מתוך</label>
+
+                        <div class="col-sm-4">
+                            <select name="floor" class="form-control" ng-model="vm.card.floor"
+                                    ng-class="{ 'has-error': form.floor.$error.required }">
+                                <option ng-repeat="item in vm.numberfloors" value="{{item}}">{{item}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-class="{ 'has-error': form.squresize.$error.required }">
+                        <label class="control-label col-sm-3" for="squresize">גודל דירה</label>
+                        <div class="col-sm-9">
+                            <input type="number" name="squresize"
+                                   place-holder="גודל דירה כולל מרפסת וגינה" class="form-control"
+                                   ng-model="vm.card.squresize">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

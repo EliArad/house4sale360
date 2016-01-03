@@ -2,11 +2,9 @@
 
 var jwt = require('jsonwebtoken');
 var secret = require('../common/config').secret;
+var mypasswordhash = require('../modules/password')();
 
-
-module.exports = function (Model,usersFunction) {
-
-
+module.exports = function (sqlserver) {
 
     return {
 
@@ -39,6 +37,25 @@ module.exports = function (Model,usersFunction) {
          * Create a member
          */
         create: function (req, res) {
+
+            sqlserver.get(function (err, con) {
+                if (!err) {
+                    mypasswordhash.encrypt(req.body.password, function (err, hash) {
+                        req.body.password = hash;
+                        var query = con.query('INSERT INTO users SET ?', req.body, function (err, result) {
+                            console.log(err);
+                            con.release();
+                            if (err)
+                                res.sendStatus(500);
+                            else
+                                res.send('ok');
+                        });
+                    });
+                } else {
+                     res.sendStatus(500);
+                }
+            });
+
 
         }
     };

@@ -52,18 +52,14 @@ app.use(function (req, res, next) {
 });
 
 
-
-
 var myhelper = require('./server/modules/myhelpers');
 
 var mkdirp = require('mkdirp');
 var jwt = require('jsonwebtoken');
 var secret = require('./server/common/config').secret;
+var mysqlserver = require('./server/common/mysql').server;
+var sqlserver = new mysqlserver();
 
-
-mkdirp('./mypage/', function (err) {
-
-});
 
 mkdirp('./uploads/', function (err) {
 
@@ -81,7 +77,7 @@ mkdirp('./uploadsvideo/', function (err) {
 //var membersControllerModule = require('./server/controller/members');
 //var membersController = new membersControllerModule(membersModel.membersModel);
 
-var registerControllerModule = require('./server/controller/register');
+var registerController = require('./server/controller/register')(sqlserver);
 
 
 //var membersRouter = require('./server/routes/members')(membersController, membersModel.membersModel, registerController);
@@ -102,11 +98,11 @@ app.use(bodyParser.json());
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 
-//var commandsRoutes = require('./server/routes/commands')(app, notifyServer, usersFunction, videopermissionModel);
+var commandsRoutes = require('./server/routes/commands')(app);
 //var generalRoutes = require('./server/routes/general')(app);
 //var getGeneralRoutes = generalRoutes.routes;
 
-//var registerRoutes = require('./server/routes/register')(registerController, regModel);
+var registerRoutes = require('./server/routes/register')(sqlserver,registerController);
 //var mailRoutes = require('./server/routes/mail');
 //var mypageRoutes = require('./server/routes/mypage');
 //var dbsearchRoutes = require('./server/routes/dbsearch');
@@ -115,7 +111,7 @@ var session = require('express-session');
 //var onlineRoutes = require('./server/routes/online');
 
 //app.use('/api/members', getmembersRouters);
-//app.use('/api/register', registerRoutes.routes);
+app.use('/api/register', registerRoutes.routes);
 //app.use('/api/mail', mailRoutes);
 //app.use('/api/mypage', mypageRoutes);
 //app.use('/api/dbsearch', dbsearchRoutes);
@@ -134,9 +130,9 @@ app.use(
   express.static(__dirname) //where your static content is located in your filesystem
 );
 
-//var loginCtrl = require('./server/controller/login');
-//loginCtrl.setModel(regModel, membersModel.membersModel);
-//app.post('/api/login', loginCtrl.login);
+var loginCtrl = require('./server/controller/login');
+loginCtrl.setsqlServer(sqlserver);
+app.post('/api/login', loginCtrl.login);
 
 
 

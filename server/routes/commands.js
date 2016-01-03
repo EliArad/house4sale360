@@ -13,8 +13,48 @@ var cors = require('../common/cors');
 
 var membersModelCount = 0;
 
-var routes = function (app, notifyServer, usersFunction) {
+var routes = function (app) {
 
+
+
+  app.post('/api/getStreets', jwtauth, function (req, res, next) {
+
+
+    cityLoader.getStreets(req.body.code,function (err,data) {
+      if (err)
+      {
+        return res.status(500).send({ error:err});
+      } else {
+        res.send(data);
+      }
+    });
+  });
+
+  app.post('/api/getSchonot', jwtauth, function (req, res, next) {
+
+    cityLoader.getSchonot(req.body.code,function (err,data) {
+      if (err)
+      {
+        return res.status(500).send({ error:err});
+      } else {
+        res.send(data);
+      }
+    });
+  });
+
+  app.get('/api/getcities', jwtauth, function (req, res, next) {
+
+    cityLoader.basic(function (err,data) {
+      if (err)
+      {
+        //console.log(err);
+        return res.status(500).send({ error:err});
+      } else {
+        //console.log(data.length);
+        res.send(data);
+      }
+    });
+  });
 
 
   return {

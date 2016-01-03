@@ -20,11 +20,15 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
         $scope.showModal = false;
         $scope.showRegistration = true;
 
+
+
         vm.user = {
             password: '',
             email: '',
+            agent:'',
             confirmPassword: '',
-            userguid: ''
+            phonenumber:'',
+            phonenumber2:''
         };
 
         $scope.logout = function () {
@@ -33,6 +37,8 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
         }
 
         $scope.save = function (params) {
+            params.agent = false;
+            delete params.confirmPassword;
             Registration.save(params,
                 function (resp, headers) {
                     //success callback

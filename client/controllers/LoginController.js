@@ -7,7 +7,6 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookieStor
         myhttphelper, PassServiceParams, socketioservice, SessionStorageService)
     {
 
-        $scope.pageClass = 'page-home';
 
         $scope.loginfailure = false;
 
@@ -35,35 +34,23 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookieStor
 
             function sendResponseData(response) {
 
-                PassServiceParams.StoreParam('userNickName', response.member.nickName);
-                //$cookieStore.put('login_user_name' , $scope.vm.user.email);
-                //console.log(response.token);
+                console.log(response.token);
+                console.log(response.rule);
                 authToken.setToken(response.token);
-                //console.log("login:" + response.user._id);
-                SessionStorageService.setSessionStorage('userid', response.user._id);
+                SessionStorageService.setSessionStorage('userid', response.id);
+                console.log(response.username);
+                SessionStorageService.setSessionStorage('username', response.username);
                 $rootScope.$broadcast("updateHeader", authToken.getToken());
-                socketioservice.connect();
+                //socketioservice.connect();
                 var rule = response.rule;
                 $rootScope.$broadcast("userrule", rule);
 
-                console.log(response.member.needInitiaDetailsBase);
-                console.log(response.member.needInitiaDetailsAll);
-                SessionStorageService.setSessionStorage('needInitiaDetailsBase', response.member.needInitiaDetailsBase);
-                SessionStorageService.setSessionStorage('needInitiaDetailsAll', response.member.needInitiaDetailsAll);
-
-                if (response.member.needInitiaDetailsBase == true || response.member.needInitiaDetailsAll == true) {
-                    $state.go('memberdetails', {}, {
-                        reload: true
-                    });
-                } else {
-                    $state.go('main', {}, {
-                        reload: true
-                    });
-                }
+                $state.go('main', {}, {
+                    reload: true
+                });
             }
 
             function sendResponseError(response) {
-                console.log("error in login " + response);
                 $scope.loginfailure = true;
             }
 
