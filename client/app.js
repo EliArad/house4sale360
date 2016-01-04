@@ -32,7 +32,8 @@ var app = angular
 
     'luegg.directives',
     'irontec.simpleChat',
-    'msgbox'
+    'msgbox',
+    'pretty-checkable'
 
 
   ]).constant("myConfig", {

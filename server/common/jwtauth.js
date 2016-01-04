@@ -3,9 +3,6 @@ var secret = require('./config').secret;
 
 module.exports = function (req, res, next) {
 
-
-    //console.log('bearerToken');
-
     var bearerToken;
     var bearerHeader = req.headers['authorization'];
 
@@ -20,6 +17,7 @@ module.exports = function (req, res, next) {
         try {
             var decoded = jwt.verify(req.body.token, secret);
             req.idFromToken = decoded.sub;
+            //console.log('req.idFromToken: ' + req.idFromToken);
 
             //console.log('the user id from the token is: ' + decoded.sub);
             return next();

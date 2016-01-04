@@ -78,6 +78,7 @@ mkdirp('./uploadsvideo/', function (err) {
 //var membersController = new membersControllerModule(membersModel.membersModel);
 
 var registerController = require('./server/controller/register')(sqlserver);
+var dbstoreController = require('./server/controller/dbstore')(sqlserver);
 
 
 //var membersRouter = require('./server/routes/members')(membersController, membersModel.membersModel, registerController);
@@ -99,24 +100,18 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 
 var commandsRoutes = require('./server/routes/commands')(app);
-//var generalRoutes = require('./server/routes/general')(app);
-//var getGeneralRoutes = generalRoutes.routes;
 
 var registerRoutes = require('./server/routes/register')(sqlserver,registerController);
+var dbstoreRoutes = require('./server/routes/dbstore')(app,dbstoreController).init();
+
 //var mailRoutes = require('./server/routes/mail');
-//var mypageRoutes = require('./server/routes/mypage');
 //var dbsearchRoutes = require('./server/routes/dbsearch');
 //var adminRoutes = require('./server/routes/admin')(notifyServer);
-//var chatRoutes = require('./server/routes/chat')(app, notifyServer, membersModel.membersModel);
-//var onlineRoutes = require('./server/routes/online');
 
-//app.use('/api/members', getmembersRouters);
 app.use('/api/register', registerRoutes.routes);
 //app.use('/api/mail', mailRoutes);
-//app.use('/api/mypage', mypageRoutes);
 //app.use('/api/dbsearch', dbsearchRoutes);
 //app.use('/api/admin', adminRoutes.router);
-//app.use('/api/online', onlineRoutes);
 //app.use('/api/general', jwtauth, getGeneralRoutes);
 
 //var createNewMember = require("./server/modules/createNewMember")(membersModel.membersModel);
