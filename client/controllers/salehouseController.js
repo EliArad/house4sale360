@@ -3,16 +3,20 @@
 
 app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCookieStore', '$window',
     '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope', 'API',
-    'SessionStorageService', '$msgbox','$cookieStore','dboperations',
+    'SessionStorageService', '$msgbox', '$cookieStore', 'dboperations',
     function ($scope, Members, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
-              $state, myhttphelper, $rootScope, API, SessionStorageService, $msgbox,$cookieStore,dboperations) {
+              $state, myhttphelper, $rootScope, API, SessionStorageService, $msgbox, $cookieStore, dboperations) {
 
 
         var vm = this;
         vm.card = {};
+        vm.cards = {};
+        vm.lastObjId = -1;
+        vm.accIsOpen = false;
         vm.currentCard = {};
         vm.city = {};
+        var slides = $scope.slides = [];
         $scope.shownapa = false;
         $window.onbeforeunload = $scope.onExit;
         var lastCity = undefined;
@@ -20,84 +24,143 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
         $scope.shoprenovatedexp = false;
         $scope.showfurnatureexp = false;
         vm.cities = [];
-        vm.numberOfRooms = [1, 1.5, 2, 2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,9,10,'יותר מעשרה'];
+        vm.numberOfRooms = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 9, 10, 'יותר מעשרה'];
         vm.numberfloors = [];
-        vm.balconies = ['אין' ,1 , 2 , 3, 'יותר משלוש'];
-
-        vm.neighborhoods = [{name:'NOT READY YET FIXME'}];
+        vm.balconies = ['אין', 1, 2, 3, 'יותר משלוש'];
+        vm.neighborhoods = [{name: 'NOT READY YET FIXME'}];
 
         vm.numberfloors.push('קרקע');
-        for (var i = 1 ; i < 35; i++)
-        {
+        for (var i = 1; i < 35; i++) {
             vm.numberfloors.push(i);
         }
 
         vm.streets = [
             /*
-            {
-                'name': 'ee'
-            },
-            {
-                'name': 'ee11'
-            }*/];
+             {
+             'name': 'ee'
+             },
+             {
+             'name': 'ee11'
+             }*/];
 
 
+        $scope.getstreet = function (selectedItem) {
 
-        $scope.getstreet = function (selectedItem)
-        {
-            _saveModel();
         }
 
-        $( document ).ready(function() {
+        $scope.accordionIsOpen = function (obj) {
+
+            if (vm.lastObjId != obj.id)
+            {
+                vm.accIsOpen = false;
+            }
+            vm.lastObjId = obj.id;
+            if (vm.accIsOpen == true)
+            {
+                vm.accIsOpen = false;
+                return;
+            }
+            vm.accIsOpen = true;
+
+            for (var i = 0 ; i < 10; i++)
+            {
+                slides = $scope.slides = [];
+            }
+
+            dboperations.getSaleHousePictureList(obj.id).then(function (result) {
+
+                setTimeout(function(){
+                    var imgsrc;
+                    for (var i = 0; i < result.data.rows.length; i++) {
+                        var imgsrc = './uploadimages/' + result.data.userid + '/salehouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
+                        //console.log(imgsrc);
+                        addPictureToCrousleSlider(imgsrc, 'ttt');
+                    }
+                }, 1);
+
+            })
+        }
+
+        $scope.removeSlide = function() {
+            slides = $scope.slides = [];
+        }
+
+        function initcrousle() {
+            $scope.myInterval = 4000;
+            $scope.noWrapSlides = false;
+        }
+
+        function addPictureToCrousleSlider(imagesrc, text) {
+            slides.push({
+                image: imagesrc,
+                text: text
+            });
+        }
+
+        initcrousle();
+
+        $(document).ready(function () {
             try {
-
-
                 myConfig.getcities($http).then(function (result) {
                     vm.cities = result.data;
 
-                    var s = $cookieStore.get('sellhouseform');
-                    vm.card = JSON.parse(s);
+                    dboperations.getAllSellHouseOfMine().then(function (result) {
+                        vm.cards = result.data;
+                        for (var i = 0; i < vm.cards.length; i++) {
 
-                    var s = $cookieStore.get('sellhousecurrentcard');
-                    vm.currentCard = JSON.parse(s);
+                            var city = vm.cards[i].city;
+                            var area = vm.cards[i].area;
+                            var napa = vm.cards[i].napa;
+                            var code = vm.cards[i].code;
 
-                    if (vm.card.code != undefined && vm.card.area != undefined)
-                    {
-                        _displayStreets(vm.card.code, vm.card.area);
-                    }
+                            var x = {
+                                'city': city,
+                                'area': area,
+                                'napa': napa,
+                                'code': code
+                            };
+                            vm.cards[i].city = x;
 
-                    if (vm.card.parking != 'אין'){
-                        $scope.shoparkingoptions = true;
-                    } else {
-                        $scope.shoparkingoptions = false;
-                    }
+                            var streetName = vm.cards[i].street;
+                            var x1 = {
+                                'name': streetName
+                            };
+                            vm.cards[i].street = x1;
+
+                            var neighborhood = vm.cards[i].neighborhood;
+                            x1 = {
+                                'name': neighborhood
+                            };
+                            vm.cards[i].neighborhood = x1;
+
+                            /*
+                             if (vm.cards[i].parking != 'אין') {
+                             $scope.shoparkingoptions = true;
+                             } else {
+                             $scope.shoparkingoptions = false;
+                             }
+                             */
+
+                            if (vm.cards[i].city.code != undefined && vm.cards[i].area != undefined) {
+                                _displayStreets(vm.cards[i].code, vm.cards[i].area);
+                            }
+                            vm.cards[i].numberofrooms = vm.cards[i].numberofrooms.toString();
+                            vm.cards[i].floor = vm.cards[i].floor.toString();
+                            vm.cards[i].fromfloor = vm.cards[i].fromfloor.toString();
+
+                        }
+                    }).catch(function (rsult) {
+
+                    })
                 });
-
             }
-            catch (e){
+            catch (e) {
 
             }
         });
 
-        function _saveModel()
-        {
-            try {
-                vm.card.neighborhood = vm.neighborhood.name;
-            }
-            catch (e)
-            {
-
-            }
-            var s = JSON.stringify(vm.card);
-            $cookieStore.put('sellhouseform' , s);
-        }
-        $scope.saveModel = function()
-        {
-            _saveModel();
-        }
 
         $scope.onExit = function () {
-
 
         };
 
@@ -112,71 +175,63 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
         });
 
 
-        $scope.getrenovated = function (selectedItem)
-        {
+        $scope.getrenovated = function (selectedItem) {
 
-            if (selectedItem == 'משהו אחר'){
+            if (selectedItem == 'משהו אחר') {
                 $scope.shoprenovatedexp = true;
             } else {
                 $scope.shoprenovatedexp = false;
             }
-            _saveModel();
         }
 
-        $scope.getparking = function (selectedItem)
-        {
-            if (selectedItem != 'אין'){
+        $scope.getparking = function (selectedItem) {
+            if (selectedItem != 'אין') {
                 $scope.shoparkingoptions = true;
             } else {
                 $scope.shoparkingoptions = false;
             }
-            _saveModel();
         }
 
-        $scope.saveChanges = function(form)
-        {
+        $scope.saveChanges = function (item) {
             //formErrors(form);
 
-            var card = angular.copy(vm.card);
-            card.city = vm.card.city.city;
-            card.napa = vm.card.city.napa;
-            card.code = vm.card.city.code;
-            card.area = vm.card.city.area;
-            card.neighborhood = vm.card.neighborhood.name;
-            card.street = vm.card.street.name;
 
-            if (angular.equals(vm.currentCard, card) == true)
-            {
-                alert("כבר קיים");
-                return;
-            }
+            var card = angular.copy(item);
+            card.city = item.city.city;
+            card.napa = item.city.napa;
+            card.code = item.city.code;
+            card.area = item.city.area;
+            card.neighborhood = item.neighborhood.name;
+            card.street = item.street.name;
 
-            dboperations.saveHouseDetails(card).then(function(result){
-                console.log(result.data);
-                vm.currentCard = card;
+            console.log(card.warehouse);
 
-                var s = JSON.stringify(vm.currentCard);
-                $cookieStore.put('sellhousecurrentcard' , s);
+            dboperations.updateSaleHouseDetails(card).then(function (result) {
 
-            }).catch(function(result){
+
+                dboperations.getSaleHouseDetails(card.id).then(function (result) {
+                    console.log(result.data[0]);
+                })
+
+
+            }).catch(function (result) {
                 console.log(result.data);
             });
 
         }
 
-        function formErrors(form){
+        function formErrors(form) {
             var errors = [];
-            for(var key in form.$error){
+            for (var key in form.$error) {
                 errors.push(key + "=" + form.$error);
             }
-            if(errors.length > 0){
+            if (errors.length > 0) {
                 console.log("Form Has Errors");
                 console.log(form.$error);
             }
         };
 
-        function _displayStreets(code, area)
-        {
+        function _displayStreets(code, area) {
             $scope.shownapa = true;
             if (lastCity == undefined || lastCity != code) {
                 general.getStreets(code).then(function (result) {
@@ -230,7 +285,6 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
             } else if (selectedItem.area == 'haifa') {
                 vm.card.area = 'אזור חיפה';
             }
-            _saveModel();
         }
     }
 ]);

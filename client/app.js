@@ -45,6 +45,8 @@ var app = angular
             if (!cities.length) {
                 var url = 'http://192.168.22.32:3000/api/getcities';
                 return $http.get(url);
+            } else {
+                console.log('cities already loaded');
             }
         }
     })

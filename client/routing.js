@@ -25,7 +25,12 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
     url: '/advertisehouserent',
     templateUrl: '/client/views/renthouse.html',
     controller: 'renthouseController'
+  }).state('addnewsalehouse', {
+    url: '/addnewsalehouse',
+    templateUrl: '/client/views/addnewsalehouse.html',
+    controller: 'addnewsalehouseController'
   });
+
 
 
 

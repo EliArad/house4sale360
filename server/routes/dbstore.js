@@ -9,10 +9,17 @@ module.exports = function (app,dbstoreController) {
 
     function init() {
 
+        app.get('/api/dbstore/getAllSellHouseOfMine', jwtauth, dbstoreController.getAllSellHouseOfMine);
         app.post('/api/dbstore/saveHouseDetails', jwtauth, dbstoreController.saveHouseDetails);
         app.post('/api/dbstore/saveRentDetails', jwtauth, dbstoreController.saveRentDetails);
         app.get('/api/dbstore/getHouseDetails', jwtauth, dbstoreController.getHouseDetails);
         app.get('/api/dbstore/getRentDetails', jwtauth, dbstoreController.getRentDetails);
+        app.post('/api/dbstore/updateSaleHouseDetails', jwtauth, dbstoreController.updateSaleHouseDetails);
+        app.post('/api/dbstore/updateRentHouseDetails', jwtauth, dbstoreController.updateRentHouseDetails);
+        app.post('/api/dbstore/getSaleHouseDetails', jwtauth, dbstoreController.getSaleHouseDetails);
+        app.post('/api/dbstore/getSaleHousePictureList', jwtauth, dbstoreController.getSaleHousePictureList);
+
+
     }
 
     return {

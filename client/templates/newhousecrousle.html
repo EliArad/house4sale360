@@ -1,0 +1,23 @@
+<uib-carousel interval="myInterval" no-wrap="noWrapSlides">
+    <uib-slide ng-repeat="slide in slides" active="slide.active">
+        <img ng-src="{{slide.image}}" style="margin:auto;max-height:600px;height:auto">
+
+        <div class="carousel-caption">
+            <!--<h4>Slide {{$index}}</h4>-->
+            <p>{{slide.text}}</p>
+        </div>
+    </uib-slide>
+</uib-carousel>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="checkbox" ng-show="false">
+            <label>
+                <input type="checkbox" ng-model="noWrapSlides">
+            </label>
+        </div>
+    </div>
+    <div class="col-md-6" ng-show="false">
+        <input type="number" class="form-control" ng-model="myInterval">
+    </div>
+</div>
