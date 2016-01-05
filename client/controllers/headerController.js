@@ -20,7 +20,11 @@ app.controller('HeaderController', ['$scope', '$state', 'authToken', 'API',
 
         function logout()
         {
-
+            authToken.RemoveToken();
+            $state.go('login', {}, {
+                reload: true
+            });
+            $rootScope.$broadcast("updateHeader", authToken.getToken());
         }
 
         $scope.$on("userrule", function (e, rule) {

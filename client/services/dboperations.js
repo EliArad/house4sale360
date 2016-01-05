@@ -50,6 +50,22 @@ app.factory('dboperations', function ($http, myConfig) {
         return $http.post(membersAPI, {id: id});
     }
 
+
+    function getSaleHouseVideoList(id) {
+        var membersAPI = myConfig.url + "/api/dbstore/getSaleHouseVideoList";
+        return $http.post(membersAPI, {id: id});
+    }
+
+    function getSaleHouseVideo360List(id) {
+        var membersAPI = myConfig.url + "/api/dbstore/getSaleHouseVideo360List";
+        return $http.post(membersAPI, {id: id});
+    }
+
+    function getSaleHouse360PictureList(id) {
+        var membersAPI = myConfig.url + "/api/dbstore/getSaleHouse360PictureList";
+        return $http.post(membersAPI, {id: id});
+    }
+
     return {
         getSaleHousePictureList:getSaleHousePictureList,
         saveHouseDetails: saveHouseDetails,
@@ -60,7 +76,10 @@ app.factory('dboperations', function ($http, myConfig) {
         getAllRentHouseOfMine: getAllRentHouseOfMine,
         updateSaleHouseDetails: updateSaleHouseDetails,
         updateRentHouseDetails: updateRentHouseDetails,
-        getSaleHouseDetails:getSaleHouseDetails
+        getSaleHouseDetails:getSaleHouseDetails,
+        getSaleHouse360PictureList:getSaleHouse360PictureList,
+        getSaleHouseVideoList:getSaleHouseVideoList,
+        getSaleHouseVideo360List:getSaleHouseVideo360List
     };
 
 

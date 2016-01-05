@@ -5,21 +5,65 @@ var secret = require('../common/config').secret;
 module.exports = function (sqlserver) {
 
     return {
+        getSaleHouseVideoList: function (req, res, next) {
+            sqlserver.get(function (err, con) {
+                if (!err) {
+                    var condition = {'tableid': req.body.id};
+                    var sql = 'SELECT * FROM salehousevideos WHERE tableid = ' + con.escape(req.body.id) + ' AND is360video = false';
+                    var query = con.query(sql, function (err, rows) {
+                        con.release();
+
+                        if (err)
+                            res.sendStatus(500);
+                        else
+                            res.json({
+                                rows: rows,
+                                userid: req.idFromToken
+                            });
+                    });
+                } else {
+                    con.release();
+                    res.sendStatus(500);
+                }
+            });
+        },
+        getSaleHouseVideo360List: function (req, res, next) {
+            sqlserver.get(function (err, con) {
+                if (!err) {
+                    var condition = {'tableid': req.body.id};
+                    var sql = 'SELECT * FROM salehousevideos WHERE tableid = ' + con.escape(req.body.id) + ' AND is360video = true';
+                    var query = con.query(sql, function (err, rows) {
+                        if (err) {
+                            con.release();
+                            res.sendStatus(500);
+                        }else {
+                            con.release();
+                            res.json({
+                                rows: rows,
+                                userid: req.idFromToken
+                            });
+                        }
+                    });
+                } else {
+                    con.release();
+                    res.sendStatus(500);
+                }
+            });
+        },
 
         updateSaleHouseDetails: function (req, res, next) {
-            console.log('updateSaleHouseDetails');
             sqlserver.get(function (err, con) {
                 if (!err) {
                     var condition = {id: req.body.data.id};
                     var query = con.query('UPDATE sellhoursedetails SET ? WHERE ?', [req.body.data, condition], function (err, result) {
                         con.release();
-                        console.log(err);
                         if (err) {
                             res.sendStatus(500);
                         } else
                             res.send('ok');
                     });
                 } else {
+                    con.release();
                     res.sendStatus(500);
                 }
             });
@@ -37,6 +81,7 @@ module.exports = function (sqlserver) {
                             res.send(rows);
                     });
                 } else {
+                    con.release();
                     res.sendStatus(500);
                 }
             });
@@ -45,7 +90,6 @@ module.exports = function (sqlserver) {
         getSaleHouseDetails: function (req, res, next) {
             sqlserver.get(function (err, con) {
                 if (!err) {
-
                     var sql = 'SELECT * FROM sellhoursedetails WHERE id = ' + con.escape(req.body.id);
                     var query = con.query(sql, function (err, rows) {
                         con.release();
@@ -55,6 +99,7 @@ module.exports = function (sqlserver) {
                             res.send(rows);
                     });
                 } else {
+                    con.release();
                     res.sendStatus(500);
                 }
             });
@@ -72,12 +117,12 @@ module.exports = function (sqlserver) {
                             res.send(rows);
                     });
                 } else {
+                    con.release();
                     res.sendStatus(500);
                 }
             });
         },
         saveHouseDetails: function (req, res, next) {
-
             sqlserver.get(function (err, con) {
                 if (!err) {
                     req.body.data.userid = req.idFromToken;
@@ -91,6 +136,7 @@ module.exports = function (sqlserver) {
                         }
                     });
                 } else {
+                    con.release();
                     res.sendStatus(500);
                 }
             });
@@ -99,18 +145,41 @@ module.exports = function (sqlserver) {
             sqlserver.get(function (err, con) {
                 if (!err) {
                     var condition = {'tableid': req.body.id};
-                    var query = con.query('SELECT * FROM salehousepictures WHERE ?', [condition], function (err, rows) {
+                    var sql = 'SELECT * FROM salehousepictures WHERE tableid = ' + con.escape(req.body.id) + ' AND is360image = false';
+                    var query = con.query(sql, function (err, rows) {
                         con.release();
-
                         if (err)
                             res.sendStatus(500);
                         else
                             res.json({
-                                rows:rows,
+                                rows: rows,
                                 userid: req.idFromToken
                             });
                     });
                 } else {
+                    con.release();
+                    res.sendStatus(500);
+                }
+            });
+        },
+
+        getSaleHouse360PictureList: function (req, res, next) {
+            sqlserver.get(function (err, con) {
+                if (!err) {
+                    var condition = {'tableid': req.body.id};
+                    var sql = 'SELECT * FROM salehousepictures WHERE tableid = ' + con.escape(req.body.id) + ' AND is360image = true';
+                    var query = con.query(sql, function (err, rows) {
+                        con.release();
+                        if (err)
+                            res.sendStatus(500);
+                        else
+                            res.json({
+                                rows: rows,
+                                userid: req.idFromToken
+                            });
+                    });
+                } else {
+                    con.release();
                     res.sendStatus(500);
                 }
             });

@@ -22,12 +22,12 @@ module.exports = function (req, res, next) {
             //console.log('the user id from the token is: ' + decoded.sub);
             return next();
         } catch (err) {
-            //console.log('error 1 in jwtauth ' + err);
-            return res.redirect(500, '/#/login');
+            console.log('error 1 in jwtauth ' + err);
+            return res.sendStatus(401);
             //return next();
         }
     } else {
-        //console.log('no bearerHeader is undefined');
-        return res.redirect(500, '/#/login');
+        console.log('no bearerHeader is undefined');
+        return res.sendStatus(401);
     }
 };

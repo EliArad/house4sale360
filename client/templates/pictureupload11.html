@@ -1,4 +1,5 @@
-<form id="uploadForm1"
+
+<form name="fff" id="uploadForm1"
       enctype="multipart/form-data"
       action="/api/photo"
       method="post">
@@ -13,8 +14,10 @@
                      accept="image/jpeg"
                      type="file"
                      multiple="false"
+                     data-myd = '{{ item.id }}'
+                     data-animal-type='{{ item.id }}'
                      data-ng-model="theFile1"
-                     onchange="angular.element(this).scope().fileNameChanged1(null)"
+                     onchange="angular.element(this).scope().fileNameChanged1(this)"
                       />
                   </span>
 

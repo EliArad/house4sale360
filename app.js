@@ -65,7 +65,7 @@ mkdirp('./uploads/', function (err) {
 
 });
 
-mkdirp('./uploadsvideo/', function (err) {
+mkdirp('./uploadvideo/', function (err) {
 
 });
 //console.log(__dirname);
@@ -165,7 +165,7 @@ app.post('/api/upload', jwtauth, bodyParser({
             var fileNameRaw = dirToCreateRaw + req.body.filename;
             var buff = new Buffer(x1, 'base64');
 
-            console.log("saving file: " + fileNameRaw);
+            //console.log("saving file: " + fileNameRaw);
             var status = 500;
             fs.writeFile(fileNameRaw, buff, function (err) {
                 if (err) {
@@ -174,22 +174,37 @@ app.post('/api/upload', jwtauth, bodyParser({
 
                     var datatoinsert = {
                         filename: req.body.filename,
-                        tableid: req.body.insertId
+                        tableid: req.body.insertId,
+                        is360image: req.body.is360image
                     };
 
                     // save the entry to database salehousepictures
                     sqlserver.get(function (err, con) {
                         if (!err) {
-                            var query = con.query('INSERT INTO salehousepictures SET ?', datatoinsert, function (err, result) {
-                                con.release();
+                            var sql = 'SELECT * FROM salehousepictures WHERE tableid = ' + con.escape(req.body.insertId) + ' AND filename = ' + con.escape(req.body.filename) + ' AND is360image = ' + con.escape(req.body.is360image);
+                            var query = con.query(sql, function (err, rows) {
                                 if (err) {
-                                    console.log(err);
-                                    res.sendStatus(500);
+                                    con.release();
+                                    return res.sendStatus(500);
                                 } else {
-                                    res.send(result);
+                                    if (rows.length > 0) {
+                                        console.log('there is already file in that name in this id');
+                                        con.release();
+                                        return res.send('ok');
+                                    }
                                 }
+
+                                var query = con.query('INSERT INTO salehousepictures SET ?', datatoinsert, function (err, result) {
+                                    con.release();
+                                    if (err) {
+                                        res.sendStatus(500);
+                                    } else {
+                                        res.send(result);
+                                    }
+                                });
                             });
                         } else {
+                            con.release();
                             res.sendStatus(500);
                         }
                     });
@@ -209,34 +224,20 @@ app.get('/api/deleteVideo', jwtauth, function (req, res) {
     var fileName = './uploadvideo/' + req.idFromToken + "/raw/1.mp4";
     fs.unlink(fileName, function (err) {
 
-        membersModel.membersModel.findOne({'registrationObjectId': req.idFromToken}, function (err, member) {
-            if (err) {
-                res.sendStatus(500);
-            } else {
-                member.videoloaded = false;
-                res.send('ok');
-            }
-        });
     });
 
 });
 
-app.post('/api/uploadvideo', bodyParser({
+app.post('/api/uploadvideo', jwtauth, bodyParser({
     limit: '50mb'
 }), function (req, res) {
 
-    //console.log("upload video");
-    var x = util.inspect(req.body.images);
-    //console.log(req.body.filenum);
-
-    //var x1 = x.replace(/^data:image\/(png|gif|jpeg);base64,/,'');
-
-    //console.log(req.body.token);
+    console.log("upload video");
+    var x = util.inspect(req.body.video);
 
     try {
-        var decoded = jwt.verify(req.body.token, secret);
-        //console.log(decoded.sub);
-        var dirToCreateRaw = './uploadvideo/' + decoded.sub + "/raw/"
+
+        var dirToCreateRaw = './uploadvideo/' + req.idFromToken + '/' + req.body.tabletype + '/' + req.body.insertId + '/';
         mkdirp(dirToCreateRaw, function (err) {
 
             var r = x.search('data:video/mp4;base64,');
@@ -247,31 +248,57 @@ app.post('/api/uploadvideo', bodyParser({
                 res.sendStatus(500);
             }
 
-            var fileNameRaw = dirToCreateRaw + req.body.filenum + ".mp4";
+            var fileNameRaw = dirToCreateRaw + req.body.filename;
             var buff = new Buffer(x1, 'base64');
+            console.log(fileNameRaw);
 
             var status = 500;
             fs.writeFile(fileNameRaw, buff, function (err) {
                 if (err) {
-                    //console.log(err);
+                    console.log(err);
                     res.sendStatus(status);
                 } else {
 
-                    membersModel.membersModel.findOne({'registrationObjectId': decoded.sub}, function (err, member) {
-                        if (err) {
-                            res.sendStatus(500);
-                        } else {
-                            member.videoloaded = true;
-                            member.save(function (err) {
-                                res.send(err);
+                    var datatoinsert = {
+                        filename: req.body.filename,
+                        tableid: req.body.insertId,
+                        is360video: req.body.is360video
+                    };
+
+                    sqlserver.get(function (err, con) {
+                        if (!err) {
+                            var sql = 'SELECT * FROM salehousevideos WHERE tableid = ' + con.escape(req.body.insertId) + ' AND filename = ' + con.escape(req.body.filename) + ' AND is360video = ' + con.escape(req.body.is360video);
+                            var query = con.query(sql, function (err, rows) {
+                                if (err) {
+                                    con.release();
+                                    return res.sendStatus(500);
+                                } else {
+                                    if (rows.length > 0) {
+                                        con.release();
+                                        console.log('there is already file in that name in this id');
+                                        return res.send('ok');
+                                    }
+                                }
+                                var query = con.query('INSERT INTO salehousevideos SET ?', datatoinsert, function (err, result) {
+                                    con.release();
+                                    if (err) {
+                                        console.log(err);
+                                        res.sendStatus(500);
+                                    } else {
+                                        res.send(result);
+                                    }
+                                });
                             });
+                        } else {
+                            con.release();
+                            res.sendStatus(500);
                         }
                     });
                 }
             });
         });
     } catch (e) {
-        //console.log(e);
+        console.log(e);
         res.status(404).send(e);
         return;
     }
@@ -295,11 +322,11 @@ app.use(function (err, req, res, next) {
 
 
 app.get('*', function (req, res) {
-    res.send(500, 'error 4000');
+    res.status(500).send('error 4000');
 });
 
 app.post('*', function (req, res) {
-    res.send(500, 'error 5000');
+    res.status(500).send('error 5000');
 });
 
 server.listen(port);
