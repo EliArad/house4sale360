@@ -10,9 +10,7 @@ var mypass = require('../modules/password')();
 
 exports.login = function (req, res) {
 
-
     var email = req.body.email || '';
-
 
     sqlServer.get(function (err, con) {
         if (err) {

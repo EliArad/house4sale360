@@ -42,7 +42,14 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
 
         myConfig.getcities($http).then(function (result) {
             vm.cities = result.data;
-        });
+        }).catch(function(result){
+            console.log(result);
+            authToken.RemoveToken();
+            $state.go('login', {}, {
+                reload: true
+            });
+            $rootScope.$broadcast("updateHeader", authToken.getToken());
+        })
 
         $scope.getstreet = function (selectedItem)
         {

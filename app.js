@@ -1,6 +1,5 @@
 'use_strict'
 var express = require('express'),
-    helpers = require('view-helpers'),
     bodyParser = require('body-parser'),
     moment = require('moment');
 args = require('yargs').argv;
@@ -184,18 +183,18 @@ app.post('/api/upload', jwtauth, bodyParser({
                             var sql = 'SELECT * FROM salehousepictures WHERE tableid = ' + con.escape(req.body.insertId) + ' AND filename = ' + con.escape(req.body.filename) + ' AND is360image = ' + con.escape(req.body.is360image);
                             var query = con.query(sql, function (err, rows) {
                                 if (err) {
-                                    con.release();
+                                    sqlserver.release(con);
                                     return res.sendStatus(500);
                                 } else {
                                     if (rows.length > 0) {
                                         console.log('there is already file in that name in this id');
-                                        con.release();
+                                        sqlserver.release(con);
                                         return res.send('ok');
                                     }
                                 }
 
                                 var query = con.query('INSERT INTO salehousepictures SET ?', datatoinsert, function (err, result) {
-                                    con.release();
+                                    sqlserver.release(con);
                                     if (err) {
                                         res.sendStatus(500);
                                     } else {
@@ -204,7 +203,6 @@ app.post('/api/upload', jwtauth, bodyParser({
                                 });
                             });
                         } else {
-                            con.release();
                             res.sendStatus(500);
                         }
                     });
@@ -250,7 +248,7 @@ app.post('/api/uploadvideo', jwtauth, bodyParser({
 
             var fileNameRaw = dirToCreateRaw + req.body.filename;
             var buff = new Buffer(x1, 'base64');
-            console.log(fileNameRaw);
+            //console.log(fileNameRaw);
 
             var status = 500;
             fs.writeFile(fileNameRaw, buff, function (err) {
@@ -270,27 +268,26 @@ app.post('/api/uploadvideo', jwtauth, bodyParser({
                             var sql = 'SELECT * FROM salehousevideos WHERE tableid = ' + con.escape(req.body.insertId) + ' AND filename = ' + con.escape(req.body.filename) + ' AND is360video = ' + con.escape(req.body.is360video);
                             var query = con.query(sql, function (err, rows) {
                                 if (err) {
-                                    con.release();
+                                    sqlserver.release(con);
                                     return res.sendStatus(500);
                                 } else {
                                     if (rows.length > 0) {
-                                        con.release();
+                                        sqlserver.release(con);
                                         console.log('there is already file in that name in this id');
-                                        return res.send('ok');
+                                        return res.json({status: 'ok' , filename:fileNameRaw});
                                     }
                                 }
                                 var query = con.query('INSERT INTO salehousevideos SET ?', datatoinsert, function (err, result) {
-                                    con.release();
+                                    sqlserver.release(con);
                                     if (err) {
                                         console.log(err);
                                         res.sendStatus(500);
                                     } else {
-                                        res.send(result);
+                                        return res.json({status: 'ok' , filename:fileNameRaw});
                                     }
                                 });
                             });
                         } else {
-                            con.release();
                             res.sendStatus(500);
                         }
                     });

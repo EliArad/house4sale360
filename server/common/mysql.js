@@ -15,21 +15,31 @@ var dbServer = function () {
 
 };
 
+var connum = 0;
 
 dbServer.prototype = function () {
+
+    release = function(con)
+    {
+        con.release();
+        connum--;
+    },
 
     get = function (callback) {
 
         pool.getConnection(function (err, connection) {
 
+            connum++;
             callback(err,connection);
             connection.on('error', function (err) {
+                console.log('connum:' + connum);
                 callback(err,null);
             });
         });
     }
     return {
-        get: get
+        get: get,
+        release:release
     };
 }();
 

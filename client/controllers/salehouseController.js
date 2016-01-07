@@ -3,16 +3,18 @@
 
 app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCookieStore', '$window',
     '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope', 'API',
-    'SessionStorageService', '$msgbox', '$cookieStore', 'dboperations', 'fileReader','$sce',
+    'SessionStorageService', '$msgbox', '$cookieStore', 'dboperations', 'fileReader','$sce','citiesservice',
     function ($scope, Members, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
               $state, myhttphelper, $rootScope, API, SessionStorageService,
-              $msgbox, $cookieStore, dboperations, fileReader,$sce) {
+              $msgbox, $cookieStore, dboperations, fileReader,$sce,
+              citiesservice) {
 
 
         var vm = this;
         vm.sphere360 = [];
         vm.sphere360index = 0;
+        vm.uuu = {};
         vm.card = {};
         vm.cards = {};
         vm.lastObjId = -1;
@@ -39,6 +41,27 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
         vm.numberfloors.push('קרקע');
         for (var i = 1; i < 35; i++) {
             vm.numberfloors.push(i);
+        }
+
+        myhttphelper.doGet('/isauth').
+            then(sendResponseData).
+            catch(sendResponseError);
+
+        function sendResponseData(response) {
+            if (response != "OK") {
+                $state.go('login', {}, {
+                    reload: true
+                });
+            } else {
+
+
+            }
+        }
+
+        function sendResponseError(response) {
+            $state.go('login', {}, {
+                reload: true
+            });
         }
 
         vm.streets = [
@@ -163,6 +186,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                 vm.accIsOpen = false;
                 return;
             }
+            vm.uuu[obj.id] = true;
             vm.accIsOpen = true;
 
             for (var i = 0; i < 10; i++) {
@@ -191,72 +215,76 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                 vm.sphere360index = 0;
                 var imgsrc;
 
-                if (result.data.rows.length == 0) {
-                    document.getElementById('image360glyps' + obj.id).style.display = 'none';
-                    return;
-                }
+                setTimeout(function () {
 
-                for (var i = 0; i < result.data.rows.length; i++) {
-                    var imgsrc = './uploadimages/' + result.data.userid + '/salehouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
-                    vm.sphere360.push(imgsrc);
-
-                    if (vm.sphere360index == 0) {
-                        if (result.data.rows.length > 1)
-                            document.getElementById('image360glyps' + obj.id).style.display = 'block';
-                        var PSV = new PhotoSphereViewer({
-                            // Panorama, given in base 64
-                            panorama: imgsrc,
-
-                            // Container
-                            container: 'your-pano' + obj.id,
-
-                            // Deactivate the animation
-                            time_anim: false,
-
-                            // Display the navigation bar
-                            navbar: true,
-
-                            // Resize the panorama
-                            size: {
-                                width: '100%',
-                                height: video360height
-                            },
-
-                            // No XMP data
-                            usexmpdata: false
-                        });
+                    if (result.data.rows.length == 0) {
+                        document.getElementById('image360glyps' + obj.id).style.display = 'none';
+                        return;
                     }
-                    vm.sphere360index++;
-                }
+
+                    for (var i = 0; i < result.data.rows.length; i++) {
+                        var imgsrc = './uploadimages/' + result.data.userid + '/salehouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
+                        vm.sphere360.push(imgsrc);
+
+                        if (vm.sphere360index == 0) {
+                            if (result.data.rows.length > 1)
+                                document.getElementById('image360glyps' + obj.id).style.display = 'block';
+                            var PSV = new PhotoSphereViewer({
+                                // Panorama, given in base 64
+                                panorama: imgsrc,
+
+                                // Container
+                                container: 'your-pano' + obj.id,
+
+                                // Deactivate the animation
+                                time_anim: false,
+
+                                // Display the navigation bar
+                                navbar: true,
+
+                                // Resize the panorama
+                                size: {
+                                    width: '100%',
+                                    height: video360height
+                                },
+
+                                // No XMP data
+                                usexmpdata: false
+                            });
+                        }
+                        vm.sphere360index++;
+                    }
+                },400);
             });
 
             dboperations.getSaleHouseVideoList(obj.id).then(function (result) {
                 var imgsrc;
-
                 vm.regularvideo = [];
                 vm.regularvideoindex = 0;
 
-                if (result.data.rows.length == 0) {
-                    document.getElementById('videodiv' + obj.id).style.display = 'none';
-                    return;
-                } else {
-                    document.getElementById('videodiv' + obj.id).style.display = 'block';
-                }
-                for (var i = 0; i < result.data.rows.length; i++) {
-                    var imgsrc = './uploadvideo/' + result.data.userid + '/salehouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
-                    vm.regularvideo.push(imgsrc);
-                    if (i == 0) {
-                        vm.changeSource(imgsrc);
+                setTimeout(function () {
+                    if (result.data.rows.length == 0) {
+                        document.getElementById('videodiv' + obj.id).style.display = 'none';
+                        return;
+                    } else {
+                        document.getElementById('videodiv' + obj.id).style.display = 'block';
                     }
-                    vm.regularvideoindex++;
-                }
+                    for (var i = 0; i < result.data.rows.length; i++) {
+                        var imgsrc = './uploadvideo/' + result.data.userid + '/salehouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
+                        vm.regularvideo.push(imgsrc);
+                        if (i == 0) {
+                            vm.changeSource(imgsrc);
+                        }
+                        vm.regularvideoindex++;
+                    }
+
+                }, 400);
             });
         }
 
         $scope.removeSlide = function () {
             slides = $scope.slides = [];
         }
-
 
         function initcrousle() {
             $scope.myInterval = 4000;
@@ -272,63 +300,75 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
 
         initcrousle();
 
-        $(document).ready(function () {
-            try {
-                myConfig.getcities($http).then(function (result) {
-                    vm.cities = result.data;
+        try {
+            citiesservice.getcities(function (err,result) {
+                if (err == 'inprocess')
+                    return;
+                if (err != null)
+                {
+                    authToken.RemoveToken();
+                    $state.go('login', {}, {
+                        reload: true
+                    });
+                    $rootScope.$broadcast("updateHeader", authToken.getToken());
+                    return;
+                }
+                vm.cities = result.data;
 
-                    dboperations.getAllSellHouseOfMine().then(function (result) {
-                        vm.cards = result.data;
-                        for (var i = 0; i < vm.cards.length; i++) {
+                dboperations.getAllSellHouseOfMine().then(function (result) {
+                    vm.cards = result.data;
+                    for (var i = 0; i < vm.cards.length; i++) {
 
-                            var city = vm.cards[i].city;
-                            var area = vm.cards[i].area;
-                            var napa = vm.cards[i].napa;
-                            var code = vm.cards[i].code;
+                        var city = vm.cards[i].city;
+                        var area = vm.cards[i].area;
+                        var napa = vm.cards[i].napa;
+                        var code = vm.cards[i].code;
 
-                            var x = {
-                                'city': city,
-                                'area': area,
-                                'napa': napa,
-                                'code': code
-                            };
-                            vm.cards[i].city = x;
+                        var x = {
+                            'city': city,
+                            'area': area,
+                            'napa': napa,
+                            'code': code
+                        };
+                        vm.cards[i].city = x;
 
-                            var streetName = vm.cards[i].street;
-                            var x1 = {
-                                'name': streetName
-                            };
-                            vm.cards[i].street = x1;
+                        var streetName = vm.cards[i].street;
+                        var x1 = {
+                            'name': streetName
+                        };
+                        vm.cards[i].street = x1;
 
-                            var neighborhood = vm.cards[i].neighborhood;
-                            x1 = {
-                                'name': neighborhood
-                            };
-                            vm.cards[i].neighborhood = x1;
+                        var neighborhood = vm.cards[i].neighborhood;
+                        x1 = {
+                            'name': neighborhood
+                        };
+                        vm.cards[i].neighborhood = x1;
 
-                            /*
-                             if (vm.cards[i].parking != 'אין') {
-                             $scope.shoparkingoptions = true;
-                             } else {
-                             $scope.shoparkingoptions = false;
-                             }
-                             */
+                        /*
+                         if (vm.cards[i].parking != 'אין') {
+                         $scope.shoparkingoptions = true;
+                         } else {
+                         $scope.shoparkingoptions = false;
+                         }
+                         */
 
-                            vm.cards[i].numberofrooms = vm.cards[i].numberofrooms.toString();
-                            vm.cards[i].floor = vm.cards[i].floor.toString();
-                            vm.cards[i].fromfloor = vm.cards[i].fromfloor.toString();
-
-                        }
-                    }).catch(function (rsult) {
-
-                    })
+                        vm.cards[i].numberofrooms = vm.cards[i].numberofrooms.toString();
+                        vm.cards[i].floor = vm.cards[i].floor.toString();
+                        vm.cards[i].fromfloor = vm.cards[i].fromfloor.toString();
+                    }
                 });
-            }
-            catch (e) {
+            }).catch(function (result) {
+                console.log(result);
+                authToken.RemoveToken();
+                $state.go('login', {}, {
+                    reload: true
+                });
+                $rootScope.$broadcast("updateHeader", authToken.getToken());
+            });
+        }
+        catch (e) {
 
-            }
-        });
-
+        }
 
         $scope.onExit = function () {
 
@@ -386,8 +426,6 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
             card.area = item.city.area;
             card.neighborhood = item.neighborhood.name;
             card.street = item.street.name;
-
-            console.log(card.warehouse);
 
             dboperations.updateSaleHouseDetails(card).then(function (result) {
 

@@ -43,8 +43,7 @@ module.exports = function (sqlserver) {
                     mypasswordhash.encrypt(req.body.password, function (err, hash) {
                         req.body.password = hash;
                         var query = con.query('INSERT INTO users SET ?', req.body, function (err, result) {
-                            console.log(err);
-                            con.release();
+                            sqlserver.release(con);
                             if (err)
                                 res.sendStatus(500);
                             else
@@ -55,8 +54,6 @@ module.exports = function (sqlserver) {
                      res.sendStatus(500);
                 }
             });
-
-
         }
     };
 }

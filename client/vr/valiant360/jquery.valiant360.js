@@ -108,7 +108,7 @@ three.js r65 or higher
     // Create the defaults once
     var pluginName = "Valiant360",
         defaults = {
-            clickAndDrag: false,
+            clickAndDrag: true,
             fov: 35,
             hideControls: false,
             lon: 0,
@@ -117,29 +117,30 @@ three.js r65 or higher
             muted: true,
             debug: false,
             flatProjection: false,
-            autoplay: true
+            autoplay: true,
+            src:''
         };
 
     // The actual plugin constructor
     function Plugin( element, options ) {
         this.element = element;
+        console.log('eeeeeeeeeeeeeeeeeeeeeeeee');
+        console.log(element);
 
         // jQuery has an extend method that merges the
         // contents of two or more objects, storing the
         // result in the first object. The first object
         // is generally empty because we don't want to alter
         // the default options for future instances of the plugin
-        this.options = $.extend( {}, defaults, options) ;
-
-        this._defaults = defaults;
+        console.log(options);
+        this.options = options; //$.extend( {}, defaults, options) ;
+        this._defaults = options;
         this._name = pluginName;
-
-        this.init();
+        this.init(this._defaults.src);
     }
 
     Plugin.prototype = {
-
-        init: function() {
+        init: function(videosrc) {
             // Place initialization logic here
             // You already have access to the DOM element and
             // the options via the instance, e.g. this.element
@@ -169,7 +170,7 @@ three.js r65 or higher
             // add a class to our element so it inherits the appropriate styles
             $(this.element).addClass('Valiant360_default');
 
-            this.createMediaPlayer();
+            this.createMediaPlayer(videosrc);
             this.createControls();
 
         },
@@ -184,7 +185,7 @@ three.js r65 or higher
             return uuid;
         },
 
-        createMediaPlayer: function() {
+        createMediaPlayer: function(videosrc) {
 
             // create a local THREE.js scene
             this._scene = new THREE.Scene();
@@ -256,7 +257,7 @@ three.js r65 or higher
                 });
 
                 // set the video src and begin loading
-                this._video.src = $(this.element).attr('data-video-src');
+                this._video.src = videosrc;//$(this.element).attr('data-video-src');
 
             }
 
@@ -516,19 +517,25 @@ three.js r65 or higher
             this._renderer.setSize(w, h);
             this._camera.aspect = w / h;
             this._camera.updateProjectionMatrix();
-        },
-
+        }
     };
+
 
     // A really lightweight plugin wrapper around the constructor,
     // preventing against multiple instantiations
+
     $.fn[pluginName] = function ( options ) {
         return this.each(function () {
             if (!$.data(this, "plugin_" + pluginName)) {
-                $.data(this, "plugin_" + pluginName,
-                new Plugin( this, options ));
+                var x  = new Plugin( this, options );
+                $.fn['eeeeee'] = x;
+                $.data(this, "plugin_" + pluginName,x );
             }
         });
     };
+
+
+
+
 
 })( jQuery, THREE, Detector, window, document );

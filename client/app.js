@@ -1,8 +1,6 @@
 'use strict';
 
 
-var cities = [];
-
 var app = angular
     .module('app', [
     'ngAnimate',
@@ -40,13 +38,5 @@ var app = angular
         "url": "http://192.168.22.32:3000",
         'timeoutSeconds': 1200,
         'idletimeSeconds': 1100,
-        "MaxPicturesForMember": 14,
-        getcities: function ($http) {
-            if (!cities.length) {
-                var url = 'http://192.168.22.32:3000/api/getcities';
-                return $http.get(url);
-            } else {
-                console.log('cities already loaded');
-            }
-        }
+        "MaxPicturesForMember": 14
     })

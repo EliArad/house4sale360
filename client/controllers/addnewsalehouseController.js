@@ -3,17 +3,18 @@
 
 app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'appCookieStore', '$window',
     '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope', 'API',
-    'SessionStorageService', '$msgbox', '$cookieStore', 'dboperations', 'fileReader', '$sce',
+    'SessionStorageService', '$msgbox', '$cookieStore', 'dboperations', 'fileReader', '$sce','citiesservice',
     function ($scope, Members, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
               $state, myhttphelper, $rootScope, API, SessionStorageService, $msgbox,
-              $cookieStore, dboperations, fileReader, $sce) {
+              $cookieStore, dboperations, fileReader, $sce,citiesservice) {
 
 
         var vm = this;
         vm.card = {};
         vm.insertId = -1;
         vm.currentCard = {};
+        $scope.showstate2 = false;
         vm.city = {};
         vm.volume = 1;
         vm.isCompleted = false;
@@ -41,13 +42,33 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
         var minHeight = 480;
         var msg1 = 'התמונות צריכות להיות בגודל של ' + minWidth + 'x' + minHeight + ' לפחות';
         $scope.showvideosingle = false;
+        $scope.showvideo360single = false;
 
 
         vm.numberfloors.push('קרקע');
         for (var i = 1; i < 35; i++) {
             vm.numberfloors.push(i);
         }
+        myhttphelper.doGet('/isauth').
+            then(sendResponseData).
+            catch(sendResponseError);
 
+        function sendResponseData(response) {
+            if (response != "OK") {
+                $state.go('login', {}, {
+                    reload: true
+                });
+            } else {
+
+
+            }
+        }
+
+        function sendResponseError(response) {
+            $state.go('login', {}, {
+                reload: true
+            });
+        }
 
         $scope.onOpen360File = function () {
             upload();
@@ -195,6 +216,62 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
         };
 
 
+        $scope.video360LoaderInputChanged = function () {
+            var fileInputElement = document.getElementById("video360LoaderInput");
+            var size = fileInputElement.files[0].size / (1024 * 1024);
+            if (size > 50) {
+                alert('מקסימום גודל קובץ להעלות הוא 50 מגה');
+                return;
+            }
+            vm.showwaitcircle = true;
+
+
+
+            upload360Video(fileInputElement.files[0]);
+        }
+        function load360Video(fileName)
+        {
+            // initialize plugin, default options shown
+            var options = {
+                crossOrigin: 'anonymous',   // valid keywords: 'anonymous' or 'use-credentials'
+                clickAndDrag: true,    // use click-and-drag camera controls
+                flatProjection: false,  // map image to appear flat (often more distorted)
+                fov: 35,                // initial field of view
+                fovMin: 3,              // min field of view allowed
+                fovMax: 100,                // max field of view allowed
+                hideControls: false,    // hide player controls
+                lon: 0,                 // initial lon for camera angle
+                lat: 0,                 // initial lat for camera angle
+                loop: "loop",           // video loops by default
+                muted: true,            // video muted by default
+                autoplay: true          // video autoplays by default
+            }
+            $('.valiant360video').Valiant360(options);
+            //console.log($.fn['eeeeee']);
+            //console.log($.fn['eeeeee']._video.src);
+            $.fn['eeeeee']._video.src = fileName;
+
+
+            // initialize plugin, default options shown
+            //$('.valiant360video').Valiant360();
+
+            // pause video
+            //$('.valiant360video').Valiant360('pause');
+
+            // load new video file
+            //$('.valiant360video').Valiant360('loadVideo', '/upload360video/videos_s_3.mp4');
+            // play video
+            //$('.valiant360video').Valiant360('play');
+
+
+            // load new photo file
+            //$('.valiant360video').Valiant360('loadPhoto', 'path/to/file.jpg');
+
+            // destroy Valiant360 processing/resources (however, will not remove element from the dom. That is left up to you)
+            //$('.valiant360video').Valiant360('destroy');
+
+        }
+
         $scope.videoregularloaderinputChanged = function (obj) {
             var fileInputElement = document.getElementById("videoregularloaderinput");
             var size = fileInputElement.files[0].size / (1024 * 1024);
@@ -205,6 +282,7 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
             vm.showwaitcircle = true;
             uploadVideo(fileInputElement.files[0]);
         }
+
 
         function uploadVideo(filename) {
             fileReader.readAsDataUrl(filename, $scope)
@@ -218,6 +296,24 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
                             vm.showwaitcircle = false;
                             $scope.showvideosingle = true;
                             vm.changeSource(result);
+                        }
+                    });
+                });
+        }
+
+        function upload360Video(filename) {
+            fileReader.readAsDataUrl(filename, $scope)
+                .then(function (result) {
+                    ajaxUpload360Video(result, filename, function(err, res){
+                        if (err != 'ok')
+                        {
+                            vm.showwaitcircle = false;
+                            alert(err + ' ' + res);
+                        } else {
+                            vm.showwaitcircle = false;
+                            $scope.showvideo360single = true;
+
+                            load360Video(res.filename);
                         }
                     });
                 });
@@ -237,6 +333,34 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
                 "tabletype": "salehouse",
                 "insertId": vm.insertId,
                 'is360video': false
+            };
+
+            myhttphelper.doPost('/api/uploadvideo', data).
+                then(function (res) {
+                    if (callback)
+                        callback("ok", res);
+                }).
+                catch(function (res) {
+                    if (callback)
+                        callback("failed", res);
+                });
+        }
+
+        function ajaxUpload360Video(result, fileName, callback) {
+
+
+            if (vm.insertId == -1) {
+                if (callback)
+                    callback("failed", "cannot attached to new message");
+                return;
+            }
+
+            var data = {
+                "video": result,
+                "filename": fileName.name,
+                "tabletype": "salehouse",
+                "insertId": vm.insertId,
+                'is360video': true
             };
 
             myhttphelper.doPost('/api/uploadvideo', data).
@@ -356,9 +480,20 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
             try {
 
 
-                myConfig.getcities($http).then(function (result) {
-                    vm.cities = result.data;
+                citiesservice.getcities(function (err,result) {
 
+                    if (err != null) {
+                        console.log(result);
+                        if (err.contains('401')) {
+                            authToken.RemoveToken();
+                            $state.go('login', {}, {
+                                reload: true
+                            });
+                            $rootScope.$broadcast("updateHeader", authToken.getToken());
+                        }
+                        return;
+                    }
+                    vm.cities = result.data;
                     try {
                         var s = $cookieStore.get('sellhouseform');
                         vm.card = JSON.parse(s);

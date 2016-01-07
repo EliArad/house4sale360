@@ -4,8 +4,8 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 
   $stateProvider.state('register', {
     url: '/register',
-    templateUrl: '/client/views/register.html',
-    controller: 'RegistrationController'
+    templateUrl: '/client/views/register.html'
+    /*controller: 'RegistrationController'*/
   }).state('login', {
     url: '/login',
     templateUrl: '/client/views/login.html',
@@ -19,16 +19,15 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
     controller: 'LogoutController'
   }).state('advertisehousesale', {
     url: '/advertisehousecsale',
-    templateUrl: '/client/views/salehouse.html',
-    controller: 'salehouseController'
+    templateUrl: '/client/views/salehouse.html'
+
   }).state('advertisehouserent', {
     url: '/advertisehouserent',
-    templateUrl: '/client/views/renthouse.html',
-    controller: 'renthouseController'
+    templateUrl: '/client/views/renthouse.html'
+    //controller: 'renthouseController'
   }).state('addnewsalehouse', {
     url: '/addnewsalehouse',
-    templateUrl: '/client/views/addnewsalehouse.html',
-    controller: 'addnewsalehouseController'
+    templateUrl: '/client/views/addnewsalehouse.html'
   });
 
 

@@ -11,7 +11,7 @@ module.exports = function (sqlserver) {
                     var condition = {'tableid': req.body.id};
                     var sql = 'SELECT * FROM salehousevideos WHERE tableid = ' + con.escape(req.body.id) + ' AND is360video = false';
                     var query = con.query(sql, function (err, rows) {
-                        con.release();
+                        sqlserver.release(con);
 
                         if (err)
                             res.sendStatus(500);
@@ -22,7 +22,6 @@ module.exports = function (sqlserver) {
                             });
                     });
                 } else {
-                    con.release();
                     res.sendStatus(500);
                 }
             });
@@ -34,10 +33,10 @@ module.exports = function (sqlserver) {
                     var sql = 'SELECT * FROM salehousevideos WHERE tableid = ' + con.escape(req.body.id) + ' AND is360video = true';
                     var query = con.query(sql, function (err, rows) {
                         if (err) {
-                            con.release();
+                            sqlserver.release(con);
                             res.sendStatus(500);
                         }else {
-                            con.release();
+                            sqlserver.release(con);
                             res.json({
                                 rows: rows,
                                 userid: req.idFromToken
@@ -45,7 +44,6 @@ module.exports = function (sqlserver) {
                         }
                     });
                 } else {
-                    con.release();
                     res.sendStatus(500);
                 }
             });
@@ -56,14 +54,13 @@ module.exports = function (sqlserver) {
                 if (!err) {
                     var condition = {id: req.body.data.id};
                     var query = con.query('UPDATE sellhoursedetails SET ? WHERE ?', [req.body.data, condition], function (err, result) {
-                        con.release();
+                        sqlserver.release(con);
                         if (err) {
                             res.sendStatus(500);
                         } else
                             res.send('ok');
                     });
                 } else {
-                    con.release();
                     res.sendStatus(500);
                 }
             });
@@ -74,14 +71,13 @@ module.exports = function (sqlserver) {
                 if (!err) {
                     var condition = {id: req.body.data.id};
                     var query = con.query('UPDATE renthoursedetails SET ? WHERE ?', [req.body.data, condition], function (err, result) {
-                        con.release();
+                        sqlserver.release(con);
                         if (err)
                             res.sendStatus(500);
                         else
                             res.send(rows);
                     });
                 } else {
-                    con.release();
                     res.sendStatus(500);
                 }
             });
@@ -92,14 +88,13 @@ module.exports = function (sqlserver) {
                 if (!err) {
                     var sql = 'SELECT * FROM sellhoursedetails WHERE id = ' + con.escape(req.body.id);
                     var query = con.query(sql, function (err, rows) {
-                        con.release();
+                        sqlserver.release(con);
                         if (err)
                             res.sendStatus(500);
                         else
                             res.send(rows);
                     });
                 } else {
-                    con.release();
                     res.sendStatus(500);
                 }
             });
@@ -110,14 +105,13 @@ module.exports = function (sqlserver) {
                 if (!err) {
                     var sql = 'SELECT * FROM sellhoursedetails WHERE userid = ' + con.escape(req.idFromToken);
                     var query = con.query(sql, function (err, rows) {
-                        con.release();
+                        sqlserver.release(con);
                         if (err)
                             res.sendStatus(500);
                         else
                             res.send(rows);
                     });
                 } else {
-                    con.release();
                     res.sendStatus(500);
                 }
             });
@@ -127,7 +121,7 @@ module.exports = function (sqlserver) {
                 if (!err) {
                     req.body.data.userid = req.idFromToken;
                     var query = con.query('INSERT INTO sellhoursedetails SET ?', req.body.data, function (err, result) {
-                        con.release();
+                        sqlserver.release(con);
                         if (err) {
                             console.log(err);
                             res.sendStatus(500);
@@ -136,7 +130,6 @@ module.exports = function (sqlserver) {
                         }
                     });
                 } else {
-                    con.release();
                     res.sendStatus(500);
                 }
             });
@@ -147,7 +140,7 @@ module.exports = function (sqlserver) {
                     var condition = {'tableid': req.body.id};
                     var sql = 'SELECT * FROM salehousepictures WHERE tableid = ' + con.escape(req.body.id) + ' AND is360image = false';
                     var query = con.query(sql, function (err, rows) {
-                        con.release();
+                        sqlserver.release(con);
                         if (err)
                             res.sendStatus(500);
                         else
@@ -157,7 +150,6 @@ module.exports = function (sqlserver) {
                             });
                     });
                 } else {
-                    con.release();
                     res.sendStatus(500);
                 }
             });
@@ -169,7 +161,7 @@ module.exports = function (sqlserver) {
                     var condition = {'tableid': req.body.id};
                     var sql = 'SELECT * FROM salehousepictures WHERE tableid = ' + con.escape(req.body.id) + ' AND is360image = true';
                     var query = con.query(sql, function (err, rows) {
-                        con.release();
+                        sqlserver.release(con);
                         if (err)
                             res.sendStatus(500);
                         else
@@ -179,7 +171,6 @@ module.exports = function (sqlserver) {
                             });
                     });
                 } else {
-                    con.release();
                     res.sendStatus(500);
                 }
             });

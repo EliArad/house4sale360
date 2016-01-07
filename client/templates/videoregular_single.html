@@ -1,4 +1,15 @@
-<div>
+
+<style>
+    .videogular-container {
+        width: 65%;
+        height: 65%;
+        max-height: 65%;
+        margin: auto;
+    }
+
+</style>
+
+<div class="videogular-container">
     <div style="margin-top:10px" id="videodiv" ng-show="showvideosingle">
         <videogular vg-player-ready="vm.onPlayerReady($API)"
                     vg-theme="vm.config.theme">
