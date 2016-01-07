@@ -1,10 +1,17 @@
 {
   "name": "yad2vr",
-  "description": "relaste vr",
-  "main": "server.js",
+  "version": "0.0.0",
+  "description": "yad2vr",
+  "main": "app.js",
   "authors": [
     "Eli Arad"
   ],
+  "scripts": {
+    "start": "node app.js"
+  },
+  "engines": {
+    "node": "5.0.0"
+  },
   "license": "ISC",
   "homepage": "https://github.com/EliArad/yad2vr",
   "moduleType": [],
@@ -16,6 +23,10 @@
     "test",
     "tests"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EliArad/yad2vr.git"
+  },
   "dependencies": {
     "angular": "~1.4.7",
     "angular-ui-router": "~0.2.15",
@@ -71,5 +82,10 @@
     "angular-msgbox": "~0.1.1",
     "moment": "~2.10.6",
     "bootstrap-select": "~1.9.3"
-  }
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "express"
+  ]
 }
