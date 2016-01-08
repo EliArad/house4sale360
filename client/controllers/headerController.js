@@ -2,9 +2,8 @@
 
 
 app.controller('HeaderController', ['$scope', '$state', 'authToken', 'API',
-                                    'PassServiceParams', 'appCookieStore','socketioservice','$rootScope','SessionStorageService',
-    function ($scope, $state, authToken, API, PassServiceParams, appCookieStore,socketioservice,$rootScope,SessionStorageService)
-    {
+    'PassServiceParams', 'appCookieStore', 'socketioservice', '$rootScope', 'SessionStorageService',
+    function ($scope, $state, authToken, API, PassServiceParams, appCookieStore, socketioservice, $rootScope, SessionStorageService) {
 
         $scope.isAuthenticated = authToken.isAuthenticated();
 
@@ -13,13 +12,18 @@ app.controller('HeaderController', ['$scope', '$state', 'authToken', 'API',
             $scope.hellousername = ' hello ' + username;
         }
 
+        $scope.partyDetail = function () {
+            $state.go('main', {}, {
+                reload: true
+            });
+        }
+
         $scope.$on("logoutnow", function (e, someInfoReceived) {
 
             logout();
         });
 
-        function logout()
-        {
+        function logout() {
             authToken.RemoveToken();
             $state.go('login', {}, {
                 reload: true
@@ -41,7 +45,7 @@ app.controller('HeaderController', ['$scope', '$state', 'authToken', 'API',
             $scope.isAuthenticated = authToken.isAuthenticated();
             var username = SessionStorageService.getSessionStorage('username');
             $scope.hellousername = ' hello  ' + username;
-         });
+        });
 
     }
-  ]);
+]);

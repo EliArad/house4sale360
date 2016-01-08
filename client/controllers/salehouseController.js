@@ -280,6 +280,30 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
 
                 }, 400);
             });
+
+
+            dboperations.getSaleHouseVideo360List(obj.id).then(function (result) {
+                var imgsrc;
+                vm.video360 = [];
+                vm.video360index = 0;
+
+                setTimeout(function () {
+                    if (result.data.rows.length == 0) {
+                        document.getElementById('video360div' + obj.id).style.display = 'none';
+                        return;
+                    } else {
+                        document.getElementById('video360div' + obj.id).style.display = 'block';
+                    }
+                    for (var i = 0; i < result.data.rows.length; i++) {
+                        var imgsrc = './upload360video/' + result.data.userid + '/salehouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
+
+                        if (i == 0)
+                            load360Video(imgsrc);
+                        vm.video360index++;
+                    }
+
+                }, 400);
+            });
         }
 
         $scope.removeSlide = function () {
@@ -384,6 +408,57 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
             });
         });
 
+        $scope.video360LoaderInputChanged = function () {
+            var fileInputElement = document.getElementById("video360LoaderInput");
+            var size = fileInputElement.files[0].size / (1024 * 1024);
+            if (size > 50) {
+                alert('מקסימום גודל קובץ להעלות הוא 50 מגה');
+                return;
+            }
+            vm.showwaitcircle = true;
+
+            upload360Video(fileInputElement.files[0]);
+        }
+        function upload360Video(filename) {
+            fileReader.readAsDataUrl(filename, $scope)
+                .then(function (result) {
+                    ajaxUpload360Video(result, filename, function(err, res){
+                        if (err != 'ok')
+                        {
+                            vm.showwaitcircle = false;
+                            alert(err + ' ' + res);
+                        } else {
+                            vm.showwaitcircle = false;
+                            $scope.showvideo360single = true;
+
+                            load360Video(res.filename);
+                        }
+                    });
+                });
+        }
+        function load360Video(fileName)
+        {
+            // initialize plugin, default options shown
+            var options = {
+                crossOrigin: 'anonymous',   // valid keywords: 'anonymous' or 'use-credentials'
+                clickAndDrag: true,    // use click-and-drag camera controls
+                flatProjection: false,  // map image to appear flat (often more distorted)
+                fov: 35,                // initial field of view
+                fovMin: 3,              // min field of view allowed
+                fovMax: 100,                // max field of view allowed
+                hideControls: false,    // hide player controls
+                lon: 0,                 // initial lon for camera angle
+                lat: 0,                 // initial lat for camera angle
+                loop: "loop",           // video loops by default
+                muted: true,            // video muted by default
+                autoplay: true          // video autoplays by default
+            }
+            $('.valiant360video').Valiant360(options);
+            //console.log($.fn['eeeeee']);
+            //console.log($.fn['eeeeee']._video.src);
+            $.fn['eeeeee']._video.src = fileName;
+
+        }
 
         $scope.getrenovated = function (selectedItem) {
 
