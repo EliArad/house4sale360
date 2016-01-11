@@ -21,6 +21,7 @@ module.exports = function (app,dbstoreController) {
         app.post('/api/dbstore/getSaleHouse360PictureList', jwtauth, dbstoreController.getSaleHouse360PictureList);
         app.post('/api/dbstore/getSaleHouseVideoList', jwtauth, dbstoreController.getSaleHouseVideoList);
         app.post('/api/dbstore/getSaleHouseVideo360List', jwtauth, dbstoreController.getSaleHouseVideo360List);
+        app.post('/api/dbstore/GetSaleHouseQueryResults',jwtauth, dbstoreController.GetSaleHouseQueryResults);
 
     }
 

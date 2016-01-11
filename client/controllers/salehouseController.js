@@ -48,6 +48,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
             catch(sendResponseError);
 
         function sendResponseData(response) {
+            console.log(response);
             if (response != "OK") {
                 $state.go('login', {}, {
                     reload: true
@@ -59,6 +60,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
         }
 
         function sendResponseError(response) {
+            console.log(response);
             $state.go('login', {}, {
                 reload: true
             });
@@ -107,8 +109,6 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
             } else {
                 xid = id;
             }
-            alert(xid);
-
             var data = {
                 "images": result,
                 "filename": fileName,
@@ -132,7 +132,6 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                 callback("failed", "cannot attached to new message");
                 return;
             }
-            alert(id);
 
             var data = {
                 "images": result,
@@ -216,17 +215,19 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                 var imgsrc;
 
                 setTimeout(function () {
-
                     if (result.data.rows.length == 0) {
                         document.getElementById('image360glyps' + obj.id).style.display = 'none';
                         return;
                     }
+                } , 300);
 
-                    for (var i = 0; i < result.data.rows.length; i++) {
-                        var imgsrc = './uploadimages/' + result.data.userid + '/salehouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
-                        vm.sphere360.push(imgsrc);
+                for (var i = 0; i < result.data.rows.length; i++) {
+                    var imgsrc = './uploadimages/' + result.data.userid + '/salehouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
+                    vm.sphere360.push(imgsrc);
 
-                        if (vm.sphere360index == 0) {
+                    if (vm.sphere360index == 0) {
+                        setTimeout(function () {
+
                             if (result.data.rows.length > 1)
                                 document.getElementById('image360glyps' + obj.id).style.display = 'block';
                             var PSV = new PhotoSphereViewer({
@@ -251,10 +252,11 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                                 // No XMP data
                                 usexmpdata: false
                             });
-                        }
-                        vm.sphere360index++;
+                        } , 300);
                     }
-                },400);
+                    vm.sphere360index++;
+                }
+
             });
 
             dboperations.getSaleHouseVideoList(obj.id).then(function (result) {
@@ -287,22 +289,17 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                 vm.video360 = [];
                 vm.video360index = 0;
 
-                setTimeout(function () {
-                    if (result.data.rows.length == 0) {
-                        document.getElementById('video360div' + obj.id).style.display = 'none';
-                        return;
-                    } else {
-                        document.getElementById('video360div' + obj.id).style.display = 'block';
-                    }
-                    for (var i = 0; i < result.data.rows.length; i++) {
-                        var imgsrc = './upload360video/' + result.data.userid + '/salehouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
+                if (result.data.rows.length > 0) {
 
-                        if (i == 0)
-                            load360Video(imgsrc);
-                        vm.video360index++;
-                    }
+                }
+                for (var i = 0; i < result.data.rows.length; i++) {
+                    var imgsrc = './upload360video/' + result.data.userid + '/salehouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
+                    console.log(imgsrc);
+                    if (i == 0)
+                        load360Video(imgsrc);
+                    vm.video360index++;
+                }
 
-                }, 400);
             });
         }
 
@@ -408,21 +405,21 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
             });
         });
 
-        $scope.video360LoaderInputChanged = function () {
-            var fileInputElement = document.getElementById("video360LoaderInput");
+        $scope.video360LoaderInputChanged = function (obj) {
+            var id = obj.getAttribute("data-animal-type");
+            var fileInputElement = document.getElementById("video360LoaderInput" + id);
             var size = fileInputElement.files[0].size / (1024 * 1024);
             if (size > 50) {
                 alert('מקסימום גודל קובץ להעלות הוא 50 מגה');
                 return;
             }
             vm.showwaitcircle = true;
-
-            upload360Video(fileInputElement.files[0]);
+            upload360Video(fileInputElement.files[0],id);
         }
-        function upload360Video(filename) {
-            fileReader.readAsDataUrl(filename, $scope)
+        function upload360Video(file,id) {
+            fileReader.readAsDataUrl(file, $scope)
                 .then(function (result) {
-                    ajaxUpload360Video(result, filename, function(err, res){
+                    ajaxUpload360Video(result, file, function(err, res){
                         if (err != 'ok')
                         {
                             vm.showwaitcircle = false;
@@ -430,13 +427,12 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                         } else {
                             vm.showwaitcircle = false;
                             $scope.showvideo360single = true;
-
-                            load360Video(res.filename);
+                            load360Video(res.filename,id);
                         }
                     });
                 });
         }
-        function load360Video(fileName)
+        function load360Video(fileName,id)
         {
             // initialize plugin, default options shown
             var options = {
@@ -453,10 +449,13 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                 muted: true,            // video muted by default
                 autoplay: true          // video autoplays by default
             }
-            $('.valiant360video').Valiant360(options);
-            //console.log($.fn['eeeeee']);
-            //console.log($.fn['eeeeee']._video.src);
-            $.fn['eeeeee']._video.src = fileName;
+
+            var x = document.getElementById('video360div' + id);
+            console.log(x);
+            $.fn['eeee'] = new Plugin( 'video360div' + id, options );
+
+            //$('.valiant360video' + id).Valiant360(options);
+            $.fn['eeee' + id]._video.src = fileName;
 
         }
 
@@ -494,6 +493,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
             //formErrors(form);
 
 
+
             var card = angular.copy(item);
             card.city = item.city.city;
             card.napa = item.city.napa;
@@ -501,6 +501,8 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
             card.area = item.city.area;
             card.neighborhood = item.neighborhood.name;
             card.street = item.street.name;
+
+            console.log(card.price);
 
             dboperations.updateSaleHouseDetails(card).then(function (result) {
 
@@ -680,6 +682,33 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                         callback("failed", res);
                 });
         }
+        function ajaxUpload360Video(result, fileName, callback) {
+
+            if (vm.insertId == -1) {
+                if (callback)
+                    callback("failed", "cannot attached to new message");
+                return;
+            }
+
+            var data = {
+                "video": result,
+                "filename": fileName.name,
+                "tabletype": "salehouse",
+                "insertId": vm.insertId,
+                'is360video': true
+            };
+
+            myhttphelper.doPost('/api/uploadvideo', data).
+                then(function (res) {
+                    if (callback)
+                        callback("ok", res);
+                }).
+                catch(function (res) {
+                    if (callback)
+                        callback("failed", res);
+                });
+        }
+
 
         $scope.onOpen360File = function (obj) {
             var item = obj.getAttribute("data-animal-type");
@@ -700,7 +729,6 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
 
             reader.onload = function () {
                 ajaxUpload2(reader.result, filename, id, function (err, results) {
-                    alert(err + '  ' + results);
                     if (err == "ok") {
                         var PSV = new PhotoSphereViewer({
                             // Panorama, given in base 64

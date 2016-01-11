@@ -1,6 +1,13 @@
 <style>
 
 
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+
     .carousel-control.left, .carousel-control.right {
         background: none !important;
         color: red;
@@ -88,23 +95,28 @@
                     <div class="panel panel-default" ng-repeat="item in vm.cards">
                         <div class="panel-heading">
                             <h4 class="panel-title">
-                                <a data-toggle="collapse"
+                                <a data-toggle="collapse" style="cursor :pointer"
                                    ng-click="accordionIsOpen(item)"
-                                   data-parent="#accordion" href="#collapse{{ $index}}">
+                                   data-parent="#accordion" data-target="#collapse{{ $index}}">
                                     {{ item.propertyType }}
                                     ב
                                     {{ item.city.city }}
                                     {{ item.street.name }}
+                                    רחוב
                                     {{ item.neighborhood.name }}
                                     {{ item.housenumber }}
-                                    {{ item.email }}
+                                    קומה:
+                                    {{ item.floor }}
+                                    טלפון:
                                     {{ item.primarycellphone }}
+                                   מחיר:
+                                    {{ item.price }}
                                 </a>
                             </h4>
                         </div>
                         <div id="collapse{{ $index}}" class="panel-collapse collapse out">
                             <div class="panel-body">
-                                <div id="panelcontent{{ item.id }}"  ng-if="vm.uuu[item.id]" ng-include="'/client/templates/salehousepanelbody.html'">
+                                <div id="panelcontent{{ item.id }}"  ng-show="vm.uuu[item.id]" ng-include="'/client/templates/salehousepanelbody.html'">
 
                                 </div>
                             </div>

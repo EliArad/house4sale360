@@ -48,7 +48,7 @@
             <label class="control-label col-sm-3" for="">אזור</label>
 
             <div class="col-sm-9">
-                        <span ng-if="shownapa">
+                        <span ng-show="shownapa">
                             {{ item.area }}
                             &nbsp;
                             נפת
@@ -342,6 +342,18 @@
 
         <div class="form-group"
              style="white-space:nowrap"
+             ng-class="{ 'has-error': form.price.$error.required && form.price.$dirty}">
+            <label class="control-label col-sm-3" for="price">מחיר</label>
+
+            <div class="col-sm-9">
+                <input type="number" name="price"
+                       placeholder="מחיר בשקלים" class="form-control"
+                       ng-model="item.price">
+            </div>
+        </div>
+
+        <div class="form-group"
+             style="white-space:nowrap"
              ng-class="{ 'has-error': form.renovatedexplnation.$error.required && form.renovatedexplnation.$dirty}">
 
             <div class="col-sm-5 col-sm-offset-2">
@@ -494,10 +506,10 @@
 <div class="row">
     <div class="col-md-4 col-md-offset-3" ng-show="vm.showwaitcircle" ng-include="'/client/templates/waitcircle.html'">
     </div>
-    <div ng-include="'client/templates/video360loader.html'">
+    <div ng-include="'client/templates/video360loader2.html'">
 
     </div>
-    <div ng-include="'client/templates/video360_single.html'">
+    <div ng-include="'client/templates/video360.html'">
 
     </div>
 </div>

@@ -116,7 +116,7 @@ app.use('/api/register', registerRoutes.routes);
 //var createNewMember = require("./server/modules/createNewMember")(membersModel.membersModel);
 
 // we send the app to this module
-//var mailverify = require('./server/modules/nodemailer')(app, regModel, createNewMember);
+var mailverify = require('./server/modules/nodemailer')(app, sqlserver);
 
 
 app.use(
@@ -138,9 +138,6 @@ app.post('/api/upload', jwtauth, bodyParser({
         return res.sendStatus(500);
     }
 
-    console.log(req.body.insertId);
-    console.log(req.idFromToken);
-
 
     var x = util.inspect(req.body.images);
 
@@ -149,7 +146,6 @@ app.post('/api/upload', jwtauth, bodyParser({
         var dirToCreateRaw = './uploadimages/' + req.idFromToken + '/' + req.body.tabletype + '/' + req.body.insertId + '/';
         mkdirp(dirToCreateRaw, function (err) {
 
-            console.log(err);
 
             var r = x.search('data:image/jpeg;base64,');
             var x1;
@@ -230,7 +226,7 @@ app.post('/api/uploadvideo', jwtauth, bodyParser({
     limit: '50mb'
 }), function (req, res) {
 
-    console.log("upload video");
+
     var x = util.inspect(req.body.video);
 
     try {

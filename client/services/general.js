@@ -13,7 +13,7 @@ app.factory("general", function($http, $q,myConfig){
 
   var sendMail = function(mailParams)
   {
-    return $http.post(myConfig + "/api/send",mailParams).
+    return $http.post(myConfig.url + "/api/send",mailParams).
       then(sendResponseData).
       catch(sendResponseError);
   }

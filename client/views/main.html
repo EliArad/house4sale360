@@ -1,3 +1,501 @@
-main
+<style>
 
-{{  text }}
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .container1 {
+        margin: 10px;
+    }
+
+    .ui-select-bootstrap .ui-select-toggle > .caret {
+        right: initial;
+        left: 10px;
+        /* or any other value - it should be the same as the original right value */
+    }
+
+    .ui-select-bootstrap > .ui-select-match > .btn {
+        text-align: right !important;
+        direction: rtl;
+        background-color: white;
+        color: black;
+    }
+
+    .ui-select-bootstrap > .ui-select-choices > .btn > span.pull-left {
+        float: right !important;
+    }
+
+    .ui-select-bootstrap > .ui-select-match > .btn > span.pull-left {
+        float: right !important;
+    }
+
+    .btn-default:hover,
+    .btn-default:focus,
+    .btn-default:active,
+    .btn-default.active {
+        color: black;
+        background-color: white;
+    }
+
+    .btn-default:active, .btn-default.active, .btn-default:visited
+    .btn-default:active:hover, .btn-default.active:hover {
+        color: black;
+        background-color: white;
+    }
+
+    .btn-default {
+        color: black;
+        background-color: white;
+    }
+
+    .btn-default:hover {
+        color: black;
+        background-color: white
+    }
+
+    .btn-default:focus {
+        color: black;
+        background-color: white
+    }
+
+
+</style>
+
+
+<div class="container1" ng-controller="MainController as vm">
+
+
+    <!-- Modal -->
+    <div class="modal" id="myModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Modal Header</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-horizontal">
+                        <form name="form">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group" style="white-space:nowrap"
+                                         ng-class="{ 'has-error': form.propertyType.$error.required && form.propertyType.$dirty }">
+                                        <label class="control-label col-sm-3" for="propertyType">סוג הנכס</label>
+
+
+                                        <div class="col-sm-9">
+                                            <select class="form-control"
+                                                    id="selectPropertyType" multiple="multiple"
+                                                    placeholder="בחר את סוג הנכס למכירה"
+                                                    name="propertyType"
+                                                    ng-model="vm.search.propertyType">
+                                                <option>דירה</option>
+                                                <option>דירת גן</option>
+                                                <option>דירת גג/פנטהאוז</option>
+                                                <option>סטודיו</option>
+                                                <option>מרתף/פרטר</option>
+                                                <option>דופלקס</option>
+                                                <option>טריפלקס</option>
+                                                <option>דו משפחתי</option>
+                                                <option>יחידת דיור</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group" style="white-space:nowrap"
+                                         ng-class="{ 'has-error': form.city.$error.required }">
+                                        <label class="control-label col-sm-3" for="propertyType">עיר</label>
+
+                                        <div class="col-sm-9">
+                                            <ui-select id="city"
+                                                       on-select="getcity(vm.search.city)"
+                                                       theme="bootstrap" ng-model="vm.search.city"
+                                                       required>
+                                                <ui-select-match placeholder="בחר עיר">
+                                                    <span ng-bind="$select.selected"></span>
+                                                </ui-select-match>
+                                                <ui-select-choices
+                                                        repeat="city in vm.cities |filter : $select.search">
+                                                    <span ng-bind-html="city.city | highlight : $select.search"></span>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="white-space:nowrap"
+                                         ng-class="{ 'has-error': form.neighborhood.$error.required }">
+                                        <label class="control-label col-sm-3" for="neighborhood">ערים:</label>
+
+                                        <div class="col-sm-9">
+                                            <ul class="nav nav-list" ng-repeat="l in vm.citiesSelected">
+                                                <li class="active"><a ng-click="removeCityFromList($index)">{{ l.name }}<i class=" glyphicon glyphicon-remove pull-left"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" style="white-space:nowrap"
+                                         ng-class="{ 'has-error': form.neighborhood.$error.required }">
+                                        <label class="control-label col-sm-3" for="neighborhood">שכונה</label>
+
+                                        <div class="col-sm-9">
+                                            <ui-select id="neighborhood"
+                                                       on-select="getschona(vm.search.neighborhood)"
+                                                       theme="bootstrap" ng-model="vm.search.neighborhood"
+                                                       required>
+                                                <ui-select-match placeholder="בחר שכונה">
+                                                    <span ng-bind="$select.selected.name"></span>
+                                                </ui-select-match>
+                                                <ui-select-choices
+                                                        repeat="n in vm.neighborhoods |filter : $select.search">
+                                                    <span ng-bind-html="n.name | highlight : $select.search"></span>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" style="white-space:nowrap"
+                                         ng-class="{ 'has-error': form.neighborhood.$error.required }">
+                                        <label class="control-label col-sm-3" for="neighborhood">שכונות</label>
+
+                                        <div class="col-sm-9">
+                                            <ul class="nav nav-list" ng-repeat="l in vm.schonotSelected">
+                                                <li class="active"><a ng-click="removeSchonaFromList($index)">{{ l.name }}<i class=" glyphicon glyphicon-remove pull-left"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group" style="white-space:nowrap"
+                                         ng-class="{ 'has-error': (form.yearsofproperty.$error.required && form.yearsofproperty.$dirty)}">
+                                        <label class="control-label col-sm-3" for="yearsofproperty">גיל הנכס</label>
+
+                                        <div class="col-sm-9">
+                                            <input type="number" ng-max="100" name="yearsofproperty" required
+                                                   placeholder="מקסימום גיל הנכס" class="form-control"
+                                                   ng-model="vm.search.yearsofproperty">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3" for="floor">קומה</label>
+
+                                        <div class="col-sm-4">
+                                            <select name="fromfloor" class="form-control"
+                                                    ng-model="vm.search.floor"
+                                                    ng-class="{ 'has-error': form.fromfloor.$error.required }">
+                                                <option ng-repeat="item in vm.numberfloors" value="{{item}}">
+                                                    {{item}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <label class="control-label col-sm-1" for="fromfloor">מתוך</label>
+
+                                        <div class="col-sm-4">
+                                            <select name="floor" class="form-control"
+                                                    ng-model="vm.search.fromfloor"
+                                                    ng-class="{ 'has-error': form.floor.$error.required }">
+                                                <option ng-repeat="item in vm.numberfloors" value="{{item}}">
+                                                    {{item}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="white-space:nowrap">
+                                        <label class="control-label col-sm-3" for="fromprice">ממחיר</label>
+
+                                        <div class="col-sm-4">
+                                            <input type="number" ng-max="100" name="fromprice" required
+                                                   placeholder="ממחיר" class="form-control"
+                                                   ng-model="vm.search.fromprice">
+                                        </div>
+                                        <label class="control-label col-sm-1" style="margin: 0"  for="fromprice">עד</label>
+                                        <div class="col-sm-4">
+                                            <input type="number" ng-max="100" name="upprice" required
+                                                   placeholder="עד מחיר" class="form-control"
+                                                   ng-model="vm.search.upprice">
+                                        </div>
+                                    </div>
+
+
+
+
+
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group" style="white-space:nowrap"
+                                         ng-class="{ 'has-error': form.numberofrooms.$error.required }">
+                                        <label class="control-label col-sm-3" for="numberofrooms">מספר חדרים</label>
+
+                                        <div class="col-sm-9">
+                                            <select name="numberOfRooms"
+                                                    class="form-control" ng-model="vm.search.numberofrooms">
+
+                                                <option ng-repeat="item in vm.numberOfRooms" value="{{item}}">
+                                                    {{item}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" style="white-space:nowrap"
+                                         ng-class="{ 'has-error': form.balcony.$error.required }">
+                                        <label class="control-label col-sm-3" for="balcony">מרפסת</label>
+
+                                        <div class="col-sm-9">
+                                            <select name="balcony" class="form-control"
+                                                    ng-model="vm.search.balcony">
+                                                <option ng-repeat="item in vm.balconies" value="{{item}}">{{item}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group"
+                                         ng-class="{ 'has-error': form.aircond.$error.required && form.aircond.$dirty }">
+                                        <label class="control-label col-sm-3" for="aircond">מזגן </label>
+
+                                        <div class="col-sm-9">
+                                            <select class="form-control"
+                                                    placeholder="בחר את התצורה של המזגנים בבית"
+                                                    name="aircond"
+                                                    ng-change="getaircond(vm.search.aircond)"
+                                                    ng-model="vm.search.aircond">
+                                                <option>לא משנה לי</option>
+                                                <option>כן</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group"
+                                         ng-class="{ 'has-error': form.parking.$error.required && form.parking.$dirty }">
+                                        <label class="control-label col-sm-3" for="parking">חנייה </label>
+
+                                        <div class="col-sm-9">
+                                            <select class="form-control" placeholder="בחר את התצורה של החנייה אם יש"
+                                                    name="parking"
+                                                    ng-change="getparking(vm.search.parking)"
+                                                    ng-model="vm.search.parking">
+                                                <option>לא משנה לי</option>
+                                                <option>לפחות אחת</option>
+                                                <option>לפחות שתיים</option>
+                                                <option>לפחות שלוש</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" ng-show="shoparkingoptions"
+                                         style="white-space:nowrap"
+                                         ng-class="{ 'has-error': form.parkingtype.$error.required && form.parkingtype.$dirty }">
+                                        <label class="control-label col-sm-3" for="parkingtype">מיקום החנייה</label>
+
+                                        <div class="col-sm-9">
+                                            <select class="form-control" placeholder="בחר את סוג החנייה"
+                                                    name="parkingtype"
+                                                    ng-model="vm.search.parkingtype">
+                                                <option>קרקע</option>
+                                                <option>מתחת לקרקע</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" ng-show="shoparkingoptions"
+                                         style="white-space:nowrap"
+                                         ng-class="{ 'has-error': form.parkingtype2.$error.required && form.parkingtype2.$dirty }">
+                                        <label class="control-label col-sm-3" for="parkingtype2">אופי החנייה</label>
+
+                                        <div class="col-sm-9">
+                                            <select class="form-control" placeholder="בחר את סוג החנייה"
+                                                    name="parkingtype2"
+                                                    ng-model="vm.search.parkingtype2">
+                                                <option>צמודות אחת ליד השנייה</option>
+                                                <option>צמודות אחת אחרי השנייה</option>
+                                                <option>סידור אחר</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group"
+                                         style="white-space:nowrap"
+                                         ng-class="{ 'has-error': form.warehouse.$error.required && form.warehouse.$dirty }">
+                                        <label class="control-label col-sm-3" for="warehouse">מחסן</label>
+
+                                        <div class="col-sm-9">
+                                            <select class="form-control" placeholder="מספר מחסנים"
+                                                    name="warehouse"
+                                                    ng-model="vm.search.warehouse">
+                                                <option>לא משנה לי</option>
+                                                <option>לפחות אחד</option>
+                                                <option>לפחות שניים</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group"
+                                         style="white-space:nowrap"
+                                         ng-class="{ 'has-error': form.elevator.$error.required && form.elevator.$dirty }">
+                                        <label class="control-label col-sm-3" for="elevator">מעליות</label>
+
+                                        <div class="col-sm-9">
+                                            <select class="form-control" placeholder="מספר מעליות"
+                                                    name="elevator"
+                                                    ng-model="vm.search.elevator">
+                                                <option>לא משנה לי</option>
+                                                <option>לפחות אחת</option>
+                                                <option>לפחות שתיים</option>
+                                                <option>לפחות שלוש</option>
+                                                <option>לפחות ארבע</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group"
+                                         style="white-space:nowrap"
+                                         ng-class="{ 'has-error': form.mamad.$error.required && form.mamad.$dirty }">
+                                        <label class="control-label col-sm-3" for="elevator">מרחב מוגן</label>
+
+                                        <div class="col-sm-9">
+                                            <select class="form-control" placeholder="האם יש בבית מרחב מוגן?"
+                                                    name="mamad"
+                                                    ng-model="vm.search.mamad">
+                                                <option>לא משנה לי</option>
+                                                <option>כן</option>
+                                                <option>לא</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group"
+                                         style="white-space:nowrap"
+                                         ng-class="{ 'has-error': form.renovated.$error.required && form.renovated.$dirty }">
+                                        <label class="control-label col-sm-3" for="renovated">מצב הדירה</label>
+                                        <input type="checkbox"> לא משנה לי
+                                        <div class="col-sm-6">
+                                            <select class="form-control" placeholder="מצב הדירה"
+                                                    name="renovated"
+                                                    ng-change="getrenovated(vm.search.renovated)"
+                                                    id="selectrenovated" multiple="multiple"
+                                                    ng-model="vm.search.renovated">
+                                                <option>כחדשה</option>
+                                                <option>שופצה במלואה</option>
+                                                <option>שופצה חלקית</option>
+                                                <option>מצב מצויין אבל לא עברה שיפוץ</option>
+                                                <option>זקוקה לשיפוץ</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">סגור</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <button type="button" class="btn btn-default" style="color:orange" data-toggle="modal" data-target="#myModal">הגדר את אפשרויות
+            החיפוש שלך
+        </button>
+
+    </div>
+    <div ng-repeat="item in vm.cards">
+        <div class="row" ng-hide="item.hideheader">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+
+                    {{ item.propertyType }}
+                    ב
+                    {{ item.city.city }}
+                    {{ item.street.name }}
+                    {{ item.neighborhood.name }}
+                    {{ item.housenumber }}
+                    {{ item.email }}
+                    {{ item.primarycellphone }}
+
+                    <button type="button" ng-click="ShowHideHeader(item)" class="btn btn-default">הסתר</button>
+
+                </div>
+                <div class="panel-body">
+
+                    {{ item.floor }}
+                    {{ item.fromfloor }}
+                    {{ item.squresize }}
+
+                    {{ item.balcony }}
+                    <div>
+                        {{ item.soragim.data[0] }}
+
+                        {{ item.handycupt.data[0] }}
+
+                        {{ item.parking }}
+
+                        {{ item.mamad }}
+                        {{ item.warehouse }}
+                        {{ item.elevator }}
+
+                        {{ item.price }}
+
+                        {{ item.dateenter }}
+
+                        {{ item.immidiate.data[0] }}
+                        {{ item.numberofrooms }}
+
+                        {{ item.yearsofproperty }}
+
+                        {{ item.parkingtype2 }}
+
+                        {{ item.parkingType }}
+
+                        {{ item.renovated }}
+
+                        {{ item.renovatedexplnation }}
+                    </div>
+                    <div class="panel-fotter">
+                        {{ item.freedetails }}
+                    </div>
+
+                    <div class="row" ng-show="item.showPictures > 0">
+                        <div ng-class="{ 'col-md-12':  !item.imageExists, 'col-md-7':  item.imageExists}" ng-show="item.image360Exists">
+                            <div id="your-pano{{ item.id }}" style="height:500px">
+
+                            </div>
+                        </div>
+                        <div ng-class="{ 'col-md-12':  !item.image360Exists, 'col-md-5':  item.image360Exists}" ng-show="item.imageExists">
+                            <div>
+                                <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
+                                    <uib-slide ng-repeat="slide in item.slides" active="slide.active">
+                                        <img ng-src="{{slide.image}}"
+                                             ng-mouseover="mo()"
+                                             ng-mouseleave="ml()"
+                                             style="margin:auto;max-height: 500px">
+
+                                        <div class="carousel-caption">
+                                            <!--<h4>Slide {{$index}}</h4>-->
+                                            <p>{{slide.text}}</p>
+                                        </div>
+                                    </uib-slide>
+                                </uib-carousel>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <a>יש גם וידאו</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+

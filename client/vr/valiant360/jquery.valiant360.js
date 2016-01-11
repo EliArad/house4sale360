@@ -124,15 +124,12 @@ three.js r65 or higher
     // The actual plugin constructor
     function Plugin( element, options ) {
         this.element = element;
-        console.log('eeeeeeeeeeeeeeeeeeeeeeeee');
         console.log(element);
-
         // jQuery has an extend method that merges the
         // contents of two or more objects, storing the
         // result in the first object. The first object
         // is generally empty because we don't want to alter
         // the default options for future instances of the plugin
-        console.log(options);
         this.options = options; //$.extend( {}, defaults, options) ;
         this._defaults = options;
         this._name = pluginName;
@@ -524,6 +521,8 @@ three.js r65 or higher
     // A really lightweight plugin wrapper around the constructor,
     // preventing against multiple instantiations
 
+
+
     $.fn[pluginName] = function ( options ) {
         return this.each(function () {
             if (!$.data(this, "plugin_" + pluginName)) {
@@ -533,9 +532,6 @@ three.js r65 or higher
             }
         });
     };
-
-
-
 
 
 })( jQuery, THREE, Detector, window, document );

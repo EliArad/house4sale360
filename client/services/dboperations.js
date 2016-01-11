@@ -45,9 +45,9 @@ app.factory('dboperations', function ($http, myConfig) {
         return $http.post(membersAPI, {id: id});
     }
 
-    function getSaleHousePictureList(id) {
+    function getSaleHousePictureList(id,i,needauth) {
         var membersAPI = myConfig.url + "/api/dbstore/getSaleHousePictureList";
-        return $http.post(membersAPI, {id: id});
+        return $http.post(membersAPI, {id: id, index:i, auth:needauth});
     }
 
 
@@ -61,9 +61,14 @@ app.factory('dboperations', function ($http, myConfig) {
         return $http.post(membersAPI, {id: id});
     }
 
-    function getSaleHouse360PictureList(id) {
+    function getSaleHouse360PictureList(id,i, needauth) {
         var membersAPI = myConfig.url + "/api/dbstore/getSaleHouse360PictureList";
-        return $http.post(membersAPI, {id: id});
+        return $http.post(membersAPI, {id: id, index:i, auth:needauth});
+    }
+
+    function GetSaleHouseQueryResults(query,needauth) {
+        var membersAPI = myConfig.url + "/api/dbstore/GetSaleHouseQueryResults";
+        return $http.post(membersAPI, {query:query, auth:needauth});
     }
 
     return {
@@ -79,7 +84,8 @@ app.factory('dboperations', function ($http, myConfig) {
         getSaleHouseDetails:getSaleHouseDetails,
         getSaleHouse360PictureList:getSaleHouse360PictureList,
         getSaleHouseVideoList:getSaleHouseVideoList,
-        getSaleHouseVideo360List:getSaleHouseVideo360List
+        getSaleHouseVideo360List:getSaleHouseVideo360List,
+        GetSaleHouseQueryResults:GetSaleHouseQueryResults
     };
 
 

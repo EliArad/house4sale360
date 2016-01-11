@@ -43,8 +43,12 @@ app.controller('HeaderController', ['$scope', '$state', 'authToken', 'API',
 
             // do the necessary updates here
             $scope.isAuthenticated = authToken.isAuthenticated();
-            var username = SessionStorageService.getSessionStorage('username');
-            $scope.hellousername = ' hello  ' + username;
+            if ($scope.isAuthenticated == true) {
+                var username = SessionStorageService.getSessionStorage('username');
+                $scope.hellousername = ' hello  ' + username;
+            } else {
+                $scope.hellousername = '';
+            }
         });
 
     }

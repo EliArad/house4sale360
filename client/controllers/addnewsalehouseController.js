@@ -225,8 +225,6 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
             }
             vm.showwaitcircle = true;
 
-
-
             upload360Video(fileInputElement.files[0]);
         }
         function load360Video(fileName)

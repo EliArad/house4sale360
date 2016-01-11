@@ -1,6 +1,12 @@
 <style>
 
 
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
 
     .carousel-control.left, .carousel-control.right {
         background: none !important;
@@ -120,7 +126,7 @@
                         <label class="control-label col-sm-3" for="">אזור</label>
 
                         <div class="col-sm-9">
-                        <span ng-if="shownapa">
+                        <span ng-show="shownapa">
                             {{ vm.card.area }}
                             &nbsp;
                             נפת
@@ -422,6 +428,19 @@
                             <input type="text" name="renovatedexplnation"
                                    placeholder="מה רצית לומר על מצב הדירה?" class="form-control"
                                    ng-model="vm.card.renovatedexplnation">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group"
+                         style="white-space:nowrap"
+                         ng-class="{ 'has-error': form.price.$error.required && form.price.$dirty}">
+                        <label class="control-label col-sm-3" for="price">מחיר</label>
+
+                        <div class="col-sm-9">
+                            <input type="number" name="price"
+                                   placeholder="מחיר בשקלים" class="form-control"
+                                   ng-model="vm.card.price">
                         </div>
                     </div>
 

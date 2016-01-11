@@ -5,15 +5,13 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
   $stateProvider.state('register', {
     url: '/register',
     templateUrl: '/client/views/register.html'
-    /*controller: 'RegistrationController'*/
   }).state('login', {
     url: '/login',
     templateUrl: '/client/views/login.html',
     controller: 'LoginController'
   }).state('main', {
     url: '/main',
-    templateUrl: '/client/views/main.html',
-    controller: 'MainController'
+    templateUrl: '/client/views/main.html'
   }).state('logout', {
     url: '/logout',
     controller: 'LogoutController'
@@ -28,11 +26,10 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
   }).state('addnewsalehouse', {
     url: '/addnewsalehouse',
     templateUrl: '/client/views/addnewsalehouse.html'
+  }).state('m', {
+    url: '/',
+    templateUrl: '/client/views/main.html'
   });
-
-
-
-
 
 
   $httpProvider.interceptors.push('authIntercepter');

@@ -17,18 +17,15 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
         vm.message1 = '';
         vm.message2 = '';
         vm.errormessage = '';
-        $scope.showModal = false;
-        $scope.showRegistration = true;
-
+        $scope.showModal = true;
+        $scope.showRegistration =true;
 
 
         vm.user = {
             password: '',
             email: '',
             agent:'',
-            confirmPassword: '',
-            phonenumber:'',
-            phonenumber2:''
+            confirmPassword: ''
         };
 
         $scope.logout = function () {
@@ -37,12 +34,15 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
         }
 
         $scope.save = function (params) {
+
             params.agent = false;
             delete params.confirmPassword;
             Registration.save(params,
                 function (resp, headers) {
                     //success callback
+
                     $scope.showRegistration = false;
+
 
                     var mailParams = {
                         to: vm.user.email
@@ -52,24 +52,27 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
                     authToken.setToken(resp.token);
 
                     var token = authToken.getToken();
+                    console.log(token);
                     Registration.get({
                         registerId: token
                     }, function (currentUser) {
-                        console.log(currentUser.user);
+                        //console.log(currentUser.user);
 
                         var mailParams = {
                             to: currentUser.user.email
                         };
+
                         general.sendMail(mailParams).
                         then(sendResponseData).
                         catch(sendResponseError);
                     });
                 },
                 function (err) {
-                    // error callback
-                    vm.showwaitcircle = false;
-                    vm.errormessage = 'שגיאה - יש אמייל כבר רשום';
-                    $scope.showModal = true;
+                    if (err.data.error.code == 'ER_DUP_ENTRY') {
+                        vm.showwaitcircle = false;
+                        vm.errormessage = 'שגיאה - יש אמייל כבר רשום';
+                        $('#myModal').modal('show');
+                    }
                 });
         };
 
@@ -82,17 +85,20 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
 
             if (isValid) {
                 vm.showwaitcircle = true;
-                $scope.showRegistration = false;
                 $scope.save(vm.user);
             }
         }
 
         function sendResponseData(response) {
+            $scope.showRegistration = false;
             vm.showwaitcircle = false;
+            console.log('2');
             //vm.message = 'Registration success - email has been sent to ' + vm.user.email + ' to validate';
             vm.message += 'ההרשמה הצליחה. ';
             vm.message1 += 'אמייל נשלח לכתובת ';
+            console.log('3');
             vm.message2 += vm.user.email + ' לאישור';
+            console.log('4');
 
         }
 

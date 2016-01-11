@@ -1,6 +1,6 @@
 var nodemailer = require("nodemailer");
 var guid = require('guid');
-
+var jwtauth = require('../common/jwtauth');
 
 // create reusable transporter object using SMTP transport
 var smtpTransport = nodemailer.createTransport({
@@ -25,55 +25,46 @@ function sendEmail(req, randomGuid, callback) {
         }
         //console.log(mailOptions);
     smtpTransport.sendMail(mailOptions, function (error, response) {
+        if (!error)
+        {
+            console.log('mail was sent to: ' + req.body.to);
+        }
         callback(error, response);
     });
 }
 
-module.exports = function (app, registrationModel, createNewMember) {
+module.exports = function (app, sqlserver) {
 
-    var createNew = createNewMember;
 
-    app.post('/api/send', function (req, res) {
+    app.post('/api/send', jwtauth, function (req, res) {
 
-        registrationModel.findOne({
-            'email': req.body.to
-        }, 'email userguid host password', function (err, member) {
-            if (err)
-                res.status(500).send("error here " + err);
-            else if (member) {
-                var randomGuid;
-                //console.log("guid from member " + member.email);
-                //console.log("guid from member " + member.userguid);
-                var host = req.get('host');
-                if (member.userguid == "undefined" || member.userguid == "") {
-                    //console.log("save new guid to user");
-                    randomGuid = guid.create();
-                    member.host = "http://" + host;
-                    member.userguid = randomGuid;
-
-                    member.save(function (err) {
-                        if (err)
-                            return handleError(err);
-
-                    })
-                } else {
-                    //console.log("guid is exists");
-                    randomGuid = member.userguid;
-                }
-                sendEmail(req, randomGuid, function (error, response) {
-                    //console.log("send email finshed");
-                    if (error) {
-                        //console.log(error);
-                        res.status(500);
-                        res.end("error");
+        sqlserver.get(function (err, con) {
+            if (!err) {
+                var sql = 'SELECT * FROM users WHERE id = ' + con.escape(req.idFromToken);
+                var query = con.query(sql, function (err, rows) {
+                    sqlserver.release(con);
+                    if (err) {
+                        res.sendStatus(500);
                     } else {
-                        //console.log("Message sent: ");
-                        res.status(201);
-                        res.end("sent");
+                        //var host = req.get('host');
+                        //req.body.host = "http://" + host;
+                        console.log('sending mail..');
+                        console.log(rows);
+                        sendEmail(req, rows[0].userguid, function (error, response) {
+                            if (error) {
+                                //console.log(error);
+                                res.status(500);
+                                res.end("error");
+                            } else {
+                                //console.log("Message sent: ");
+                                res.status(201);
+                                res.end("sent");
+                            }
+                        });
                     }
                 });
             } else {
-                res.status(404).send('no registration found');
+                res.sendStatus(500);
             }
         });
     });

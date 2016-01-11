@@ -15,9 +15,9 @@ module.exports = function () {
 
         encrypt: function (password, callback) {
             bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
-                console.log('password: ' + password);
+                //console.log('password: ' + password);
                 bcrypt.hash(password, salt, function (err, hash) {
-                    console.log(hash);
+                    //console.log(hash);
                     callback(err,hash)
                 });
             });

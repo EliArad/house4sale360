@@ -43,7 +43,7 @@ var routes = function (app) {
     });
   });
 
-  app.get('/api/getcities', jwtauth, function (req, res, next) {
+  app.get('/api/getcities', function (req, res, next) {
 
     cityLoader.basic(function (err,data) {
       if (err)

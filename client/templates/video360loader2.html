@@ -3,13 +3,14 @@
       method="post">
               <span class="btn btn-primary btn-file">
 העלה וידאו 360
-              <input id="video360LoaderInput"
+              <input id="video360LoaderInput{{ item.id }}"
                      data-classIcon="icon-plus"
                      name="images" ,
                      accept="video/mp4,video/x-m4v,video/*"
                      type="file"
                      multiple="false"
-                     onchange="angular.element(this).scope().video360LoaderInputChanged(item.id)"
+                     data-animal-type='{{ item.id }}'
+                     onchange="angular.element(this).scope().video360LoaderInputChanged(this)"
                       />
                   </span>
 </form>
