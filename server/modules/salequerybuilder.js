@@ -39,6 +39,8 @@ module.exports = function () {
 
         i = 0;
 
+        if (opt.renovated != undefined)
+        {
         for (i = 0; i < opt.renovated.length; i++) {
 
             if (i == 0)
@@ -54,7 +56,7 @@ module.exports = function () {
         if (opt.renovated.length > 0)
             sql = sql + ') ';
         sql = sql + '\n';
-
+      }
 
 
         if (opt.fromprice != undefined) {

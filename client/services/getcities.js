@@ -1,12 +1,12 @@
-app.service('citiesservice', ['$http', function ($http)
+app.factory("citiesservice", function($http, $q,myConfig)
 {
     var citiesData = [];
 
     function getcities(callback)
     {
         if (citiesData.length == 0) {
-            console.log('loading cities');
-            var url = 'http://192.168.22.32:3000/api/getcities';
+            //console.log('loading cities');
+            var url = myConfig.url + '/api/getcities';
             $http.get(url).then(function(result){
                 citiesData = result;
                 callback(null, result);
@@ -24,4 +24,4 @@ app.service('citiesservice', ['$http', function ($http)
         getcities:getcities
     }
 
-}]);
+  });

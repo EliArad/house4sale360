@@ -48,10 +48,10 @@ var routes = function (app) {
     cityLoader.basic(function (err,data) {
       if (err)
       {
-        //console.log(err);
+        console.log(err);
         return res.status(500).send({ error:err});
       } else {
-        //console.log(data.length);
+        console.log(data.length);
         res.send(data);
       }
     });

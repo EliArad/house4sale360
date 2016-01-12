@@ -625,6 +625,31 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
             {
                 card.parking = 0;
             }
+            if (card.mamad == 'כן') {
+                card.mamad = 1;
+            } else {
+                card.mamad = 0;
+            }
+            switch(card.balcony)
+            {
+                case 'אין':
+                    card.balcony = 0;
+                break;
+                case '1':
+                    card.balcony = 1;
+                break;
+                case '2':
+                    card.balcony = 2;
+                break;
+                case '3':
+                    card.balcony = 3;
+                break;
+                case 'יותר משלוש':
+                    card.balcony = 4;
+                break;
+            }
+
+
 
             if (angular.equals(vm.currentCard, card) == true) {
                 alert("כבר קיים");

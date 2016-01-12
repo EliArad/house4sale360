@@ -35,7 +35,7 @@ var app = angular
 
 
   ]).constant("myConfig", {
-        "url": "http://192.168.22.32:3000",
+        "url": "http://192.168.1.16:8080",
         'timeoutSeconds': 1200,
         'idletimeSeconds': 1100,
         "MaxPicturesForMember": 14

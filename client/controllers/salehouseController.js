@@ -341,6 +341,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                 vm.cities = result.data;
 
                 dboperations.getAllSellHouseOfMine().then(function (result) {
+                  console.log(result);
                     vm.cards = result.data;
                     for (var i = 0; i < vm.cards.length; i++) {
 

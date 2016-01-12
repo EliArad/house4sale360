@@ -45,12 +45,15 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 citiesservice.getcities(function (err, result) {
 
                     if (err != null) {
+                        console.log(err);
                         authToken.RemoveToken();
                         $state.go('login', {}, {
                             reload: true
                         });
                         $rootScope.$broadcast("updateHeader", authToken.getToken());
                         return;
+                    } else {
+                      console.log('cities loaded ok');
                     }
                     vm.cities = result.data;
 

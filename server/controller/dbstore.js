@@ -219,18 +219,21 @@ module.exports = function (sqlserver) {
             });
         },
         saveHouseDetails: function (req, res, next) {
+            console.log('saveHouseDetails');
             sqlserver.get(function (err, con) {
                 if (!err) {
                     req.body.data.userid = req.idFromToken;
                     var query = con.query('INSERT INTO sellhousedetails SET ?', req.body.data, function (err, result) {
                         sqlserver.release(con);
                         if (err) {
+                            console.log(err); 
                             res.sendStatus(500);
                         } else {
                             res.send(result);
                         }
                     });
                 } else {
+                    console.log(err);
                     res.sendStatus(500);
                 }
             });

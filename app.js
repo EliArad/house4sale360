@@ -5,7 +5,8 @@ var express = require('express'),
 args = require('yargs').argv;
 var util = require('util');
 
-var cors = require('./server/common/cors');
+//var cors = require('./server/common/cors');
+
 
 //var demofile = './uploads/' + '566408969e8d1b71d0982d20' + "/raw/5.jpg";
 //var demofile1 = './uploads/' + '566408969e8d1b71d0982d20' + "/raw/6.jpg";
@@ -37,7 +38,7 @@ var http = require('http');
 var server = http.createServer(app);
 var io = require('socket.io')(server);
 
-
+/*
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -46,6 +47,33 @@ app.use(function (req, res, next) {
     if ('OPTIONS' == req.method) {
         res.send(200);
     } else {
+        next();
+    }
+});
+*/
+app.use(function(req, res, next) {
+    var oneof = false;
+    if(req.headers.origin) {
+        res.header('Access-Control-Allow-Origin', req.headers.origin);
+        oneof = true;
+    }
+    if(req.headers['access-control-request-method']) {
+        res.header('Access-Control-Allow-Methods', req.headers['access-control-request-method']);
+        oneof = true;
+    }
+    if(req.headers['access-control-request-headers']) {
+        res.header('Access-Control-Allow-Headers', req.headers['access-control-request-headers']);
+        oneof = true;
+    }
+    if(oneof) {
+        res.header('Access-Control-Max-Age', 60 * 60 * 24 * 365);
+    }
+
+    // intercept OPTIONS method
+    if (oneof && req.method == 'OPTIONS') {
+        res.send(200);
+    }
+    else {
         next();
     }
 });
@@ -84,7 +112,7 @@ var dbstoreController = require('./server/controller/dbstore')(sqlserver);
 //var getmembersRouters = membersRouter.routes;
 
 
-port = args.port || 3000;
+port = args.port || 8080;
 
 app.use(bodyParser({
     limit: '50mb'
@@ -306,10 +334,6 @@ app.get('/isauth', jwtauth, function (req, res, next) {
 });
 
 
-app.get('/eli', cors, function (req, res) {
-    res.send("ok from this");
-});
-
 
 app.use(function (err, req, res, next) {
     console.error(err.stack);
@@ -325,5 +349,5 @@ app.post('*', function (req, res) {
     res.status(500).send('error 5000');
 });
 
-server.listen(port);
+server.listen(port, '192.168.1.16');
 console.log("Running on port " + port);

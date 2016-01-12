@@ -78,7 +78,7 @@
 </style>
 
 
-<div class="container" ng-controller="renthouseController as vm">
+<div class="container" ng-controller="salehouseController as vm">
 
     <div ng-show="vm.showwaitcircle" ng-include="'/client/templates/waitcircle.html'">
     </div>
@@ -116,7 +116,7 @@
                         </div>
                         <div id="collapse{{ $index}}" class="panel-collapse collapse out">
                             <div class="panel-body">
-                                <div id="panelcontent{{ item.id }}"  ng-show="vm.uuu[item.id]" ng-include="'/client/templates/renthousepanelbody.html'">
+                                <div id="panelcontent{{ item.id }}"  ng-show="vm.uuu[item.id]" ng-include="'/client/templates/salehousepanelbody.html'">
 
                                 </div>
                             </div>
