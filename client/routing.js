@@ -29,6 +29,9 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
   }).state('m', {
     url: '/',
     templateUrl: '/client/views/main.html'
+  }).state('addnewrenthouse', {
+    url: '/addnewrenthouse',
+    templateUrl: '/client/views/addnewrenthouse.html'
   });
 
 

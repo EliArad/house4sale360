@@ -40,6 +40,11 @@ app.factory('dboperations', function ($http, myConfig) {
         return $http.post(membersAPI, {data: data});
     }
 
+    function getRentHouseDetails(id) {
+        var membersAPI = myConfig.url + "/api/dbstore/getRentHouseDetails";
+        return $http.post(membersAPI, {id: id});
+    }
+
     function getSaleHouseDetails(id) {
         var membersAPI = myConfig.url + "/api/dbstore/getSaleHouseDetails";
         return $http.post(membersAPI, {id: id});
@@ -50,7 +55,7 @@ app.factory('dboperations', function ($http, myConfig) {
         return $http.post(membersAPI, {id: id, index:i, auth:needauth});
     }
 
-    function getSaleHousePictureList(id,i,needauth) {
+    function getRentHousePictureList(id,i,needauth) {
         var membersAPI = myConfig.url + "/api/dbstore/getRentHousePictureList";
         return $http.post(membersAPI, {id: id, index:i, auth:needauth});
     }
@@ -61,6 +66,16 @@ app.factory('dboperations', function ($http, myConfig) {
         return $http.post(membersAPI, {id: id, index:index, auth:needauth});
     }
 
+    function getRentHouseVideoList(id, index,needauth) {
+        var membersAPI = myConfig.url + "/api/dbstore/getRentHouseVideoList";
+        return $http.post(membersAPI, {id: id, index:index, auth:needauth});
+    }
+
+    function getRentHouseVideo360List(id) {
+        var membersAPI = myConfig.url + "/api/dbstore/getRentHouseVideo360List";
+        return $http.post(membersAPI, {id: id});
+    }
+
     function getSaleHouseVideo360List(id) {
         var membersAPI = myConfig.url + "/api/dbstore/getSaleHouseVideo360List";
         return $http.post(membersAPI, {id: id});
@@ -68,6 +83,10 @@ app.factory('dboperations', function ($http, myConfig) {
 
     function getSaleHouse360PictureList(id,i, needauth) {
         var membersAPI = myConfig.url + "/api/dbstore/getSaleHouse360PictureList";
+        return $http.post(membersAPI, {id: id, index:i, auth:needauth});
+    }
+    function getRentHouse360PictureList(id,i, needauth) {
+        var membersAPI = myConfig.url + "/api/dbstore/getRentHouse360PictureList";
         return $http.post(membersAPI, {id: id, index:i, auth:needauth});
     }
 
@@ -92,8 +111,10 @@ app.factory('dboperations', function ($http, myConfig) {
         getSaleHouseDetails:getSaleHouseDetails,
         getSaleHouse360PictureList:getSaleHouse360PictureList,
         getSaleHouseVideoList:getSaleHouseVideoList,
+        getRentHouseVideoList:getRentHouseVideoList,
         getSaleHouseVideo360List:getSaleHouseVideo360List,
-        GetSaleHouseQueryResults:GetSaleHouseQueryResults
+        GetSaleHouseQueryResults:GetSaleHouseQueryResults,
+        getRentHouse360PictureList:getRentHouse360PictureList
 
     };
 

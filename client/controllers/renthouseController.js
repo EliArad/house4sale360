@@ -340,7 +340,7 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
                 }
                 vm.cities = result.data;
 
-                dboperations.getAllSellHouseOfMine().then(function (result) {
+                dboperations.getAllRentHouseOfMine().then(function (result) {
                     vm.cards = result.data;
                     for (var i = 0; i < vm.cards.length; i++) {
 

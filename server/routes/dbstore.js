@@ -10,6 +10,8 @@ module.exports = function (app,dbstoreController) {
     function init() {
 
         app.get('/api/dbstore/getAllSellHouseOfMine', jwtauth, dbstoreController.getAllSellHouseOfMine);
+        app.get('/api/dbstore/getAllRentHouseOfMine', jwtauth, dbstoreController.getAllRentHouseOfMine);
+
         app.post('/api/dbstore/saveHouseDetails', jwtauth, dbstoreController.saveHouseDetails);
         app.post('/api/dbstore/saveRentDetails', jwtauth, dbstoreController.saveRentDetails);
         app.get('/api/dbstore/getHouseDetails', jwtauth, dbstoreController.getHouseDetails);
@@ -22,7 +24,14 @@ module.exports = function (app,dbstoreController) {
         app.post('/api/dbstore/getSaleHouseVideoList', jwtauth, dbstoreController.getSaleHouseVideoList);
         app.post('/api/dbstore/getSaleHouseVideo360List', jwtauth, dbstoreController.getSaleHouseVideo360List);
 
+
+        app.post('/api/dbstore/getRentHouseVideo360List', jwtauth, dbstoreController.getRentHouseVideo360List);
         app.post('/api/dbstore/getRentHousePictureList', jwtauth, dbstoreController.getRentHousePictureList);
+        app.post('/api/dbstore/getRentHouse360PictureList', jwtauth, dbstoreController.getRentHouse360PictureList);
+        app.post('/api/dbstore/getRentHouseVideoList', jwtauth, dbstoreController.getRentHouseVideoList);
+        app.post('/api/dbstore/getRentHouseDetails', jwtauth, dbstoreController.getRentHouseDetails);
+
+
     }
 
     return {

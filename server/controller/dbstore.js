@@ -5,6 +5,41 @@ var secret = require('../common/config').secret;
 module.exports = function (sqlserver) {
 
     return {
+
+        getRentHouseVideoList: function (req, res, next) {
+            sqlserver.get(function (err, con) {
+                if (!err) {
+                    var sql;
+                    if (req.body.auth == true) {
+                        sql = 'SELECT renthouseblobs.*,renthousedetails.userid\
+                        FROM renthouseblobs\
+                        INNER JOIN renthousedetails\
+                        ON renthouseblobs.tableid = renthousedetails.id\
+                        WHERE renthouseblobs.is360video = false AND renthouseblobs.tableid = ' + con.escape(req.body.id) + ' AND renthousedetails.userid = ' + req.idFromToken;
+                    } else {
+                        sql = 'SELECT renthouseblobs.*,renthousedetails.userid\
+                        FROM renthouseblobs\
+                        INNER JOIN renthousedetails\
+                        ON renthouseblobs.tableid = renthousedetails.id\
+                        WHERE renthouseblobs.is360video = false AND renthouseblobs.tableid = ' + con.escape(req.body.id);
+                    }
+                    var query = con.query(sql, function (err, rows) {
+                        sqlserver.release(con);
+                        if (err)
+                            res.sendStatus(500);
+                        else
+                            res.json({
+                                rows: rows,
+                                userid: req.idFromToken
+                            });
+                    });
+                } else {
+                    res.sendStatus(500);
+                }
+            });
+        },
+
+
         getSaleHouseVideoList: function (req, res, next) {
             sqlserver.get(function (err, con) {
                 if (!err) {
@@ -37,6 +72,29 @@ module.exports = function (sqlserver) {
                 }
             });
         },
+
+        getRentHouseVideo360List: function (req, res, next) {
+            sqlserver.get(function (err, con) {
+                if (!err) {
+                    var sql = 'SELECT * FROM renthouseblobs WHERE tableid = ' + con.escape(req.body.id) + ' AND isvideo = true AND is360video = true';
+                    var query = con.query(sql, function (err, rows) {
+                        if (err) {
+                            sqlserver.release(con);
+                            res.sendStatus(500);
+                        } else {
+                            sqlserver.release(con);
+                            res.json({
+                                rows: rows,
+                                userid: req.idFromToken
+                            });
+                        }
+                    });
+                } else {
+                    res.sendStatus(500);
+                }
+            });
+        },
+
         getSaleHouseVideo360List: function (req, res, next) {
             sqlserver.get(function (err, con) {
                 if (!err) {
@@ -93,10 +151,44 @@ module.exports = function (sqlserver) {
             });
         },
 
+        getRentHouseDetails: function (req, res, next) {
+            sqlserver.get(function (err, con) {
+                if (!err) {
+                    var sql = 'SELECT * FROM renthousedetails WHERE id = ' + con.escape(req.body.id);
+                    var query = con.query(sql, function (err, rows) {
+                        sqlserver.release(con);
+                        if (err)
+                            res.sendStatus(500);
+                        else
+                            res.send(rows);
+                    });
+                } else {
+                    res.sendStatus(500);
+                }
+            });
+        },
+
         getSaleHouseDetails: function (req, res, next) {
             sqlserver.get(function (err, con) {
                 if (!err) {
                     var sql = 'SELECT * FROM sellhousedetails WHERE id = ' + con.escape(req.body.id);
+                    var query = con.query(sql, function (err, rows) {
+                        sqlserver.release(con);
+                        if (err)
+                            res.sendStatus(500);
+                        else
+                            res.send(rows);
+                    });
+                } else {
+                    res.sendStatus(500);
+                }
+            });
+        },
+
+        getAllRentHouseOfMine: function (req, res, next) {
+            sqlserver.get(function (err, con) {
+                if (!err) {
+                    var sql = 'SELECT * FROM renthousedetails WHERE userid = ' + con.escape(req.idFromToken);
                     var query = con.query(sql, function (err, rows) {
                         sqlserver.release(con);
                         if (err)
@@ -172,6 +264,41 @@ module.exports = function (sqlserver) {
                                 index: req.body.index,
                                 userid: req.idFromToken
                             });
+                    });
+                } else {
+                    res.sendStatus(500);
+                }
+            });
+        },
+        getRentHouse360PictureList: function (req, res, next) {
+            sqlserver.get(function (err, con) {
+                if (!err) {
+                    var condition = {'tableid': req.body.id};
+
+                    var sql;
+                    if (req.body.auth == false) {
+                        sql = 'SELECT renthouseblobs.*,renthousedetails.userid\
+                        FROM renthouseblobs\
+                        INNER JOIN renthousedetails\
+                        ON renthouseblobs.tableid = renthousedetails.id\
+                        WHERE renthouseblobs.is360image = true AND renthouseblobs.tableid = ' + con.escape(req.body.id);
+                    } else {
+                        sql = 'SELECT renthouseblobs.*,renthousedetails.userid\
+                        FROM renthouseblobs\
+                        INNER JOIN renthousedetails\
+                        ON renthouseblobs.tableid = sellhousedetails.id\
+                        WHERE renthouseblobs.is360image = true AND renthouseblobs.tableid = ' + con.escape(req.body.id) + ' AND renthousedetails.id = ' + req.idFromToken;
+                    }
+                    var query = con.query(sql, function (err, rows) {
+                        sqlserver.release(con);
+                        if (err)
+                            res.sendStatus(500);
+                        else {
+                            res.json({
+                                rows: rows,
+                                index: req.body.index
+                            });
+                        }
                     });
                 } else {
                     res.sendStatus(500);
