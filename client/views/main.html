@@ -7,11 +7,9 @@
         margin: 0;
     }
 
-
-
     .container1 {
         margin: 30px;
-        margin-top:-10px;
+        margin-top: -10px;
     }
 
     .ui-select-bootstrap .ui-select-toggle > .caret {
@@ -417,19 +415,22 @@
                                          style="white-space:nowrap"
                                          ng-class="{ 'has-error': form.renovated.$error.required && form.renovated.$dirty }">
                                         <label class="control-label col-sm-3" for="renovated">מצב הדירה</label>
-                                        <input type="checkbox"> לא משנה לי
+                                        <input ng-model="aptstatus" ng-change="onAptStatus()" type="checkbox"> לא משנה
+                                        לי
                                         <div class="col-sm-6">
-                                            <select class="form-control" placeholder="מצב הדירה"
-                                                    name="renovated"
-                                                    ng-change="getrenovated(vm.search.renovated)"
-                                                    id="selectrenovated" multiple="multiple"
-                                                    ng-model="vm.search.renovated">
-                                                <option>כחדשה</option>
-                                                <option>שופצה במלואה</option>
-                                                <option>שופצה חלקית</option>
-                                                <option>מצב מצויין אבל לא עברה שיפוץ</option>
-                                                <option>זקוקה לשיפוץ</option>
-                                            </select>
+                                            <div ng-show="showaptselect">
+                                                <select class="form-control" placeholder="מצב הדירה"
+                                                        name="renovated"
+                                                        ng-change="getrenovated(vm.search.renovated)"
+                                                        id="selectrenovated" multiple="multiple"
+                                                        ng-model="vm.search.renovated">
+                                                    <option>כחדשה</option>
+                                                    <option>שופצה במלואה</option>
+                                                    <option>שופצה חלקית</option>
+                                                    <option>מצב מצויין אבל לא עברה שיפוץ</option>
+                                                    <option>זקוקה לשיפוץ</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -539,8 +540,8 @@
                                 <td>סורגים</td>
                                 <td>גישה לנכים</td>
                                 <td>חנייה</td>
-                                <td ng-show="item.parking > 0" >מיקום החנייה</td>
-                                <td ng-show="item.parking > 1">סוג חנייה  </td>
+                                <td ng-show="item.parking > 0">מיקום החנייה</td>
+                                <td ng-show="item.parking > 1">סוג חנייה</td>
                                 <td>ממ"ד</td>
                                 <td>מחסן</td>
                                 <td>elevators</td>
@@ -568,7 +569,7 @@
                                 <td ng-show="item.parking > 0">
                                     {{ item.parkingType }}
                                 </td>
-                                <td  ng-show="item.parking > 1">
+                                <td ng-show="item.parking > 1">
                                     {{ item.parkingtype2 }}
                                 </td>
                                 <td>
@@ -588,7 +589,7 @@
                         </table>
                     </div>
                     <div>
-                         {{  item.freedetails}}
+                        {{ item.freedetails}}
                     </div>
                 </div>
             </div>

@@ -16,20 +16,47 @@ module.exports = function () {
             }
             sql = sql + ' sellhousedetails.city = ' + con.escape(opt.city[i].name) + ' ';
         }
-        sql = sql + ') ';
+        if (opt.city.length > 0)
+            sql = sql + ') ';
         sql = sql + '\n';
-        sql = sql + ' AND (';
 
         i = 0;
         for (i = 0; i < opt.propertyType.length; i++) {
+            if (i == 0)
+            {
+                sql = sql + ' AND (';
+            }
             if (i > 0)
             {
                 sql = sql + 'OR '
             }
             sql = sql + ' sellhousedetails.propertyType = ' + con.escape(opt.propertyType[i]) + ' ';
         }
-        sql = sql + ') ';
+        if (opt.propertyType.length > 0)
+            sql = sql + ') ';
         sql = sql + '\n';
+
+
+        i = 0;
+
+        for (i = 0; i < opt.renovated.length; i++) {
+
+            if (i == 0)
+            {
+                sql = sql + ' AND (';
+            }
+            if (i > 0)
+            {
+                sql = sql + 'OR '
+            }
+            sql = sql + ' sellhousedetails.renovated = ' + con.escape(opt.renovated[i]) + ' ';
+        }
+        if (opt.renovated.length > 0)
+            sql = sql + ') ';
+        sql = sql + '\n';
+
+
+
         if (opt.fromprice != undefined) {
 
             sql = sql + ' AND (';

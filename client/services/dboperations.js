@@ -50,6 +50,11 @@ app.factory('dboperations', function ($http, myConfig) {
         return $http.post(membersAPI, {id: id, index:i, auth:needauth});
     }
 
+    function getSaleHousePictureList(id,i,needauth) {
+        var membersAPI = myConfig.url + "/api/dbstore/getRentHousePictureList";
+        return $http.post(membersAPI, {id: id, index:i, auth:needauth});
+    }
+
 
     function getSaleHouseVideoList(id, index,needauth) {
         var membersAPI = myConfig.url + "/api/dbstore/getSaleHouseVideoList";
@@ -75,6 +80,7 @@ app.factory('dboperations', function ($http, myConfig) {
 
     return {
         getSaleHousePictureList:getSaleHousePictureList,
+        getRentHousePictureList:getRentHousePictureList,
         saveHouseDetails: saveHouseDetails,
         getHouseDetails: getHouseDetails,
         saveRentDetails: saveRentDetails,

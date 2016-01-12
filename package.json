@@ -1,7 +1,7 @@
 {
-  "name": "yad2vr",
+  "name": "house4sale360",
   "version": "1.0.0",
-  "description": "yad2vr ",
+  "description": "house4sale360 ",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/EliArad/yad2vr.git"
+    "url": "git+https://github.com/EliArad/house4sale360.git"
   },
   "author": "Eli Arad",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/EliArad/yad2vr/issues"
+    "url": "https://github.com/EliArad/house4sale360/issues"
   },
-  "homepage": "https://github.com/EliArad/yad2vr#readme",
+  "homepage": "https://github.com/EliArad/house4sale360#readme",
   "dependencies": {
     "basic-csv": "0.0.2",
     "bcryptjs": "^2.3.0",
@@ -41,6 +41,7 @@
     "jasmine-core": "^2.4.1",
     "jshint-stylish": "^2.1.0",
     "karma": "^0.13.15",
+    "lodash": "^3.10.1",
     "lwip": "0.0.8",
     "mkdirp": "^0.5.1",
     "moment": "^2.10.6",

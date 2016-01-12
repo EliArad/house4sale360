@@ -1,7 +1,7 @@
 {
-  "name": "yad2vr",
+  "name": "house4sale360",
   "version": "0.0.0",
-  "description": "yad2vr",
+  "description": "house4sale360",
   "main": "app.js",
   "authors": [
     "Eli Arad"
@@ -13,7 +13,7 @@
     "node": "5.0.0"
   },
   "license": "ISC",
-  "homepage": "https://github.com/EliArad/yad2vr",
+  "homepage": "https://github.com/EliArad/house4sale360",
   "moduleType": [],
   "private": true,
   "ignore": [
@@ -25,20 +25,20 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/EliArad/yad2vr.git"
+    "url": "https://github.com/EliArad/house4sale360.git"
   },
   "dependencies": {
-    "angular": "~1.4.7",
+    "angular": "~1.4.8",
     "angular-ui-router": "~0.2.15",
     "angular-bootstrap": "~0.14.3",
     "angular-ui-calendar": "~1.0.1",
-    "angular-resource": "~1.4.7",
+    "angular-resource": "~1.4.8",
     "angular-motion": "~0.4.3",
-    "angular-animate": "~1.4.7",
-    "angular-aria": "~1.4.7",
+    "angular-animate": "~1.4.8",
+    "angular-aria": "~1.4.8",
     "ng-password-strength": "~0.2.1",
-    "angular-cookies": "~1.4.7",
-    "angular-messages": "~1.4.7",
+    "angular-cookies": "~1.4.8",
+    "angular-messages": "~1.4.8",
     "angular-sanitize": "~1.4.8",
     "angular-touch": "~1.4.8",
     "bootstrap": "~3.3.5",

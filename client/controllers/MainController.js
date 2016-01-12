@@ -14,6 +14,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         vm.search = {};
         var cssUpdateTimer;
         vm.userMessageId = -1;
+        $scope.aptstatus = false;
         vm.numberfloors = [];
         vm.balconies = ['לא משנה לי', 1, 2, 3, 'יותר משלוש'];
         vm.numberOfRooms = ['הכל',1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 9, 10, 'יותר מעשרה'];
@@ -69,11 +70,17 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                         if (ressearch != undefined)
                             vm.schonotSelected = JSON.parse(ressearch);
 
+                        ressearch = $cookieStore.get('aptstatus');
+                        if (ressearch != undefined)
+                            vm.aptstatus = JSON.parse(ressearch);
+
+
 
                         $('#selectPropertyType').multiselect('select', vm.search.propertyType);
-                        $('#selectrenovated').multiselect();
+                        $('#selectrenovated').multiselect('select', vm.search.renovated);
 
                         $scope.getparking(vm.search.parking);
+                        $scope.onAptStatus();
 
                     }
                     catch (e) {
@@ -108,12 +115,24 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             s = JSON.stringify(vm.schonotSelected);
             $cookieStore.put('schonotSelected', s);
 
+            s = JSON.stringify(vm.aptstatus);
+            $cookieStore.put('aptstatus', s);
+
             ShowResults();
 
 
         })
 
+        $scope.onAptStatus = function()
+        {
 
+            if($scope.aptstatus == false)
+            {
+                $scope.showaptselect = true;
+            } else {
+                $scope.showaptselect = false;
+            }
+        }
 
         $scope.getcity = function (selectedItem) {
 
@@ -259,6 +278,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             var search = angular.copy(vm.search);
             search.city = vm.citiesSelected;
             search.propertyType = vm.search.propertyType;
+            search.renovated = vm.search.renovated;
             search.toprice = vm.search.toprice;
             if (vm.search.floor == 'קרקע')
             {
