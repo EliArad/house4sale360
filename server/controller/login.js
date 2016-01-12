@@ -21,7 +21,6 @@ exports.login = function (req, res) {
             con.query( sql, function(err, rows) {
                 con.release();
                 if (err) {
-                    console.log(err);
                     return res.status(500).send({ error:'user not found'});
                 }
                 var userRule = 0;
@@ -29,11 +28,11 @@ exports.login = function (req, res) {
                 if (email == '' || password == '') {
                     return res.status(401).send({ error:'email or password are empty'});
                 }
-                console.log(rows[0].password);
+                if (rows.length == 0)
+                {
+                    return res.status(401).send({ error:'email or password incorrent'});
+                }
                 mypass.comparePassword(password,rows[0].password, function(err, match){
-
-                    console.log(err);
-                    console.log(match);
                     if (match) {
 
                         var  userRule = 0;

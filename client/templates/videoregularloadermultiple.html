@@ -3,13 +3,14 @@
       method="post">
               <span class="btn btn-primary btn-file">
     העלה וידאו רגיל
-              <input id="videoregularloaderinput"
+              <input id="videoregularloaderinput{{ item.id }}"
                      data-classIcon="icon-plus"
                      name="images" ,
                      accept="video/mp4,video/x-m4v,video/*"
                      type="file"
                      multiple="false"
-                     onchange="angular.element(this).scope().videoregularloaderinputChanged(item)"
+                     data-vidlm='{{ item.id }}'
+                     onchange="angular.element(this).scope().videoregularloaderinputChanged(this)"
                       />
                   </span>
 </form>

@@ -2,14 +2,16 @@
 
 
 app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookieStore',
-                 '$http', '$rootScope', 'myhttphelper', 'PassServiceParams', 'socketioservice', 'SessionStorageService',
+                 '$http', '$rootScope', 'myhttphelper', 'PassServiceParams',
+                 'socketioservice', 'SessionStorageService','$timeout',
     function ($scope, $state, authToken, $cookieStore, $http, $rootScope,
-        myhttphelper, PassServiceParams, socketioservice, SessionStorageService)
+              myhttphelper, PassServiceParams, socketioservice,
+              SessionStorageService,$timeout)
     {
 
 
         $scope.loginfailure = false;
-
+        var cssUpdateTimer= null;
         $scope.vm = this;
 
         $scope.vm.login = login;
@@ -34,8 +36,6 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookieStor
 
             function sendResponseData(response) {
 
-                console.log(response.token);
-                console.log(response.rule);
                 authToken.setToken(response.token);
                 SessionStorageService.setSessionStorage('userid', response.id);
                 console.log(response.username);
@@ -52,8 +52,19 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookieStor
 
             function sendResponseError(response) {
                 $scope.loginfailure = true;
-            }
 
+                if (cssUpdateTimer != undefined && cssUpdateTimer != null) {
+                    $timeout.cancel(cssUpdateTimer);
+                    cssUpdateTimer = null;
+                }
+                var x = document.getElementById('loginfailureid');
+                x.className = "animated bounce";
+
+                cssUpdateTimer = $timeout(function () {
+                    var x = document.getElementById('loginfailureid');
+                    x.className = "";
+                }, 1900);
+            }
         }
     }
 

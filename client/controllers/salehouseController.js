@@ -3,11 +3,11 @@
 
 app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCookieStore', '$window',
     '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope', 'API',
-    'SessionStorageService', '$msgbox', '$cookieStore', 'dboperations', 'fileReader','$sce','citiesservice',
+    'SessionStorageService', '$msgbox', '$cookieStore', 'dboperations', 'fileReader', '$sce', 'citiesservice',
     function ($scope, Members, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
               $state, myhttphelper, $rootScope, API, SessionStorageService,
-              $msgbox, $cookieStore, dboperations, fileReader,$sce,
+              $msgbox, $cookieStore, dboperations, fileReader, $sce,
               citiesservice) {
 
 
@@ -91,7 +91,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
 
             var id = obj.getAttribute("data-animal-type");
 
-            var fileInputElement = document.getElementById("fileInputElementfirst");
+            var fileInputElement = document.getElementById("fileInputElementfirst" + id);
             $scope.uploadFile1(fileInputElement.files[0], id);
         }
 
@@ -114,7 +114,8 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                 "filename": fileName,
                 "tabletype": "salehouse",
                 "insertId": xid,
-                'is360image': false
+                'is360image': false,
+                'isvideo': false
             };
 
             myhttphelper.doPost('/api/upload', data).
@@ -154,10 +155,10 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                 });
         }
 
-        $scope.uploadFile1 = function (fileName, id) {
+        $scope.uploadFile1 = function (file, id) {
 
             $scope.progress = 0;
-            fileReader.readAsDataUrl(fileName, $scope)
+            fileReader.readAsDataUrl(file, $scope)
                 .then(function (result) {
                     var i = new Image();
                     i.onload = function () {
@@ -169,7 +170,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                             alert(msg);
                             return;
                         }
-                        ajaxUpload(result, fileName.name, id);
+                        ajaxUpload(result, file.name, id);
                     };
                     i.src = result;
                 });
@@ -193,6 +194,10 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
             }
 
             _displayStreets(obj.city.code, obj.city.area);
+
+
+            $scope.getparking(obj.parking);
+
 
             dboperations.getSaleHousePictureList(obj.id).then(function (result) {
 
@@ -219,7 +224,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                         document.getElementById('image360glyps' + obj.id).style.display = 'none';
                         return;
                     }
-                } , 300);
+                }, 300);
 
                 for (var i = 0; i < result.data.rows.length; i++) {
                     var imgsrc = './uploadimages/' + result.data.userid + '/salehouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
@@ -252,7 +257,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                                 // No XMP data
                                 usexmpdata: false
                             });
-                        } , 300);
+                        }, 300);
                     }
                     vm.sphere360index++;
                 }
@@ -322,11 +327,10 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
         initcrousle();
 
         try {
-            citiesservice.getcities(function (err,result) {
+            citiesservice.getcities(function (err, result) {
                 if (err == 'inprocess')
                     return;
-                if (err != null)
-                {
+                if (err != null) {
                     authToken.RemoveToken();
                     $state.go('login', {}, {
                         reload: true
@@ -365,13 +369,49 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                         };
                         vm.cards[i].neighborhood = x1;
 
-                        /*
-                         if (vm.cards[i].parking != 'אין') {
-                         $scope.shoparkingoptions = true;
-                         } else {
-                         $scope.shoparkingoptions = false;
-                         }
-                         */
+                        if (vm.cards[i].elevator == 0) {
+                            vm.cards[i].elevator = 'אין';
+                        } else
+                        if (vm.cards[i].elevator == 6)
+                        {
+                            vm.cards[i].elevator = 'יותר מחמש';
+                        } else {
+                            vm.cards[i].elevator = vm.cards[i].elevator.toString();
+                        }
+
+                        if (vm.cards[i].parking == 0) {
+                            vm.cards[i].parking = 'אין';
+                        } else {
+                            vm.cards[i].parking = vm.cards[i].parking.toString();
+                        }
+
+                        if (vm.cards[i].warehouse == 0) {
+                            vm.cards[i].warehouse = 'אין';
+                        } else {
+                            vm.cards[i].warehouse = vm.cards[i].warehouse.toString();
+                        }
+
+                        if (vm.cards[i].mamad.data[0] == 0) {
+                            vm.cards[i].mamad = 'לא';
+                        } else {
+                            vm.cards[i].mamad = 'כן';
+                        }
+
+
+                        switch(vm.cards[i].balcony)
+                        {
+                            case 0:
+                                vm.cards[i].balcony = 'אין';
+                            break;
+                            case 1:
+                            case 2:
+                            case 3:
+                                vm.cards[i].balcony = vm.cards[i].balcony.toString();
+                                break;
+                            case 4:
+                                vm.cards[i].balcony = 'יותר משלוש';
+                            break;
+                        }
 
                         vm.cards[i].numberofrooms = vm.cards[i].numberofrooms.toString();
                         vm.cards[i].floor = vm.cards[i].floor.toString();
@@ -414,26 +454,25 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                 return;
             }
             vm.showwaitcircle = true;
-            upload360Video(fileInputElement.files[0],id);
+            upload360Video(fileInputElement.files[0], id);
         }
-        function upload360Video(file,id) {
+        function upload360Video(file, id) {
             fileReader.readAsDataUrl(file, $scope)
                 .then(function (result) {
-                    ajaxUpload360Video(result, file, function(err, res){
-                        if (err != 'ok')
-                        {
+                    ajaxUpload360Video(result, file, function (err, res) {
+                        if (err != 'ok') {
                             vm.showwaitcircle = false;
                             alert(err + ' ' + res);
                         } else {
                             vm.showwaitcircle = false;
                             $scope.showvideo360single = true;
-                            load360Video(res.filename,id);
+                            load360Video(res.filename, id);
                         }
                     });
                 });
         }
-        function load360Video(fileName,id)
-        {
+
+        function load360Video(fileName, id) {
             // initialize plugin, default options shown
             var options = {
                 crossOrigin: 'anonymous',   // valid keywords: 'anonymous' or 'use-credentials'
@@ -452,7 +491,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
 
             var x = document.getElementById('video360div' + id);
             console.log(x);
-            $.fn['eeee'] = new Plugin( 'video360div' + id, options );
+            $.fn['eeee'] = new Plugin('video360div' + id, options);
 
             //$('.valiant360video' + id).Valiant360(options);
             $.fn['eeee' + id]._video.src = fileName;
@@ -469,13 +508,33 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
         }
 
         $scope.getparking = function (selectedItem) {
-            if (selectedItem != 'אין') {
-                $scope.shoparkingoptions = true;
-            } else {
+
+            if (selectedItem == 'אין') {
                 $scope.shoparkingoptions = false;
+                $scope.shoparkingoptions2 = false;
+            } else {
+                $scope.shoparkingoptions = true;
             }
+
+            switch (selectedItem)
+            {
+                case '1':
+                    $scope.shoparkingoptions2 = false;
+                break;
+                case '2':
+                case '3':
+                    $scope.shoparkingoptions2 = true;
+                break;
+
+            }
+
+
         }
-        vm.changeSource = function (result) {
+
+        vm.changeSource = function (result, id) {
+
+            document.getElementById('videodiv' + id).style.display = 'block';
+
             vm.config = {
                 sources: [
                     {src: $sce.trustAsResourceUrl(result), type: "video/mp4"}
@@ -493,7 +552,6 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
             //formErrors(form);
 
 
-
             var card = angular.copy(item);
             card.city = item.city.city;
             card.napa = item.city.napa;
@@ -502,7 +560,41 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
             card.neighborhood = item.neighborhood.name;
             card.street = item.street.name;
 
-            console.log(card.price);
+            if (card.warehouse == 'אין') {
+                card.warehouse = 0;
+            }
+            if (card.elevator == 'אין') {
+                card.elevator = 0;
+            }
+            else if (card.elevator == 'יותר מחמש') {
+                card.elevator = 6;
+            }
+            if (card.parking == 'אין') {
+                card.parking = 0;
+            }
+            if (card.mamad == 'כן') {
+                card.mamad = 1;
+            } else {
+                card.mamad = 0;
+            }
+            switch(card.balcony)
+            {
+                case 'אין':
+                    card.balcony = 0;
+                break;
+                case '1':
+                    card.balcony = 1;
+                break;
+                case '2':
+                    card.balcony = 2;
+                break;
+                case '3':
+                    card.balcony = 3;
+                break;
+                case 'יותר משלוש':
+                    card.balcony = 4;
+                break;
+            }
 
             dboperations.updateSaleHouseDetails(card).then(function (result) {
 
@@ -629,46 +721,43 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
         };
 
         $scope.videoregularloaderinputChanged = function (obj) {
-            var fileInputElement = document.getElementById("videoregularloaderinput");
+            var id = obj.getAttribute("data-vidlm");
+            var fileInputElement = document.getElementById("videoregularloaderinput" + id);
+
             var size = fileInputElement.files[0].size / (1024 * 1024);
             if (size > 50) {
                 alert('מקסימום גודל קובץ להעלות הוא 50 מגה');
                 return;
             }
             vm.showwaitcircle = true;
-            uploadVideo(fileInputElement.files[0]);
+            uploadVideo(fileInputElement.files[0], id);
         }
 
-        function uploadVideo(filename) {
-            fileReader.readAsDataUrl(filename, $scope)
+        function uploadVideo(file, id) {
+
+            fileReader.readAsDataUrl(file, $scope)
                 .then(function (result) {
-                    ajaxUploadVideo(result, filename, function(err, res){
-                        if (err != 'ok')
-                        {
+                    ajaxUploadVideo(result, file.name, id, function (err, res) {
+                        if (err != 'ok') {
                             vm.showwaitcircle = false;
                             alert(err + ' ' + res);
                         } else {
                             vm.showwaitcircle = false;
                             $scope.showvideosingle = true;
-                            vm.changeSource(result);
+                            vm.changeSource(res.filename, id);
                         }
                     });
                 });
         }
 
-        function ajaxUploadVideo(result, fileName, callback) {
+        function ajaxUploadVideo(result, fileName, id, callback) {
 
-            if (vm.insertId == -1) {
-                if (callback)
-                    callback("failed", "cannot attached to new message");
-                return;
-            }
 
             var data = {
                 "video": result,
-                "filename": fileName.name,
+                "filename": fileName,
                 "tabletype": "salehouse",
-                "insertId": vm.insertId,
+                "insertId": id,
                 'is360video': false
             };
 
@@ -682,6 +771,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                         callback("failed", res);
                 });
         }
+
         function ajaxUpload360Video(result, fileName, callback) {
 
             if (vm.insertId == -1) {
@@ -718,7 +808,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
             upload(filename, item.id, file);
         }
 
-        // Load a panorama stored on the user's computer
+// Load a panorama stored on the user's computer
         function upload(filename, id, file) {
             _upload(filename, id, file);
         }
@@ -845,4 +935,5 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
             }
         }
     }
-]);
+])
+;

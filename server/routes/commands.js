@@ -35,7 +35,7 @@ var routes = function (app) {
     cityLoader.getSchonot(req.body.code,function (err,data) {
       if (err)
       {
-        console.log(err);
+        //console.log(err);
         return res.status(500).send({ error:err});
       } else {
         res.send(data);

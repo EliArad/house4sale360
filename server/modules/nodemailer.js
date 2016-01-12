@@ -33,8 +33,28 @@ function sendEmail(req, randomGuid, callback) {
     });
 }
 
+function sendEmailToUser(address, subject, message, callback) {
+    var mailOptions;
+
+    mailOptions = {
+        to: address,
+        from: 'easwdev@gmail.com', // sender
+        subject: subject,
+        html: message
+    }
+    //console.log(mailOptions);
+    smtpTransport.sendMail(mailOptions, function (error, response) {
+        callback(error, response);
+    });
+}
+
+
+
 module.exports = function (app, sqlserver) {
 
+    return{
+        sendEmailToUser:sendEmailToUser
+    }
 
     app.post('/api/send', jwtauth, function (req, res) {
 

@@ -8,11 +8,22 @@ module.exports = function (sqlserver) {
         getSaleHouseVideoList: function (req, res, next) {
             sqlserver.get(function (err, con) {
                 if (!err) {
-                    var condition = {'tableid': req.body.id};
-                    var sql = 'SELECT * FROM salehousevideos WHERE tableid = ' + con.escape(req.body.id) + ' AND is360video = false';
+                    var sql;
+                    if (req.body.auth == true) {
+                        sql = 'SELECT salehouseblobs.*,sellhousedetails.userid\
+                        FROM salehouseblobs\
+                        INNER JOIN sellhousedetails\
+                        ON salehouseblobs.tableid = sellhousedetails.id\
+                        WHERE salehouseblobs.is360video = false AND salehouseblobs.tableid = ' + con.escape(req.body.id) + ' AND sellhousedetails.userid = ' + req.idFromToken;
+                    } else {
+                        sql = 'SELECT salehouseblobs.*,sellhousedetails.userid\
+                        FROM salehouseblobs\
+                        INNER JOIN sellhousedetails\
+                        ON salehouseblobs.tableid = sellhousedetails.id\
+                        WHERE salehouseblobs.is360video = false AND salehouseblobs.tableid = ' + con.escape(req.body.id);
+                    }
                     var query = con.query(sql, function (err, rows) {
                         sqlserver.release(con);
-
                         if (err)
                             res.sendStatus(500);
                         else
@@ -29,8 +40,7 @@ module.exports = function (sqlserver) {
         getSaleHouseVideo360List: function (req, res, next) {
             sqlserver.get(function (err, con) {
                 if (!err) {
-                    var condition = {'tableid': req.body.id};
-                    var sql = 'SELECT * FROM salehousevideos WHERE tableid = ' + con.escape(req.body.id) + ' AND is360video = true';
+                    var sql = 'SELECT * FROM salehouseblobs WHERE tableid = ' + con.escape(req.body.id) + ' AND isvideo = true AND is360video = true';
                     var query = con.query(sql, function (err, rows) {
                         if (err) {
                             sqlserver.release(con);
@@ -139,20 +149,18 @@ module.exports = function (sqlserver) {
                     var condition = {'tableid': req.body.id};
 
                     var sql;
-                    if (req.body.auth == false)
-                    {
-                        sql = 'SELECT salehousepictures.*,sellhousedetails.userid\
-                        FROM salehousepictures\
+                    if (req.body.auth == false) {
+                        sql = 'SELECT salehouseblobs.*,sellhousedetails.userid\
+                        FROM salehouseblobs\
                         INNER JOIN sellhousedetails\
-                        ON salehousepictures.tableid = sellhousedetails.id\
-                        WHERE salehousepictures.is360image = false AND salehousepictures.tableid = ' + con.escape(req.body.id);
+                        ON salehouseblobs.tableid = sellhousedetails.id\
+                        WHERE salehouseblobs.is360image = false AND salehouseblobs.tableid = ' + con.escape(req.body.id);
                     } else {
-                        //sql = 'SELECT * FROM salehousepictures WHERE tableid = ' + con.escape(req.body.id) + ' AND is360image = false';
-                        sql = 'SELECT salehousepictures.*,sellhousedetails.userid\
-                        FROM salehousepictures\
+                        sql = 'SELECT salehouseblobs.*,sellhousedetails.userid\
+                        FROM salehouseblobs\
                         INNER JOIN sellhousedetails\
-                        ON salehousepictures.tableid = sellhousedetails.id\
-                        WHERE salehousepictures.is360image = false AND salehousepictures.tableid = ' + con.escape(req.body.id) + ' AND sellhousedetails.userid = ' + req.idFromToken;
+                        ON salehouseblobs.tableid = sellhousedetails.id\
+                        WHERE salehouseblobs.is360image = false AND salehouseblobs.tableid = ' + con.escape(req.body.id) + ' AND sellhousedetails.userid = ' + req.idFromToken;
                     }
                     var query = con.query(sql, function (err, rows) {
                         sqlserver.release(con);
@@ -178,17 +186,17 @@ module.exports = function (sqlserver) {
 
                     var sql;
                     if (req.body.auth == false) {
-                        sql = 'SELECT salehousepictures.*,sellhousedetails.userid\
-                        FROM salehousepictures\
+                        sql = 'SELECT salehouseblobs.*,sellhousedetails.userid\
+                        FROM salehouseblobs\
                         INNER JOIN sellhousedetails\
-                        ON salehousepictures.tableid = sellhousedetails.id\
-                        WHERE salehousepictures.is360image = true AND salehousepictures.tableid = ' + con.escape(req.body.id);
+                        ON salehouseblobs.tableid = sellhousedetails.id\
+                        WHERE salehouseblobs.is360image = true AND salehouseblobs.tableid = ' + con.escape(req.body.id);
                     } else {
-                        sql = 'SELECT salehousepictures.*,sellhousedetails.userid\
-                        FROM salehousepictures\
+                        sql = 'SELECT salehouseblobs.*,sellhousedetails.userid\
+                        FROM salehouseblobs\
                         INNER JOIN sellhousedetails\
-                        ON salehousepictures.tableid = sellhousedetails.id\
-                        WHERE salehousepictures.is360image = true AND salehousepictures.tableid = ' + con.escape(req.body.id) + ' AND sellhousedetails.id = ' + req.idFromToken ;
+                        ON salehouseblobs.tableid = sellhousedetails.id\
+                        WHERE salehouseblobs.is360image = true AND salehouseblobs.tableid = ' + con.escape(req.body.id) + ' AND sellhousedetails.id = ' + req.idFromToken;
                     }
                     var query = con.query(sql, function (err, rows) {
                         sqlserver.release(con);
@@ -217,23 +225,6 @@ module.exports = function (sqlserver) {
         getRentDetails: function (req, res, next) {
             console.log('getRentDetails');
             res.send('ok');
-        },
-        GetSaleHouseQueryResults: function (req, res, next) {
-            sqlserver.get(function (err, con) {
-                if (!err) {
-                    var sql = 'SELECT * FROM sellhousedetails';
-                    var query = con.query(sql, function (err, rows) {
-                        sqlserver.release(con);
-                        if (err) {
-                            return res.sendStatus(500);
-                        } else {
-                            return res.send(rows);
-                        }
-                    });
-                } else {
-                    return res.sendStatus(500);
-                }
-            });
         }
     }
 };

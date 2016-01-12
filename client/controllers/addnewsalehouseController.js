@@ -609,6 +609,23 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
             card.neighborhood = vm.card.neighborhood.name;
             card.street = vm.card.street.name;
 
+            if (card.warehouse == 'אין')
+            {
+                card.warehouse = 0;
+            }
+            if (card.elevator == 'אין')
+            {
+                card.elevator = 0;
+            }
+            else if (card.elevator == 'יותר מחמש')
+            {
+                card.elevator = 5;
+            }
+            if (card.parking == 'אין')
+            {
+                card.parking = 0;
+            }
+
             if (angular.equals(vm.currentCard, card) == true) {
                 alert("כבר קיים");
                 return;

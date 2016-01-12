@@ -99,25 +99,25 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 
 var commandsRoutes = require('./server/routes/commands')(app);
-
+var mailverify = require('./server/modules/nodemailer')(app, sqlserver);
 var registerRoutes = require('./server/routes/register')(sqlserver, registerController);
 var dbstoreRoutes = require('./server/routes/dbstore')(app, dbstoreController).init();
 
-//var mailRoutes = require('./server/routes/mail');
+
 //var dbsearchRoutes = require('./server/routes/dbsearch');
 //var adminRoutes = require('./server/routes/admin')(notifyServer);
 
+var salequeryController = require('./server/controller/salequery')(sqlserver);
+var mailController = require('./server/controller/mail')(sqlserver,mailverify);
+var mailRoutes = require('./server/routes/mail')(app, mailController).init();
+var salequeryRoutes = require('./server/routes/salequery')(app, salequeryController).init();
 app.use('/api/register', registerRoutes.routes);
-//app.use('/api/mail', mailRoutes);
+
 //app.use('/api/dbsearch', dbsearchRoutes);
 //app.use('/api/admin', adminRoutes.router);
 //app.use('/api/general', jwtauth, getGeneralRoutes);
 
 //var createNewMember = require("./server/modules/createNewMember")(membersModel.membersModel);
-
-// we send the app to this module
-var mailverify = require('./server/modules/nodemailer')(app, sqlserver);
-
 
 app.use(
     "/", //the URL throught which you want to access to you static content
@@ -170,13 +170,16 @@ app.post('/api/upload', jwtauth, bodyParser({
                     var datatoinsert = {
                         filename: req.body.filename,
                         tableid: req.body.insertId,
-                        is360image: req.body.is360image
+                        is360image: req.body.is360image,
+                        isvideo: false,
+                        is360video:false
                     };
 
-                    // save the entry to database salehousepictures
+
+                    // save the entry to database salehouseblobs
                     sqlserver.get(function (err, con) {
                         if (!err) {
-                            var sql = 'SELECT * FROM salehousepictures WHERE tableid = ' + con.escape(req.body.insertId) + ' AND filename = ' + con.escape(req.body.filename) + ' AND is360image = ' + con.escape(req.body.is360image);
+                            var sql = 'SELECT * FROM salehouseblobs WHERE tableid = ' + con.escape(req.body.insertId) + ' AND filename = ' + con.escape(req.body.filename) + ' AND isvideo = false AND is360image = ' + con.escape(req.body.is360image);
                             var query = con.query(sql, function (err, rows) {
                                 if (err) {
                                     sqlserver.release(con);
@@ -189,7 +192,7 @@ app.post('/api/upload', jwtauth, bodyParser({
                                     }
                                 }
 
-                                var query = con.query('INSERT INTO salehousepictures SET ?', datatoinsert, function (err, result) {
+                                var query = con.query('INSERT INTO salehouseblobs SET ?', datatoinsert, function (err, result) {
                                     sqlserver.release(con);
                                     if (err) {
                                         res.sendStatus(500);
@@ -228,7 +231,6 @@ app.post('/api/uploadvideo', jwtauth, bodyParser({
 
 
     var x = util.inspect(req.body.video);
-
     try {
 
         var dirToCreateRaw = './uploadvideo/' + req.idFromToken + '/' + req.body.tabletype + '/' + req.body.insertId + '/';
@@ -256,12 +258,13 @@ app.post('/api/uploadvideo', jwtauth, bodyParser({
                     var datatoinsert = {
                         filename: req.body.filename,
                         tableid: req.body.insertId,
-                        is360video: req.body.is360video
+                        is360video: req.body.is360video,
+                        is360image:false,
+                        isvideo:true
                     };
-
                     sqlserver.get(function (err, con) {
                         if (!err) {
-                            var sql = 'SELECT * FROM salehousevideos WHERE tableid = ' + con.escape(req.body.insertId) + ' AND filename = ' + con.escape(req.body.filename) + ' AND is360video = ' + con.escape(req.body.is360video);
+                            var sql = 'SELECT * FROM salehouseblobs WHERE tableid = ' + con.escape(req.body.insertId) + ' AND isvideo = true  AND filename = ' + con.escape(req.body.filename) + ' AND is360video = ' + con.escape(req.body.is360video);
                             var query = con.query(sql, function (err, rows) {
                                 if (err) {
                                     sqlserver.release(con);
@@ -273,7 +276,7 @@ app.post('/api/uploadvideo', jwtauth, bodyParser({
                                         return res.json({status: 'ok' , filename:fileNameRaw});
                                     }
                                 }
-                                var query = con.query('INSERT INTO salehousevideos SET ?', datatoinsert, function (err, result) {
+                                var query = con.query('INSERT INTO salehouseblobs SET ?', datatoinsert, function (err, result) {
                                     sqlserver.release(con);
                                     if (err) {
                                         console.log(err);

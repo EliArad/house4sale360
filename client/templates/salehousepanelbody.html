@@ -226,20 +226,20 @@
 
         <div class="form-group" ng-show="shoparkingoptions"
              style="white-space:nowrap"
-             ng-class="{ 'has-error': form.parkingtype.$error.required && form.parkingtype.$dirty }">
-            <label class="control-label col-sm-3" for="parkingtype">מיקום החנייה</label>
+             ng-class="{ 'has-error': form.parkingType.$error.required && form.parkingType.$dirty }">
+            <label class="control-label col-sm-3" for="parkingType">מיקום החנייה</label>
 
             <div class="col-sm-9">
                 <select class="form-control" placeholder="בחר את סוג החנייה"
-                        name="parkingtype"
-                        ng-model="item.parkingtype">
+                        name="parkingType"
+                        ng-model="item.parkingType">
                     <option>קרקע</option>
                     <option>מתחת לקרקע</option>
                 </select>
             </div>
         </div>
 
-        <div class="form-group" ng-show="shoparkingoptions"
+        <div class="form-group" ng-show="shoparkingoptions2"
              style="white-space:nowrap"
              ng-class="{ 'has-error': form.parkingtype2.$error.required && form.parkingtype2.$dirty }">
             <label class="control-label col-sm-3" for="parkingtype2">אופי החנייה</label>

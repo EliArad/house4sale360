@@ -7,8 +7,11 @@
         margin: 0;
     }
 
+
+
     .container1 {
-        margin: 10px;
+        margin: 30px;
+        margin-top:-10px;
     }
 
     .ui-select-bootstrap .ui-select-toggle > .caret {
@@ -66,6 +69,43 @@
 
 
 <div class="container1" ng-controller="MainController as vm">
+
+
+    <!-- Modal -->
+    <div class="modal" id="sendMessageModal" role="dialog">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">שלח מייל</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="well" style="padding-bottom:50px">
+                        <form name="form1" accept-charset="UTF-8">
+                            <div class="form-group">
+                                <textarea id="msgbody" required class="form-control"
+                                          rows="5" id="new_message"
+                                          name="messagebody"
+                                          ng-model="messagebody"
+                                          placeholder="שלום זה בקשר לדירה"></textarea>
+                            </div>
+
+                            <h6 id="cLeft" class="pull-right">500 אותיות נשארו</h6>
+                            <button id="sendButton{{ vm.userMessageId }}"
+                                    ng-click="sendEmailToUser(vm.userMessageId )"
+                                    class="btn btn-info pull-left" ng-disabled="form1.$invalid" type="submit">
+                                שלח הודעה
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">סגור</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <!-- Modal -->
@@ -133,7 +173,8 @@
 
                                         <div class="col-sm-9">
                                             <ul class="nav nav-list" ng-repeat="l in vm.citiesSelected">
-                                                <li class="active"><a ng-click="removeCityFromList($index)">{{ l.name }}<i class=" glyphicon glyphicon-remove pull-left"></i></a></li>
+                                                <li class="active"><a ng-click="removeCityFromList($index)">{{ l.name }}<i
+                                                        class=" glyphicon glyphicon-remove pull-left"></i></a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -164,7 +205,8 @@
 
                                         <div class="col-sm-9">
                                             <ul class="nav nav-list" ng-repeat="l in vm.schonotSelected">
-                                                <li class="active"><a ng-click="removeSchonaFromList($index)">{{ l.name }}<i class=" glyphicon glyphicon-remove pull-left"></i></a></li>
+                                                <li class="active"><a ng-click="removeSchonaFromList($index)">{{ l.name
+                                                    }}<i class=" glyphicon glyphicon-remove pull-left"></i></a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -175,7 +217,7 @@
                                         <label class="control-label col-sm-3" for="yearsofproperty">גיל הנכס</label>
 
                                         <div class="col-sm-9">
-                                            <input type="number" ng-max="100" name="yearsofproperty" required
+                                            <input type="number" ng-max="200" name="yearsofproperty" required
                                                    placeholder="מקסימום גיל הנכס" class="form-control"
                                                    ng-model="vm.search.yearsofproperty">
                                         </div>
@@ -208,20 +250,19 @@
                                         <label class="control-label col-sm-3" for="fromprice">ממחיר</label>
 
                                         <div class="col-sm-4">
-                                            <input type="number" ng-max="100" name="fromprice" required
+                                            <input type="number" name="fromprice" required
                                                    placeholder="ממחיר" class="form-control"
                                                    ng-model="vm.search.fromprice">
                                         </div>
-                                        <label class="control-label col-sm-1" style="margin: 0"  for="fromprice">עד</label>
+                                        <label class="control-label col-sm-1" style="margin: 0"
+                                               for="toprice">עד</label>
+
                                         <div class="col-sm-4">
-                                            <input type="number" ng-max="100" name="upprice" required
+                                            <input type="number" name="toprice" required
                                                    placeholder="עד מחיר" class="form-control"
-                                                   ng-model="vm.search.upprice">
+                                                   ng-model="vm.search.toprice">
                                         </div>
                                     </div>
-
-
-
 
 
                                 </div>
@@ -295,13 +336,14 @@
                                             <select class="form-control" placeholder="בחר את סוג החנייה"
                                                     name="parkingtype"
                                                     ng-model="vm.search.parkingtype">
+                                                <option>לא משנה לי</option>
                                                 <option>קרקע</option>
                                                 <option>מתחת לקרקע</option>
                                             </select>
                                         </div>
                                     </div>
 
-                                    <div class="form-group" ng-show="shoparkingoptions"
+                                    <div class="form-group" ng-show="shoparkingoptions2"
                                          style="white-space:nowrap"
                                          ng-class="{ 'has-error': form.parkingtype2.$error.required && form.parkingtype2.$dirty }">
                                         <label class="control-label col-sm-3" for="parkingtype2">אופי החנייה</label>
@@ -310,6 +352,7 @@
                                             <select class="form-control" placeholder="בחר את סוג החנייה"
                                                     name="parkingtype2"
                                                     ng-model="vm.search.parkingtype2">
+                                                <option>לא משנה לי</option>
                                                 <option>צמודות אחת ליד השנייה</option>
                                                 <option>צמודות אחת אחרי השנייה</option>
                                                 <option>סידור אחר</option>
@@ -354,10 +397,12 @@
                                     <div class="form-group"
                                          style="white-space:nowrap"
                                          ng-class="{ 'has-error': form.mamad.$error.required && form.mamad.$dirty }">
-                                        <label class="control-label col-sm-3" for="elevator">מרחב מוגן</label>
+                                        <label class="control-label col-sm-3" for="mamad">מרחב מוגן</label>
 
                                         <div class="col-sm-9">
-                                            <select class="form-control" placeholder="האם יש בבית מרחב מוגן?"
+                                            <select class="form-control"
+                                                    placeholder="האם יש בבית מרחב מוגן?"
+                                                    ng-model="vm.search.mamad"
                                                     name="mamad"
                                                     ng-model="vm.search.mamad">
                                                 <option>לא משנה לי</option>
@@ -402,99 +447,184 @@
 
 
     <div class="row">
-        <button type="button" class="btn btn-default" style="color:orange" data-toggle="modal" data-target="#myModal">הגדר את אפשרויות
+        <button type="button" class="btn btn-default" style="color:orange" data-toggle="modal" data-target="#myModal">
+            הגדר את אפשרויות
             החיפוש שלך
+
         </button>
 
     </div>
+
+    <div class="row" ng-show="showNoResultsMessage">
+        <div class="col-md-10 col-md-offset-2">
+            <h2 class="animated infinite bounce">
+                לא נמצאו תוצאות המתאימות לחיפוש</h2>
+        </div>
+    </div>
+
+    <div class="row" ng-show="showerrorenable">
+        <div class="col-md-10 col-md-offset-2">
+            <h2 class="animated infinite bounce">{{ showerror }}</h2>
+
+        </div>
+    </div>
+
+
     <div ng-repeat="item in vm.cards">
         <div class="row" ng-hide="item.hideheader">
             <div class="panel panel-info">
                 <div class="panel-heading">
 
+                    <span style="font-weight: bold">
                     {{ item.propertyType }}
                     ב
                     {{ item.city.city }}
+,
+
+                        &nbsp;
+                        &nbsp;
+                        <span style="font-weight: bold">
+                     {{ item.numberofrooms }}
+                            </span>
+
+                        &nbsp;
+                        &nbsp;
+ברחוב
+                        <span style="font-weight: bold">
                     {{ item.street.name }}
+                            </span>
+בשכונת
                     {{ item.neighborhood.name }}
+
+                        &nbsp;
+                        &nbsp;
+מספר
+                        <span style="font-weight: bold">
                     {{ item.housenumber }}
-                    {{ item.email }}
-                    {{ item.primarycellphone }}
+                            </span>
 
-                    <button type="button" ng-click="ShowHideHeader(item)" class="btn btn-default">הסתר</button>
-
-                </div>
-                <div class="panel-body">
-
+                        &nbsp;
+                        &nbsp;
+                    קומה:
+                    <span style="font-weight: bold">
                     {{ item.floor }}
-                    {{ item.fromfloor }}
+                        </span>
+                    מתוך:
+
+                        <span style="font-weight: bold">
+                        {{ item.fromfloor }}
+                            </span>
+                        &nbsp;
+                        &nbsp;
+                    גודל:
+                        <span style="font-weight: bold">
                     {{ item.squresize }}
+                            </span>
+                    מ"ר
+                        &nbsp;
+                        &nbsp;
+                                            מחיר:
+                        <span style="font-weight: bold">
+                {{ item.price }}
+                    </span>
+                        </span>
 
-                    {{ item.balcony }}
+
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered">
+
+                            <thead>
+                            <tr>
+                                <td>מרפסת</td>
+                                <td>סורגים</td>
+                                <td>גישה לנכים</td>
+                                <td>חנייה</td>
+                                <td ng-show="item.parking > 0" >מיקום החנייה</td>
+                                <td ng-show="item.parking > 1">סוג חנייה  </td>
+                                <td>ממ"ד</td>
+                                <td>מחסן</td>
+                                <td>elevators</td>
+                                <td>גיל הנכס</td>
+                                <td>מצב הנכס</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+
+                                <td>
+                                    <span ng-show="item.balcony > 0">{{ item.balcony }}</span>
+                                    <span ng-class="{'glyphicon glyphicon glyphicon-remove': (item.balcony == 0)}"></span>
+                                </td>
+                                <td>
+                                    <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.soragim == 1) , 'glyphicon glyphicon glyphicon-remove': (item.soragim == 0)}"></span>
+                                </td>
+                                <td>
+                                    <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.handycupt == 1) , 'glyphicon glyphicon glyphicon-remove': (item.handycupt == 0)}"></span>
+                                </td>
+                                <td>
+                                    <span ng-show="item.parking > 0">{{ item.parking }}</span>
+                                    <span ng-class="{'glyphicon glyphicon glyphicon-remove': (item.parking == 0)}"></span>
+                                </td>
+                                <td ng-show="item.parking > 0">
+                                    {{ item.parkingType }}
+                                </td>
+                                <td  ng-show="item.parking > 1">
+                                    {{ item.parkingtype2 }}
+                                </td>
+                                <td>
+                                    <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.mamad.data[0] == 1) , 'glyphicon glyphicon glyphicon-remove': (item.mamad.data[0] == 0)}"></span>
+                                </td>
+                                <td>
+                                    <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.warehouse > 0) , 'glyphicon glyphicon glyphicon-remove': (item.warehouse == 0)}"></span>
+                                </td>
+                                <td>
+                                    <span ng-show="item.elevator > 0">{{ item.elevator }}</span>
+                                    <span ng-class="{'glyphicon glyphicon glyphicon-remove': (item.elevator == 0)}"></span>
+                                </td>
+                                <td> {{ item.yearsofproperty }}</td>
+                                <td> {{ item.renovated }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <div>
-                        {{ item.soragim.data[0] }}
-
-                        {{ item.handycupt.data[0] }}
-
-                        {{ item.parking }}
-
-                        {{ item.mamad }}
-                        {{ item.warehouse }}
-                        {{ item.elevator }}
-
-                        {{ item.price }}
-
-                        {{ item.dateenter }}
-
-                        {{ item.immidiate.data[0] }}
-                        {{ item.numberofrooms }}
-
-                        {{ item.yearsofproperty }}
-
-                        {{ item.parkingtype2 }}
-
-                        {{ item.parkingType }}
-
-                        {{ item.renovated }}
-
-                        {{ item.renovatedexplnation }}
-                    </div>
-                    <div class="panel-fotter">
-                        {{ item.freedetails }}
-                    </div>
-
-                    <div class="row" ng-show="item.showPictures > 0">
-                        <div ng-class="{ 'col-md-12':  !item.imageExists, 'col-md-7':  item.imageExists}" ng-show="item.image360Exists">
-                            <div id="your-pano{{ item.id }}" style="height:500px">
-
-                            </div>
-                        </div>
-                        <div ng-class="{ 'col-md-12':  !item.image360Exists, 'col-md-5':  item.image360Exists}" ng-show="item.imageExists">
-                            <div>
-                                <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
-                                    <uib-slide ng-repeat="slide in item.slides" active="slide.active">
-                                        <img ng-src="{{slide.image}}"
-                                             ng-mouseover="mo()"
-                                             ng-mouseleave="ml()"
-                                             style="margin:auto;max-height: 500px">
-
-                                        <div class="carousel-caption">
-                                            <!--<h4>Slide {{$index}}</h4>-->
-                                            <p>{{slide.text}}</p>
-                                        </div>
-                                    </uib-slide>
-                                </uib-carousel>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <a>יש גם וידאו</a>
+                         {{  item.freedetails}}
                     </div>
                 </div>
             </div>
+
+
+            <div class="row" ng-show="item.showPictures > 0">
+                <div ng-class="{ 'col-md-12':  !item.imageExists, 'col-md-7':  item.imageExists}"
+                     ng-show="item.image360Exists">
+                    <div id="your-pano{{ item.id }}" style="height:500px">
+
+                    </div>
+                </div>
+                <div ng-class="{ 'col-md-12':  !item.image360Exists, 'col-md-5':  item.image360Exists}"
+                     ng-show="item.imageExists">
+                    <div>
+                        <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
+                            <uib-slide ng-repeat="slide in item.slides" active="slide.active">
+                                <img ng-src="{{slide.image}}"
+                                     ng-mouseover="mo()"
+                                     ng-mouseleave="ml()"
+                                     style="margin:auto;max-height: 500px">
+
+                                <div class="carousel-caption">
+                                    <!--<h4>Slide {{$index}}</h4>-->
+                                    <p>{{slide.text}}</p>
+                                </div>
+                            </uib-slide>
+                        </uib-carousel>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <a>יש גם וידאו</a>
+            </div>
         </div>
     </div>
-
 </div>
 
 

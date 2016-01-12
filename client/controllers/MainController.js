@@ -3,18 +3,20 @@
 
 app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper', 'myutils',
     'appCookieStore', 'socketioservice', 'Idle', '$rootScope',
-    'SessionStorageService', 'API', 'myConfig', '$http', '$window', '$timeout', '$msgbox', 'dboperations','citiesservice','general','$cookieStore',
+    'SessionStorageService', 'API', 'myConfig', '$http', '$window', '$timeout', '$msgbox', 'dboperations', 'citiesservice', 'general', '$cookieStore',
     function ($scope, $state, authToken, myhttphelper, myutils,
               appCookieStore, socketioservice, Idle, $rootScope, SessionStorageService,
-              API, myConfig, $http, $window, $timeout, $msgbox, dboperations,citiesservice,general,$cookieStore) {
+              API, myConfig, $http, $window, $timeout, $msgbox, dboperations, citiesservice, general, $cookieStore) {
 
 
         var vm = this;
         var video360height = '500px';
         vm.search = {};
+        var cssUpdateTimer;
+        vm.userMessageId = -1;
         vm.numberfloors = [];
         vm.balconies = ['לא משנה לי', 1, 2, 3, 'יותר משלוש'];
-        vm.numberOfRooms = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 9, 10, 'יותר מעשרה'];
+        vm.numberOfRooms = ['הכל',1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 9, 10, 'יותר מעשרה'];
         vm.numberfloors.push('קרקע');
         for (var i = 1; i < 35; i++) {
             vm.numberfloors.push(i);
@@ -28,20 +30,18 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             //{name:'תל אביב'}
         ];
 
-        $scope.removeSchonaFromList = function(index)
-        {
-            vm.schonotSelected.splice(index,1);
+        $scope.removeSchonaFromList = function (index) {
+            vm.schonotSelected.splice(index, 1);
         }
-        $scope.removeCityFromList = function(index)
-        {
+        $scope.removeCityFromList = function (index) {
 
-            vm.citiesSelected.splice(index,1);
+            vm.citiesSelected.splice(index, 1);
         }
 
         $(document).ready(function () {
             try {
 
-                citiesservice.getcities(function (err,result) {
+                citiesservice.getcities(function (err, result) {
 
                     if (err != null) {
                         authToken.RemoveToken();
@@ -52,6 +52,35 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                         return;
                     }
                     vm.cities = result.data;
+
+
+
+                    try {
+                        var ressearch = $cookieStore.get('sellhousesearch');
+                        if (ressearch != undefined)
+                            vm.search = JSON.parse(ressearch);
+
+
+                        ressearch = $cookieStore.get('citiesSelected');
+                        if (ressearch != undefined)
+                            vm.citiesSelected = JSON.parse(ressearch);
+
+                        ressearch = $cookieStore.get('schonotSelected');
+                        if (ressearch != undefined)
+                            vm.schonotSelected = JSON.parse(ressearch);
+
+
+                        $('#selectPropertyType').multiselect('select', vm.search.propertyType);
+                        $('#selectrenovated').multiselect();
+
+                        $scope.getparking(vm.search.parking);
+
+                    }
+                    catch (e) {
+
+                    }
+
+                    ShowResults();
                 });
             }
             catch (e) {
@@ -59,11 +88,15 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             }
         });
 
-        $scope.getschona = function(selectedItem)
-        {
+        $scope.getschona = function (selectedItem) {
 
-            vm.schonotSelected.push({name : vm.search.neighborhood.name});
+            vm.schonotSelected.push({name: vm.search.neighborhood.name});
         }
+
+        $('#sendMessageModal').on('hidden.bs.modal', function () {
+
+            vm.userMessageId = -1;
+        });
 
         $('#myModal').on('hidden.bs.modal', function () {
             var s = JSON.stringify(vm.search);
@@ -75,42 +108,19 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             s = JSON.stringify(vm.schonotSelected);
             $cookieStore.put('schonotSelected', s);
 
+            ShowResults();
+
 
         })
 
-        try {
-            var ressearch = $cookieStore.get('sellhousesearch');
-            if (ressearch != undefined)
-                vm.search = JSON.parse(ressearch);
 
-
-            ressearch = $cookieStore.get('citiesSelected');
-            if (ressearch != undefined)
-                vm.citiesSelected = JSON.parse(ressearch);
-
-            ressearch = $cookieStore.get('schonotSelected');
-            if (ressearch != undefined)
-                vm.schonotSelected = JSON.parse(ressearch);
-
-
-
-            $('#selectPropertyType').multiselect('select', vm.search.propertyType);
-            $('#selectrenovated').multiselect();
-
-
-
-        }
-        catch (e)
-        {
-
-        }
 
         $scope.getcity = function (selectedItem) {
 
             vm.search.napa = selectedItem.napa;
             vm.search.code = selectedItem.code;
             vm.search.city = selectedItem.city;
-            vm.citiesSelected.push({name : vm.search.city});
+            vm.citiesSelected.push({name: vm.search.city});
 
             $scope.shownapa = true;
             if (lastCity == undefined || lastCity != selectedItem.code) {
@@ -133,10 +143,42 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             } else if (selectedItem.area == 'haifa') {
                 vm.search.area = 'אזור חיפה';
             }
-
         }
 
+        $scope.sendEmailToUser = function (id) {
 
+            if (vm.userMessageId != -1) {
+                general.SendEmailToUser(vm.userMessageId, $scope.messagebody).then(function (result) {
+
+                    var buttonid = 'sendButton' + id;
+
+                    document.getElementById(buttonid).className = "btn btn-info pull-left animated tada";
+                    document.getElementById(buttonid).style.color = 'lightgreen';
+                    document.getElementById(buttonid).innerHTML = 'הודעה נשלחה';
+
+                    cssUpdateTimer = $timeout(function () {
+                        $('#sendMessageModal').modal('hide');
+                        document.getElementById(buttonid).innerHTML = 'שלח הודעה';
+                        document.getElementById(buttonid).style.color = 'white';
+                        document.getElementById(buttonid).className = "btn btn-info pull-left";
+                    }, 1900);
+                }).catch(function (result) {
+
+                    $msgbox.show('קרתה שגיאה בשליחת ההודעה')
+                        .then(function () {
+
+                        });
+                })
+            }
+        }
+
+        $scope.SendUserMessage = function (item) {
+            vm.userMessageId = item.id;
+            $('#sendMessageModal').modal('show');
+        }
+        $scope.ShowUserDetails = function (item) {
+            console.log(item);
+        }
 
         $scope.ShowContent = function (item) {
             alert(item.id);
@@ -147,125 +189,355 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             item.hideheader = true;
         }
 
-        var query = {};
-        dboperations.GetSaleHouseQueryResults(query, false).then(function (result) {
+        function Dictionary(values) {
+            this.values = values || {};
 
-            vm.cards = result.data;
-            console.log(vm.cards);
+            var forEachIn = function (object, action) {
+                for (var property in object) {
+                    if (Object.prototype.hasOwnProperty.call(object, property))
+                        action(property, object[property]);
+                }
+            };
 
-            for (var i = 0; i < vm.cards.length; i++) {
-                //console.log(vm.cards[i].id);
-                vm.cards[i].sphere360 = [];
-                vm.cards[i].showPictures = 0;
-                vm.cards[i].image360Exists = false;
-                vm.cards[i].imageExists = false;
-                vm.cards[i].slides = [];
-                vm.cards[i].hideheader = false;
-                vm.cards[i].sphere360index = 0;
-                var city = vm.cards[i].city;
-                var area = vm.cards[i].area;
-                var napa = vm.cards[i].napa;
-                var code = vm.cards[i].code;
+            Dictionary.prototype.containsKey = function (key) {
+                return Object.prototype.hasOwnProperty.call(this.values, key) &&
+                    Object.prototype.propertyIsEnumerable.call(this.values, key);
+            };
 
-                var x = {
-                    'city': city,
-                    'area': area,
-                    'napa': napa,
-                    'code': code
-                };
-                vm.cards[i].city = x;
+            Dictionary.prototype.forEach = function (action) {
+                forEachIn(this.values, action);
+            };
 
-                var streetName = vm.cards[i].street;
-                var x1 = {
-                    'name': streetName
-                };
-                vm.cards[i].street = x1;
+            Dictionary.prototype.lookup = function (key) {
+                return this.values[key];
+            };
 
-                var neighborhood = vm.cards[i].neighborhood;
-                x1 = {
-                    'name': neighborhood
-                };
-                vm.cards[i].neighborhood = x1;
+            Dictionary.prototype.add = function (key, value) {
+                this.values[key] = value;
+            };
+        };
+        $scope.getparking = function(s)
+        {
 
-                vm.cards[i].numberofrooms = vm.cards[i].numberofrooms.toString();
-                vm.cards[i].floor = vm.cards[i].floor.toString();
-                vm.cards[i].fromfloor = vm.cards[i].fromfloor.toString();
+            switch (s)
+            {
+                case 'לא משנה לי':
+                    $scope.shoparkingoptions = false;
+                break;
+                case 'לפחות אחת':
+                case 'לפחות שתיים':
+                case 'לפחות שלוש':
+                    $scope.shoparkingoptions = true;
+                break;
+            }
+
+            switch (s)
+            {
+                case 'לא משנה לי':
+                case 'לפחות אחת':
+                    $scope.shoparkingoptions2 = false;
+                break;
+                case 'לפחות שתיים':
+                case 'לפחות שלוש':
+                    $scope.shoparkingoptions2 = true;
+                    break;
+            }
+
+        }
+
+
+        function ShowResults()
+        {
+            if (vm.citiesSelected.length == 0)
+            {
+                $msgbox.show('בחר לפחות עיר אחת בבקשה')
+                    .then(function () {
+                        return;
+                    });
+                return;
+            }
+            var search = angular.copy(vm.search);
+            search.city = vm.citiesSelected;
+            search.propertyType = vm.search.propertyType;
+            search.toprice = vm.search.toprice;
+            if (vm.search.floor == 'קרקע')
+            {
+                search.floor = 0;
+            }
+            if (vm.search.fromfloor == 'קרקע')
+            {
+                search.fromfloor = 0;
+            }
+            if (vm.search.numberofrooms == 'הכל')
+            {
+                search.numberofrooms = undefined;
+            }
+            if (vm.search.aircond == 'לא משנה לי')
+            {
+                search.aircond = undefined;
+            }
+
+            if (vm.search.parking == 'לא משנה לי')
+            {
+                search.parking = undefined;
+            } else {
+                switch (search.parking)
+                {
+                    case 'לפחות אחת':
+                        search.parking = 1;
+                    break;
+                    case 'לפחות שתיים':
+                        search.parking = 2;
+                    break;
+                    case 'לפחות שלוש':
+                        search.parking = 3;
+                    break;
+                }
+            }
+
+            if (vm.search.parkingtype == 'לא משנה לי') {
+                search.parkingtype = undefined;
+            }
+            if (vm.search.parkingtype2 == 'לא משנה לי')
+            {
+                search.parkingtype2 = undefined;
+            }
+
+            switch (vm.search.elevator)
+            {
+                case 'לא משנה לי':
+                    search.elevator = undefined;
+                break;
+                case 'לפחות אחת':
+                    search.elevator = 1;
+                break;
+                case 'לפחות שתיים':
+                    search.elevator = 2;
+                break;
+                case 'לפחות שלוש':
+                    search.elevator = 3;
+                break;
+                case 'לפחות ארבע':
+                    search.elevator = 4;
+                break;
+            }
+
+            switch (vm.search.warehouse)
+            {
+                case 'לא משנה לי':
+                    search.warehouse = undefined;
+                    break;
+                case 'לפחות אחד':
+                    search.warehouse = 1;
+                    break;
+                case 'לפחות שניים':
+                    search.warehouse = 2;
+                    break;
+
+            }
+
+            switch (vm.search.mamad)
+            {
+                case 'לא משנה לי':
+                    search.mamad = undefined;
+                break;
+                case 'כן':
+                    search.mamad = 1;
+                break
+                case 'לא':
+                    search.mamad = 0;
+                break
             }
 
 
-            for (var i = 0; i < vm.cards.length; i++) {
+            switch (vm.search.balcony)
+            {
+                case 'לא משנה לי':
+                    search.balcony = undefined;
+                    break;
+                case '1':
+                    search.balcony = 1;
+                break;
+                case '2':
+                    search.balcony = 2;
+                break;
+                case '3':
+                    search.balcony = 3;
+                break;
+                case 'יותר משלוש':
+                    search.balcony = 4;
+                break;
 
-                dboperations.getSaleHousePictureList(vm.cards[i].id, i, false).then(function (result) {
 
-                    var index = result.data.index;
-                    if (result.data.rows.length > 0) {
-                        vm.cards[index].showPictures++;
-                        vm.cards[index].imageExists = true;
-                    }
-                    var imgsrc;
-
-                    for (var k = 0; k < result.data.rows.length; k++) {
-                        var userid = result.data.rows[k].userid;
-                        var imgsrc = './uploadimages/' + userid + '/salehouse/' + result.data.rows[k].tableid + '/' + result.data.rows[k].filename;
-                        vm.cards[index].slides.push({
-                            image: imgsrc,
-                            text: 'rrrr'
-                        });
-                    }
-                });
             }
 
-            for (var i = 0; i < vm.cards.length; i++) {
+            dboperations.GetSaleHouseQueryResults(search, false).then(function (result) {
 
+                $scope.showerrorenable = false;
+                if (result.data.length == 0)
+                {
+                    $scope.showNoResultsMessage = true;
+                } else {
+                    $scope.showNoResultsMessage = false;
+                }
 
-                dboperations.getSaleHouse360PictureList(vm.cards[i].id, i, false).then(function (result) {
+                vm.cards1 = result.data;
+                var dic = new Dictionary();
 
-                    var imgsrc;
-                    var index = result.data.index;
-                    if (result.data.rows.length > 0) {
-                        vm.cards[index].showPictures++;
-                        vm.cards[index].image360Exists = true;
+                //http://stackoverflow.com/questions/17787754/creating-a-net-like-dictionary-object-in-javascript
+
+                for (var i = 0; i < vm.cards1.length; i++) {
+                    var c = dic.containsKey(vm.cards1[i].id);
+                    if (c) {
+                        var x = dic.lookup(vm.cards1[i].id);
+                        x.push(vm.cards1[i]);
+                        dic.add(vm.cards1[i].id, x);
+                    } else {
+                        var x = [];
+                        x.push(vm.cards1[i]);
+                        dic.add(vm.cards1[i].id, x);
+                    }
+                }
+
+                vm.cards = [];
+                i = 0;
+                dic.forEach(function (key, value) {
+
+                    //console.log(vm.cards[i].id);
+                    var card = {};
+                    //console.log(value);
+                    card = value[0];
+                    card.id = key;
+                    card.sphere360 = [];
+                    card.showPictures = 0;
+                    card.image360Exists = false;
+                    card.imageExists = false;
+                    card.video360Exists = false;
+                    card.videoExists = false;
+                    card.slides = [];
+                    card.hideheader = false;
+                    card.sphere360index = 0;
+                    var city = card.city;
+                    var area = card.area;
+                    var napa = card.napa;
+                    var code = card.code;
+
+                    if (card.numberofrooms == 1)
+                    {
+                        card.numberofrooms = 'חדר אחד';
+                    } else {
+                        card.numberofrooms = card.numberofrooms + 'חדרים';
                     }
 
-                    setTimeout(function () {
-                        for (var k = 0; k < result.data.rows.length; k++) {
-                            var userid = result.data.rows[k].userid;
-                            var imgsrc = './uploadimages/' + userid + '/salehouse/' + result.data.rows[k].tableid + '/' + result.data.rows[k].filename;
-                            vm.cards[index].sphere360.push(imgsrc);
 
-                            if (vm.cards[index].sphere360index == 0) {
 
-                                var PSV = new PhotoSphereViewer({
-                                    // Panorama, given in base 64
-                                    panorama: imgsrc,
+                    var x = {
+                        'city': city,
+                        'area': area,
+                        'napa': napa,
+                        'code': code
+                    };
+                    card.city = x;
 
-                                    // Container
-                                    container: 'your-pano' + vm.cards[index].id,
+                    var streetName = card.street;
+                    var x1 = {
+                        'name': streetName
+                    };
+                    card.street = x1;
 
-                                    // Deactivate the animation
-                                    time_anim: false,
+                    var neighborhood = card.neighborhood;
+                    x1 = {
+                        'name': neighborhood
+                    };
+                    card.neighborhood = x1;
 
-                                    // Display the navigation bar
-                                    navbar: true,
+                    card.numberofrooms = card.numberofrooms.toString();
+                    card.floor = card.floor.toString();
+                    card.fromfloor = card.fromfloor.toString();
+                    card.balcony = card.balcony.toString();
 
-                                    // Resize the panorama
-                                    size: {
-                                        width: '100%',
-                                        height: video360height
-                                    },
+                    for (var k = 0; k < value.length; k++) {
+                        if (value[k].isvideo != null &&
+                            value[k].tableid != null &&
+                            value[k].filename != null &&
+                            value[k].is360image != null &&
+                            value[k].isvideo == 0 &&
+                            value[k].is360image == 0) {
 
-                                    // No XMP data
-                                    usexmpdata: false
-                                });
+                            //console.log(value[k]);
+                            var imgsrc;
+                            if (k == 0) {
+                                card.showPictures++;
+                                card.imageExists = true;
                             }
-                            vm.cards[index].sphere360index++;
+                            var userid = value[k].userid;
+                            var imgsrc = './uploadimages/' + userid + '/salehouse/' + value[k].tableid + '/' + value[k].filename;
+                            //console.log(imgsrc);
+                            card.slides.push({
+                                image: imgsrc,
+                                text: 'rrrr'
+                            });
                         }
-                    } , 300);
+                    }
+                    var firsttime = 0;
+                    for (var k = 0; k < value.length; k++) {
+                        if (value[k].isvideo != null &&
+                            value[k].tableid != null &&
+                            value[k].filename != null &&
+                            value[k].is360image != null &&
+                            value[k].isvideo == 0 &&
+                            value[k].is360image == 1) {
+
+                            var imgsrc;
+                            if (firsttime == 0) {
+                                card.showPictures++;
+                                card.image360Exists = true;
+                                firsttime++;
+                            }
+
+                            var userid = value[k].userid;
+                            var imgsrc = './uploadimages/' + userid + '/salehouse/' + value[k].tableid + '/' + value[k].filename;
+                            card.sphere360.push(imgsrc);
+
+                            if (card.sphere360index == 0) {
+                                setTimeout(function () {
+                                    var PSV = new PhotoSphereViewer({
+                                        // Panorama, given in base 64
+                                        panorama: imgsrc,
+
+                                        // Container
+                                        container: 'your-pano' + key,
+
+                                        // Deactivate the animation
+                                        time_anim: false,
+
+                                        // Display the navigation bar
+                                        navbar: true,
+
+                                        // Resize the panorama
+                                        size: {
+                                            width: '100%',
+                                            height: video360height
+                                        },
+
+                                        // No XMP data
+                                        usexmpdata: false
+                                    });
+                                }, 10, key);
+                            }
+                            card.sphere360index++;
+                        }
+                    }
+
+                    vm.cards.push(card);
+                    i++;
                 });
-            }
-
-
-        });
+            }).catch (function (result){
+                 $scope.showerror = result.data;
+                 $scope.showerrorenable = true;
+                 $scope.showNoResultsMessage = true;
+            })
+        }
 
 
         function initcrousle() {
@@ -287,12 +559,13 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             }
         });
     } // the controller closing
-]).config(function (IdleProvider, KeepaliveProvider, myConfig) {
-    // configure Idle settings
-    IdleProvider.idle(myConfig.idletimeSeconds); // in seconds
-    IdleProvider.timeout(myConfig.timeoutSeconds); // in seconds
-    KeepaliveProvider.interval(2); // in seconds
-})
+]).
+    config(function (IdleProvider, KeepaliveProvider, myConfig) {
+        // configure Idle settings
+        IdleProvider.idle(myConfig.idletimeSeconds); // in seconds
+        IdleProvider.timeout(myConfig.timeoutSeconds); // in seconds
+        KeepaliveProvider.interval(2); // in seconds
+    })
     .run(function (Idle) {
         // start watching when the app runs. also starts the Keepalive service by default.
         Idle.watch();

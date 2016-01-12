@@ -1,6 +1,6 @@
 <div class="container">
     <div class="row">
-        <div class="col-md-8"> </div>
+
         <div class="col-md-4">
             <h2>התחבר</h2>
             <div ng-show="vm.error" class="alert alert-danger">{{vm.error}}</div>
@@ -20,9 +20,12 @@
                     <a href="#/register" class="btn btn-link">Register</a>
                 </div>
                 <div>
-                    <h1 ng-show="loginfailure" ng-class="{ 'animated bounce': loginfailure}">כניסה שגויה</h1></h1>
+                    <h1  id="loginfailureid" ng-show="loginfailure" ng-class="{ 'animated bounce': loginfailure}">כניסה שגויה</h1></h1>
                 </div>
             </form>
+        </div>
+        <div class="col-md-8">
+
         </div>
     </div>
 </div>
