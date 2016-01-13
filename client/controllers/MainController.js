@@ -39,7 +39,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             vm.citiesSelected.splice(index, 1);
         }
 
-        function setDefaultSearch()
+        function setDefaultSearch() 
         {
             if (vm.search.balcony == undefined)
             {
