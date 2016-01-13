@@ -11,7 +11,7 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
 
 
         var vm = this;
-     
+
         vm.card = {};
         vm.insertId = -1;
         vm.currentCard = {};

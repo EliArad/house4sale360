@@ -39,6 +39,46 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             vm.citiesSelected.splice(index, 1);
         }
 
+        function setDefaultSearch()
+        {
+            if (vm.search.balcony == undefined)
+            {
+                vm.search.balcony = 'לא משנה לי';
+            }
+            if (vm.search.parking == undefined)
+            {
+                vm.search.parking = 'לא משנה לי';
+            }
+            if (vm.search.parkingtype == undefined)
+            {
+                vm.search.parkingtype = 'לא משנה לי';
+            }
+            if (vm.search.parkingtype2 == undefined)
+            {
+                vm.search.parkingtype2 = 'לא משנה לי';
+            }
+            if (vm.search.warehouse == undefined)
+            {
+                vm.search.warehouse = 'לא משנה לי';
+            }
+            if (vm.search.elevator == undefined)
+            {
+                vm.search.elevator = 'לא משנה לי';
+            }
+            if (vm.search.mamad == undefined)
+            {
+                vm.search.mamad = 'לא משנה לי';
+            }
+            if (vm.search.aircond == undefined)
+            {
+                vm.search.aircond = 'לא משנה לי';
+            }
+            if (vm.search.numberofrooms == undefined)
+            {
+                vm.search.numberofrooms = '4';
+            }
+        }
+
         $(document).ready(function () {
             try {
 
@@ -64,6 +104,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                         if (ressearch != undefined)
                             vm.search = JSON.parse(ressearch);
 
+                        setDefaultSearch();
 
                         ressearch = $cookieStore.get('citiesSelected');
                         if (ressearch != undefined)
