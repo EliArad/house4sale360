@@ -1,3 +1,5 @@
+use yad2vr;
+
 CREATE TABLE `renthouseblobs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tableid` int(11) DEFAULT NULL,
@@ -8,7 +10,7 @@ CREATE TABLE `renthouseblobs` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=utf8;
-SELECT * FROM yad2vr.sellhoursedetails;
+
 
 
 CREATE TABLE `renthousedetails` (

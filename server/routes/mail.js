@@ -13,7 +13,7 @@ module.exports = function (app,mailController) {
         var router = express.Router();
         router.get('/getnumberofmails', jwtauth, mailController.getnumberofmails);
         router.post('/SendEmailToUser', mailController.SendEmailToUser);
-
+        router.post('/SendEmail', jwtauth, mailController.SendEmail);
         app.use('/api/mail', router);
 
     }

@@ -14,6 +14,7 @@ var smtpTransport = nodemailer.createTransport({
 function sendEmail(req, randomGuid, callback) {
     var mailOptions, host, link;
 
+    console.log('sendEmail');
     host = req.get('host');
     //console.log("host " + host);
     link = "http://" + req.get('host') + "/verify?id=" + randomGuid;
@@ -29,6 +30,7 @@ function sendEmail(req, randomGuid, callback) {
         {
             console.log('mail was sent to: ' + req.body.to);
         }
+        console.log('sendEmail 2');
         callback(error, response);
     });
 }
@@ -52,42 +54,13 @@ function sendEmailToUser(address, subject, message, callback) {
 
 module.exports = function (app, sqlserver) {
 
+
     return{
-        sendEmailToUser:sendEmailToUser
+        sendEmailToUser:sendEmailToUser,
+        sendEmail:sendEmail
     }
 
-    app.post('/api/send', jwtauth, function (req, res) {
 
-        sqlserver.get(function (err, con) {
-            if (!err) {
-                var sql = 'SELECT * FROM users WHERE id = ' + con.escape(req.idFromToken);
-                var query = con.query(sql, function (err, rows) {
-                    sqlserver.release(con);
-                    if (err) {
-                        res.sendStatus(500);
-                    } else {
-                        //var host = req.get('host');
-                        //req.body.host = "http://" + host;
-                        console.log('sending mail..');
-                        console.log(rows);
-                        sendEmail(req, rows[0].userguid, function (error, response) {
-                            if (error) {
-                                //console.log(error);
-                                res.status(500);
-                                res.end("error");
-                            } else {
-                                //console.log("Message sent: ");
-                                res.status(201);
-                                res.end("sent");
-                            }
-                        });
-                    }
-                });
-            } else {
-                res.sendStatus(500);
-            }
-        });
-    });
 
     app.get('/verify', function (req, res) {
         //console.log(req.query.id);
