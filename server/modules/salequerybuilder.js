@@ -70,10 +70,17 @@ module.exports = function () {
             sql = sql + ') ';
             sql = sql + '\n';
         }
-        sql = sql + ' AND (';
-        sql = sql + 'sellhousedetails.floor >= ' + opt.floor + ' AND sellhousedetails.floor <= ' + opt.fromfloor;
-        sql = sql + ') ';
-
+        if (opt.floor != undefined && opt.fromfloor != undefined) {
+            sql = sql + ' AND (';
+            sql = sql + 'sellhousedetails.floor >= ' + opt.floor + ' AND sellhousedetails.floor <= ' + opt.fromfloor;
+            sql = sql + ') ';
+        } else {
+            if (opt.floor != undefined && opt.fromfloor == undefined) {
+                sql = sql + ' AND (';
+                sql = sql + 'sellhousedetails.floor >= ' + opt.floor + ' ';
+                sql = sql + ') ';
+            }
+        }
 
         if (opt.numberofrooms != undefined) {
             sql = sql + ' AND (';

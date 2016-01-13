@@ -3,10 +3,12 @@
 
 app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper', 'myutils',
     'appCookieStore', 'socketioservice', 'Idle', '$rootScope',
-    'SessionStorageService', 'API', 'myConfig', '$http', '$window', '$timeout', '$msgbox', 'dboperations', 'citiesservice', 'general', '$cookieStore',
+    'SessionStorageService', 'API', 'myConfig', '$http', '$window', '$timeout', '$msgbox',
+    'dboperations', 'citiesservice', 'general', '$cookieStore','$msgboxok',
     function ($scope, $state, authToken, myhttphelper, myutils,
               appCookieStore, socketioservice, Idle, $rootScope, SessionStorageService,
-              API, myConfig, $http, $window, $timeout, $msgbox, dboperations, citiesservice, general, $cookieStore) {
+              API, myConfig, $http, $window, $timeout, $msgbox, dboperations,
+              citiesservice, general, $cookieStore,$msgboxok) {
 
 
         var vm = this;
@@ -39,8 +41,9 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             vm.citiesSelected.splice(index, 1);
         }
 
-        function setDefaultSearch() 
+        function setDefaultSearch()
         {
+
             if (vm.search.balcony == undefined)
             {
                 vm.search.balcony = 'לא משנה לי';
@@ -227,7 +230,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                     }, 1900);
                 }).catch(function (result) {
 
-                    $msgbox.show('קרתה שגיאה בשליחת ההודעה')
+                    $msgboxok.show('קרתה שגיאה בשליחת ההודעה')
                         .then(function () {
 
                         });
@@ -313,7 +316,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         {
             if (vm.citiesSelected.length == 0)
             {
-                $msgbox.show('בחר לפחות עיר אחת בבקשה')
+                $msgboxok.show('בחר לפחות עיר אחת בבקשה')
                     .then(function () {
                         return;
                     });

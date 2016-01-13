@@ -219,6 +219,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                 vm.sphere360index = 0;
                 var imgsrc;
 
+
                 setTimeout(function () {
                     if (result.data.rows.length == 0) {
                         document.getElementById('image360glyps' + obj.id).style.display = 'none';
@@ -226,6 +227,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                     }
                 }, 300);
 
+                console.log(result.data);
                 for (var i = 0; i < result.data.rows.length; i++) {
                     var imgsrc = './uploadimages/' + result.data.userid + '/salehouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
                     vm.sphere360.push(imgsrc);
@@ -341,7 +343,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                 vm.cities = result.data;
 
                 dboperations.getAllSellHouseOfMine().then(function (result) {
-                  console.log(result);
+
                     vm.cards = result.data;
                     for (var i = 0; i < vm.cards.length; i++) {
 

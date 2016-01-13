@@ -290,7 +290,7 @@ module.exports = function (sqlserver) {
                         FROM renthouseblobs\
                         INNER JOIN renthousedetails\
                         ON renthouseblobs.tableid = sellhousedetails.id\
-                        WHERE renthouseblobs.is360image = true AND renthouseblobs.tableid = ' + con.escape(req.body.id) + ' AND renthousedetails.id = ' + req.idFromToken;
+                        WHERE renthouseblobs.is360image = true AND renthouseblobs.tableid = ' + con.escape(req.body.id) + ' AND renthousedetails.userid = ' + req.idFromToken;
                     }
                     var query = con.query(sql, function (err, rows) {
                         sqlserver.release(con);
@@ -326,7 +326,7 @@ module.exports = function (sqlserver) {
                         FROM salehouseblobs\
                         INNER JOIN sellhousedetails\
                         ON salehouseblobs.tableid = sellhousedetails.id\
-                        WHERE salehouseblobs.is360image = true AND salehouseblobs.tableid = ' + con.escape(req.body.id) + ' AND sellhousedetails.id = ' + req.idFromToken;
+                        WHERE salehouseblobs.is360image = true AND salehouseblobs.tableid = ' + con.escape(req.body.id) + ' AND sellhousedetails.userid = ' + req.idFromToken;
                     }
                     var query = con.query(sql, function (err, rows) {
                         sqlserver.release(con);
@@ -335,7 +335,8 @@ module.exports = function (sqlserver) {
                         else {
                             res.json({
                                 rows: rows,
-                                index: req.body.index
+                                index: req.body.index,
+                                userid:req.idFromToken
                             });
                         }
                     });
