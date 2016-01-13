@@ -61,7 +61,7 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
                         var mailParams = {
                             to: currentUser.user.email
                         };
-
+                               
                         general.sendMail(mailParams).
                         then(sendResponseData).
                         catch(sendResponseError);
@@ -72,7 +72,11 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
                         vm.showwaitcircle = false;
                         vm.errormessage = 'שגיאה - יש אמייל כבר רשום';
                         $('#myModal').modal('show');
+                    } else {
+                        vm.showwaitcircle = false;
+                        alert(err);
                     }
+                    
                 });
         };
 
@@ -103,6 +107,7 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
         }
 
         function sendResponseError(response) {
+            vm.showwaitcircle = false;
             alert('שגיאה' + response);
         }
     }

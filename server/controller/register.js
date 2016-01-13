@@ -44,10 +44,11 @@ module.exports = function (sqlserver) {
          */
 
         create: function (req, res) {
-
+            console.log('create new user');                    
             sqlserver.get(function (err, con) {
                 if (!err) {
                     mypasswordhash.encrypt(req.body.password, function (err, hash) {
+                        
                         if (!err) {
                             req.body.password = hash;
                             var randomGuid;
@@ -56,6 +57,7 @@ module.exports = function (sqlserver) {
                             var query = con.query('INSERT INTO users SET ?', req.body, function (err, result) {
                                 sqlserver.release(con);
                                 if (err) {
+                                    console.log(err);
                                     if ((contains(err, 'Duplicate entry') && (contains(err, 'email')))) {
                                         err = 'duplicate email';
                                     }
@@ -75,10 +77,12 @@ module.exports = function (sqlserver) {
                                 }
                             });
                         } else {
+                            console.log(err);
                             res.sendStatus(500);
                         }
                     });
                 } else {
+                    console.log(err);
                     res.sendStatus(500);
                 }
             });
