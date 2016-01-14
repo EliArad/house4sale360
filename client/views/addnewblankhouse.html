@@ -69,7 +69,7 @@
 </style>
 
 
-<div class="container" ng-controller="addnewsalehouseController as vm">
+<div class="container" ng-controller="addnewblankhouseController as vm">
 
 
     <div class="form-horizontal">
@@ -438,7 +438,7 @@
                         <label class="control-label col-sm-3" for="price">מחיר</label>
 
                         <div class="col-sm-9">
-                            <input type="number" name="price" required
+                            <input type="number" name="price"
                                    placeholder="מחיר בשקלים" class="form-control"
                                    ng-model="vm.card.price">
                         </div>
@@ -496,11 +496,12 @@
                                 </div>
                             </div>
                             <div class="form-group" style="white-space:nowrap"
+                                 ng-class="{ 'has-error': (form.secondarycellphone.$error.required &&  form.secondarycellphone.$dirty)}">
                                 <label class="control-label col-sm-3" for="secondarycellphone">נייד
                                     משני</label>
 
                                 <div class="col-sm-9">
-                                    <input type="number" name="secondarycellphone"
+                                    <input type="number" name="secondarycellphone" required
                                            placeholder="מספר טלפון נייד משני" class="form-control"
                                            ng-change="saveModel()"
                                            ng-model="vm.card.secondarycellphone">

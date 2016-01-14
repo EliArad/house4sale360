@@ -5,7 +5,7 @@ app.controller('LogoutController', ['$scope', '$state', 'authToken', '$rootScope
     {
 
         authToken.RemoveToken();
-        $state.go('login', {}, {
+        $state.go('welcome', {}, {
             reload: true
         });
         $rootScope.$broadcast("updateHeader", authToken.getToken());

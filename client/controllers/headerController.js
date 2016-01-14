@@ -38,6 +38,24 @@ app.controller('HeaderController', ['$scope', '$state', 'authToken', 'API',
                 $scope.isAdmin = false;
             }
         });
+        function _show(agent)
+        {
+            console.log(agent);
+            if (agent == 'kablan') {
+                $scope.showagentpages = true;
+            } else {
+                $scope.showagentpages = false;
+            }
+        }
+
+        var agent = SessionStorageService.getSessionStorage('agentin360');
+        _show(agent);
+        $scope.$on("updateAgent", function (e, someInfoReceived) {
+
+            var agent = someInfoReceived;
+            _show(agent);
+            SessionStorageService.setSessionStorage('agentin360', agent);
+        });
 
         $scope.$on("updateHeader", function (e, someInfoReceived) {
 
@@ -50,6 +68,5 @@ app.controller('HeaderController', ['$scope', '$state', 'authToken', 'API',
                 $scope.hellousername = '';
             }
         });
-
     }
 ]);

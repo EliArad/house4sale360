@@ -35,7 +35,16 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
   }).state('welcome', {
     url: '/welcome',
     templateUrl: '/client/views/welcome.html'
+  }).state('kablanref', {
+    url: '/kablanref',
+    templateUrl: '/client/views/kablanhouse.html'
+  }).state('addnewblankhouse', {
+    url: '/addnewblankhouse',
+    templateUrl: '/client/views/addnewblankhouse.html'
   });
+
+
+
 
 
   $httpProvider.interceptors.push('authIntercepter');

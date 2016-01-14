@@ -6,15 +6,18 @@
         <div class="container ">
             <div class="navbar-header">
 
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#js-navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" style="cursor:pointer" ng-click="partyDetail()">Sale house 360</a>
-                <a ng-show="isAuthenticated" class="navbar-brand" style="margin-left:5px;font-family: arial, sans-serif">{{hellousername}}</a>
-                <a ng-show="isAuthenticated" style="color: orange;margin-left:5px;font-family: arial, sans-serif" ng-show="showOnline" class="navbar-brand">{{NumberOfOnlineUsers}}</a>
+                <a class="navbar-brand" style="cursor:pointer" ng-click="partyDetail()">חפש דירות ב 360</a>
+                <a ng-show="isAuthenticated" class="navbar-brand"
+                   style="margin-left:5px;font-family: arial, sans-serif">{{hellousername}}</a>
+                <a ng-show="isAuthenticated" style="color: orange;margin-left:5px;font-family: arial, sans-serif"
+                   ng-show="showOnline" class="navbar-brand">{{NumberOfOnlineUsers}}</a>
             </div>
 
             <div class="collapse navbar-collapse" id="js-navbar-collapse">
@@ -43,7 +46,6 @@
             </span>
                         </a>
                     </li>
-
 
 
                     <li ng-show="isAuthenticated" ui-sref-active="active">
@@ -77,21 +79,38 @@
           </li>
           -->
 
-          <!--
-          <li ng-show="isAuthenticated" class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" ui-sref="memberdetails">
-              פרטים אישיים
-              <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="memberdetails">כל הפרטים האישיים</a></li>
-              <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="coredetails">עדכן פרטי בסיס</a></li>
-              <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="mypictures">רק תמונות</a></li>
-              <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="deletecard">מחק כרטיס</a></li>
-            </ul>
-          </li>
-          -->
-                    <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="advertisehousesale">מכירה</a></li>
-                    <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="advertisehouserent">השכרה </a></li>
+                    <!--
+                    <li ng-show="isAuthenticated" class="dropdown">
+                      <a class="dropdown-toggle" data-toggle="dropdown" ui-sref="memberdetails">
+                        פרטים אישיים
+                        <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="memberdetails">כל הפרטים האישיים</a></li>
+                        <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="coredetails">עדכן פרטי בסיס</a></li>
+                        <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="mypictures">רק תמונות</a></li>
+                        <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="deletecard">מחק כרטיס</a></li>
+                      </ul>
+                    </li>
+                    -->
+
+
+                    <li ng-show="isAuthenticated && showagentpages" ui-sref-active="active"><a ui-sref="kablanref">הוסף או עדכן מודעות שלך</a></li>
+
+
+                    <li ng-show="isAuthenticated && !showagentpages"
+                        style="cursor:pointer"
+                        class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown">
+                            הוסף או עדכן מודעות שלך
+                            <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li ng-show="isAuthenticated" ui-sref-active="active"><a
+                                    ui-sref="advertisehousesale">מכירה</a></li>
+                            <li ng-show="isAuthenticated" ui-sref-active="active"><a
+                                    ui-sref="advertisehouserent">השכרה </a></li>
+                        </ul>
+                    </li>
+
                 </ul>
             </div>
         </div>

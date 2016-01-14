@@ -54,7 +54,8 @@ exports.login = function (req, res) {
                             id:rows[0].id,
                             token: token,
                             rule:userRule,
-                            username:userfrommail
+                            username:userfrommail,
+                            agent:rows[0].agent
                         });
                     } else {
                         return res.status(403).send({ error:'email or password are not valid'});

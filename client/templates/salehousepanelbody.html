@@ -346,7 +346,7 @@
             <label class="control-label col-sm-3" for="price">מחיר</label>
 
             <div class="col-sm-9">
-                <input type="number" name="price"
+                <input type="number" name="price" required
                        placeholder="מחיר בשקלים" class="form-control"
                        ng-model="item.price">
             </div>
@@ -410,12 +410,11 @@
                 </div>
 
                 <div class="form-group" style="white-space:nowrap"
-                     ng-class="{ 'has-error': (form.secondarycellphone.$error.required &&  form.secondarycellphone.$dirty)}">
                     <label class="control-label col-sm-3" for="secondarycellphone">נייד
                         משני</label>
 
                     <div class="col-sm-9">
-                        <input type="number" name="secondarycellphone" required
+                        <input type="number" name="secondarycellphone"
                                placeholder="מספר טלפון נייד משני" class="form-control"
                                ng-model="item.secondarycellphone">
                     </div>

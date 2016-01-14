@@ -101,7 +101,7 @@ module.exports = function () {
 
         if (opt.aircond != undefined) {
             sql = sql + ' AND (';
-            sql = sql + 'sellhousedetails.aircond = ' + con.escape(opt.aircond) + ' ';
+            sql = sql + 'sellhousedetails.aircond != ' + con.escape(opt.aircond) + ' ';
             sql = sql + ') ';
         }
 

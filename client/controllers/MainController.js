@@ -4,11 +4,11 @@
 app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper', 'myutils',
     'appCookieStore', 'socketioservice', 'Idle', '$rootScope',
     'SessionStorageService', 'API', 'myConfig', '$http', '$window', '$timeout', '$msgbox',
-    'dboperations', 'citiesservice', 'general', '$cookieStore','$msgboxok',
+    'dboperations', 'citiesservice', 'general', '$cookieStore', '$msgboxok', '$sce',
     function ($scope, $state, authToken, myhttphelper, myutils,
               appCookieStore, socketioservice, Idle, $rootScope, SessionStorageService,
               API, myConfig, $http, $window, $timeout, $msgbox, dboperations,
-              citiesservice, general, $cookieStore,$msgboxok) {
+              citiesservice, general, $cookieStore, $msgboxok, $sce) {
 
 
         var vm = this;
@@ -18,8 +18,9 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         vm.userMessageId = -1;
         $scope.aptstatus = false;
         vm.numberfloors = [];
+        $scope.showmessagetype = true;
         vm.balconies = ['לא משנה לי', 1, 2, 3, 'יותר משלוש'];
-        vm.numberOfRooms = ['הכל',1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 9, 10, 'יותר מעשרה'];
+        vm.numberOfRooms = ['הכל', 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 9, 10, 'יותר מעשרה'];
         vm.numberfloors.push('קרקע');
         for (var i = 1; i < 35; i++) {
             vm.numberfloors.push(i);
@@ -41,48 +42,42 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             vm.citiesSelected.splice(index, 1);
         }
 
-        function setDefaultSearch()
-        {
-            if (vm.search.agent == undefined)
-            {
+        function setDefaultSearch() {
+            if (vm.search.agent == undefined) {
                 vm.search.agent = 'פרטי';
             }
 
-            if (vm.search.balcony == undefined)
+            if (vm.search.messagetype == undefined)
             {
+                vm.search.messagetype = 'מכירה';
+            }
+
+            if (vm.search.balcony == undefined) {
                 vm.search.balcony = 'לא משנה לי';
             }
-            if (vm.search.parking == undefined)
-            {
+            if (vm.search.parking == undefined) {
                 vm.search.parking = 'לא משנה לי';
             }
-            if (vm.search.parkingtype == undefined)
-            {
+            if (vm.search.parkingtype == undefined) {
                 vm.search.parkingtype = 'לא משנה לי';
             }
-            if (vm.search.parkingtype2 == undefined)
-            {
+            if (vm.search.parkingtype2 == undefined) {
                 vm.search.parkingtype2 = 'לא משנה לי';
             }
-            if (vm.search.warehouse == undefined)
-            {
+            if (vm.search.warehouse == undefined) {
                 vm.search.warehouse = 'לא משנה לי';
             }
-            if (vm.search.elevator == undefined)
-            {
+            if (vm.search.elevator == undefined) {
                 vm.search.elevator = 'לא משנה לי';
             }
-            if (vm.search.mamad == undefined)
-            {
+            if (vm.search.mamad == undefined) {
                 vm.search.mamad = 'לא משנה לי';
             }
-            if (vm.search.aircond == undefined)
-            {
+            if (vm.search.aircond == undefined) {
                 vm.search.aircond = 'לא משנה לי';
             }
-            if (vm.search.numberofrooms == undefined)
-            {
-                vm.search.numberofrooms = '4';
+            if (vm.search.numberofrooms == undefined) {
+                vm.search.numberofrooms = 'הכל';
             }
         }
 
@@ -100,15 +95,13 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                         $rootScope.$broadcast("updateHeader", authToken.getToken());
                         return;
                     } else {
-                      console.log('cities loaded ok');
+                        console.log('cities loaded ok');
                     }
                     vm.cities = result;
                     try {
                         var ressearch = $cookieStore.get('sellhousesearch');
                         if (ressearch != undefined)
                             vm.search = JSON.parse(ressearch);
-
-                        setDefaultSearch();
 
                         ressearch = $cookieStore.get('citiesSelected');
                         if (ressearch != undefined)
@@ -123,12 +116,15 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                             vm.aptstatus = JSON.parse(ressearch);
 
 
-
                         $('#selectPropertyType').multiselect('select', vm.search.propertyType);
                         $('#selectrenovated').multiselect('select', vm.search.renovated);
 
+                        setDefaultSearch();
+
                         $scope.getparking(vm.search.parking);
                         $scope.onAptStatus();
+
+                        $scope.UpdateMessageType();
 
                     }
                     catch (e) {
@@ -171,11 +167,9 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
         })
 
-        $scope.onAptStatus = function()
-        {
+        $scope.onAptStatus = function () {
 
-            if($scope.aptstatus == false)
-            {
+            if ($scope.aptstatus == false) {
                 $scope.showaptselect = true;
             } else {
                 $scope.showaptselect = false;
@@ -283,27 +277,24 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 this.values[key] = value;
             };
         };
-        $scope.getparking = function(s)
-        {
+        $scope.getparking = function (s) {
 
-            switch (s)
-            {
+            switch (s) {
                 case 'לא משנה לי':
                     $scope.shoparkingoptions = false;
-                break;
+                    break;
                 case 'לפחות אחת':
                 case 'לפחות שתיים':
                 case 'לפחות שלוש':
                     $scope.shoparkingoptions = true;
-                break;
+                    break;
             }
 
-            switch (s)
-            {
+            switch (s) {
                 case 'לא משנה לי':
                 case 'לפחות אחת':
                     $scope.shoparkingoptions2 = false;
-                break;
+                    break;
                 case 'לפחות שתיים':
                 case 'לפחות שלוש':
                     $scope.shoparkingoptions2 = true;
@@ -313,10 +304,8 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         }
 
 
-        function ShowResults()
-        {
-            if (vm.citiesSelected.length == 0)
-            {
+        function ShowResults() {
+            if (vm.citiesSelected.length == 0) {
                 $msgboxok.show('בחר לפחות עיר אחת בבקשה')
                     .then(function () {
                         return;
@@ -329,75 +318,81 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             search.renovated = vm.search.renovated;
             search.toprice = vm.search.toprice;
 
-            if (vm.search.agent == undefined)
-            {
-                vm.search.agent = 'פרטי';
+            if (vm.search.agent == undefined) {
+                search.agent = 'private';
+            } else {
+                switch(vm.search.agent)
+                {
+                    case 'פרטי':
+                        search.agent = 'private';
+                    break;
+                    case 'קבלן':
+                        search.agent = 'kablan';
+                    break;
+                    case 'מתווך':
+                        search.agent = 'agent';
+                    break;
+
+                }
             }
 
-            if (vm.search.floor == 'קרקע')
-            {
+            if (vm.search.floor == 'קרקע') {
                 search.floor = 0;
             }
-            if (vm.search.fromfloor == 'קרקע')
-            {
+            if (vm.search.fromfloor == 'קרקע') {
                 search.fromfloor = 0;
             }
-            if (vm.search.numberofrooms == 'הכל')
-            {
+            if (vm.search.numberofrooms == 'הכל') {
                 search.numberofrooms = undefined;
             }
-            if (vm.search.aircond == 'לא משנה לי')
-            {
+            if (vm.search.aircond == 'לא משנה לי') {
                 search.aircond = undefined;
+            } else {
+                search.aircond = 'אין';
             }
 
-            if (vm.search.parking == 'לא משנה לי')
-            {
+            if (vm.search.parking == 'לא משנה לי') {
                 search.parking = undefined;
             } else {
-                switch (search.parking)
-                {
+                switch (search.parking) {
                     case 'לפחות אחת':
                         search.parking = 1;
-                    break;
+                        break;
                     case 'לפחות שתיים':
                         search.parking = 2;
-                    break;
+                        break;
                     case 'לפחות שלוש':
                         search.parking = 3;
-                    break;
+                        break;
                 }
             }
 
             if (vm.search.parkingtype == 'לא משנה לי') {
                 search.parkingtype = undefined;
             }
-            if (vm.search.parkingtype2 == 'לא משנה לי')
-            {
+            if (vm.search.parkingtype2 == 'לא משנה לי') {
                 search.parkingtype2 = undefined;
             }
 
-            switch (vm.search.elevator)
-            {
+            switch (vm.search.elevator) {
                 case 'לא משנה לי':
                     search.elevator = undefined;
-                break;
+                    break;
                 case 'לפחות אחת':
                     search.elevator = 1;
-                break;
+                    break;
                 case 'לפחות שתיים':
                     search.elevator = 2;
-                break;
+                    break;
                 case 'לפחות שלוש':
                     search.elevator = 3;
-                break;
+                    break;
                 case 'לפחות ארבע':
                     search.elevator = 4;
-                break;
+                    break;
             }
 
-            switch (vm.search.warehouse)
-            {
+            switch (vm.search.warehouse) {
                 case 'לא משנה לי':
                     search.warehouse = undefined;
                     break;
@@ -410,37 +405,35 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
             }
 
-            switch (vm.search.mamad)
-            {
+            switch (vm.search.mamad) {
                 case 'לא משנה לי':
                     search.mamad = undefined;
-                break;
+                    break;
                 case 'כן':
                     search.mamad = 1;
-                break
+                    break
                 case 'לא':
                     search.mamad = 0;
-                break
+                    break
             }
 
 
-            switch (vm.search.balcony)
-            {
+            switch (vm.search.balcony) {
                 case 'לא משנה לי':
                     search.balcony = undefined;
                     break;
                 case '1':
                     search.balcony = 1;
-                break;
+                    break;
                 case '2':
                     search.balcony = 2;
-                break;
+                    break;
                 case '3':
                     search.balcony = 3;
-                break;
+                    break;
                 case 'יותר משלוש':
                     search.balcony = 4;
-                break;
+                    break;
 
 
             }
@@ -448,8 +441,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             dboperations.GetSaleHouseQueryResults(search, false).then(function (result) {
 
                 $scope.showerrorenable = false;
-                if (result.data.length == 0)
-                {
+                if (result.data.length == 0) {
                     $scope.showNoResultsMessage = true;
                 } else {
                     $scope.showNoResultsMessage = false;
@@ -487,6 +479,10 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                     card.image360Exists = false;
                     card.imageExists = false;
                     card.video360Exists = false;
+                    card.videosourceurl = [];
+                    card.videoExists = false;
+                    card.showVideo = 0;
+                    card.showregularvideo = false;
                     card.videoExists = false;
                     card.slides = [];
                     card.hideheader = false;
@@ -496,13 +492,11 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                     var napa = card.napa;
                     var code = card.code;
 
-                    if (card.numberofrooms == 1)
-                    {
+                    if (card.numberofrooms == 1) {
                         card.numberofrooms = 'חדר אחד';
                     } else {
                         card.numberofrooms = card.numberofrooms + 'חדרים';
                     }
-
 
 
                     var x = {
@@ -603,16 +597,118 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                         }
                     }
 
+                    var firsttimevid = 0;
+                    for (var f = 0; f < value.length; f++) {
+                        if (value[f].isvideo != null &&
+                            value[f].tableid != null &&
+                            value[f].filename != null &&
+                            value[f].is360image != null &&
+                            value[f].isvideo == 1 &&
+                            value[f].is360video == 0 &&
+                            value[f].is360image == 0) {
+                            var userid1 = value[f].userid;
+                            var tableid = value[f].tableid;
+                            var videofilename = value[f].filename;
+                            var videosrouceurl = './uploadvideo/' + userid1 + '/salehouse/' + tableid + '/' + videofilename;
+                            card.videosourceurl.push(videosrouceurl);
+                            card.showregularvideo = true;
+                            card.videoexistlable = 'יש גם וידאו - הראה לי';
+                            break;
+                        }
+                    }
+
                     vm.cards.push(card);
                     i++;
                 });
-            }).catch (function (result){
-                 $scope.showerror = result.data;
-                 $scope.showerrorenable = true;
-                 $scope.showNoResultsMessage = true;
+            }).catch(function (result) {
+                $scope.showerror = result.data;
+                $scope.showerrorenable = true;
+                $scope.showNoResultsMessage = true;
             })
         }
 
+        $scope.ShowRegularVideo = function(item)
+        {
+            if (item.videoexistlable == 'הסתר וידאו')
+            {
+                document.getElementById('videodiv' + item.id).style.display = 'none';
+                item.videoexistlable = 'יש גם וידאו - הראה לי';
+            } else {
+                document.getElementById('videodiv' + item.id).style.display = 'block';
+                vm.changeSource(item.videosourceurl[0], item.id);
+                item.videoexistlable = 'הסתר וידאו';
+            }
+        }
+
+        vm.onError = function (event) {
+            console.log("VIDEOGULAR ERROR EVENT");
+            console.log(event);
+        };
+
+        vm.onCompleteVideo = function () {
+            vm.isCompleted = true;
+        };
+
+        vm.onUpdateState = function (state) {
+            vm.state = state;
+        };
+
+        vm.onUpdateTime = function (currentTime, totalTime) {
+            vm.currentTime = currentTime;
+            vm.totalTime = totalTime;
+        };
+
+        vm.onSeeking = function (currentTime, duration) {
+            vm.seeking.currentTime = currentTime;
+            vm.seeking.duration = duration;
+        };
+
+        vm.onSeeked = function (currentTime, duration) {
+            vm.seeked.currentTime = currentTime;
+            vm.seeked.duration = duration;
+        };
+
+        vm.onUpdateVolume = function (newVol) {
+            vm.volume = newVol;
+        };
+
+
+        vm.onUpdatePlayback = function (newSpeed) {
+            vm.API.playback = newSpeed;
+        };
+        vm.onPlayerReady = function (API) {
+            vm.API = API;
+        };
+
+
+        vm.changeSource = function (result, id) {
+
+            document.getElementById('videodiv' + id).style.display = 'block';
+            console.log(result);
+
+            vm.config = {
+                sources: [
+                    {src: $sce.trustAsResourceUrl(result), type: "video/mp4"}
+                ],
+                theme: "bower_components/videogular-themes-default/videogular.css",
+                plugins: {
+                    //poster: "http://www.videogular.com/assets/images/videogular.png"
+                }
+            };
+            vm.config.tracks = undefined;
+            vm.config.loop = false;
+            vm.config.preload = true;
+        };
+
+        $scope.UpdateMessageType = function()
+        {
+            if (vm.search.agent == 'קבלן')
+            {
+                $scope.showmessagetype = false;
+            } else {
+                $scope.showmessagetype = true;
+            }
+        }
 
         function initcrousle() {
             $scope.myInterval = 4000;

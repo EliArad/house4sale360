@@ -36,6 +36,18 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
 
         $scope.save = function (params) {
 
+            switch (params.agent)
+            {
+                case 'קבלן':
+                    params.agent = 'kablan';
+                break;
+                case 'מתווך':
+                    params.agent = 'agent';
+                break;
+                case 'פרטי':
+                    params.agent = 'private';
+                break;
+            }
 
             delete params.confirmPassword;
             Registration.save(params,

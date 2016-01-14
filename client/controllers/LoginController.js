@@ -38,9 +38,11 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookieStor
 
                 authToken.setToken(response.token);
                 SessionStorageService.setSessionStorage('userid', response.id);
-                console.log(response.username);
+
+
                 SessionStorageService.setSessionStorage('username', response.username);
                 $rootScope.$broadcast("updateHeader", authToken.getToken());
+                $rootScope.$broadcast("updateAgent", response.agent);
                 //socketioservice.connect();
                 var rule = response.rule;
                 $rootScope.$broadcast("userrule", rule);
