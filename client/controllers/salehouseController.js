@@ -206,7 +206,6 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                     var imgsrc;
                     for (var i = 0; i < result.data.rows.length; i++) {
                         var imgsrc = './uploadimages/' + result.data.userid + '/salehouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
-                        //console.log(imgsrc);
                         addPictureToCrousleSlider(imgsrc, 'ttt');
                     }
                 }, 1);
@@ -228,7 +227,6 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                     }
                 }, 300);
 
-                console.log(result.data);
                 for (var i = 0; i < result.data.rows.length; i++) {
                     var imgsrc = './uploadimages/' + result.data.userid + '/salehouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
                     vm.sphere360.push(imgsrc);
@@ -281,13 +279,13 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                     }
                     for (var i = 0; i < result.data.rows.length; i++) {
                         var imgsrc = './uploadvideo/' + result.data.userid + '/salehouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
+                        //console.log('3' + imgsrc);
                         vm.regularvideo.push(imgsrc);
                         if (i == 0) {
-                            vm.changeSource(imgsrc);
+                            vm.changeSource(imgsrc, obj.id);
                         }
                         vm.regularvideoindex++;
                     }
-
                 }, 400);
             });
 
@@ -538,6 +536,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
         vm.changeSource = function (result, id) {
 
             document.getElementById('videodiv' + id).style.display = 'block';
+            console.log(result);
 
             vm.config = {
                 sources: [

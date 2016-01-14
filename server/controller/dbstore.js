@@ -15,12 +15,14 @@ module.exports = function (sqlserver) {
                         FROM renthouseblobs\
                         INNER JOIN renthousedetails\
                         ON renthouseblobs.tableid = renthousedetails.id\
+                        AND renthouseblobs.isvideo = true\
                         WHERE renthouseblobs.is360video = false AND renthouseblobs.tableid = ' + con.escape(req.body.id) + ' AND renthousedetails.userid = ' + req.idFromToken;
                     } else {
                         sql = 'SELECT renthouseblobs.*,renthousedetails.userid\
                         FROM renthouseblobs\
                         INNER JOIN renthousedetails\
                         ON renthouseblobs.tableid = renthousedetails.id\
+                        AND salehouseblobs.isvideo = true\
                         WHERE renthouseblobs.is360video = false AND renthouseblobs.tableid = ' + con.escape(req.body.id);
                     }
                     var query = con.query(sql, function (err, rows) {
@@ -49,12 +51,14 @@ module.exports = function (sqlserver) {
                         FROM salehouseblobs\
                         INNER JOIN sellhousedetails\
                         ON salehouseblobs.tableid = sellhousedetails.id\
+                        AND salehouseblobs.isvideo = true\
                         WHERE salehouseblobs.is360video = false AND salehouseblobs.tableid = ' + con.escape(req.body.id) + ' AND sellhousedetails.userid = ' + req.idFromToken;
                     } else {
                         sql = 'SELECT salehouseblobs.*,sellhousedetails.userid\
                         FROM salehouseblobs\
                         INNER JOIN sellhousedetails\
                         ON salehouseblobs.tableid = sellhousedetails.id\
+                        AND salehouseblobs.isvideo = true\
                         WHERE salehouseblobs.is360video = false AND salehouseblobs.tableid = ' + con.escape(req.body.id);
                     }
                     var query = con.query(sql, function (err, rows) {
@@ -249,13 +253,16 @@ module.exports = function (sqlserver) {
                         FROM salehouseblobs\
                         INNER JOIN sellhousedetails\
                         ON salehouseblobs.tableid = sellhousedetails.id\
+                        AND salehouseblobs.isvideo = false\
                         WHERE salehouseblobs.is360image = false AND salehouseblobs.tableid = ' + con.escape(req.body.id);
                     } else {
                         sql = 'SELECT salehouseblobs.*,sellhousedetails.userid\
                         FROM salehouseblobs\
                         INNER JOIN sellhousedetails\
                         ON salehouseblobs.tableid = sellhousedetails.id\
-                        WHERE salehouseblobs.is360image = false AND salehouseblobs.tableid = ' + con.escape(req.body.id) + ' AND sellhousedetails.userid = ' + req.idFromToken;
+                        WHERE salehouseblobs.is360image = false\
+                        AND salehouseblobs.isvideo = false\
+                        AND salehouseblobs.tableid = ' + con.escape(req.body.id) + ' AND sellhousedetails.userid = ' + req.idFromToken;
                     }
                     var query = con.query(sql, function (err, rows) {
                         sqlserver.release(con);
@@ -284,12 +291,14 @@ module.exports = function (sqlserver) {
                         FROM renthouseblobs\
                         INNER JOIN renthousedetails\
                         ON renthouseblobs.tableid = renthousedetails.id\
+                        AND renthouseblobs.isvideo = false\
                         WHERE renthouseblobs.is360image = true AND renthouseblobs.tableid = ' + con.escape(req.body.id);
                     } else {
                         sql = 'SELECT renthouseblobs.*,renthousedetails.userid\
                         FROM renthouseblobs\
                         INNER JOIN renthousedetails\
                         ON renthouseblobs.tableid = sellhousedetails.id\
+                        AND renthouseblobs.isvideo = false\
                         WHERE renthouseblobs.is360image = true AND renthouseblobs.tableid = ' + con.escape(req.body.id) + ' AND renthousedetails.userid = ' + req.idFromToken;
                     }
                     var query = con.query(sql, function (err, rows) {
@@ -320,12 +329,14 @@ module.exports = function (sqlserver) {
                         FROM salehouseblobs\
                         INNER JOIN sellhousedetails\
                         ON salehouseblobs.tableid = sellhousedetails.id\
+                        AND salehouseblobs.isvideo = false\
                         WHERE salehouseblobs.is360image = true AND salehouseblobs.tableid = ' + con.escape(req.body.id);
                     } else {
                         sql = 'SELECT salehouseblobs.*,sellhousedetails.userid\
                         FROM salehouseblobs\
                         INNER JOIN sellhousedetails\
                         ON salehouseblobs.tableid = sellhousedetails.id\
+                        AND salehouseblobs.isvideo = false\
                         WHERE salehouseblobs.is360image = true AND salehouseblobs.tableid = ' + con.escape(req.body.id) + ' AND sellhousedetails.userid = ' + req.idFromToken;
                     }
                     var query = con.query(sql, function (err, rows) {
