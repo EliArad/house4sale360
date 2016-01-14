@@ -1,0 +1,49 @@
+<style>
+    .btn-default:hover,
+    .btn-default:focus,
+    .btn-default:active,
+    .btn-default.active {
+        color: black;
+        background-color: white;
+    }
+
+    .btn-default:active, .btn-default.active, .btn-default:visited
+    .btn-default:active:hover, .btn-default.active:hover {
+        color: black;
+        background-color: white;
+    }
+
+    .btn-default {
+        color: black;
+        background-color: white;
+    }
+
+    .btn-default:hover {
+        color: black;
+        background-color: white
+    }
+
+    .btn-default:focus {
+        color: black;
+        background-color: white
+    }
+
+
+</style>
+<div class="container" ng-controller="welcomeController as vm">
+    <div dir="rtl">&nbsp;<span style="font-family:arial,helvetica,sans-serif;">ברוכים הבאים לאתר דירות ב 360 - 360 appartments. אתר חדשני לחיפוש דירות לקנייה והשכרה מאנשים פרטיים,מתווכים ודירות חדשות של קבלנים.</span></div>
+    <div dir="rtl"><font face="arial, helvetica, sans-serif">לחץ והזז את העכבר לראות את הוידאו ב 360.</font></div>
+    <div dir="rtl"><font face="arial, helvetica, sans-serif">כל המוכרים יכולים להעלות תמונות רגילות באיכות גבוהה, תמונות 360, וידאו וידאו ב 360. לפרטים נוספים לחץ <a href="http://ddd">כאן</a></font>
+        <button type="button" ui-sref="main"  class="btn btn-default" style="color:orange;float:left;width: 200px">
+            חפש דירות
+        </button>
+    </div>
+
+
+
+    <div id="welcomevideodiv" class="welcome360video" style="height: 580px;margin-top: 20px">
+
+
+    </div>
+
+</div>

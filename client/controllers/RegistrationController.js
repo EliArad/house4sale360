@@ -3,8 +3,8 @@
 //(function() {
 
 
-app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registration', 'general', 'authToken',
-    function ($scope, $cookieStore, Registration, general, authToken) {
+app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registration', 'general', 'authToken','$state',
+    function ($scope, $cookieStore, Registration, general, authToken,$state) {
 
 
         //http://odetocode.com/blogs/scott/archive/2014/10/13/confirm-password-validation-in-angularjs.aspx
@@ -19,6 +19,7 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
         vm.errormessage = '';
         $scope.showModal = true;
         $scope.showRegistration =true;
+        $scope.showloginbtn = false;
 
 
         vm.user = {
@@ -35,7 +36,7 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
 
         $scope.save = function (params) {
 
-            params.agent = false;
+
             delete params.confirmPassword;
             Registration.save(params,
                 function (resp, headers) {
@@ -43,18 +44,15 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
 
                     $scope.showRegistration = false;
 
-
                     var mailParams = {
                         to: vm.user.email
                     };
                     //general.sendMail(mailParams);
 
                     authToken.setToken(resp.token);
-
                     var token = authToken.getToken();
-                    console.log(token);
                     Registration.get({
-                        registerId: token
+                        registerId: resp.token
                     }, function (currentUser) {
                         //console.log(currentUser.user);
 
@@ -92,21 +90,26 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
                 $scope.save(vm.user);
             }
         }
+        $scope.MoveToLoginPage = function()
+        {
+            $state.go('login', {}, {
+                reload: true
+            });
+        }
 
         function sendResponseData(response) {
+            authToken.RemoveToken();
             $scope.showRegistration = false;
             vm.showwaitcircle = false;
-            console.log('2');
             //vm.message = 'Registration success - email has been sent to ' + vm.user.email + ' to validate';
             vm.message += 'ההרשמה הצליחה. ';
             vm.message1 += 'אמייל נשלח לכתובת ';
-            console.log('3');
             vm.message2 += vm.user.email + ' לאישור';
-            console.log('4');
-
+            $scope.showloginbtn = true;
         }
 
         function sendResponseError(response) {
+            authToken.RemoveToken();
             vm.showwaitcircle = false;
             alert('שגיאה' + response);
         }

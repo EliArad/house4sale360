@@ -1,6 +1,6 @@
 app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 
-  $urlRouterProvider.otherwise('/');
+  $urlRouterProvider.otherwise('/welcome');
 
   $stateProvider.state('register', {
     url: '/register',
@@ -32,6 +32,9 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
   }).state('addnewrenthouse', {
     url: '/addnewrenthouse',
     templateUrl: '/client/views/addnewrenthouse.html'
+  }).state('welcome', {
+    url: '/welcome',
+    templateUrl: '/client/views/welcome.html'
   });
 
 

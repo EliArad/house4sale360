@@ -32,7 +32,7 @@ var routes = function (app) {
     });
   });
 
-  app.post('/api/getSchonot', jwtauth, function (req, res, next) {
+  app.post('/api/getSchonot', function (req, res, next) {
 
     cityLoader.getSchonot(req.body.code,function (err,data) {
       if (err)

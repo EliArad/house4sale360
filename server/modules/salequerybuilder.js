@@ -3,6 +3,8 @@ module.exports = function () {
 
         var sql = 'SELECT sellhousedetails.* , salehouseblobs.filename, salehouseblobs.tableid , salehouseblobs.is360image , salehouseblobs.is360video , salehouseblobs.isvideo\
                     FROM sellhousedetails\
+                    INNER JOIN users\
+                    ON users.id = sellhousedetails.userid\
                     LEFT JOIN salehouseblobs\
                     ON salehouseblobs.tableid  = sellhousedetails.id ';
 
@@ -18,6 +20,9 @@ module.exports = function () {
         }
         if (opt.city.length > 0)
             sql = sql + ') ';
+        sql = sql + '\n';
+
+        sql = sql + 'AND (users.agent = ' + con.escape(opt.agent) + ') ';
         sql = sql + '\n';
 
         i = 0;

@@ -112,7 +112,7 @@ var dbstoreController = require('./server/controller/dbstore')(sqlserver);
 //var getmembersRouters = membersRouter.routes;
 
 
-port = args.port || 8080;
+port = args.port || 8000;
 
 app.use(bodyParser({
     limit: '50mb'
@@ -348,7 +348,7 @@ app.get('*', function (req, res) {
 app.post('*', function (req, res) {
     res.status(500).send('error 5000');
 });
-
-server.listen(port, '192.168.22.28'); // at work
+server.listen(port, '192.168.22.32');
+//server.listen(port, '192.168.22.28'); // at work
 //server.listen(port, '192.168.1.16');// at home
 console.log("Running on port " + port);

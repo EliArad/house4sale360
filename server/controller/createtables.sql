@@ -120,12 +120,13 @@ CREATE TABLE `sellhousedetails` (
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `email` varchar(45) DEFAULT NULL,
-  `agent` bit(1) DEFAULT NULL,
-  `password` varchar(400) DEFAULT NULL,
-  `userguid` varchar(528) DEFAULT NULL,
-  `host` varchar(145) DEFAULT NULL,
+  `email` varchar(45) CHARACTER SET latin1 DEFAULT NULL,
+  `agent` varchar(45) DEFAULT '0',
+  `password` varchar(400) CHARACTER SET latin1 DEFAULT NULL,
+  `userguid` varchar(528) CHARACTER SET latin1 DEFAULT NULL,
+  `host` varchar(145) CHARACTER SET latin1 DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`),
   KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8;
+SELECT * FROM yad2vr.users;

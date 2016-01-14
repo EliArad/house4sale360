@@ -25,7 +25,7 @@ app.factory("citiesservice", function($http, $q,myConfig)
                     }
                     chunk = Math.min(50, size);
                     size-=chunk;
-                    console.log('size:' + size);
+                    //console.log('size:' + size);
                     url = myConfig.url + '/api/getcitieschunk';
                     index1 = index;
                     index+=chunk;
@@ -35,25 +35,25 @@ app.factory("citiesservice", function($http, $q,myConfig)
                         }
                         if (result.data.size == 0)
                         {
-                            
-                            console.log('finished, we have the cities');
-                            console.log(citiesData);
+
+                            //console.log('finished, we have the cities');
+                            //console.log(citiesData);
                             callback(null, citiesData);
                         }
                     }).catch (function(result){
                         citiesData = [];
-                        console.log('error get cities');
+                        //console.log('error get cities');
                         errorHappend = true;
                         callback('error', result);
                     })
                 }
             }).catch(function(result){
                 citiesData = [];
-                console.log('error get cities');
+                //console.log('error get cities');
                 callback('error', result);
             });
         } else {
-            console.log('cities is already loaded');
+            //console.log('cities is already loaded');
             callback(null, citiesData);
         }
     }

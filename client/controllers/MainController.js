@@ -43,6 +43,10 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
         function setDefaultSearch()
         {
+            if (vm.search.agent == undefined)
+            {
+                vm.search.agent = 'פרטי';
+            }
 
             if (vm.search.balcony == undefined)
             {
@@ -324,6 +328,12 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             search.propertyType = vm.search.propertyType;
             search.renovated = vm.search.renovated;
             search.toprice = vm.search.toprice;
+
+            if (vm.search.agent == undefined)
+            {
+                vm.search.agent = 'פרטי';
+            }
+
             if (vm.search.floor == 'קרקע')
             {
                 search.floor = 0;

@@ -21,6 +21,7 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
         vm.accIsOpen = false;
         vm.currentCard = {};
         vm.city = {};
+        var cssUpdateTimer;
         var minWidth = 640;
         var minHeight = 480;
         var video360height = '600px';
@@ -601,6 +602,19 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
                 dboperations.getRentHouseDetails(card.id).then(function (result) {
                     console.log(result.data[0]);
                 })
+
+
+                var buttonid = 'updatechangesbtnid' + item.id;
+
+                document.getElementById(buttonid).className = "btn btn-primary animated tada";
+                document.getElementById(buttonid).style.color = 'lightgreen';
+                document.getElementById(buttonid).innerHTML = 'נתונים עודכנו';
+
+                cssUpdateTimer = $timeout(function () {
+                    document.getElementById(buttonid).innerHTML = 'עדכן נתונים';
+                    document.getElementById(buttonid).style.color = 'white';
+                    document.getElementById(buttonid).className = "btn btn-primary";
+                }, 1900);
 
 
             }).catch(function (result) {

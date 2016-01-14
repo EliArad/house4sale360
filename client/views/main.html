@@ -112,7 +112,24 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Modal Header</h4>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="control-label" for="agent">בעל המודעה</label>
+                            <select class="form-control"
+                                    placeholder="האם אתה קבלן, מתווך או אדם פרטי"
+                                    name="agent"
+                                    ng-model="vm.search.agent">
+                                <option>פרטי</option>
+                                <option> מתווך</option>
+                                <option>קבלן</option>
+                            </select>
+                        </div>
+                        <div class="col-md-9">
+                            <h4 style="text-align: center" class="modal-title">הגדרות חיפוש</h4>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="modal-body">
 
@@ -453,6 +470,23 @@
             החיפוש שלך
 
         </button>
+        נמצאו
+        {{ fff }}
+        דירות
+        מ
+        {{  vm.search.agent }}
+        {{ vm.search.balcony}}
+        {{ vm.search.balcony}}
+        {{ vm.search.parking}}
+        {{ vm.search.parkingtype}}
+        {{ vm.search.parkingtype2}}
+        {{ vm.search.warehouse}}
+        {{ vm.search.elevator}}
+        {{ vm.search.mamad}}
+        {{ vm.search.aircond}}
+        {{ vm.search.numberofrooms}}
+
+
 
     </div>
 
@@ -537,6 +571,7 @@
                             <thead>
                             <tr>
                                 <td>מרפסת</td>
+                                <td>מזגן</td>
                                 <td>סורגים</td>
                                 <td>גישה לנכים</td>
                                 <td>חנייה</td>
@@ -553,8 +588,12 @@
                             <tr>
 
                                 <td>
+                                    <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.balcony > 0) , 'glyphicon glyphicon glyphicon-remove': (item.balcony == 0)}"></span>
                                     <span ng-show="item.balcony > 0">{{ item.balcony }}</span>
-                                    <span ng-class="{'glyphicon glyphicon glyphicon-remove': (item.balcony == 0)}"></span>
+                                </td>
+                                <td>
+                                    <span ng-show="item.aircond != 'אין'">{{ item.aircond }}</span>
+                                    <span ng-class="{'glyphicon glyphicon glyphicon-remove': (item.aircond == 'אין')}"></span>
                                 </td>
                                 <td>
                                     <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.soragim == 1) , 'glyphicon glyphicon glyphicon-remove': (item.soragim == 0)}"></span>
@@ -577,6 +616,7 @@
                                 </td>
                                 <td>
                                     <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.warehouse > 0) , 'glyphicon glyphicon glyphicon-remove': (item.warehouse == 0)}"></span>
+                                    <span ng-show="item.warehouse > 0">{{ item.parking }}</span>
                                 </td>
                                 <td>
                                     <span ng-show="item.elevator > 0">{{ item.elevator }}</span>
