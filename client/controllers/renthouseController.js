@@ -338,7 +338,7 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
                     $rootScope.$broadcast("updateHeader", authToken.getToken());
                     return;
                 }
-                vm.cities = result.data;
+                vm.cities = result;
 
                 dboperations.getAllRentHouseOfMine().then(function (result) {
                     vm.cards = result.data;

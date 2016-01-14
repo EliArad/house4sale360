@@ -340,7 +340,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                     $rootScope.$broadcast("updateHeader", authToken.getToken());
                     return;
                 }
-                vm.cities = result.data;
+                vm.cities = result;
 
                 dboperations.getAllSellHouseOfMine().then(function (result) {
 

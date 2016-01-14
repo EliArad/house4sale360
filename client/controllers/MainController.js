@@ -98,10 +98,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                     } else {
                       console.log('cities loaded ok');
                     }
-                    vm.cities = result.data;
-
-
-
+                    vm.cities = result;
                     try {
                         var ressearch = $cookieStore.get('sellhousesearch');
                         if (ressearch != undefined)

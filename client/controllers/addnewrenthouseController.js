@@ -492,7 +492,7 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
                         }
                         return;
                     }
-                    vm.cities = result.data;
+                    vm.cities = result;
                     try {
                         var s = $cookieStore.get('renthouseform');
                         vm.card = JSON.parse(s);
