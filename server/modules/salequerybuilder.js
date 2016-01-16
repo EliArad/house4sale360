@@ -26,19 +26,22 @@ module.exports = function () {
         sql = sql + '\n';
 
         i = 0;
-        for (i = 0; i < opt.propertyType.length; i++) {
-            if (i == 0)
-            {
-                sql = sql + ' AND (';
+        if (opt.propertyType != undefined)
+        {
+            for (i = 0; i < opt.propertyType.length; i++) {
+                if (i == 0)
+                {
+                    sql = sql + ' AND (';
+                }
+                if (i > 0)
+                {
+                    sql = sql + 'OR '
+                }
+                sql = sql + ' sellhousedetails.propertyType = ' + con.escape(opt.propertyType[i]) + ' ';
             }
-            if (i > 0)
-            {
-                sql = sql + 'OR '
-            }
-            sql = sql + ' sellhousedetails.propertyType = ' + con.escape(opt.propertyType[i]) + ' ';
+            if (opt.propertyType.length > 0)
+                sql = sql + ') ';
         }
-        if (opt.propertyType.length > 0)
-            sql = sql + ') ';
         sql = sql + '\n';
 
 
