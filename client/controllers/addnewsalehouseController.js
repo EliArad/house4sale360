@@ -3,11 +3,11 @@
 
 app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'appCookieStore', '$window',
     '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope', 'API',
-    'SessionStorageService', '$msgbox', '$cookieStore', 'dboperations', 'fileReader', '$sce','citiesservice',
+    'SessionStorageService', '$msgbox', '$cookies', 'dboperations', 'fileReader', '$sce','citiesservice','versionReloader',
     function ($scope, Members, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
               $state, myhttphelper, $rootScope, API, SessionStorageService, $msgbox,
-              $cookieStore, dboperations, fileReader, $sce,citiesservice) {
+              $cookies, dboperations, fileReader, $sce,citiesservice,versionReloader) {
 
 
         var vm = this;
@@ -43,6 +43,12 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
         var msg1 = 'התמונות צריכות להיות בגודל של ' + minWidth + 'x' + minHeight + ' לפחות';
         $scope.showvideosingle = false;
         $scope.showvideo360single = false;
+
+        versionReloader.addPage(reloadFunction);
+        function reloadFunction()
+        {
+            window.location.reload(true);
+        }
 
 
         vm.numberfloors.push('קרקע');
@@ -249,24 +255,6 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
             //console.log($.fn['eeeeee']._video.src);
             $.fn['eeeeee']._video.src = fileName;
 
-
-            // initialize plugin, default options shown
-            //$('.valiant360video').Valiant360();
-
-            // pause video
-            //$('.valiant360video').Valiant360('pause');
-
-            // load new video file
-            //$('.valiant360video').Valiant360('loadVideo', '/upload360video/videos_s_3.mp4');
-            // play video
-            //$('.valiant360video').Valiant360('play');
-
-
-            // load new photo file
-            //$('.valiant360video').Valiant360('loadPhoto', 'path/to/file.jpg');
-
-            // destroy Valiant360 processing/resources (however, will not remove element from the dom. That is left up to you)
-            //$('.valiant360video').Valiant360('destroy');
 
         }
 
@@ -493,10 +481,10 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
                     }
                     vm.cities = result;
                     try {
-                        var s = $cookieStore.get('sellhouseform');
+                        var s = $cookies.get('sellhouseform');
                         vm.card = JSON.parse(s);
 
-                        var s = $cookieStore.get('sellhousecurrentcard');
+                        var s = $cookies.get('sellhousecurrentcard');
                         vm.currentCard = JSON.parse(s);
                     }
                     catch (e) {
@@ -528,7 +516,7 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
 
             }
             var s = JSON.stringify(vm.card);
-            $cookieStore.put('sellhouseform', s);
+            $cookies.put('sellhouseform', s);
         }
 
         $scope.saveModel = function () {
@@ -661,10 +649,10 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
 
                 vm.currentCard = card;
                 var s = JSON.stringify(vm.currentCard);
-                $cookieStore.put('sellhousecurrentcard', s);
+                $cookies.put('sellhousecurrentcard', s);
 
                 //var s = {};
-                //$cookieStore.put('sellhouseform', s);
+                //$cookies.put('sellhouseform', s);
 
                 $scope.showstate2 = true;
 

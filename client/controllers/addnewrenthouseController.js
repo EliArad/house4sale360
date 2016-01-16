@@ -4,10 +4,11 @@
 app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'appCookieStore', '$window',
     '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope', 'API',
     'SessionStorageService', '$msgbox', '$cookieStore', 'dboperations', 'fileReader', '$sce','citiesservice',
+    'versionReloader',
     function ($scope, Members, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
               $state, myhttphelper, $rootScope, API, SessionStorageService, $msgbox,
-              $cookieStore, dboperations, fileReader, $sce,citiesservice) {
+              $cookieStore, dboperations, fileReader, $sce,citiesservice,versionReloader) {
 
 
         var vm = this;
@@ -63,6 +64,12 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
 
 
             }
+        }
+
+        versionReloader.addPage(reloadFunction);
+        function reloadFunction()
+        {
+            window.location.reload(true);
         }
 
         function sendResponseError(response) {
@@ -494,10 +501,10 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
                     }
                     vm.cities = result;
                     try {
-                        var s = $cookieStore.get('renthouseform');
+                        var s = $cookies.get('renthouseform');
                         vm.card = JSON.parse(s);
 
-                        var s = $cookieStore.get('renthousecurrentcard');
+                        var s = $cookies.get('renthousecurrentcard');
                         vm.currentCard = JSON.parse(s);
                     }
                     catch (e) {
@@ -529,7 +536,7 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
 
             }
             var s = JSON.stringify(vm.card);
-            $cookieStore.put('renthouseform', s);
+            $cookies.put('renthouseform', s);
         }
 
         $scope.saveModel = function () {
@@ -637,10 +644,10 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
 
                 vm.currentCard = card;
                 var s = JSON.stringify(vm.currentCard);
-                $cookieStore.put('renthousecurrentcard', s);
+                $cookies.put('renthousecurrentcard', s);
 
                 //var s = {};
-                //$cookieStore.put('renthouseform', s);
+                //$cookies.put('renthouseform', s);
 
                 $scope.showstate2 = true;
 

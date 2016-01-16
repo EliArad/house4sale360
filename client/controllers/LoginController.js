@@ -1,12 +1,12 @@
 'use strict';
 
 
-app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookieStore',
+app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
                  '$http', '$rootScope', 'myhttphelper', 'PassServiceParams',
-                 'socketioservice', 'SessionStorageService','$timeout',
-    function ($scope, $state, authToken, $cookieStore, $http, $rootScope,
+                 'socketioservice', 'SessionStorageService','$timeout','versionReloader',
+    function ($scope, $state, authToken, $cookies, $http, $rootScope,
               myhttphelper, PassServiceParams, socketioservice,
-              SessionStorageService,$timeout)
+              SessionStorageService,$timeout,versionReloader)
     {
 
 
@@ -21,11 +21,20 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookieStor
             email: ""
         };
 
+        versionReloader.addPage(reloadFunction);
+
+        function reloadFunction()
+        {
+            window.location.reload(true);
+        }
+
+
+
         $scope.vm.clearError = function () {
             $scope.loginfailure = false;
         }
 
-        //$scope.vm.user.email =$cookieStore.get('login_user_name');
+        //$scope.vm.user.email =$cookies.get('login_user_name');
         function login() {
 
             authToken.RemoveToken();

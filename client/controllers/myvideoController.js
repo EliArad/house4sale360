@@ -1,8 +1,8 @@
 'use strict';
 
 app.controller('myvideoController', ['$scope','$state', 'authToken','myhttphelper',
-               '$sce','fileReader','$window','video','API','SessionStorageService',
-  function($scope,$state, authToken,myhttphelper,$sce,fileReader,$window,video,API,SessionStorageService)
+               '$sce','fileReader','$window','video','API','SessionStorageService','versionReloader',
+  function($scope,$state, authToken,myhttphelper,$sce,fileReader,$window,video,API,SessionStorageService,versionReloader)
   {
     var vm = this;
     $scope.pageClass = 'page-home';
@@ -25,6 +25,12 @@ app.controller('myvideoController', ['$scope','$state', 'authToken','myhttphelpe
       currentTime: 0,
       duration: 0
     };
+
+    versionReloader.addPage(reloadFunction);
+    function reloadFunction()
+    {
+      window.location.reload(true);
+    }
 
     $scope.videooption1 = true;
     $scope.savevideooptions1 = function()

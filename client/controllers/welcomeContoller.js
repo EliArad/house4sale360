@@ -1,10 +1,15 @@
 'use strict';
 
-app.controller('welcomeController', ['$scope', '$state', 'authToken',
-    function ($scope, $state, authToken)
+app.controller('welcomeController', ['$scope', '$state', 'authToken','versionReloader',
+    function ($scope, $state, authToken,versionReloader)
     {
         var vm = this;
 
+        versionReloader.addPage(reloadFunction);
+        function reloadFunction()
+        {
+            window.location.reload(true);
+        }
 
         function load360Video(fileName)
         {
@@ -23,11 +28,39 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
                 muted: true,            // video muted by default
                 autoplay: true          // video autoplays by default
             }
-            $('.welcome360video').Valiant360(options);
+            $('.valiant360video').Valiant360(options);
             $.fn['eeeeee']._video.src = './upload360video/welcome.mp4';
         }
 
-        load360Video();
+        //load360Video();
+        loadPhotoScphere('welcome360imageid', '400px', './uploadimages/welcome360.jpg');
+
+        function loadPhotoScphere(divid, hight, filename)
+        {
+
+            var PSV = new PhotoSphereViewer({
+                // Panorama, given in base 64
+                panorama: filename,
+
+                // Container
+                container: divid,
+
+                // Deactivate the animation
+                time_anim: false,
+
+                // Display the navigation bar
+                navbar: true,
+
+                // Resize the panorama
+                size: {
+                    width: '100%',
+                    height: hight
+                },
+
+                // No XMP data
+                usexmpdata: false
+            });
+        }
 
     }
 

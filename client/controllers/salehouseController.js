@@ -3,12 +3,12 @@
 
 app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCookieStore', '$window',
     '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope', 'API',
-    'SessionStorageService', '$msgbox', '$cookieStore', 'dboperations', 'fileReader', '$sce', 'citiesservice',
+    'SessionStorageService', '$msgbox', '$cookieStore', 'dboperations', 'fileReader', '$sce', 'citiesservice', 'versionReloader',
     function ($scope, Members, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
               $state, myhttphelper, $rootScope, API, SessionStorageService,
               $msgbox, $cookieStore, dboperations, fileReader, $sce,
-              citiesservice) {
+              citiesservice, versionReloader) {
 
 
         var vm = this;
@@ -44,6 +44,11 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
             vm.numberfloors.push(i);
         }
 
+        versionReloader.addPage(reloadFunction);
+        function reloadFunction() {
+            window.location.reload(true);
+        }
+
         myhttphelper.doGet('/isauth').
             then(sendResponseData).
             catch(sendResponseError);
@@ -60,8 +65,39 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
             }
         }
 
+        $scope.SuspendMessage = function (item) {
+
+            if (item.suspend == 1)
+            {
+                item.suspend = 0;
+            } else {
+                item.suspend = 1;
+            }
+
+            dboperations.suspendMessage(item.id, 'sale', item.suspend).then(function (result) {
+                if (item.suspend == 1) {
+                    document.getElementById('panellinkid' + item.id).style.textDecoration = 'line-through';
+                    document.getElementById('panellinkid' + item.id).disabled = true;
+                    document.getElementById('suspendLable' + item.id).innerHTML = 'החזר';
+                } else {
+                    document.getElementById('panellinkid' + item.id).style.textDecoration = 'none';
+                    document.getElementById('panellinkid' + item.id).disabled = false;
+                    document.getElementById('suspendLable' + item.id).innerHTML = 'השעה';
+                }
+            }).catch(function (result) {
+                console.log('suspend failed ' + result);
+            })
+        }
+        $scope.DeleteMessageComplete = function (id) {
+            dboperations.deleteMessage(id, 'sale').then(function (result) {
+
+            }).catch(function (result) {
+
+            })
+        }
+
         function sendResponseError(response) {
-            console.log(response);
+
             $state.go('login', {}, {
                 reload: true
             });
@@ -178,6 +214,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
         };
 
         $scope.accordionIsOpen = function (obj) {
+
 
             if (vm.lastObjId != obj.id) {
                 vm.accIsOpen = false;
@@ -373,9 +410,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
 
                         if (vm.cards[i].elevator == 0) {
                             vm.cards[i].elevator = 'אין';
-                        } else
-                        if (vm.cards[i].elevator == 6)
-                        {
+                        } else if (vm.cards[i].elevator == 6) {
                             vm.cards[i].elevator = 'יותר מחמש';
                         } else {
                             vm.cards[i].elevator = vm.cards[i].elevator.toString();
@@ -400,11 +435,10 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                         }
 
 
-                        switch(vm.cards[i].balcony)
-                        {
+                        switch (vm.cards[i].balcony) {
                             case 0:
                                 vm.cards[i].balcony = 'אין';
-                            break;
+                                break;
                             case 1:
                             case 2:
                             case 3:
@@ -412,13 +446,30 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                                 break;
                             case 4:
                                 vm.cards[i].balcony = 'יותר משלוש';
-                            break;
+                                break;
                         }
 
                         vm.cards[i].numberofrooms = vm.cards[i].numberofrooms.toString();
                         vm.cards[i].floor = vm.cards[i].floor.toString();
                         vm.cards[i].fromfloor = vm.cards[i].fromfloor.toString();
+
+
                     }
+                    for (var i = 0; i < vm.cards.length; i++) {
+                        setTimeout(function (i) {
+                            if (vm.cards[i].suspend == 1) {
+                                document.getElementById('panellinkid' + vm.cards[i].id).disabled = true;
+                                document.getElementById('panellinkid' + vm.cards[i].id).style.textDecoration = 'line-through';
+                                document.getElementById('suspendLable' + vm.cards[i].id).innerHTML = 'החזר';
+                            } else {
+                                document.getElementById('panellinkid' + vm.cards[i].id).disabled = false;
+                                document.getElementById('panellinkid' + vm.cards[i].id).style.textDecoration = 'none';
+                                document.getElementById('suspendLable' + vm.cards[i].id).innerHTML = 'השעה';
+                            }
+                        }, 100,i);
+                    }
+
+
                 });
             }).catch(function (result) {
                 console.log(result);
@@ -518,15 +569,14 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                 $scope.shoparkingoptions = true;
             }
 
-            switch (selectedItem)
-            {
+            switch (selectedItem) {
                 case '1':
                     $scope.shoparkingoptions2 = false;
-                break;
+                    break;
                 case '2':
                 case '3':
                     $scope.shoparkingoptions2 = true;
-                break;
+                    break;
 
             }
 
@@ -580,23 +630,22 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
             } else {
                 card.mamad = 0;
             }
-            switch(card.balcony)
-            {
+            switch (card.balcony) {
                 case 'אין':
                     card.balcony = 0;
-                break;
+                    break;
                 case '1':
                     card.balcony = 1;
-                break;
+                    break;
                 case '2':
                     card.balcony = 2;
-                break;
+                    break;
                 case '3':
                     card.balcony = 3;
-                break;
+                    break;
                 case 'יותר משלוש':
                     card.balcony = 4;
-                break;
+                    break;
             }
 
             dboperations.updateSaleHouseDetails(card).then(function (result) {
@@ -735,6 +784,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
         vm.onPlayerReady = function (API) {
             vm.API = API;
         };
+
 
         $scope.videoregularloaderinputChanged = function (obj) {
             var id = obj.getAttribute("data-vidlm");

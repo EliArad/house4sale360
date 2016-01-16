@@ -4,11 +4,11 @@
 app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper', 'myutils',
     'appCookieStore', 'socketioservice', 'Idle', '$rootScope',
     'SessionStorageService', 'API', 'myConfig', '$http', '$window', '$timeout', '$msgbox',
-    'dboperations', 'citiesservice', 'general', '$cookieStore', '$msgboxok', '$sce',
+    'dboperations', 'citiesservice', 'general', '$cookies', '$msgboxok', '$sce','versionReloader',
     function ($scope, $state, authToken, myhttphelper, myutils,
               appCookieStore, socketioservice, Idle, $rootScope, SessionStorageService,
               API, myConfig, $http, $window, $timeout, $msgbox, dboperations,
-              citiesservice, general, $cookieStore, $msgboxok, $sce) {
+              citiesservice, general, $cookies, $msgboxok, $sce,versionReloader) {
 
 
         var vm = this;
@@ -33,6 +33,14 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         vm.schonotSelected = [
             //{name:'תל אביב'}
         ];
+
+        versionReloader.addPage(reloadFunction);
+
+        function reloadFunction()
+        {
+            window.location.reload(true);
+        }
+
 
         $scope.removeSchonaFromList = function (index) {
             vm.schonotSelected.splice(index, 1);
@@ -99,19 +107,22 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                     }
                     vm.cities = result;
                     try {
-                        var ressearch = $cookieStore.get('sellhousesearch');
+
+                        var ressearch = $cookies.get('sellhousesearch');
                         if (ressearch != undefined)
                             vm.search = JSON.parse(ressearch);
 
-                        ressearch = $cookieStore.get('citiesSelected');
+                        ressearch = $cookies.get('citiesSelected');
+
                         if (ressearch != undefined)
                             vm.citiesSelected = JSON.parse(ressearch);
 
-                        ressearch = $cookieStore.get('schonotSelected');
+
+                        ressearch = $cookies.get('schonotSelected');
                         if (ressearch != undefined)
                             vm.schonotSelected = JSON.parse(ressearch);
 
-                        ressearch = $cookieStore.get('aptstatus');
+                        ressearch = $cookies.get('aptstatus');
                         if (ressearch != undefined)
                             vm.aptstatus = JSON.parse(ressearch);
 
@@ -151,16 +162,16 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
         $('#myModal').on('hidden.bs.modal', function () {
             var s = JSON.stringify(vm.search);
-            $cookieStore.put('sellhousesearch', s);
+            $cookies.put('sellhousesearch', s);
 
             s = JSON.stringify(vm.citiesSelected);
-            $cookieStore.put('citiesSelected', s);
+            $cookies.put('citiesSelected', s);
 
             s = JSON.stringify(vm.schonotSelected);
-            $cookieStore.put('schonotSelected', s);
+            $cookies.put('schonotSelected', s);
 
             s = JSON.stringify(vm.aptstatus);
-            $cookieStore.put('aptstatus', s);
+            $cookies.put('aptstatus', s);
 
             ShowResults();
 
@@ -702,6 +713,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
         $scope.UpdateMessageType = function()
         {
+
             if (vm.search.agent == 'קבלן')
             {
                 $scope.showmessagetype = false;

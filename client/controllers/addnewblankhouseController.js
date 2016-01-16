@@ -3,11 +3,11 @@
 
 app.controller('addnewblankhouseController', ['$scope', 'Members', 'general', 'appCookieStore', '$window',
     '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope', 'API',
-    'SessionStorageService', '$msgbox', '$cookieStore', 'dboperations', 'fileReader', '$sce','citiesservice',
+    'SessionStorageService', '$msgbox', '$cookies', 'dboperations', 'fileReader', '$sce','citiesservice','versionReloader',
     function ($scope, Members, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
               $state, myhttphelper, $rootScope, API, SessionStorageService, $msgbox,
-              $cookieStore, dboperations, fileReader, $sce,citiesservice) {
+              $cookies, dboperations, fileReader, $sce,citiesservice,versionReloader) {
 
 
         var vm = this;
@@ -43,6 +43,12 @@ app.controller('addnewblankhouseController', ['$scope', 'Members', 'general', 'a
         var msg1 = 'התמונות צריכות להיות בגודל של ' + minWidth + 'x' + minHeight + ' לפחות';
         $scope.showvideosingle = false;
         $scope.showvideo360single = false;
+
+        versionReloader.addPage(reloadFunction);
+        function reloadFunction()
+        {
+            window.location.reload(true);
+        }
 
 
         vm.numberfloors.push('קרקע');
@@ -493,10 +499,10 @@ app.controller('addnewblankhouseController', ['$scope', 'Members', 'general', 'a
                     }
                     vm.cities = result;
                     try {
-                        var s = $cookieStore.get('sellhouseform');
+                        var s = $cookies.get('sellhouseform');
                         vm.card = JSON.parse(s);
 
-                        var s = $cookieStore.get('sellhousecurrentcard');
+                        var s = $cookies.get('sellhousecurrentcard');
                         vm.currentCard = JSON.parse(s);
                     }
                     catch (e) {
@@ -528,7 +534,7 @@ app.controller('addnewblankhouseController', ['$scope', 'Members', 'general', 'a
 
             }
             var s = JSON.stringify(vm.card);
-            $cookieStore.put('sellhouseform', s);
+            $cookies.put('sellhouseform', s);
         }
 
         $scope.saveModel = function () {
@@ -661,10 +667,10 @@ app.controller('addnewblankhouseController', ['$scope', 'Members', 'general', 'a
 
                 vm.currentCard = card;
                 var s = JSON.stringify(vm.currentCard);
-                $cookieStore.put('sellhousecurrentcard', s);
+                $cookies.put('sellhousecurrentcard', s);
 
                 //var s = {};
-                //$cookieStore.put('sellhouseform', s);
+                //$cookies.put('sellhouseform', s);
 
                 $scope.showstate2 = true;
 

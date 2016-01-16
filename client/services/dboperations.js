@@ -96,6 +96,14 @@ app.factory('dboperations', function ($http, myConfig) {
     }
 
 
+    function suspendMessage(id, tablename,suspend) {
+        var membersAPI = myConfig.url + "/api/dbstore/suspendMessage";
+        return $http.post(membersAPI, {id:id, 'tablename': tablename, suspend:suspend});
+    }
+    function deleteMessage(id,tablename) {
+        var membersAPI = myConfig.url + "/api/dbstore/deleteMessage";
+        return $http.post(membersAPI, {id:id, 'tablename': tablename});
+    }
 
     return {
         getSaleHousePictureList:getSaleHousePictureList,
@@ -114,7 +122,9 @@ app.factory('dboperations', function ($http, myConfig) {
         getRentHouseVideoList:getRentHouseVideoList,
         getSaleHouseVideo360List:getSaleHouseVideo360List,
         GetSaleHouseQueryResults:GetSaleHouseQueryResults,
-        getRentHouse360PictureList:getRentHouse360PictureList
+        getRentHouse360PictureList:getRentHouse360PictureList,
+        suspendMessage:suspendMessage,
+        deleteMessage:deleteMessage
 
     };
 

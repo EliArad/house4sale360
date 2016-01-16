@@ -25,6 +25,12 @@ module.exports = function (app,dbstoreController) {
         app.post('/api/dbstore/getSaleHouseVideo360List', jwtauth, dbstoreController.getSaleHouseVideo360List);
 
 
+        app.post('/api/dbstore/suspendMessage', jwtauth, dbstoreController.suspendMessage);
+        app.post('/api/dbstore/deleteMessage', jwtauth, dbstoreController.deleteMessage);
+
+
+
+
         app.post('/api/dbstore/getRentHouseVideo360List', jwtauth, dbstoreController.getRentHouseVideo360List);
         app.post('/api/dbstore/getRentHousePictureList', jwtauth, dbstoreController.getRentHousePictureList);
         app.post('/api/dbstore/getRentHouse360PictureList', jwtauth, dbstoreController.getRentHouse360PictureList);

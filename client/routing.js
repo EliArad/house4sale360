@@ -41,10 +41,11 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
   }).state('addnewblankhouse', {
     url: '/addnewblankhouse',
     templateUrl: '/client/views/addnewblankhouse.html'
+  }).state('virtualtour', {
+    url: '/virtualtour',
+    controller: 'virtualTourController',
+    templateUrl: '/virtualtours/57/114/index.html'
   });
-
-
-
 
 
   $httpProvider.interceptors.push('authIntercepter');

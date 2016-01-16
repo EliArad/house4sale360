@@ -1,13 +1,19 @@
 'use strict';
 
-app.controller('vr360videoController', ['$scope', '$state', 'authToken',
-  function ($scope, $state, authToken) {
+app.controller('vr360videoController', ['$scope', '$state', 'authToken','versionReloader',
+  function ($scope, $state, authToken,versionReloader) {
 
 
     $(document).ready(function () {
       $('.valiantPhoto').Valiant360();
     });
 
+
+    versionReloader.addPage(reloadFunction);
+    function reloadFunction()
+    {
+      window.location.reload(true);
+    }
 
     (function (i, s, o, g, r, a, m) {
       i['GoogleAnalyticsObject'] = r;

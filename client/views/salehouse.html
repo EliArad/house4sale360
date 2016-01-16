@@ -95,7 +95,8 @@
                     <div class="panel panel-default" ng-repeat="item in vm.cards">
                         <div class="panel-heading">
                             <h4 class="panel-title">
-                                <a data-toggle="collapse" style="cursor :pointer"
+
+                                <a data-toggle="collapse" id="panellinkid{{ item.id }}" style="cursor :pointer"
                                    ng-click="accordionIsOpen(item)"
                                    data-parent="#accordion" data-target="#collapse{{ $index}}">
                                     {{ item.propertyType }}
@@ -112,6 +113,9 @@
                                    מחיר:
                                     {{ item.price }}
                                 </a>
+                                <a  id="suspendLable{{ item.id }}" ng-click="SuspendMessage(item)" style="float: left;color:orange;cursor: pointer">השעה</a>
+
+                                <a ng-click="DeleteMessageComplete(item.id)" style="float: left;color:orange;margin-left: 7px;cursor: pointer">מחק</a>
                             </h4>
                         </div>
                         <div id="collapse{{ $index}}" class="panel-collapse collapse out">

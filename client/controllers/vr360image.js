@@ -1,8 +1,15 @@
 'use strict';
 
-app.controller('vr360imageController', ['$scope', '$state', 'authToken',
-  function ($scope, $state, authToken)
+app.controller('vr360imageController', ['$scope', '$state', 'authToken','versionReloader',
+  function ($scope, $state, authToken,versionReloader)
   {
+
+    versionReloader.addPage(reloadFunction);
+    function reloadFunction()
+    {
+      window.location.reload(true);
+    }
+
     window.onload = function() {
       document.getElementById('go').addEventListener('click', loadPredefinedPanorama, false);
 

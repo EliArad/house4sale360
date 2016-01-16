@@ -3,12 +3,12 @@
 
 app.controller('kablanhouseController', ['$scope', 'Members', 'general', 'appCookieStore', '$window',
     '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope', 'API',
-    'SessionStorageService', '$msgbox', '$cookieStore', 'dboperations', 'fileReader', '$sce', 'citiesservice',
+    'SessionStorageService', '$msgbox', '$cookies', 'dboperations', 'fileReader', '$sce', 'citiesservice','versionReloader',
     function ($scope, Members, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
               $state, myhttphelper, $rootScope, API, SessionStorageService,
-              $msgbox, $cookieStore, dboperations, fileReader, $sce,
-              citiesservice) {
+              $msgbox, $cookies, dboperations, fileReader, $sce,
+              citiesservice,versionReloader) {
 
 
         var vm = this;
@@ -42,6 +42,12 @@ app.controller('kablanhouseController', ['$scope', 'Members', 'general', 'appCoo
         vm.numberfloors.push('קרקע');
         for (var i = 1; i < 35; i++) {
             vm.numberfloors.push(i);
+        }
+
+        versionReloader.addPage(reloadFunction);
+        function reloadFunction()
+        {
+            window.location.reload(true);
         }
 
         myhttphelper.doGet('/isauth').

@@ -227,10 +227,13 @@ module.exports = function (sqlserver) {
             sqlserver.get(function (err, con) {
                 if (!err) {
                     req.body.data.userid = req.idFromToken;
+                    var datesql = new Date().toISOString().slice(0, 19).replace('T', ' ');
+                    req.body.data.dateEnter = datesql;
+                    req.body.data.suspend = 0;
                     var query = con.query('INSERT INTO sellhousedetails SET ?', req.body.data, function (err, result) {
                         sqlserver.release(con);
                         if (err) {
-                            console.log(err); 
+                            console.log(err);
                             res.sendStatus(500);
                         } else {
                             res.send(result);
@@ -347,7 +350,7 @@ module.exports = function (sqlserver) {
                             res.json({
                                 rows: rows,
                                 index: req.body.index,
-                                userid:req.idFromToken
+                                userid: req.idFromToken
                             });
                         }
                     });
@@ -360,6 +363,9 @@ module.exports = function (sqlserver) {
             sqlserver.get(function (err, con) {
                 if (!err) {
                     req.body.data.userid = req.idFromToken;
+                    var datesql = new Date().toISOString().slice(0, 19).replace('T', ' ');
+                    req.body.data.dateEnter = datesql;
+                    req.body.data.suspend = 0;
                     var query = con.query('INSERT INTO renthousedetails SET ?', req.body.data, function (err, result) {
                         sqlserver.release(con);
                         if (err) {
@@ -381,6 +387,47 @@ module.exports = function (sqlserver) {
             console.log('getRentDetails');
             res.send('ok');
         },
+        suspendMessage: function (req, res, next) {
+
+            sqlserver.get(function (err, con) {
+                if (!err) {
+                    console.log(req.body);
+                    if (req.body.tablename == 'sale') {
+                        con.query('UPDATE sellhousedetails SET ? WHERE ?', [{suspend: req.body.suspend}, {id: req.body.id}], function(err, result){
+                            sqlserver.release(con);
+                            if (err)
+                            {
+                                console.log(err);
+                                return res.status(500).send(err);
+                            } else {
+                                console.log(result);
+                                return res.send('ok');
+                            }
+                        });
+                    }  else {
+                        if (req.body.tablename == 'rent') {
+                            con.query('UPDATE renthousedetails SET ? WHERE ?', [{suspend: req.body.suspend}, {id: req.body.id}], function(err,result){
+                                sqlserver.release(con);
+                                if (err)
+                                {
+                                    return res.status(500).send(err);
+                                } else {
+                                    return res.send('ok');
+                                }
+                            });
+                        } else {
+                            sqlserver.release(con);
+                            return res.status(500).send('error');
+                        }
+                    }
+                }
+            });
+        },
+        deleteMessage: function (req, res, next) {
+            console.log('deleteMessage');
+            res.send('ok');
+        },
+
         getRentHousePictureList: function (req, res, next) {
             sqlserver.get(function (err, con) {
                 if (!err) {

@@ -86,60 +86,71 @@ module.exports = function () {
                 sql = sql + ') ';
             }
         }
-
+        sql = sql + ' AND ( sellhousedetails.suspend = 0 ) ';
+        sql = sql + '\n';
         if (opt.numberofrooms != undefined) {
             sql = sql + ' AND (';
             sql = sql + 'sellhousedetails.numberofrooms = ' + opt.numberofrooms + ' ';
             sql = sql + ') ';
+            sql = sql + '\n';
         }
 
         if (opt.yearsofproperty != undefined) {
             sql = sql + ' AND (';
             sql = sql + 'sellhousedetails.yearsofproperty <= ' + opt.yearsofproperty + ' ';
             sql = sql + ') ';
+            sql = sql + '\n';
         }
 
         if (opt.aircond != undefined) {
             sql = sql + ' AND (';
             sql = sql + 'sellhousedetails.aircond != ' + con.escape(opt.aircond) + ' ';
             sql = sql + ') ';
+            sql = sql + '\n';
         }
 
         if (opt.parking != undefined) {
             sql = sql + ' AND (';
             sql = sql + 'sellhousedetails.parking >= ' + opt.parking + ' ';
             sql = sql + ') ';
+            sql = sql + '\n';
         }
         if (opt.parkingtype != undefined) {
             sql = sql + ' AND (';
             sql = sql + 'sellhousedetails.parkingtype = ' + opt.parkingtype + ' ';
             sql = sql + ') ';
+            sql = sql + '\n';
         }
 
         if (opt.parkingtype2 != undefined) {
             sql = sql + ' AND (';
             sql = sql + 'sellhousedetails.parkingtype2 = ' + opt.parkingtype2 + ' ';
             sql = sql + ') ';
+            sql = sql + '\n';
         }
         if (opt.warehouse != undefined) {
             sql = sql + ' AND (';
             sql = sql + 'sellhousedetails.warehouse >= ' + opt.warehouse + ' ';
             sql = sql + ') ';
+            sql = sql + '\n';
         }
         if (opt.elevator != undefined) {
             sql = sql + ' AND (';
             sql = sql + 'sellhousedetails.elevator >= ' + opt.elevator + ' ';
             sql = sql + ') ';
+            sql = sql + '\n';
         }
         if (opt.mamad != undefined) {
             sql = sql + ' AND (';
             sql = sql + 'sellhousedetails.mamad = ' + opt.mamad + ' ';
             sql = sql + ') ';
+            sql = sql + '\n';
         }
         if (opt.balcony != undefined) {
             sql = sql + ' AND (';
             sql = sql + 'sellhousedetails.balcony >= ' + opt.balcony + ' ';
             sql = sql + ') ';
+            sql = sql + '\n';
         }
 
         return sql;

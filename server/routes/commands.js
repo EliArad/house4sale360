@@ -45,7 +45,10 @@ var routes = function (app) {
     });
   });
 
+  app.get('/api/getVersion', function (req, res, next) {
 
+      return res.send('1.0');
+  });
 
   app.post('/api/getcitieschunk', function (req, res, next) {
 

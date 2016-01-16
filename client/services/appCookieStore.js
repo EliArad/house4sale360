@@ -1,21 +1,21 @@
 
-app.factory("appCookieStore", function($cookieStore) {
+app.factory("appCookieStore", function($cookies) {
 
     var set = function (page , value) {
-        $cookieStore.put(page, value);
+        $cookies.put(page, value);
     }
     var get = function (page) {
-        return $cookieStore.get(page);
+        return $cookies.get(page);
     }
     var get_wd = function (page, d) {
-      var c = $cookieStore.get(page);
+      var c = $cookies.get(page);
       if(typeof c == "undefined") //no errors
         return d;
       return c;
     }
     var remove = function(page)
     {
-        $cookieStore.remove(page);
+        $cookies.remove(page);
     }
 
     return {

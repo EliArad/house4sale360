@@ -1,12 +1,12 @@
-app.factory("authToken", function($cookieStore) {
+app.factory("authToken", function($cookies) {
 
   var setToken = function (token) {
-    //$cookieStore.put('token', token);
+    //$cookies.put('token', token);
     sessionStorage.setItem('token', token);
   }
 
   function getToken() {
-     //return $cookieStore.get('token');
+     //return $cookies.get('token');
      return sessionStorage.getItem('token');
   }
 
@@ -14,7 +14,7 @@ app.factory("authToken", function($cookieStore) {
     return !!getToken();
   }
   function RemoveToken() {
-    //$cookieStore.remove('token');
+    //$cookies.remove('token');
     sessionStorage.removeItem('token');
   }
 
