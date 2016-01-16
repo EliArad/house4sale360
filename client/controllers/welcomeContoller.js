@@ -14,8 +14,8 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken','versionRel
         settings.set(TDV.PlayerSettings.FLASH_PANORAMA_PLAYER_URL, '/client/js/lib/PanoramaRenderer.swf');
         settings.set(TDV.PlayerSettings.THREE_JS_WEBGL_URL, '/client/js/lib/ThreeWebGL.js');
 
-        showPreloader();
-        loadTour(settings);
+        //showPreloader();
+      //  loadTour(settings);
 
 
         versionReloader.addPage(reloadFunction);
