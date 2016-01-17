@@ -28,15 +28,15 @@
 
             <div class="col-sm-9">
                 <ui-select id="city"
-                           on-select="getcity(item.city)"
+                           on-select="getcity(item.city,$index)"
                            theme="bootstrap" ng-model="item.city"
                            required>
                     <ui-select-match placeholder="בחר עיר">
-                        <span ng-bind="$select.selected.city"></span>
+                        <span ng-bind="$select.selected"></span>
                     </ui-select-match>
                     <ui-select-choices
-                            repeat="city in vm.cities |filter : $select.search">
-                        <span ng-bind-html="city.city | highlight : $select.search"></span>
+                            repeat="city in vm.citiesOnly |filter : $select.search">
+                        <span ng-bind-html="city | highlight : $select.search"></span>
                     </ui-select-choices>
                 </ui-select>
             </div>
@@ -48,12 +48,14 @@
             <label class="control-label col-sm-3" for="">אזור</label>
 
             <div class="col-sm-9">
-                        <span ng-show="shownapa">
-                            {{ item.area }}
+                        <span ng-show="item.shownapa">
+
+                            {{ AREA }}
                             &nbsp;
                             נפת
                             &nbsp;
-                            {{ item.napa }}
+
+                            {{ NAPA }}
                             <!--{{ item.code }}-->
                         </span>
             </div>

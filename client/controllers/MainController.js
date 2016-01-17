@@ -42,6 +42,10 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         }
 
 
+        vm.cities = citiesservice.getcities_all_ready();
+        vm.citiesOnly = citiesservice.getcities_ready();
+
+
         $scope.removeSchonaFromList = function (index) {
             vm.schonotSelected.splice(index, 1);
         }
@@ -90,64 +94,45 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         }
 
         $(document).ready(function () {
+
             try {
 
-                citiesservice.getcities(function (err, result) {
+                var ressearch = $cookies.get('sellhousesearch');
+                if (ressearch != undefined)
+                    vm.search = JSON.parse(ressearch);
 
-                    if (err != null) {
-                        console.log(err);
-                        authToken.RemoveToken();
-                        $state.go('login', {}, {
-                            reload: true
-                        });
-                        $rootScope.$broadcast("updateHeader", authToken.getToken());
-                        return;
-                    } else {
-                        console.log('cities loaded ok');
-                    }
-                    vm.cities = result;
-                    try {
+                ressearch = $cookies.get('citiesSelected');
 
-                        var ressearch = $cookies.get('sellhousesearch');
-                        if (ressearch != undefined)
-                            vm.search = JSON.parse(ressearch);
-
-                        ressearch = $cookies.get('citiesSelected');
-
-                        if (ressearch != undefined)
-                            vm.citiesSelected = JSON.parse(ressearch);
+                if (ressearch != undefined)
+                    vm.citiesSelected = JSON.parse(ressearch);
 
 
-                        ressearch = $cookies.get('schonotSelected');
-                        if (ressearch != undefined)
-                            vm.schonotSelected = JSON.parse(ressearch);
+                ressearch = $cookies.get('schonotSelected');
+                if (ressearch != undefined)
+                    vm.schonotSelected = JSON.parse(ressearch);
 
-                        ressearch = $cookies.get('aptstatus');
-                        if (ressearch != undefined)
-                            vm.aptstatus = JSON.parse(ressearch);
+                ressearch = $cookies.get('aptstatus');
+                if (ressearch != undefined)
+                    vm.aptstatus = JSON.parse(ressearch);
 
 
-                        $('#selectPropertyType').multiselect('select', vm.search.propertyType);
-                        $('#selectrenovated').multiselect('select', vm.search.renovated);
+                $('#selectPropertyType').multiselect('select', vm.search.propertyType);
+                $('#selectrenovated').multiselect('select', vm.search.renovated);
 
-                        setDefaultSearch();
+                setDefaultSearch();
 
-                        $scope.getparking(vm.search.parking);
-                        $scope.onAptStatus();
+                $scope.getparking(vm.search.parking);
+                $scope.onAptStatus();
 
-                        $scope.UpdateMessageType();
+                $scope.UpdateMessageType();
 
-                    }
-                    catch (e) {
-
-                    }
-
-                    ShowResults();
-                });
             }
             catch (e) {
 
             }
+
+            ShowResults();
+
         });
 
         $scope.getschona = function (selectedItem) {
@@ -186,33 +171,49 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 $scope.showaptselect = false;
             }
         }
+        function getCityObject(selectedItem)
+        {
+            for (var i = 0 ; i < vm.cities.length ;i++)
+            {
+                if (selectedItem == vm.cities[i].city)
+                {
+                    return vm.cities[i];
+                }
+            }
+        }
 
         $scope.getcity = function (selectedItem) {
 
-            vm.search.napa = selectedItem.napa;
-            vm.search.code = selectedItem.code;
-            vm.search.city = selectedItem.city;
+
+            //vm.search.napa = selectedItem.napa;
+            //vm.search.code = selectedItem.code;
+
+            vm.search.city = selectedItem;
+
             vm.citiesSelected.push({name: vm.search.city});
 
+            var objectData = getCityObject(selectedItem);
+
+
             $scope.shownapa = true;
-            if (lastCity == undefined || lastCity != selectedItem.code) {
-                console.log('selectedItem.code : ' + selectedItem.code);
-                general.getSchonot(selectedItem.code).then(function (result) {
+            if (lastCity == undefined || lastCity != objectData.code) {
+                console.log('selectedItem.code : ' + objectData.code);
+                general.getSchonot(objectData.code).then(function (result) {
                     vm.search.neighborhood = '';
                     vm.neighborhoods = result.data;
                 })
             }
-            lastCity = selectedItem.code;
+            lastCity = objectData.code;
 
-            if (selectedItem.area == 'merkaz') {
+            if (objectData.area == 'merkaz') {
                 vm.search.area = 'אזור המרכז';
-            } else if (selectedItem.area == 'darom') {
+            } else if (objectData.area == 'darom') {
                 vm.search.area = 'אזור הדרום';
-            } else if (selectedItem.area == 'jerusalem') {
+            } else if (objectData.area == 'jerusalem') {
                 vm.search.area = 'אזור ירושלים';
-            } else if (selectedItem.area == 'zafon') {
+            } else if (objectData.area == 'zafon') {
                 vm.search.area = 'אזור הצפון';
-            } else if (selectedItem.area == 'haifa') {
+            } else if (objectData.area == 'haifa') {
                 vm.search.area = 'אזור חיפה';
             }
         }

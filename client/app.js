@@ -30,8 +30,8 @@ var app = angular
 
 
   ]).constant("myConfig", {
-        //"url": "http://192.168.22.32:8000",
-        "url": "http://localhost:8000",
+        "url": "http://192.168.22.32:8000",
+        //"url": "http://localhost:8000",
         //"url": "http://192.168.22.28:8080",
         //"url": "http://192.168.1.16:8080",
         'timeoutSeconds': 1200,

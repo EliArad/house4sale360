@@ -56,11 +56,12 @@ var routes = function (app) {
      var a = [];
      for (var i = req.body.index; i < (req.body.index + req.body.chunk); i++) {
         a.push(cities[i]);
+        //fs.appendFile('./c.txt', cities[i].city + "\r\n");
      }
-     console.log(req.body.index + ' ' + req.body.chunk);
+     //console.log(req.body.index + ' ' + (req.body.index + req.body.chunk));
      //console.log('a:');
      //console.log(a);
-     res.json({ a:a, size:req.body.size});
+     res.json({ a:a, size:req.body.size, index:req.body.index});
   });
 
 

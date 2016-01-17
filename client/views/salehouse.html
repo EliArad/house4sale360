@@ -97,7 +97,7 @@
                             <h4 class="panel-title">
 
                                 <a data-toggle="collapse" id="panellinkid{{ item.id }}" style="cursor :pointer"
-                                   ng-click="accordionIsOpen(item)"
+                                   ng-click="accordionIsOpen(item, $index)"
                                    data-parent="#accordion" data-target="#collapse{{ $index}}">
                                     {{ item.propertyType }}
                                     ב

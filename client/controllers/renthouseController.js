@@ -328,97 +328,87 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
         initcrousle();
 
         try {
-            citiesservice.getcities(function (err, result) {
-                if (err == 'inprocess')
-                    return;
-                if (err != null) {
-                    authToken.RemoveToken();
-                    $state.go('login', {}, {
-                        reload: true
-                    });
-                    $rootScope.$broadcast("updateHeader", authToken.getToken());
-                    return;
-                }
-                vm.cities = result;
+            vm.cities = citiesservice.getcities_all_ready();
+            vm.citiesOnly = citiesservice.getcities_ready();
 
-                dboperations.getAllRentHouseOfMine().then(function (result) {
-                    vm.cards = result.data;
-                    for (var i = 0; i < vm.cards.length; i++) {
+            dboperations.getAllRentHouseOfMine().then(function (result) {
+                vm.cards = result.data;
+                for (var i = 0; i < vm.cards.length; i++) {
 
-                        var city = vm.cards[i].city;
-                        var area = vm.cards[i].area;
-                        var napa = vm.cards[i].napa;
-                        var code = vm.cards[i].code;
+                    var city = vm.cards[i].city;
+                    var area = vm.cards[i].area;
+                    var napa = vm.cards[i].napa;
+                    var code = vm.cards[i].code;
 
-                        var x = {
-                            'city': city,
-                            'area': area,
-                            'napa': napa,
-                            'code': code
-                        };
-                        vm.cards[i].city = x;
+                    var x = {
+                        'city': city,
+                        'area': area,
+                        'napa': napa,
+                        'code': code
+                    };
+                    vm.cards[i].city = x;
 
-                        var streetName = vm.cards[i].street;
-                        var x1 = {
-                            'name': streetName
-                        };
-                        vm.cards[i].street = x1;
+                    var streetName = vm.cards[i].street;
+                    var x1 = {
+                        'name': streetName
+                    };
+                    vm.cards[i].street = x1;
 
-                        var neighborhood = vm.cards[i].neighborhood;
-                        x1 = {
-                            'name': neighborhood
-                        };
-                        vm.cards[i].neighborhood = x1;
+                    var neighborhood = vm.cards[i].neighborhood;
+                    x1 = {
+                        'name': neighborhood
+                    };
+                    vm.cards[i].neighborhood = x1;
 
-                        if (vm.cards[i].elevator == 0) {
-                            vm.cards[i].elevator = 'אין';
-                        } else
-                        if (vm.cards[i].elevator == 6)
-                        {
-                            vm.cards[i].elevator = 'יותר מחמש';
-                        } else {
-                            vm.cards[i].elevator = vm.cards[i].elevator.toString();
-                        }
-
-                        if (vm.cards[i].parking == 0) {
-                            vm.cards[i].parking = 'אין';
-                        } else {
-                            vm.cards[i].parking = vm.cards[i].parking.toString();
-                        }
-
-                        if (vm.cards[i].warehouse == 0) {
-                            vm.cards[i].warehouse = 'אין';
-                        } else {
-                            vm.cards[i].warehouse = vm.cards[i].warehouse.toString();
-                        }
-
-                        if (vm.cards[i].mamad.data[0] == 0) {
-                            vm.cards[i].mamad = 'לא';
-                        } else {
-                            vm.cards[i].mamad = 'כן';
-                        }
-
-
-                        switch(vm.cards[i].balcony)
-                        {
-                            case 0:
-                                vm.cards[i].balcony = 'אין';
-                                break;
-                            case 1:
-                            case 2:
-                            case 3:
-                                vm.cards[i].balcony = vm.cards[i].balcony.toString();
-                                break;
-                            case 4:
-                                vm.cards[i].balcony = 'יותר משלוש';
-                                break;
-                        }
-
-                        vm.cards[i].numberofrooms = vm.cards[i].numberofrooms.toString();
-                        vm.cards[i].floor = vm.cards[i].floor.toString();
-                        vm.cards[i].fromfloor = vm.cards[i].fromfloor.toString();
+                    if (vm.cards[i].elevator == 0) {
+                        vm.cards[i].elevator = 'אין';
+                    } else
+                    if (vm.cards[i].elevator == 6)
+                    {
+                        vm.cards[i].elevator = 'יותר מחמש';
+                    } else {
+                        vm.cards[i].elevator = vm.cards[i].elevator.toString();
                     }
-                });
+
+                    if (vm.cards[i].parking == 0) {
+                        vm.cards[i].parking = 'אין';
+                    } else {
+                        vm.cards[i].parking = vm.cards[i].parking.toString();
+                    }
+
+                    if (vm.cards[i].warehouse == 0) {
+                        vm.cards[i].warehouse = 'אין';
+                    } else {
+                        vm.cards[i].warehouse = vm.cards[i].warehouse.toString();
+                    }
+
+                    if (vm.cards[i].mamad.data[0] == 0) {
+                        vm.cards[i].mamad = 'לא';
+                    } else {
+                        vm.cards[i].mamad = 'כן';
+                    }
+
+
+                    switch(vm.cards[i].balcony)
+                    {
+                        case 0:
+                            vm.cards[i].balcony = 'אין';
+                            break;
+                        case 1:
+                        case 2:
+                        case 3:
+                            vm.cards[i].balcony = vm.cards[i].balcony.toString();
+                            break;
+                        case 4:
+                            vm.cards[i].balcony = 'יותר משלוש';
+                            break;
+                    }
+
+                    vm.cards[i].numberofrooms = vm.cards[i].numberofrooms.toString();
+                    vm.cards[i].floor = vm.cards[i].floor.toString();
+                    vm.cards[i].fromfloor = vm.cards[i].fromfloor.toString();
+                }
+
             }).catch(function (result) {
                 console.log(result);
                 authToken.RemoveToken();
@@ -917,36 +907,7 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
             }
         }
 
-        $scope.getcity = function (selectedItem) {
 
-            vm.city.napa = selectedItem.napa;
-            vm.city.code = selectedItem.code;
-            vm.city.city = selectedItem.city;
-            $scope.shownapa = true;
-            if (lastCity == undefined || lastCity != selectedItem.code) {
-                general.getStreets(selectedItem.code).then(function (result) {
-                    vm.card.street = '';
-                    vm.streets = result.data;
-                })
-                general.getSchonot(selectedItem.code).then(function (result) {
-                    vm.card.neighborhood = '';
-                    vm.neighborhoods = result.data;
-                })
-            }
-            lastCity = selectedItem.code;
-
-            if (selectedItem.area == 'merkaz') {
-                vm.card.area = 'אזור המרכז';
-            } else if (selectedItem.area == 'darom') {
-                vm.card.area = 'אזור הדרום';
-            } else if (selectedItem.area == 'jerusalem') {
-                vm.card.area = 'אזור ירושלים';
-            } else if (selectedItem.area == 'zafon') {
-                vm.card.area = 'אזור הצפון';
-            } else if (selectedItem.area == 'haifa') {
-                vm.card.area = 'אזור חיפה';
-            }
-        }
     }
 ])
 ;

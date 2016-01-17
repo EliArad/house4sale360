@@ -126,6 +126,7 @@ module.exports = function (sqlserver) {
                 if (!err) {
                     var condition = {id: req.body.data.id};
                     var query = con.query('UPDATE sellhousedetails SET ? WHERE ?', [req.body.data, condition], function (err, result) {
+                        console.log(err);
                         sqlserver.release(con);
                         if (err) {
                             res.sendStatus(500);

@@ -1,25 +1,35 @@
 app.factory("citiesservice", function($http, $q,myConfig)
 {
-    var citiesData = [];
+    var citiesDataAll = [];
+    var citiesDataOnly = [];
     var inaction  = false;
+
+    function getcities_ready()
+    {
+
+        return citiesDataOnly;
+    }
+    function getcities_all_ready()
+    {
+
+        return citiesDataAll;
+    }
 
     function getcities(callback)
     {
         if (inaction == true)
         {
-          callback(null, citiesData);
+          callback('inprocess', citiesDataAll);
           return;
         }
           inaction = true;
-        if (citiesData.length == 0) {
+        if (citiesDataAll.length == 0) {
             //console.log('loading cities');
             var url = myConfig.url + '/api/getcities';
             $http.get(url).then(function(result){
                 var errorHappend = false;
-
-
                 var size = parseInt(result.data);
-                console.log('cities size: ' + size);
+                //console.log('cities size: ' + size);
                 var chunk;
                 var index = 0;
                 var index1 = 0;
@@ -32,27 +42,32 @@ app.factory("citiesservice", function($http, $q,myConfig)
                     }
                     chunk = Math.min(50, size);
                     size-=chunk;
-                    console.log('size:' + size);
+                    //console.log('size:' + size);
                     url = myConfig.url + '/api/getcitieschunk';
                     index1 = index;
                     index+=chunk;
                     $http.post(url, {size: size , index:index1, chunk:chunk}).then(function(result){
-                      console.log('adding: ' + result.data.a.length);
-                        for (var j = 0 ; j < result.data.a.length; j++) {
-                            citiesData.push(result.data.a[j]);
+                        var resize = result.data.a.length;
+                        //console.log(result.data);
+                        //console.log('adding: ' + resize);
+                        var x = 0;
+                        for (var j = result.data.index ; j < (result.data.index + resize); j++) {
+                            citiesDataOnly[j] = (result.data.a[x].city);
+                            citiesDataAll[j] = (result.data.a[x]);
+                            x++;
                         }
                         if (result.data.size == 0)
                         {
                             //console.log('finished, we have the cities');
                             //console.log(citiesData);
-                            console.log('size of cities is: ' + citiesData.length);
+                            //console.log('size of cities is: ' + citiesData.length);
                             inaction = false;
-                            citiesData.sort();
-                            callback(null, citiesData);
+                            callback(null, citiesDataAll);
+
 
                         }
                     }).catch (function(result){
-                        citiesData = [];
+                        citiesDataAll = [];
                         //console.log('error get cities');
                         errorHappend = true;
                         callback('error', result);
@@ -60,7 +75,7 @@ app.factory("citiesservice", function($http, $q,myConfig)
                     })
                 }
             }).catch(function(result){
-                citiesData = [];
+                citiesDataAll = [];
                 //console.log('error get cities');
                 callback('error', result);
             });
@@ -71,7 +86,9 @@ app.factory("citiesservice", function($http, $q,myConfig)
     }
 
     return {
-        getcities:getcities
+        getcities:getcities,
+        getcities_ready:getcities_ready,
+        getcities_all_ready:getcities_all_ready
     }
 
   });

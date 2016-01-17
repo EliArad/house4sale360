@@ -26,6 +26,8 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
             currentTime: 0,
             duration: 0
         };
+        vm.cities = citiesservice.getcities_all_ready();
+        vm.citiesOnly = citiesservice.getcities_ready();
         var slides = $scope.slides = [];
         $scope.shownapa = false;
         $window.onbeforeunload = $scope.onExit;
@@ -33,7 +35,6 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
         $scope.shoparkingoptions = false;
         $scope.shoprenovatedexp = false;
         $scope.showfurnatureexp = false;
-        vm.cities = [];
         vm.numberOfRooms = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 9, 10, 'יותר מעשרה'];
         vm.numberfloors = [];
         vm.balconies = ['אין', 1, 2, 3, 'יותר משלוש'];
@@ -464,44 +465,27 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
 
         $(document).ready(function () {
             try {
+                try {
+                    var s = $cookies.get('sellhouseform');
+                    vm.card = JSON.parse(s);
 
+                    var s = $cookies.get('sellhousecurrentcard');
+                    vm.currentCard = JSON.parse(s);
+                }
+                catch (e) {
 
-                citiesservice.getcities(function (err,result) {
+                }
 
-                    if (err != null) {
-                        console.log(result);
-                        if (err.contains('401')) {
-                            authToken.RemoveToken();
-                            $state.go('login', {}, {
-                                reload: true
-                            });
-                            $rootScope.$broadcast("updateHeader", authToken.getToken());
-                        }
-                        return;
-                    }
-                    vm.cities = result;
-                    try {
-                        var s = $cookies.get('sellhouseform');
-                        vm.card = JSON.parse(s);
+                if (vm.card.code != undefined && vm.card.area != undefined) {
+                    _displayStreets(vm.card.code, vm.card.area);
+                    vm.city.napa = vm.card.napa;
+                }
 
-                        var s = $cookies.get('sellhousecurrentcard');
-                        vm.currentCard = JSON.parse(s);
-                    }
-                    catch (e) {
-
-                    }
-
-                    if (vm.card.code != undefined && vm.card.area != undefined) {
-                        _displayStreets(vm.card.code, vm.card.area);
-                        vm.city.napa = vm.card.napa;
-                    }
-
-                    if (vm.card.parking != 'אין') {
-                        $scope.shoparkingoptions = true;
-                    } else {
-                        $scope.shoparkingoptions = false;
-                    }
-                });
+                if (vm.card.parking != 'אין') {
+                    $scope.shoparkingoptions = true;
+                } else {
+                    $scope.shoparkingoptions = false;
+                }
             }
             catch (e) {
 
@@ -590,12 +574,29 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
             formErrors(form);
 
             var card = angular.copy(vm.card);
-            card.city = vm.card.city.city;
-            card.napa = vm.card.city.napa;
-            card.code = vm.card.city.code;
-            card.area = vm.card.city.area;
+            card.city = vm.card.city;
+            var objdata = getCityObject(vm.card.city);
+            //console.log(card.city);
+            //console.log(objdata);
+            card.napa = objdata.napa;
+            card.code = objdata.code;
+            card.area = objdata.area;
+
+            if (objdata.area == 'merkaz') {
+                card.area = 'אזור המרכז';
+            } else if (objdata.area == 'darom') {
+                card.area = 'אזור הדרום';
+            } else if (objdata.area == 'jerusalem') {
+                card.area = 'אזור ירושלים';
+            } else if (objdata.area == 'zafon') {
+                card.area = 'אזור הצפון';
+            } else if (objdata.area == 'haifa') {
+                card.area = 'אזור חיפה';
+            }
+
             card.neighborhood = vm.card.neighborhood.name;
             card.street = vm.card.street.name;
+
 
             if (card.warehouse == 'אין')
             {
@@ -698,34 +699,50 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
             }
         }
 
+        function getCityObject(selectedItem)
+        {
+            for (var i = 0 ; i < vm.cities.length ;i++)
+            {
+                if (selectedItem == vm.cities[i].city)
+                {
+                    return vm.cities[i];
+                }
+            }
+        }
+
         $scope.getcity = function (selectedItem) {
-            console.log(selectedItem);
-            vm.city.napa = selectedItem.napa;
-            vm.city.code = selectedItem.code;
-            vm.city.city = selectedItem.city;
+
+
+            var objectData = getCityObject(selectedItem);
+            console.log(objectData);
+            vm.card.napa = objectData.napa;
+            vm.card.code = objectData.code;
+            vm.card.city = selectedItem;
+            $scope.NAPA = vm.card.napa;
             $scope.shownapa = true;
-            if (lastCity == undefined || lastCity != selectedItem.code) {
-                general.getStreets(selectedItem.code).then(function (result) {
+            if (lastCity == undefined || lastCity != objectData.code) {
+                general.getStreets(objectData.code).then(function (result) {
                     vm.card.street = '';
                     vm.streets = result.data;
                 })
-                general.getSchonot(selectedItem.code).then(function (result) {
+                general.getSchonot(objectData.code).then(function (result) {
                     vm.card.neighborhood = '';
                     vm.neighborhoods = result.data;
                 })
             }
-            lastCity = selectedItem.code;
+            lastCity = objectData.code;
 
-            if (selectedItem.area == 'merkaz') {
-                vm.card.area = 'אזור המרכז';
-            } else if (selectedItem.area == 'darom') {
-                vm.card.area = 'אזור הדרום';
-            } else if (selectedItem.area == 'jerusalem') {
-                vm.card.area = 'אזור ירושלים';
-            } else if (selectedItem.area == 'zafon') {
-                vm.card.area = 'אזור הצפון';
-            } else if (selectedItem.area == 'haifa') {
-                vm.card.area = 'אזור חיפה';
+
+            if (objectData.area == 'merkaz') {
+                $scope.AREA = 'אזור המרכז';
+            } else if (objectData.area == 'darom') {
+                $scope.AREA = 'אזור הדרום';
+            } else if (objectData.area == 'jerusalem') {
+                $scope.AREA = 'אזור ירושלים';
+            } else if (objectData.area == 'zafon') {
+                $scope.AREA = 'אזור הצפון';
+            } else if (objectData.area == 'haifa') {
+                $scope.AREA = 'אזור חיפה';
             }
             _saveModel();
         }

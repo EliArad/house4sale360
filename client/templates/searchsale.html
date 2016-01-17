@@ -50,15 +50,15 @@
 
                     <div class="col-sm-9">
                         <ui-select id="city"
-                                   on-select="getcity(vm.card.city)"
+                                   on-select="getcity(vm.card.city, $index)"
                                    theme="bootstrap" ng-model="vm.card.city"
                                    required>
                             <ui-select-match placeholder="בחר עיר">
-                                <span ng-bind="$select.selected.city"></span>
+                                <span ng-bind="$select.selected"></span>
                             </ui-select-match>
                             <ui-select-choices
-                                    repeat="city in vm.cities |filter : $select.search">
-                                <span ng-bind-html="city.city | highlight : $select.search"></span>
+                                    repeat="city in vm.citiesOnly |filter : $select.search">
+                                <span ng-bind-html="city | highlight : $select.search"></span>
                             </ui-select-choices>
                         </ui-select>
                     </div>

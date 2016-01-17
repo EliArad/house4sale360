@@ -178,6 +178,8 @@
                                          ng-class="{ 'has-error': form.city.$error.required }">
                                         <label class="control-label col-sm-3" for="propertyType">עיר</label>
 
+
+
                                         <div class="col-sm-9">
                                             <ui-select id="city"
                                                        on-select="getcity(vm.search.city)"
@@ -187,8 +189,8 @@
                                                     <span ng-bind="$select.selected"></span>
                                                 </ui-select-match>
                                                 <ui-select-choices
-                                                        repeat="city in vm.cities |filter : $select.search">
-                                                    <span ng-bind-html="city.city | highlight : $select.search"></span>
+                                                        repeat="city in vm.citiesOnly |filter : $select.search">
+                                                    <span ng-bind-html="city | highlight : $select.search"></span>
                                                 </ui-select-choices>
                                             </ui-select>
                                         </div>

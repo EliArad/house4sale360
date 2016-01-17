@@ -28,6 +28,8 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
             currentTime: 0,
             duration: 0
         };
+        vm.cities = citiesservice.getcities_all_ready();
+        vm.citiesOnly = getcities_ready();
         var slides = $scope.slides = [];
         $scope.shownapa = false;
         $window.onbeforeunload = $scope.onExit;
@@ -486,42 +488,31 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
             try {
 
 
-                citiesservice.getcities(function (err,result) {
 
-                    if (err != null) {
-                        console.log(result);
-                        if (err.contains('401')) {
-                            authToken.RemoveToken();
-                            $state.go('login', {}, {
-                                reload: true
-                            });
-                            $rootScope.$broadcast("updateHeader", authToken.getToken());
-                        }
-                        return;
-                    }
-                    vm.cities = result;
-                    try {
-                        var s = $cookies.get('renthouseform');
-                        vm.card = JSON.parse(s);
 
-                        var s = $cookies.get('renthousecurrentcard');
-                        vm.currentCard = JSON.parse(s);
-                    }
-                    catch (e) {
 
-                    }
+                try {
+                    var s = $cookies.get('renthouseform');
+                    vm.card = JSON.parse(s);
 
-                    if (vm.card.code != undefined && vm.card.area != undefined) {
-                        _displayStreets(vm.card.code, vm.card.area);
-                        vm.city.napa = vm.card.napa;
-                    }
+                    var s = $cookies.get('renthousecurrentcard');
+                    vm.currentCard = JSON.parse(s);
+                }
+                catch (e) {
 
-                    if (vm.card.parking != 'אין') {
-                        $scope.shoparkingoptions = true;
-                    } else {
-                        $scope.shoparkingoptions = false;
-                    }
-                });
+                }
+
+                if (vm.card.code != undefined && vm.card.area != undefined) {
+                    _displayStreets(vm.card.code, vm.card.area);
+                    vm.city.napa = vm.card.napa;
+                }
+
+                if (vm.card.parking != 'אין') {
+                    $scope.shoparkingoptions = true;
+                } else {
+                    $scope.shoparkingoptions = false;
+                }
+
             }
             catch (e) {
 

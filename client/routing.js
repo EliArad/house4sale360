@@ -1,4 +1,5 @@
-app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
+app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', function($stateProvider,$urlRouterProvider, $httpProvider, citiesservice) {
+//app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 
   $urlRouterProvider.otherwise('/welcome');
 
@@ -50,4 +51,4 @@ app.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 
   $httpProvider.interceptors.push('authIntercepter');
 
-});
+}]);

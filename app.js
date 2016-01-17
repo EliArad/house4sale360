@@ -138,6 +138,11 @@ var dbstoreRoutes = require('./server/routes/dbstore')(app, dbstoreController).i
 var salequeryController = require('./server/controller/salequery')(sqlserver);
 var mailController = require('./server/controller/mail')(sqlserver,mailverify);
 var mailRoutes = require('./server/routes/mail')(app, mailController).init();
+
+
+var tasksController = require('./server/controller/tasks')(sqlserver);
+var mailRoutes = require('./server/routes/tasks')(app, tasksController).init();
+
 var salequeryRoutes = require('./server/routes/salequery')(app, salequeryController).init();
 app.use('/api/register', registerRoutes.routes);
 

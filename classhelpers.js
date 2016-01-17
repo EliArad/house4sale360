@@ -41,7 +41,7 @@ Sitehelper.prototype = function () {
                 callback(error, c);
             } else {
                 var c = [];
-                for (var i = 0; i < rows.length; i++) {
+                for (var i = 1; i < rows.length; i++) {
                     c.push({
                         name: rows[i][0]
                     });
@@ -49,12 +49,11 @@ Sitehelper.prototype = function () {
                 callback(error, c);
             }
         });
-
     }
 
     var basic = function (callback) {
         var data = [];
-        basicCSV.readCSV('./cities/_ezormerkaz.txt', function (error, rows) {
+        basicCSV.readCSV('./cities/allcities_sorted.txt', function (error, rows) {
 
             if (error)
             {
@@ -65,103 +64,13 @@ Sitehelper.prototype = function () {
             for (var i = 0; i < rows.length; i++) {
                 var res = rows[i][0].split("\t");
                 c.push({
-                        area: 'merkaz',
+                        area: res[3],
                         city: res[0],
                         code: res[1],
                         napa: res[2]
                 });
             }
-
-            basicCSV.readCSV('./cities/_telaviv.txt', function (error, rows) {
-                if (error)
-                {
-                    callback(error,null);
-                    return;
-                }
-                for (var i = 0; i < rows.length; i++) {
-                    var res = rows[i][0].split("\t");
-                    c.push({
-                        area: 'telaviv',
-                        city: res[0],
-                        code: res[1],
-                        napa: res[2]
-                    });
-                }
-
-
-                basicCSV.readCSV('./cities/_haifa.txt', function (error, rows) {
-
-                    for (var i = 0; i < rows.length; i++) {
-                        var res = rows[i][0].split("\t");
-                        c.push({
-                            area: 'haifa',
-                            city: res[0],
-                            code: res[1],
-                            napa: res[2]
-                        });
-                    }
-
-                    if (error)
-                    {
-                        callback(error,null);
-                        return;
-                    }
-
-
-                    basicCSV.readCSV('./cities/_darom.txt', function (error, rows) {
-
-                        if (error)
-                        {
-                            callback(error,null);
-                            return;
-                        }
-
-                        for (var i = 0; i < rows.length; i++) {
-                            var res = rows[i][0].split("\t");
-                            c.push({
-                                area: 'darom',
-                                city: res[0],
-                                code: res[1],
-                                napa: res[2]
-                            });
-                        }
-
-                        basicCSV.readCSV('./cities/_zafon.txt', function (error, rows) {
-                            if (error)
-                            {
-                                callback(error,null);
-                                return;
-                            }
-                            for (var i = 0; i < rows.length; i++) {
-                                var res = rows[i][0].split("\t");
-                                c.push({
-                                    area: 'zafon',
-                                    city: res[0],
-                                    code: res[1],
-                                    napa: res[2]
-                                });
-                            }
-                            basicCSV.readCSV('./cities/_jerusalem.txt', function (error, rows) {
-                                if (error)
-                                {
-                                    callback(error,null);
-                                    return;
-                                }
-                                for (var i = 0; i < rows.length; i++) {
-                                    var res = rows[i][0].split("\t");
-                                    c.push({
-                                        area: 'jerusalem',
-                                        city: res[0],
-                                        code: res[1],
-                                        napa: res[2]
-                                    });
-                                }
-                                callback(error,c);
-                            });
-                        });
-                    });
-                });
-            });
+            callback(error,c);
         });
     }
 
