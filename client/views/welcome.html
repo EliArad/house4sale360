@@ -45,9 +45,13 @@
         height: 100%;
     }
 
+    .container1 {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
 
 </style>
-<div class="container" ng-controller="welcomeController as vm">
+<div class="container1" ng-controller="welcomeController as vm">
 
     <!--<a ui-sref="virtualtour">vtssssssssssssssss</a>-->
 
@@ -60,14 +64,14 @@
                 width: 100%;
                 height: 500px;
                 position: absolute;
-                top:70px;
+                top: 70px;
             }
 
             #preloadContainer {
                 z-index: 2;
                 width: 100%;
                 position: absolute;
-                top:50px;
+                top: 50px;
                 height: 500px;
                 transition: opacity 1s;
                 -webkit-transition: opacity 1s;
@@ -99,22 +103,24 @@
     </div>
 
     <div class="row" style="margin-top: 570px">
-        <div dir="rtl">&nbsp;<span style="font-family:arial,helvetica,sans-serif;">ברוכים הבאים לאתר דירות ב 360 - 360 appartments. אתר חדשני לחיפוש דירות לקנייה והשכרה מאנשים פרטיים,מתווכים ודירות חדשות של קבלנים.</span>
-        </div>
-        <div dir="rtl"><font face="arial, helvetica, sans-serif">לחץ והזז את העכבר לראות את הוידאו ב 360.</font>
-        </div>
-        <div dir="rtl"><font face="arial, helvetica, sans-serif">כל המוכרים יכולים להעלות תמונות רגילות באיכות
-            גבוהה,
-            תמונות 360, וידאו וידאו ב 360. לפרטים נוספים לחץ <a href="http://ddd">כאן</a></font>
-            <button type="button" ui-sref="main" class="btn btn-default"
-                    style="color:orange;float:left;width: 200px">
-                חפש דירות
-            </button>
+        <div style="margin-right: 20px">
+            <div dir="rtl">&nbsp;<span style="font-family:arial,helvetica,sans-serif;">ברוכים הבאים לאתר דירות ב 360 - 360 appartments. אתר חדשני לחיפוש דירות לקנייה והשכרה מאנשים פרטיים,מתווכים ודירות חדשות של קבלנים.</span>
+            </div>
+            <div dir="rtl"><font face="arial, helvetica, sans-serif">לחץ והזז את העכבר לראות את הוידאו ב 360.</font>
+            </div>
+            <div dir="rtl"><font face="arial, helvetica, sans-serif">כל המוכרים יכולים להעלות תמונות רגילות באיכות
+                גבוהה,
+                תמונות 360, וידאו וידאו ב 360. לפרטים נוספים לחץ <a href="http://ddd">כאן</a></font>
+                <button type="button" ui-sref="main" class="btn btn-default"
+                        style="color:orange;float:left;width: 200px">
+                    חפש דירות
+                </button>
+            </div>
         </div>
     </div>
 
     <div class="row" style="margin-top: 15px">
-        <div class="col-md-6">
+        <div class="col-md-6  col-lg-6">
 
 
             <div id="welcome360imageid" class="welcome360image" style="height: 580px">
@@ -126,7 +132,7 @@
             את הצילום ניתן לעשות עם טלפון נייד באפליקציה sourround shotting או google street view ב אייפון
             <a style="cursor:pointer" ui-sref="image360howto">לפרטים נוספים</a>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 col-lg-6">
 
             <!--
             <div id="welcomevideodiv" class="valiant360video" style="height: 580px">
@@ -134,7 +140,7 @@
             </div>
             -->
             <div class="video-container">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/ULixPLH-WA4" frameborder="0"
+                <iframe width="48%" height="50%" src="https://www.youtube.com/embed/ULixPLH-WA4" frameborder="0"
                         allowfullscreen></iframe>
             </div>
             ניתן לצלם וידאו ב360 על ידי מצלמה מיוחדת

@@ -3,12 +3,12 @@
 
 app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper', 'myutils',
     'appCookieStore', 'socketioservice', 'Idle', '$rootScope',
-    'SessionStorageService', 'API', 'myConfig', '$http', '$window', '$timeout', '$msgbox',
-    'dboperations', 'citiesservice', 'general', '$cookies', '$msgboxok', '$sce','versionReloader',
+    'SessionStorageService', 'API', 'myConfig', '$http', '$window', '$timeout',
+    'dboperations', 'citiesservice', 'general', '$cookies', '$sce','versionReloader',
     function ($scope, $state, authToken, myhttphelper, myutils,
               appCookieStore, socketioservice, Idle, $rootScope, SessionStorageService,
-              API, myConfig, $http, $window, $timeout, $msgbox, dboperations,
-              citiesservice, general, $cookies, $msgboxok, $sce,versionReloader) {
+              API, myConfig, $http, $window, $timeout, dboperations,
+              citiesservice, general, $cookies, $sce,versionReloader) {
 
 
         var vm = this;
@@ -236,11 +236,13 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                         document.getElementById(buttonid).className = "btn btn-info pull-left";
                     }, 1900);
                 }).catch(function (result) {
-
-                    $msgboxok.show('קרתה שגיאה בשליחת ההודעה')
+                    vm.msgboxcontent = 'קרתה שגיאה בשליחת ההודעה';
+                    $('#msgbox').modal('show');
+                    /*
+                    $msgbox.show('קרתה שגיאה בשליחת ההודעה')
                         .then(function () {
 
-                        });
+                        });*/
                 })
             }
         }
@@ -318,10 +320,9 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
         function ShowResults() {
             if (vm.citiesSelected.length == 0) {
-                $msgboxok.show('בחר לפחות עיר אחת בבקשה')
-                    .then(function () {
-                        return;
-                    });
+                vm.msgboxcontent = 'בחר עיר אחת לפחות';
+                $('#msgbox').modal('show');
+
                 return;
             }
             var search = angular.copy(vm.search);

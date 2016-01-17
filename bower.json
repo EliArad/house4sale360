@@ -48,6 +48,7 @@
     "angular-swipe": "~0.1.0",
     "angularjs-scroll-glue": "~0.0.1",
     "bootstrap-select": "~1.9.3",
-    "ui-select": "angular-ui-select#~0.13.2"
+    "ui-select": "angular-ui-select#~0.13.2",
+    "angular-bootstrap": "~1.0.3"
   }
 }

@@ -12,8 +12,7 @@ var app = angular
     'ngFileUpload',
     'ui.bootstrap',
 
-
-    'angular-carousel',
+    //'angular-carousel',
     'swipe',
     'ui.router',
 
@@ -25,8 +24,8 @@ var app = angular
     "com.2fdevs.videogular.plugins.controls",
     "com.2fdevs.videogular.plugins.overlayplay",
     "com.2fdevs.videogular.plugins.poster",
-    'ui.select',
-    'msgbox'
+    'ui.select'
+
 
 
   ]).constant("myConfig", {
