@@ -3,14 +3,15 @@
 
 app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'appCookieStore', '$window',
     '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope', 'API',
-    'SessionStorageService', '$msgbox', '$cookies', 'dboperations', 'fileReader', '$sce','citiesservice','versionReloader',
+    'SessionStorageService', '$cookies', 'dboperations', 'fileReader', '$sce','citiesservice','versionReloader',
     function ($scope, Members, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
-              $state, myhttphelper, $rootScope, API, SessionStorageService, $msgbox,
+              $state, myhttphelper, $rootScope, API, SessionStorageService,
               $cookies, dboperations, fileReader, $sce,citiesservice,versionReloader) {
 
 
         var vm = this;
+        var cexp = general.getCookieExp();
         vm.card = {};
         vm.insertId = -1;
         vm.currentCard = {};
@@ -500,7 +501,7 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
 
             }
             var s = JSON.stringify(vm.card);
-            $cookies.put('sellhouseform', s);
+            $cookies.put('sellhouseform', s ,{expires: cexp});
         }
 
         $scope.saveModel = function () {
@@ -650,7 +651,7 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
 
                 vm.currentCard = card;
                 var s = JSON.stringify(vm.currentCard);
-                $cookies.put('sellhousecurrentcard', s);
+                $cookies.put('sellhousecurrentcard', s ,{expires: cexp});
 
                 //var s = {};
                 //$cookies.put('sellhouseform', s);

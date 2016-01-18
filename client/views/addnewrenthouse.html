@@ -110,11 +110,11 @@
                                        theme="bootstrap" ng-model="vm.card.city"
                                        required>
                                 <ui-select-match placeholder="בחר עיר">
-                                    <span ng-bind="$select.selected.city"></span>
+                                    <span ng-bind="$select.selected"></span>
                                 </ui-select-match>
                                 <ui-select-choices
                                         repeat="city in vm.citiesOnly |filter : $select.search">
-                                    <span ng-bind-html="city.city | highlight : $select.search"></span>
+                                    <span ng-bind-html="city | highlight : $select.search"></span>
                                 </ui-select-choices>
                             </ui-select>
                         </div>
@@ -127,11 +127,11 @@
 
                         <div class="col-sm-9">
                         <span ng-show="shownapa">
-                            {{ vm.card.area }}
+                            {{ AREA }}
                             &nbsp;
                             נפת
                             &nbsp;
-                            {{ vm.city.napa }}
+                            {{ NAPA }}
                             <!--{{ vm.card.code }}-->
                         </span>
                         </div>
@@ -268,6 +268,70 @@
                             </select>
                         </div>
                     </div>
+                    <div class="form-group" style="white-space:nowrap"
+                         ng-class="{ 'has-error': form.animals.$error.required }">
+                        <label class="control-label col-sm-3" for="animals">מאפשר חיות?</label>
+
+                        <div class="col-sm-9">
+                            <select name="animals" class="form-control"
+                                    ng-model="vm.card.animals">
+                                <option>כן</option>
+                                <option>לא</option>
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="white-space:nowrap"
+                         ng-class="{ 'has-error': form.romates.$error.required }">
+                        <label  class="control-label col-sm-3" for="romates">מאפשר שותפים?</label>
+
+                        <div class="col-sm-9">
+                            <select name="romates" class="form-control"
+                                    ng-model="item.romates">
+                                <option>כן</option>
+                                <option>לא</option>
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group" style="white-space:nowrap"
+                         ng-class="{ 'has-error': form.furnatures.$error.required }">
+                        <label class="control-label col-sm-3" for="furnatures">ריהוט</label>
+
+                        <div class="col-sm-9">
+                            <select name="furnatures" class="form-control"
+                                    ng-model="vm.card.furnatures">
+                                <option>כן</option>
+                                <option>לא</option>
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group"
+                         style="white-space:nowrap">
+                        <label class="control-label col-sm-3" for="furnaturedetails">פרוט הריהוט</label>
+
+                        <div class="col-sm-9">
+                            <textarea id="new_message"
+                                      style="border-color: gray;width: 100%"
+                                      placeholder="פרט בבקשה עך הריהוט בבית"
+                                      rows="8" cols="50" ng-model="vm.card.furnaturedetails"/>
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+
+
                 </div>
                 <div class="col-md-4">
                     <div class="form-group"
@@ -438,7 +502,7 @@
                         <label class="control-label col-sm-3" for="price">מחיר</label>
 
                         <div class="col-sm-9">
-                            <input type="number" name="price"
+                            <input type="number" name="price" required
                                    placeholder="מחיר בשקלים" class="form-control"
                                    ng-model="vm.card.price">
                         </div>
@@ -484,7 +548,7 @@
                         <div class="panel-body">
 
                             <div class="form-group" style="white-space:nowrap"
-                                 ng-class="{ 'has-error': (form.primarycellphone.$error.required &&  form.primarycellphone.$dirty)}">
+                                 ng-class="{ 'has-error': (form.primarycellphone.$error.required && form.primarycellphone.$dirty)}">
                                 <label class="control-label col-sm-3" for="primarycellphone">נייד
                                     ראשי</label>
 
@@ -500,7 +564,7 @@
                                     משני</label>
 
                                 <div class="col-sm-9">
-                                    <input type="number" name="secondarycellphone" required
+                                    <input type="number" name="secondarycellphone"
                                            placeholder="מספר טלפון נייד משני" class="form-control"
                                            ng-change="saveModel()"
                                            ng-model="vm.card.secondarycellphone">
@@ -564,7 +628,7 @@
                         <button type="submit"
                                 ng-disabled="form.$invalid"
                                 ng-click="saveChanges(form)"
-                                class="btn btn-primary">שמור נתונים
+                                class="btn btn-lg btn-primary">שמור נתונים
                         </button>
                     </div>
                 </div>

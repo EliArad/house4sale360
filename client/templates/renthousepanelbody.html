@@ -28,15 +28,15 @@
 
             <div class="col-sm-9">
                 <ui-select id="city"
-                           on-select="getcity(item.city)"
+                           on-select="getcity(item.city,$index)"
                            theme="bootstrap" ng-model="item.city"
                            required>
                     <ui-select-match placeholder="בחר עיר">
-                        <span ng-bind="$select.selected.city"></span>
+                        <span ng-bind="$select.selected"></span>
                     </ui-select-match>
                     <ui-select-choices
                             repeat="city in vm.citiesOnly |filter : $select.search">
-                        <span ng-bind-html="city.city | highlight : $select.search"></span>
+                        <span ng-bind-html="city | highlight : $select.search"></span>
                     </ui-select-choices>
                 </ui-select>
             </div>
@@ -48,12 +48,14 @@
             <label class="control-label col-sm-3" for="">אזור</label>
 
             <div class="col-sm-9">
-                        <span ng-show="shownapa">
-                            {{ item.area }}
+                        <span ng-show="item.shownapa">
+
+                            {{ AREA }}
                             &nbsp;
                             נפת
                             &nbsp;
-                            {{ item.napa }}
+
+                            {{ NAPA }}
                             <!--{{ item.code }}-->
                         </span>
             </div>
@@ -183,6 +185,24 @@
                 </select>
             </div>
         </div>
+
+
+        <div class="form-group" style="white-space:nowrap"
+             ng-class="{ 'has-error': form.animals.$error.required }">
+            <label class="control-label col-sm-3" for="animals">מאפשר חיות בבית?</label>
+
+            <div class="col-sm-9">
+                <select name="animals" class="form-control"
+                        ng-model="item.animals">
+                    <option>כן</option>
+                    <option>לא</option>
+                    </option>
+                </select>
+            </div>
+        </div>
+
+
+
     </div>
     <div class="col-md-4">
         <div class="form-group"
@@ -346,7 +366,7 @@
             <label class="control-label col-sm-3" for="price">מחיר</label>
 
             <div class="col-sm-9">
-                <input type="number" name="price"
+                <input type="number" name="price" required
                        placeholder="מחיר בשקלים" class="form-control"
                        ng-model="item.price">
             </div>
@@ -409,13 +429,12 @@
                     </div>
                 </div>
 
-                <div class="form-group" style="white-space:nowrap"
-                     ng-class="{ 'has-error': (form.secondarycellphone.$error.required &&  form.secondarycellphone.$dirty)}">
+                <div class="form-group" style="white-space:nowrap">
                     <label class="control-label col-sm-3" for="secondarycellphone">נייד
                         משני</label>
 
                     <div class="col-sm-9">
-                        <input type="number" name="secondarycellphone" required
+                        <input type="number" name="secondarycellphone"
                                placeholder="מספר טלפון נייד משני" class="form-control"
                                ng-model="item.secondarycellphone">
                     </div>
@@ -466,10 +485,9 @@
     <div class="form-group">
         <div class="col-sm-3 col-sm-offset-6">
             <button type="submit"
-                    id='updatechangesbtnid'
+                    id='updatechangesbtnid{{ item.id }}'
                     ng-disabled="form.$invalid"
                     ng-click="saveChanges(item)"
-                    id="updatechangesbtnid{{ item.id }}"
                     class="btn btn-primary">
                 עדכן נתונים
             </button>

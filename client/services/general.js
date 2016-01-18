@@ -47,6 +47,14 @@ app.factory("general", function ($http, $q, myConfig, appCookieStore) {
         return $q.reject("error from send " + response.status);
     }
 
+    function getCookieExp()
+    {
+        var now = new Date(),
+        // this will set the expiration to 12 months
+        exp = new Date(now.getFullYear()+1, now.getMonth(), now.getDate());
+        return exp;
+    }
+
     var SendEmailToUser = function (id, message) {
         var data = {
             'id': id,
@@ -60,6 +68,7 @@ app.factory("general", function ($http, $q, myConfig, appCookieStore) {
         getStreets: getStreets,
         getSchonot: getSchonot,
         SendEmailToUser: SendEmailToUser,
-        getVersion:getVersion
+        getVersion:getVersion,
+        getCookieExp:getCookieExp
     };
 });

@@ -11,7 +11,7 @@ module.exports = function (app,salequeryController) {
 
 
         var router = express.Router();
-        router.post('/GetSaleHouseQueryResults', salequeryController.GetSaleHouseQueryResults);
+        router.post('/GetHouseQueryResults', salequeryController.GetHouseQueryResults);
 
         app.use('/api/salequery', router);
 

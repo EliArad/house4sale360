@@ -3,12 +3,12 @@
 
 app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCookieStore', '$window',
     '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope', 'API',
-    'SessionStorageService', '$msgbox', '$cookieStore', 'dboperations', 'fileReader', '$sce', 'citiesservice',
+    'SessionStorageService', '$cookieStore', 'dboperations', 'fileReader', '$sce', 'citiesservice',
     'versionReloader','SchonotBackg',
     function ($scope, Members, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
               $state, myhttphelper, $rootScope, API, SessionStorageService,
-              $msgbox, $cookieStore, dboperations, fileReader, $sce,
+              $cookieStore, dboperations, fileReader, $sce,
               citiesservice, versionReloader,SchonotBackg) {
 
 

@@ -90,9 +90,9 @@ app.factory('dboperations', function ($http, myConfig) {
         return $http.post(membersAPI, {id: id, index:i, auth:needauth});
     }
 
-    function GetSaleHouseQueryResults(query,needauth) {
-        var membersAPI = myConfig.url + "/api/salequery/GetSaleHouseQueryResults";
-        return $http.post(membersAPI, {query:query, auth:needauth});
+    function GetHouseQueryResults(query,needauth, type) {
+        var membersAPI = myConfig.url + "/api/salequery/GetHouseQueryResults";
+        return $http.post(membersAPI, {query:query, auth:needauth, type:type});
     }
 
 
@@ -121,7 +121,7 @@ app.factory('dboperations', function ($http, myConfig) {
         getSaleHouseVideoList:getSaleHouseVideoList,
         getRentHouseVideoList:getRentHouseVideoList,
         getSaleHouseVideo360List:getSaleHouseVideo360List,
-        GetSaleHouseQueryResults:GetSaleHouseQueryResults,
+        GetHouseQueryResults:GetHouseQueryResults,
         getRentHouse360PictureList:getRentHouse360PictureList,
         suspendMessage:suspendMessage,
         deleteMessage:deleteMessage

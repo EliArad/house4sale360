@@ -23,7 +23,6 @@ app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', function($s
   }).state('advertisehouserent', {
     url: '/advertisehouserent',
     templateUrl: '/client/views/renthouse.html'
-    //controller: 'renthouseController'
   }).state('addnewsalehouse', {
     url: '/addnewsalehouse',
     templateUrl: '/client/views/addnewsalehouse.html'
@@ -46,7 +45,17 @@ app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', function($s
     url: '/virtualtour',
     controller: 'virtualTourController',
     templateUrl: '/virtualtours/57/114/index.html'
+  }).state('image360howto', {
+    url: '/howto360?helptopic',
+    controller: 'howto360Controller',
+    templateUrl: '/client/views/howto360.html'
+  }).state('video360howto', {
+    url: '/howto360?helptopic',
+    controller: 'howto360Controller',
+    templateUrl: '/client/views/howto360.html'
   });
+
+
 
 
   $httpProvider.interceptors.push('authIntercepter');

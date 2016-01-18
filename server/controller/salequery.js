@@ -1,17 +1,22 @@
 'use strict';
 
 var secret = require('../common/config').secret;
-var builder = require('../modules/salequerybuilder')();
+var builder_sale = require('../modules/salequerybuilder')();
+var builder_rent = require('../modules/rentquerybuilder')();
 var fs = require('fs');
 module.exports = function (sqlserver) {
 
     return {
 
-        GetSaleHouseQueryResults: function (req, res, next) {
+        GetHouseQueryResults: function (req, res, next) {
             sqlserver.get(function (err, con) {
                 if (!err) {
-                    var sql = builder.build(con, req.body.query);
-                    fs.writeFile('./sql.txt', sql, function (err) {
+                    var sql;
+                    if (req.body.type == 0)
+                        sql = builder_sale.build(con, req.body.query);
+                    else if (req.body.type == 1)
+                        sql = builder_rent.build(con, req.body.query);
+                        fs.writeFile('./sql.txt', sql, function (err) {
                         if (err)
                             console.log(err);
                     });

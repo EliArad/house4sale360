@@ -13,7 +13,9 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
         var vm = this;
         var video360height = '500px';
+        vm.searchsummery = '';
         vm.search = {};
+        var cexp = general.getCookieExp();
         var cssUpdateTimer;
         vm.userMessageId = -1;
         $scope.aptstatus = false;
@@ -147,21 +149,53 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
         $('#myModal').on('hidden.bs.modal', function () {
             var s = JSON.stringify(vm.search);
-            $cookies.put('sellhousesearch', s);
+            $cookies.put('sellhousesearch', s ,{expires: cexp});
 
             s = JSON.stringify(vm.citiesSelected);
-            $cookies.put('citiesSelected', s);
+            $cookies.put('citiesSelected', s ,{expires: cexp});
 
             s = JSON.stringify(vm.schonotSelected);
-            $cookies.put('schonotSelected', s);
+            $cookies.put('schonotSelected', s ,{expires: cexp});
 
             s = JSON.stringify(vm.aptstatus);
-            $cookies.put('aptstatus', s);
+            $cookies.put('aptstatus', s ,{expires: cexp});
 
             ShowResults();
 
 
+
+
         })
+
+        function buildSearchSummery()
+        {
+            vm.searchsummery = '';
+            vm.searchsummery +=  'מציג ';
+
+
+            vm.searchsummery+= vm.search.propertyType + ' ב';
+
+
+            vm.citiesSelected.forEach(function(en){
+                vm.searchsummery += en.name + ',';
+            })
+            vm.searchsummery+= '  ';
+            if (vm.search.numberofrooms == 'הכל') {
+                vm.searchsummery += ' ללא הגבלת חדרים';
+            } else {
+                vm.searchsummery += vm.search.numberofrooms;
+                vm.searchsummery += 'חדרים ';
+            }
+            if (vm.search.toprice != undefined) {
+                vm.searchsummery += ' במחיר עד ';
+                vm.searchsummery += vm.search.toprice;
+            } else {
+                vm.searchsummery += ' בכל מחיר';
+            }
+
+
+
+        }
 
         $scope.onAptStatus = function () {
 
@@ -334,17 +368,16 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             if (vm.search.agent == undefined) {
                 search.agent = 'private';
             } else {
-                switch(vm.search.agent)
-                {
+                switch (vm.search.agent) {
                     case 'פרטי':
                         search.agent = 'private';
-                    break;
+                        break;
                     case 'קבלן':
                         search.agent = 'kablan';
-                    break;
+                        break;
                     case 'מתווך':
                         search.agent = 'agent';
-                    break;
+                        break;
 
                 }
             }
@@ -450,8 +483,17 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
 
             }
+            buildSearchSummery();
 
-            dboperations.GetSaleHouseQueryResults(search, false).then(function (result) {
+            var type;
+            if (search.messagetype == 'השכרה')
+            {
+               type = 1;
+            } else {
+                type = 0;
+            }
+
+            dboperations.GetHouseQueryResults(search, false,type).then(function (result) {
 
                 $scope.showerrorenable = false;
                 if (result.data.length == 0) {

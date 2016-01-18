@@ -3,16 +3,15 @@
 
 app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'appCookieStore', '$window',
     '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope', 'API',
-    'SessionStorageService', '$msgbox', '$cookieStore', 'dboperations', 'fileReader', '$sce','citiesservice',
-    'versionReloader',
+    'SessionStorageService', '$cookies', 'dboperations', 'fileReader', '$sce','citiesservice','versionReloader',
     function ($scope, Members, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
-              $state, myhttphelper, $rootScope, API, SessionStorageService, $msgbox,
-              $cookieStore, dboperations, fileReader, $sce,citiesservice,versionReloader) {
+              $state, myhttphelper, $rootScope, API, SessionStorageService,
+              $cookies, dboperations, fileReader, $sce,citiesservice,versionReloader) {
 
 
         var vm = this;
-
+        var cexp = general.getCookieExp();
         vm.card = {};
         vm.insertId = -1;
         vm.currentCard = {};
@@ -29,7 +28,7 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
             duration: 0
         };
         vm.cities = citiesservice.getcities_all_ready();
-        vm.citiesOnly = getcities_ready();
+        vm.citiesOnly = citiesservice.getcities_ready();
         var slides = $scope.slides = [];
         $scope.shownapa = false;
         $window.onbeforeunload = $scope.onExit;
@@ -37,7 +36,6 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
         $scope.shoparkingoptions = false;
         $scope.shoprenovatedexp = false;
         $scope.showfurnatureexp = false;
-        vm.cities = [];
         vm.numberOfRooms = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 9, 10, 'יותר מעשרה'];
         vm.numberfloors = [];
         vm.balconies = ['אין', 1, 2, 3, 'יותר משלוש'];
@@ -47,6 +45,12 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
         var msg1 = 'התמונות צריכות להיות בגודל של ' + minWidth + 'x' + minHeight + ' לפחות';
         $scope.showvideosingle = false;
         $scope.showvideo360single = false;
+
+        versionReloader.addPage(reloadFunction);
+        function reloadFunction()
+        {
+            window.location.reload(true);
+        }
 
 
         vm.numberfloors.push('קרקע');
@@ -66,12 +70,6 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
 
 
             }
-        }
-
-        versionReloader.addPage(reloadFunction);
-        function reloadFunction()
-        {
-            window.location.reload(true);
         }
 
         function sendResponseError(response) {
@@ -259,24 +257,6 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
             //console.log($.fn['eeeeee']._video.src);
             $.fn['eeeeee']._video.src = fileName;
 
-
-            // initialize plugin, default options shown
-            //$('.valiant360video').Valiant360();
-
-            // pause video
-            //$('.valiant360video').Valiant360('pause');
-
-            // load new video file
-            //$('.valiant360video').Valiant360('loadVideo', '/upload360video/videos_s_3.mp4');
-            // play video
-            //$('.valiant360video').Valiant360('play');
-
-
-            // load new photo file
-            //$('.valiant360video').Valiant360('loadPhoto', 'path/to/file.jpg');
-
-            // destroy Valiant360 processing/resources (however, will not remove element from the dom. That is left up to you)
-            //$('.valiant360video').Valiant360('destroy');
 
         }
 
@@ -486,11 +466,6 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
 
         $(document).ready(function () {
             try {
-
-
-
-
-
                 try {
                     var s = $cookies.get('renthouseform');
                     vm.card = JSON.parse(s);
@@ -512,7 +487,6 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
                 } else {
                     $scope.shoparkingoptions = false;
                 }
-
             }
             catch (e) {
 
@@ -527,7 +501,7 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
 
             }
             var s = JSON.stringify(vm.card);
-            $cookies.put('renthouseform', s);
+            $cookies.put('renthouseform', s ,{expires: cexp});
         }
 
         $scope.saveModel = function () {
@@ -601,12 +575,29 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
             formErrors(form);
 
             var card = angular.copy(vm.card);
-            card.city = vm.card.city.city;
-            card.napa = vm.card.city.napa;
-            card.code = vm.card.city.code;
-            card.area = vm.card.city.area;
+            card.city = vm.card.city;
+            var objdata = getCityObject(vm.card.city);
+            //console.log(card.city);
+            //console.log(objdata);
+            card.napa = objdata.napa;
+            card.code = objdata.code;
+            card.area = objdata.area;
+
+            if (objdata.area == 'merkaz') {
+                card.area = 'אזור המרכז';
+            } else if (objdata.area == 'darom') {
+                card.area = 'אזור הדרום';
+            } else if (objdata.area == 'jerusalem') {
+                card.area = 'אזור ירושלים';
+            } else if (objdata.area == 'zafon') {
+                card.area = 'אזור הצפון';
+            } else if (objdata.area == 'haifa') {
+                card.area = 'אזור חיפה';
+            }
+
             card.neighborhood = vm.card.neighborhood.name;
             card.street = vm.card.street.name;
+
 
             if (card.warehouse == 'אין')
             {
@@ -624,18 +615,43 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
             {
                 card.parking = 0;
             }
+            if (card.mamad == 'כן') {
+                card.mamad = 1;
+            } else {
+                card.mamad = 0;
+            }
+            switch(card.balcony)
+            {
+                case 'אין':
+                    card.balcony = 0;
+                    break;
+                case '1':
+                    card.balcony = 1;
+                    break;
+                case '2':
+                    card.balcony = 2;
+                    break;
+                case '3':
+                    card.balcony = 3;
+                    break;
+                case 'יותר משלוש':
+                    card.balcony = 4;
+                    break;
+            }
+
+
 
             if (angular.equals(vm.currentCard, card) == true) {
                 alert("כבר קיים");
                 return;
             }
 
-            dboperations.saveRentDetails(card).then(function (result) {
+            dboperations.saveHouseDetails(card).then(function (result) {
                 vm.insertId = result.data.insertId;
 
                 vm.currentCard = card;
                 var s = JSON.stringify(vm.currentCard);
-                $cookies.put('renthousecurrentcard', s);
+                $cookies.put('renthousecurrentcard', s ,{expires: cexp});
 
                 //var s = {};
                 //$cookies.put('renthouseform', s);
@@ -684,34 +700,50 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
             }
         }
 
+        function getCityObject(selectedItem)
+        {
+            for (var i = 0 ; i < vm.cities.length ;i++)
+            {
+                if (selectedItem == vm.cities[i].city)
+                {
+                    return vm.cities[i];
+                }
+            }
+        }
+
         $scope.getcity = function (selectedItem) {
-            console.log(selectedItem);
-            vm.city.napa = selectedItem.napa;
-            vm.city.code = selectedItem.code;
-            vm.city.city = selectedItem.city;
+
+
+            var objectData = getCityObject(selectedItem);
+            console.log(objectData);
+            vm.card.napa = objectData.napa;
+            vm.card.code = objectData.code;
+            vm.card.city = selectedItem;
+            $scope.NAPA = vm.card.napa;
             $scope.shownapa = true;
-            if (lastCity == undefined || lastCity != selectedItem.code) {
-                general.getStreets(selectedItem.code).then(function (result) {
+            if (lastCity == undefined || lastCity != objectData.code) {
+                general.getStreets(objectData.code).then(function (result) {
                     vm.card.street = '';
                     vm.streets = result.data;
                 })
-                general.getSchonot(selectedItem.code).then(function (result) {
+                general.getSchonot(objectData.code).then(function (result) {
                     vm.card.neighborhood = '';
                     vm.neighborhoods = result.data;
                 })
             }
-            lastCity = selectedItem.code;
+            lastCity = objectData.code;
 
-            if (selectedItem.area == 'merkaz') {
-                vm.card.area = 'אזור המרכז';
-            } else if (selectedItem.area == 'darom') {
-                vm.card.area = 'אזור הדרום';
-            } else if (selectedItem.area == 'jerusalem') {
-                vm.card.area = 'אזור ירושלים';
-            } else if (selectedItem.area == 'zafon') {
-                vm.card.area = 'אזור הצפון';
-            } else if (selectedItem.area == 'haifa') {
-                vm.card.area = 'אזור חיפה';
+
+            if (objectData.area == 'merkaz') {
+                $scope.AREA = 'אזור המרכז';
+            } else if (objectData.area == 'darom') {
+                $scope.AREA = 'אזור הדרום';
+            } else if (objectData.area == 'jerusalem') {
+                $scope.AREA = 'אזור ירושלים';
+            } else if (objectData.area == 'zafon') {
+                $scope.AREA = 'אזור הצפון';
+            } else if (objectData.area == 'haifa') {
+                $scope.AREA = 'אזור חיפה';
             }
             _saveModel();
         }

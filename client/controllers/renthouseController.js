@@ -3,12 +3,13 @@
 
 app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCookieStore', '$window',
     '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope', 'API',
-    'SessionStorageService', '$msgbox', '$cookieStore', 'dboperations', 'fileReader', '$sce', 'citiesservice',
+    'SessionStorageService', '$cookieStore', 'dboperations', 'fileReader', '$sce', 'citiesservice',
+    'versionReloader','SchonotBackg',
     function ($scope, Members, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
               $state, myhttphelper, $rootScope, API, SessionStorageService,
-              $msgbox, $cookieStore, dboperations, fileReader, $sce,
-              citiesservice) {
+              $cookieStore, dboperations, fileReader, $sce,
+              citiesservice, versionReloader,SchonotBackg) {
 
 
         var vm = this;
@@ -20,7 +21,6 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
         vm.lastObjId = -1;
         vm.accIsOpen = false;
         vm.currentCard = {};
-        vm.city = {};
         var cssUpdateTimer;
         var minWidth = 640;
         var minHeight = 480;
@@ -44,6 +44,11 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
             vm.numberfloors.push(i);
         }
 
+        versionReloader.addPage(reloadFunction);
+        function reloadFunction() {
+            window.location.reload(true);
+        }
+
         myhttphelper.doGet('/isauth').
             then(sendResponseData).
             catch(sendResponseError);
@@ -60,8 +65,39 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
             }
         }
 
+        $scope.SuspendMessage = function (item) {
+
+            if (item.suspend == 1)
+            {
+                item.suspend = 0;
+            } else {
+                item.suspend = 1;
+            }
+
+            dboperations.suspendMessage(item.id, 'rent', item.suspend).then(function (result) {
+                if (item.suspend == 1) {
+                    document.getElementById('panellinkid' + item.id).style.textDecoration = 'line-through';
+                    document.getElementById('panellinkid' + item.id).disabled = true;
+                    document.getElementById('suspendLable' + item.id).innerHTML = 'החזר';
+                } else {
+                    document.getElementById('panellinkid' + item.id).style.textDecoration = 'none';
+                    document.getElementById('panellinkid' + item.id).disabled = false;
+                    document.getElementById('suspendLable' + item.id).innerHTML = 'השעה';
+                }
+            }).catch(function (result) {
+                console.log('suspend failed ' + result);
+            })
+        }
+        $scope.DeleteMessageComplete = function (id) {
+            dboperations.deleteMessage(id, 'rent').then(function (result) {
+
+            }).catch(function (result) {
+
+            })
+        }
+
         function sendResponseError(response) {
-            console.log(response);
+
             $state.go('login', {}, {
                 reload: true
             });
@@ -177,7 +213,8 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
                 });
         };
 
-        $scope.accordionIsOpen = function (obj) {
+        $scope.accordionIsOpen = function (obj, index) {
+
 
             if (vm.lastObjId != obj.id) {
                 vm.accIsOpen = false;
@@ -193,8 +230,8 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
             for (var i = 0; i < 10; i++) {
                 slides = $scope.slides = [];
             }
-
-            _displayStreets(obj.city.code, obj.city.area);
+            console.log(obj);
+            _displayStreets(obj.code, obj.napa, obj.area,index);
 
 
             $scope.getparking(obj.parking);
@@ -206,8 +243,7 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
                     var imgsrc;
                     for (var i = 0; i < result.data.rows.length; i++) {
                         var imgsrc = './uploadimages/' + result.data.userid + '/renthouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
-                        //console.log(imgsrc);
-                        addPictureToCrousleSlider(imgsrc, 'ttt');
+                        addPictureToCrousleSlider(imgsrc, '');
                     }
                 }, 1);
 
@@ -219,6 +255,7 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
                 vm.sphere360 = [];
                 vm.sphere360index = 0;
                 var imgsrc;
+
 
                 setTimeout(function () {
                     if (result.data.rows.length == 0) {
@@ -279,13 +316,13 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
                     }
                     for (var i = 0; i < result.data.rows.length; i++) {
                         var imgsrc = './uploadvideo/' + result.data.userid + '/renthouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
+                        //console.log('3' + imgsrc);
                         vm.regularvideo.push(imgsrc);
                         if (i == 0) {
-                            vm.changeSource(imgsrc);
+                            vm.changeSource(imgsrc, obj.id);
                         }
                         vm.regularvideoindex++;
                     }
-
                 }, 400);
             });
 
@@ -327,100 +364,92 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
 
         initcrousle();
 
-        try {
-            vm.cities = citiesservice.getcities_all_ready();
-            vm.citiesOnly = citiesservice.getcities_ready();
+        vm.cities = citiesservice.getcities_all_ready();
+        vm.citiesOnly = citiesservice.getcities_ready();
 
-            dboperations.getAllRentHouseOfMine().then(function (result) {
-                vm.cards = result.data;
-                for (var i = 0; i < vm.cards.length; i++) {
+        dboperations.getAllRentHouseOfMine().then(function (result) {
 
-                    var city = vm.cards[i].city;
-                    var area = vm.cards[i].area;
-                    var napa = vm.cards[i].napa;
-                    var code = vm.cards[i].code;
-
-                    var x = {
-                        'city': city,
-                        'area': area,
-                        'napa': napa,
-                        'code': code
-                    };
-                    vm.cards[i].city = x;
-
-                    var streetName = vm.cards[i].street;
-                    var x1 = {
-                        'name': streetName
-                    };
-                    vm.cards[i].street = x1;
-
-                    var neighborhood = vm.cards[i].neighborhood;
-                    x1 = {
-                        'name': neighborhood
-                    };
-                    vm.cards[i].neighborhood = x1;
-
-                    if (vm.cards[i].elevator == 0) {
-                        vm.cards[i].elevator = 'אין';
-                    } else
-                    if (vm.cards[i].elevator == 6)
-                    {
-                        vm.cards[i].elevator = 'יותר מחמש';
-                    } else {
-                        vm.cards[i].elevator = vm.cards[i].elevator.toString();
-                    }
-
-                    if (vm.cards[i].parking == 0) {
-                        vm.cards[i].parking = 'אין';
-                    } else {
-                        vm.cards[i].parking = vm.cards[i].parking.toString();
-                    }
-
-                    if (vm.cards[i].warehouse == 0) {
-                        vm.cards[i].warehouse = 'אין';
-                    } else {
-                        vm.cards[i].warehouse = vm.cards[i].warehouse.toString();
-                    }
-
-                    if (vm.cards[i].mamad.data[0] == 0) {
-                        vm.cards[i].mamad = 'לא';
-                    } else {
-                        vm.cards[i].mamad = 'כן';
-                    }
+            vm.cards = result.data;
+            for (var i = 0; i < vm.cards.length; i++) {
 
 
-                    switch(vm.cards[i].balcony)
-                    {
-                        case 0:
-                            vm.cards[i].balcony = 'אין';
-                            break;
-                        case 1:
-                        case 2:
-                        case 3:
-                            vm.cards[i].balcony = vm.cards[i].balcony.toString();
-                            break;
-                        case 4:
-                            vm.cards[i].balcony = 'יותר משלוש';
-                            break;
-                    }
+                vm.cards[i].shownapa = true;
+                console.log(vm.cards[i].code);
 
-                    vm.cards[i].numberofrooms = vm.cards[i].numberofrooms.toString();
-                    vm.cards[i].floor = vm.cards[i].floor.toString();
-                    vm.cards[i].fromfloor = vm.cards[i].fromfloor.toString();
+                var streetName = vm.cards[i].street;
+                var x1 = {
+                    'name': streetName
+                };
+                vm.cards[i].street = x1;
+
+                var neighborhood = vm.cards[i].neighborhood;
+                x1 = {
+                    'name': neighborhood
+                };
+                vm.cards[i].neighborhood = x1;
+
+                if (vm.cards[i].elevator == 0) {
+                    vm.cards[i].elevator = 'אין';
+                } else if (vm.cards[i].elevator == 6) {
+                    vm.cards[i].elevator = 'יותר מחמש';
+                } else {
+                    vm.cards[i].elevator = vm.cards[i].elevator.toString();
                 }
 
-            }).catch(function (result) {
-                console.log(result);
-                authToken.RemoveToken();
-                $state.go('login', {}, {
-                    reload: true
-                });
-                $rootScope.$broadcast("updateHeader", authToken.getToken());
-            });
-        }
-        catch (e) {
+                if (vm.cards[i].parking == 0) {
+                    vm.cards[i].parking = 'אין';
+                } else {
+                    vm.cards[i].parking = vm.cards[i].parking.toString();
+                }
 
-        }
+                if (vm.cards[i].warehouse == 0) {
+                    vm.cards[i].warehouse = 'אין';
+                } else {
+                    vm.cards[i].warehouse = vm.cards[i].warehouse.toString();
+                }
+
+                if (vm.cards[i].mamad.data[0] == 0) {
+                    vm.cards[i].mamad = 'לא';
+                } else {
+                    vm.cards[i].mamad = 'כן';
+                }
+
+
+                switch (vm.cards[i].balcony) {
+                    case 0:
+                        vm.cards[i].balcony = 'אין';
+                        break;
+                    case 1:
+                    case 2:
+                    case 3:
+                        vm.cards[i].balcony = vm.cards[i].balcony.toString();
+                        break;
+                    case 4:
+                        vm.cards[i].balcony = 'יותר משלוש';
+                        break;
+                }
+
+                vm.cards[i].numberofrooms = vm.cards[i].numberofrooms.toString();
+                vm.cards[i].floor = vm.cards[i].floor.toString();
+                vm.cards[i].fromfloor = vm.cards[i].fromfloor.toString();
+
+
+            }
+            for (var i = 0; i < vm.cards.length; i++) {
+                setTimeout(function (i) {
+                    if (vm.cards[i].suspend == 1) {
+                        document.getElementById('panellinkid' + vm.cards[i].id).disabled = true;
+                        document.getElementById('panellinkid' + vm.cards[i].id).style.textDecoration = 'line-through';
+                        document.getElementById('suspendLable' + vm.cards[i].id).innerHTML = 'החזר';
+                    } else {
+                        document.getElementById('panellinkid' + vm.cards[i].id).disabled = false;
+                        document.getElementById('panellinkid' + vm.cards[i].id).style.textDecoration = 'none';
+                        document.getElementById('suspendLable' + vm.cards[i].id).innerHTML = 'השעה';
+                    }
+                }, 100,i);
+            }
+        });
+
 
         $scope.onExit = function () {
 
@@ -507,8 +536,7 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
                 $scope.shoparkingoptions = true;
             }
 
-            switch (selectedItem)
-            {
+            switch (selectedItem) {
                 case '1':
                     $scope.shoparkingoptions2 = false;
                     break;
@@ -525,6 +553,7 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
         vm.changeSource = function (result, id) {
 
             document.getElementById('videodiv' + id).style.display = 'block';
+            console.log(result);
 
             vm.config = {
                 sources: [
@@ -544,13 +573,29 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
 
 
             var card = angular.copy(item);
-            card.city = item.city.city;
-            card.napa = item.city.napa;
-            card.code = item.city.code;
-            card.area = item.city.area;
+            card.city = item.city;
+
+            var objdata = getCityObject(item.city);
+            console.log(objdata);
+            card.napa = objdata.napa;
+            card.code = objdata.code;
+            card.area = objdata.area;
+            if (objdata.area == 'merkaz') {
+                card.area = 'אזור המרכז';
+            } else if (objdata.area == 'darom') {
+                card.area = 'אזור הדרום';
+            } else if (objdata.area == 'jerusalem') {
+                card.area = 'אזור ירושלים';
+            } else if (objdata.area == 'zafon') {
+                card.area = 'אזור הצפון';
+            } else if (objdata.area == 'haifa') {
+                card.area = 'אזור חיפה';
+            }
+
             card.neighborhood = item.neighborhood.name;
             card.street = item.street.name;
 
+            delete card.shownapa;
             if (card.warehouse == 'אין') {
                 card.warehouse = 0;
             }
@@ -568,8 +613,7 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
             } else {
                 card.mamad = 0;
             }
-            switch(card.balcony)
-            {
+            switch (card.balcony) {
                 case 'אין':
                     card.balcony = 0;
                     break;
@@ -587,7 +631,10 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
                     break;
             }
 
+            console.log(card);
+
             dboperations.updateRentHouseDetails(card).then(function (result) {
+
 
                 dboperations.getRentHouseDetails(card.id).then(function (result) {
                     console.log(result.data[0]);
@@ -722,6 +769,7 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
         vm.onPlayerReady = function (API) {
             vm.API = API;
         };
+
 
         $scope.videoregularloaderinputChanged = function (obj) {
             var id = obj.getAttribute("data-vidlm");
@@ -877,7 +925,7 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
             reader.readAsDataURL(file);
         }
 
-        function _displayStreets(code, area) {
+        function _displayStreets(code, napa, area, index) {
             if (code == null) {
                 alert('The code for this city is null\nCannot get street and schonot for it');
             }
@@ -887,27 +935,73 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
                     general.getStreets(code).then(function (result) {
                         vm.streets = result.data;
                     })
-                    general.getSchonot(code).then(function (result) {
-                        vm.neighborhoods = result.data;
-                    })
+                    console.log('eeeeeeeeeee ' + code);
+                    vm.neighborhoods = SchonotBackg.getCollection(code);
+                    console.log(vm.neighborhoods);
+                    if (vm.neighborhoods == null) {
+                        general.getSchonot(code).then(function (result) {
+                            vm.neighborhoods = result.data;
+                        })
+                    }
                 }
             }
             lastCity = code;
 
-            if (area == 'merkaz') {
-                vm.card.area = 'אזור המרכז';
-            } else if (area == 'darom') {
-                vm.card.area = 'אזור הדרום';
-            } else if (area == 'jerusalem') {
-                vm.card.area = 'אזור ירושלים';
-            } else if (area == 'zafon') {
-                vm.card.area = 'אזור הצפון';
-            } else if (area == 'haifa') {
-                vm.card.area = 'אזור חיפה';
+            $scope.AREA = area;
+            $scope.NAPA = napa;
+
+        }
+
+        function getCityObject(selectedItem)
+        {
+            for (var i = 0 ; i < vm.cities.length ;i++)
+            {
+                if (selectedItem == vm.cities[i].city)
+                {
+                    return vm.cities[i];
+                }
             }
         }
 
+        $scope.getcity = function (selectedItem, index) {
 
+            var objectData = getCityObject(selectedItem);
+
+            $scope.NAPA = objectData.napa;
+            console.log(objectData);
+            vm.cities[index].code = objectData.code;
+            vm.cities[index].city = selectedItem;
+
+            $scope.shownapa = true;
+            if (lastCity == undefined || lastCity != objectData.code) {
+                general.getStreets(objectData.code).then(function (result) {
+                    vm.card.street = '';
+                    vm.streets = result.data;
+                })
+                vm.neighborhoods = SchonotBackg.getCollection(objectData.code);
+                if (vm.neighborhoods == null) {
+                    general.getSchonot(objectData.code).then(function (result) {
+                        vm.neighborhoods = result.data;
+                    })
+                }
+                vm.cards[index].neighborhood = '';
+            }
+            lastCity = objectData.code;
+
+
+            if (objectData.area == 'merkaz') {
+                $scope.AREA = 'אזור המרכז';
+            } else if (objectData.area == 'darom') {
+                $scope.AREA = 'אזור הדרום';
+            } else if (objectData.area == 'jerusalem') {
+                $scope.AREA = 'אזור ירושלים';
+            } else if (objectData.area == 'zafon') {
+                $scope.AREA = 'אזור הצפון';
+            } else if (objectData.area == 'haifa') {
+                $scope.AREA = 'אזור חיפה';
+            }
+
+        }
     }
 ])
 ;
