@@ -271,12 +271,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                     }, 1900);
                 }).catch(function (result) {
                     vm.msgboxcontent = 'קרתה שגיאה בשליחת ההודעה';
-                    $('#msgbox').modal('show');
-                    /*
-                    $msgbox.show('קרתה שגיאה בשליחת ההודעה')
-                        .then(function () {
-
-                        });*/
+                     
                 })
             }
         }
@@ -355,7 +350,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         function ShowResults() {
             if (vm.citiesSelected.length == 0) {
                 vm.msgboxcontent = 'בחר עיר אחת לפחות';
-                $('#msgbox').modal('show');
+               
 
                 return;
             }

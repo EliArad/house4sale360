@@ -66,7 +66,7 @@
 </style>
 
 
-<div class="container1" ng-controller="MainController as vm">
+<div class="container" ng-controller="MainController as vm">
 
 
     <!-- Modal -->
@@ -509,12 +509,12 @@
 
         {{ vm.searchsummery}}
 
-</span>
+    </span>
 
     </div>
 
     <div class="row" ng-show="showNoResultsMessage">
-        <div class="col-md-10 col-md-offset-2">
+        <div class= col-md-10 col-md-offset-2">
             <h2 class="animated infinite bounce">
                 לא נמצאו תוצאות המתאימות לחיפוש</h2>
         </div>
@@ -659,18 +659,19 @@
 
 
             <div class="row" ng-show="item.showPictures > 0">
-                <div ng-class="{ 'col-md-12':  !item.imageExists, 'col-md-7':  item.imageExists}"
+                <div ng-class="{ 'col-md-12 col-sm-12':  !item.imageExists, 'col-md-7 col-sm-7':  item.imageExists}"
                      ng-show="item.image360Exists">
                     <div id="your-pano{{ item.id }}" style="height:500px">
 
                     </div>
                 </div>
-                <div ng-class="{ 'col-md-12':  !item.image360Exists, 'col-md-5':  item.image360Exists}"
+                <div ng-class="{ 'col-md-12  col-sm-12':  !item.image360Exists, 'col-md-5  col-sm-5':  item.image360Exists}"
                      ng-show="item.imageExists">
                     <div>
                         <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
                             <uib-slide ng-repeat="slide in item.slides" active="slide.active">
                                 <img ng-src="{{slide.image}}"
+                                     class="img-responsive"
                                      ng-mouseover="mo()"
                                      ng-mouseleave="ml()"
                                      style="margin:auto;max-height: 500px">

@@ -3,11 +3,11 @@
 
 app.controller('kablanhouseController', ['$scope', 'Members', 'general', 'appCookieStore', '$window',
     '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope', 'API',
-    'SessionStorageService', '$msgbox', '$cookies', 'dboperations', 'fileReader', '$sce', 'citiesservice','versionReloader',
+    'SessionStorageService', '$cookies', 'dboperations', 'fileReader', '$sce', 'citiesservice','versionReloader',
     function ($scope, Members, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
               $state, myhttphelper, $rootScope, API, SessionStorageService,
-              $msgbox, $cookies, dboperations, fileReader, $sce,
+              $cookies, dboperations, fileReader, $sce,
               citiesservice,versionReloader) {
 
 
