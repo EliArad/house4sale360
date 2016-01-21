@@ -6,10 +6,12 @@
         -webkit-appearance: none;
         margin: 0;
     }
+    
 
     .container1 {
-        margin: 30px;
-        margin-top: -10px;
+        width:auto;
+        margin-right: 20px;
+        margin-left: 20px;
     }
 
     .ui-select-bootstrap .ui-select-toggle > .caret {
@@ -66,7 +68,7 @@
 </style>
 
 
-<div class="container" ng-controller="MainController as vm">
+<div class="container1" ng-controller="MainController as vm">
 
 
     <!-- Modal -->
@@ -586,7 +588,7 @@
                 {{ item.price }}
                     </span>
                         </span>
-
+                    <button type="button" style="float:left" ng-click="SendUserMessage(item)" class="btn btn-sm btn-success">send message</button>
 
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered">
@@ -656,16 +658,15 @@
                     </div>
                 </div>
             </div>
-
-
-            <div class="row" ng-show="item.showPictures > 0">
-                <div ng-class="{ 'col-md-12 col-sm-12':  !item.imageExists, 'col-md-7 col-sm-7':  item.imageExists}"
+                
+            <div class="row" style="margin-top:-20px" ng-show="item.showPictures > 0">
+                <div ng-class="{ 'col-md-12 col-sm-12':  !item.imageExists, 'col-md-7 col-sm-12':  item.imageExists}"
                      ng-show="item.image360Exists">
                     <div id="your-pano{{ item.id }}" style="height:500px">
 
                     </div>
                 </div>
-                <div ng-class="{ 'col-md-12  col-sm-12':  !item.image360Exists, 'col-md-5  col-sm-5':  item.image360Exists}"
+                <div ng-class="{ 'col-md-12  col-sm-12':  !item.image360Exists, 'col-md-5  col-sm-12':  item.image360Exists}"
                      ng-show="item.imageExists">
                     <div>
                         <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
