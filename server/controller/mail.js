@@ -46,6 +46,7 @@ module.exports = function (sqlserver, mailer) {
         },
         SendEmailToUser: function (req, res, next) {
 
+            console.log('SendEmailToUser');
             sqlserver.get(function (err, con) {
                 if (!err) {
 
@@ -57,10 +58,11 @@ module.exports = function (sqlserver, mailer) {
 
                     var query = con.query(sql, function (err, rows) {
                         sqlserver.release(con);
+
                         if (err) {
                             res.sendStatus(500);
                         } else {
-                            mailer.sendEmailToUser(rows[0].email, 'מייל easwdev' ,  req.body.message, function(err , result){
+                            mailer.sendEmailToUser(rows[0].email, 'הודעה מאתר apt360' ,  req.body.message, function(err ,  result){
                                 if (err)
                                     res.sendStatus(500);
                                 else {
