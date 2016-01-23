@@ -13,6 +13,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
         var vm = this;
         var video360height = '500px';
+        $scope.mobile = true;
         vm.searchsummery = '';
         vm.search = {};
         var cexp = general.getCookieExp();
@@ -35,6 +36,21 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         vm.schonotSelected = [
             //{name:'תל אביב'}
         ];
+
+        $scope.mobile = false;
+        if ($(window).width() < 768) {
+            $scope.mobile = true;
+        }
+        else if ($(window).width() >= 768 &&  $(window).width() <= 992) {
+            // do something for medium screens
+        }
+        else if ($(window).width() > 992 &&  $(window).width() <= 1200) {
+            // do something for big screens
+        }
+        else  {
+            // do something for huge screens
+        }
+
 
         versionReloader.addPage(reloadFunction);
 

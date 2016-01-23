@@ -6,8 +6,8 @@ var jwtauth = require('../common/jwtauth');
 var smtpTransport = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
-        user: 'easwdev',
-        pass: 'sheep3628290'
+        user: 'aptvr360',
+        pass: 'elianat4414123'
     }
 });
 
@@ -20,9 +20,9 @@ function sendEmail(req, randomGuid, callback) {
     link = "http://" + req.get('host') + "/verify?id=" + randomGuid;
     mailOptions = {
             to: req.body.to,
-            from: 'easwdev@gmail.com', // sender
-            subject: "Please confirm your Email account",
-            html: "Hello,<br> Please Click on the link to verify your email.<br><a href=" + link + ">Click here to verify</a>"
+            from: 'aptvr360@gmail.com', // sender
+            subject: "אנא אשר את המייל שלך",
+            html: "Hello,<br> לחץ על הקישור הבא לאישור המייל שלך.<br><a href=" + link + ">לחץ כאן לאימות המייל</a>"
         }
         //console.log(mailOptions);
     smtpTransport.sendMail(mailOptions, function (error, response) {
@@ -40,7 +40,7 @@ function sendEmailToUser(address, subject, message, callback) {
 
     mailOptions = {
         to: address,
-        from: 'easwdev@gmail.com', // sender
+        from: 'aptvr360@gmail.com', // sender
         subject: subject,
         html: message
     }

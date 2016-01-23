@@ -1,17 +1,22 @@
 <style>
 
 
+    .didd {
+        width: 100%;
+        float: left;
+    }
+
     input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button {
         -webkit-appearance: none;
         margin: 0;
     }
-    
 
     .container1 {
-        width:auto;
+        width: auto;
         margin-right: 20px;
         margin-left: 20px;
+
     }
 
     .ui-select-bootstrap .ui-select-toggle > .caret {
@@ -69,7 +74,7 @@
 
 
 <div class="container1" ng-controller="MainController as vm">
-
+    <div id="media-width-detection-element"></div>
 
     <!-- Modal -->
     <div class="modal" id="msgbox" role="dialog">
@@ -83,14 +88,12 @@
                     <p>{{ vm.msgboxcontent }}</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" style="color:orange" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" style="color:orange" data-dismiss="modal">Close
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-
-
-
 
 
     <!-- Modal -->
@@ -154,7 +157,7 @@
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label  ng-show="showmessagetype"  class="control-label" for="msggtype">סוג המודעה</label>
+                            <label ng-show="showmessagetype" class="control-label" for="msggtype">סוג המודעה</label>
                             <select class="form-control" ng-show="showmessagetype"
                                     placeholder="מכירה או השכרה"
                                     name="msggtype"
@@ -201,7 +204,6 @@
                                     <div class="form-group" style="white-space:nowrap"
                                          ng-class="{ 'has-error': form.city.$error.required }">
                                         <label class="control-label col-sm-3" for="propertyType">עיר</label>
-
 
 
                                         <div class="col-sm-9">
@@ -500,7 +502,6 @@
         </div>
     </div>
 
-
     <div class="row">
         <button type="button" class="btn btn-default" style="color:orange" data-toggle="modal" data-target="#myModal">
             הגדר את אפשרויות
@@ -516,195 +517,392 @@
     </div>
 
     <div class="row" ng-show="showNoResultsMessage">
-        <div class= col-md-10 col-md-offset-2">
-            <h2 class="animated infinite bounce">
-                לא נמצאו תוצאות המתאימות לחיפוש</h2>
-        </div>
+        <div class=col-md-10 col-md-offset-2
+        ">
+        <h2 class="animated infinite bounce">
+            לא נמצאו תוצאות המתאימות לחיפוש</h2>
     </div>
+</div>
 
-    <div class="row" ng-show="showerrorenable">
-        <div class="col-md-10 col-md-offset-2">
-            <h2 class="animated infinite bounce">{{ showerror }}</h2>
+<div class="row" ng-show="showerrorenable">
+    <div class="col-md-10 col-md-offset-2">
+        <h2 class="animated infinite bounce">{{ showerror }}</h2>
 
-        </div>
     </div>
+</div>
 
 
-    <div ng-repeat="item in vm.cards">
-        <div class="row" ng-hide="item.hideheader">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-
-                    <span style="font-weight: bold">
+<div ng-repeat="item in vm.cards">
+    <div class="row" ng-hide="item.hideheader">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-sm-12 col-xs-12 col-md-12">
+                     <span style="font-weight: bold">
                     {{ item.propertyType }}
                     ב
                     {{ item.city.city }}
-,
+                         </span>
 
-                        &nbsp;
-                        &nbsp;
                         <span style="font-weight: bold">
                      {{ item.numberofrooms }}
-                            </span>
+                       </span>
 
-                        &nbsp;
-                        &nbsp;
-ברחוב
-                        <span style="font-weight: bold">
+                        ברחוב
+                     <span style="font-weight: bold">
                     {{ item.street.name }}
                             </span>
-בשכונת
-                    {{ item.neighborhood.name }}
 
-                        &nbsp;
-                        &nbsp;
-מספר
+                        בשכונת
+                        {{ item.neighborhood.name }}
+
+
+                        מספר
                         <span style="font-weight: bold">
-                    {{ item.housenumber }}
+                    {{ item.housenumber }}6
                             </span>
 
-                        &nbsp;
-                        &nbsp;
-                    קומה:
+
+                        קומה:
                     <span style="font-weight: bold">
                     {{ item.floor }}
                         </span>
-                    מתוך:
+                        מתוך:
 
                         <span style="font-weight: bold">
                         {{ item.fromfloor }}
-                            </span>
-                        &nbsp;
-                        &nbsp;
-                    גודל:
-                        <span style="font-weight: bold">
-                    {{ item.squresize }}
-                            </span>
-                    מ"ר
-                        &nbsp;
-                        &nbsp;
-                                            מחיר:
-                        <span style="font-weight: bold">
-                {{ item.price }}
-                    </span>
                         </span>
-                    <button type="button" style="float:left" ng-click="SendUserMessage(item)" class="btn btn-sm btn-success">send message</button>
+                        גודל:
+                        <span style="font-weight: bold">
+                        {{ item.squresize }}
+                            </span>
+                        מ"ר
 
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered">
+                        מחיר:
+                        <span style="font-weight: bold">
+                        {{ item.price }}
+                        </span>
 
-                            <thead>
-                            <tr>
-                                <td>מרפסת</td>
-                                <td>מזגן</td>
-                                <td>סורגים</td>
-                                <td>גישה לנכים</td>
-                                <td>חנייה</td>
-                                <td ng-show="item.parking > 0">מיקום החנייה</td>
-                                <td ng-show="item.parking > 1">סוג חנייה</td>
-                                <td>ממ"ד</td>
-                                <td>מחסן</td>
-                                <td>elevators</td>
-                                <td>גיל הנכס</td>
-                                <td>מצב הנכס</td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-
-                                <td>
-                                    <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.balcony > 0) , 'glyphicon glyphicon glyphicon-remove': (item.balcony == 0)}"></span>
-                                    <span ng-show="item.balcony > 0">{{ item.balcony }}</span>
-                                </td>
-                                <td>
-                                    <span ng-show="item.aircond != 'אין'">{{ item.aircond }}</span>
-                                    <span ng-class="{'glyphicon glyphicon glyphicon-remove': (item.aircond == 'אין')}"></span>
-                                </td>
-                                <td>
-                                    <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.soragim == 1) , 'glyphicon glyphicon glyphicon-remove': (item.soragim == 0)}"></span>
-                                </td>
-                                <td>
-                                    <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.handycupt == 1) , 'glyphicon glyphicon glyphicon-remove': (item.handycupt == 0)}"></span>
-                                </td>
-                                <td>
-                                    <span ng-show="item.parking > 0">{{ item.parking }}</span>
-                                    <span ng-class="{'glyphicon glyphicon glyphicon-remove': (item.parking == 0)}"></span>
-                                </td>
-                                <td ng-show="item.parking > 0">
-                                    {{ item.parkingType }}
-                                </td>
-                                <td ng-show="item.parking > 1">
-                                    {{ item.parkingtype2 }}
-                                </td>
-                                <td>
-                                    <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.mamad.data[0] == 1) , 'glyphicon glyphicon glyphicon-remove': (item.mamad.data[0] == 0)}"></span>
-                                </td>
-                                <td>
-                                    <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.warehouse > 0) , 'glyphicon glyphicon glyphicon-remove': (item.warehouse == 0)}"></span>
-                                    <span ng-show="item.warehouse > 0">{{ item.parking }}</span>
-                                </td>
-                                <td>
-                                    <span ng-show="item.elevator > 0">{{ item.elevator }}</span>
-                                    <span ng-class="{'glyphicon glyphicon glyphicon-remove': (item.elevator == 0)}"></span>
-                                </td>
-                                <td> {{ item.yearsofproperty }}</td>
-                                <td> {{ item.renovated }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                        {{ item.freedetails}}
+                        <button type="button" style="float:left" ng-click="SendUserMessage(item)"
+                                class="btn btn-sm btn-success">send message
+                        </button>
                     </div>
                 </div>
-            </div>
-                
-            <div class="row" style="margin-top:-20px" ng-show="item.showPictures > 0">
-                <div ng-class="{ 'col-md-12 col-sm-12':  !item.imageExists, 'col-md-7 col-sm-12':  item.imageExists}"
-                     ng-show="item.image360Exists">
-                    <div id="your-pano{{ item.id }}" style="height:500px">
-
+                <div class="row" ng-if="!mobile">
+                    <div class="col-sm-1 col-md-1">
+                        <div>
+                            <div class="didd">
+                                מרפסת
+                            </div>
+                            <div class="didd">
+                                <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.balcony > 0) , 'glyphicon glyphicon glyphicon-remove': (item.balcony == 0)}"></span>
+                                <span ng-show="item.balcony > 0">{{ item.balcony }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-1 col-md-1">
+                        <div>
+                            <div class="didd">
+                                מזגן
+                            </div>
+                            <div class="didd">
+                                <span ng-show="item.aircond != 'אין'">{{ item.aircond }}</span>
+                                <span ng-class="{'glyphicon glyphicon glyphicon-remove': (item.aircond == 'אין')}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-1 col-md-1">
+                        <div>
+                            <div class="didd">
+                                סורגים
+                            </div>
+                            <div class="didd">
+                                <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.soragim == 1) , 'glyphicon glyphicon glyphicon-remove': (item.soragim == 0)}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-1 col-md-1">
+                        <div>
+                            <div class="didd">
+                                גישה לנכים
+                            </div>
+                            <div class="didd">
+                                <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.handycupt == 1) , 'glyphicon glyphicon glyphicon-remove': (item.handycupt == 0)}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-1 col-md-1">
+                        <div>
+                            <div class="didd">
+                                חנייה
+                            </div>
+                            <div class="didd">
+                                <span ng-show="item.parking > 0">{{ item.parking }}</span>
+                                <span ng-class="{'glyphicon glyphicon glyphicon-remove': (item.parking == 0)}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-1 col-md-1" ng-show="item.parking > 0">
+                        <div>
+                            <div class="didd">
+                                מיקום
+                            </div>
+                            <div class="didd">
+                                {{ item.parkingType }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-1 col-md-1" ng-show="item.parking > 1">
+                        <div>
+                            <div class="didd">
+                                סוג חנייה
+                            </div>
+                            <div class="didd">
+                                {{ item.parkingtype2 }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-1 col-md-1">
+                        <div>
+                            <div class="didd">
+                                ממ"ד
+                            </div>
+                            <div class="didd">
+                                <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.mamad.data[0] == 1) , 'glyphicon glyphicon glyphicon-remove': (item.mamad.data[0] == 0)}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-1 col-md-1">
+                        <div>
+                            <div class="didd">
+                                מחסן
+                            </div>
+                            <div class="didd">
+                                <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.warehouse > 0) , 'glyphicon glyphicon glyphicon-remove': (item.warehouse == 0)}"></span>
+                                <span ng-show="item.warehouse > 0">{{ item.warehouse }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-1 col-md-1">
+                        <div>
+                            <div class="didd">
+                                מעליות
+                            </div>
+                            <div class="didd">
+                                <span ng-show="item.elevator > 0">{{ item.elevator }}</span>
+                                <span ng-class="{'glyphicon glyphicon glyphicon-remove': (item.elevator == 0)}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-1 col-md-1">
+                        <div>
+                            <div class="didd">
+                                גיל הנכס
+                            </div>
+                            <div class="didd">
+                                {{ item.yearsofproperty }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-1 col-md-1">
+                        <div>
+                            <div class="didd">
+                                מצב הנכס
+                            </div>
+                            <div class="didd">
+                                {{ item.renovated }}
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div ng-class="{ 'col-md-12  col-sm-12':  !item.image360Exists, 'col-md-5  col-sm-12':  item.image360Exists}"
-                     ng-show="item.imageExists">
-                    <div>
-                        <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
-                            <uib-slide ng-repeat="slide in item.slides" active="slide.active">
-                                <img ng-src="{{slide.image}}"
-                                     class="img-responsive"
-                                     ng-mouseover="mo()"
-                                     ng-mouseleave="ml()"
-                                     style="margin:auto;max-height: 500px">
 
-                                <div class="carousel-caption">
-                                    <!--<h4>Slide {{$index}}</h4>-->
-                                    <p>{{slide.text}}</p>
-                                </div>
-                            </uib-slide>
-                        </uib-carousel>
+
+                <div class="row" ng-if="mobile">
+                    <div class="col-xs-2">
+                        <div>
+                            <div class="didd">
+                                מרפסת
+                            </div>
+                            <div class="didd">
+                                <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.balcony > 0) , 'glyphicon glyphicon glyphicon-remove': (item.balcony == 0)}"></span>
+                                <span ng-show="item.balcony > 0">{{ item.balcony }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div>
+                            <div class="didd">
+                                מזגן
+                            </div>
+                            <div class="didd">
+                                <span ng-show="item.aircond != 'אין'">{{ item.aircond }}</span>
+                                <span ng-class="{'glyphicon glyphicon glyphicon-remove': (item.aircond == 'אין')}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div>
+                            <div class="didd">
+                                סורגים
+                            </div>
+                            <div class="didd">
+                                <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.soragim == 1) , 'glyphicon glyphicon glyphicon-remove': (item.soragim == 0)}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div>
+                            <div class="didd">
+                                גישה לנכים
+                            </div>
+                            <div class="didd">
+                                <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.handycupt == 1) , 'glyphicon glyphicon glyphicon-remove': (item.handycupt == 0)}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div>
+                            <div class="didd">
+                                חנייה
+                            </div>
+                            <div class="didd">
+                                <span ng-show="item.parking > 0">{{ item.parking }}</span>
+                                <span ng-class="{'glyphicon glyphicon glyphicon-remove': (item.parking == 0)}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-2" ng-show="item.parking > 0">
+                        <div>
+                            <div class="didd">
+                                מיקום
+                            </div>
+                            <div class="didd">
+                                {{ item.parkingType }}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row" ng-if="mobile">
+
+                    <div class="col-xs-2" ng-show="item.parking > 1">
+                        <div>
+                            <div class="didd">
+                                סוג חנייה
+                            </div>
+                            <div class="didd">
+                                {{ item.parkingtype2 }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div>
+                            <div class="didd">
+                                ממ"ד
+                            </div>
+                            <div class="didd">
+                                <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.mamad.data[0] == 1) , 'glyphicon glyphicon glyphicon-remove': (item.mamad.data[0] == 0)}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div>
+                            <div class="didd">
+                                מחסן
+                            </div>
+                            <div class="didd">
+                                <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.warehouse > 0) , 'glyphicon glyphicon glyphicon-remove': (item.warehouse == 0)}"></span>
+                                <span ng-show="item.warehouse > 0">{{ item.warehouse }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div>
+                            <div class="didd">
+                                מעליות
+                            </div>
+                            <div class="didd">
+                                <span ng-show="item.elevator > 0">{{ item.elevator }}</span>
+                                <span ng-class="{'glyphicon glyphicon glyphicon-remove': (item.elevator == 0)}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div>
+                            <div class="didd">
+                                גיל הנכס
+                            </div>
+                            <div class="didd">
+                                {{ item.yearsofproperty }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div>
+                            <div class="didd">
+                                מצב הנכס
+                            </div>
+                            <div class="didd">
+                                {{ item.renovated }}
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row" ng-show="item.showregularvideo">
-                <a class="animated infinite pulse" style="cursor :pointer;margin-right: 20px;font-size: x-large" ng-click="ShowRegularVideo(item)">
-            {{ item.videoexistlable }}
-                    </a>
 
-            </div>
-
-            <div class="row">
-                <div class="col-md-4 col-md-offset-3" ng-show="false"
-                     ng-include="'/client/templates/waitcircle.html'">
-                </div>
-                <div ng-include="'client/templates/videoregular_multiple.html'">
-
+                <!-- end of the table-->
+                <div class="row" style="word-wrap: break-word">
+                    {{ item.freedetails}}
                 </div>
             </div>
+        </div>
+
+        <div class="row" style="margin-top:-20px" ng-show="item.showPictures > 0">
+            <div ng-class="{ 'col-md-12 col-xs-12 col-lg-12 col-sm-12':  !item.imageExists, 'col-md-7 col-xs-12 col-lg-7 col-sm-7':  item.imageExists}"
+                 ng-show="item.image360Exists">
+                <div id="your-pano{{ item.id }}" style="height:500px">
+
+                </div>
+            </div>
+            <div ng-class="{ 'col-md-12  col-xs-12 col-lg-12 col-sm-12':  !item.image360Exists, 'col-md-5 col-xs-12 col-lg-5 col-sm-12':  item.image360Exists}"
+                 ng-show="item.imageExists">
+                <div>
+                    <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
+                        <uib-slide ng-repeat="slide in item.slides" active="slide.active">
+                            <img ng-src="{{slide.image}}"
+                                 class="img-responsive"
+                                 ng-mouseover="mo()"
+                                 ng-mouseleave="ml()"
+                                 style="margin:auto;max-height: 500px">
+
+                            <div class="carousel-caption">
+                                <!--<h4>Slide {{$index}}</h4>-->
+                                <p>{{slide.text}}</p>
+                            </div>
+                        </uib-slide>
+                    </uib-carousel>
+                </div>
+            </div>
+        </div>
+        <div class="row" ng-show="item.showregularvideo">
+            <a class="animated infinite pulse" style="cursor :pointer;margin-right: 20px;font-size: x-large"
+               ng-click="ShowRegularVideo(item)">
+                {{ item.videoexistlable }}
+            </a>
 
         </div>
+
+        <div class="row">
+            <div class="col-md-4 col-md-offset-3" ng-show="false"
+                 ng-include="'/client/templates/waitcircle.html'">
+            </div>
+            <div ng-include="'client/templates/videoregular_multiple.html'">
+
+            </div>
+        </div>
+
     </div>
 </div>
+
 
 
 
