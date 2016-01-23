@@ -1,13 +1,14 @@
 var nodemailer = require("nodemailer");
 var guid = require('guid');
 var jwtauth = require('../common/jwtauth');
+var  cred = require('./pwd');
 
 // create reusable transporter object using SMTP transport
 var smtpTransport = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
-        user: 'aptvr360',
-        pass: 'elianat4414123'
+        user: cred.gmailuser,
+        pass: cred.gmailpwd
     }
 });
 
@@ -46,6 +47,7 @@ function sendEmailToUser(address, subject, message, callback) {
     }
     //console.log(mailOptions);
     smtpTransport.sendMail(mailOptions, function (error, response) {
+        console.log(error + ' ' + response);
         callback(error, response);
     });
 }
