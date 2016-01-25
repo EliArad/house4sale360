@@ -29,6 +29,7 @@ module.exports = function (app,dbstoreController) {
         app.post('/api/dbstore/deleteMessage', jwtauth, dbstoreController.deleteMessage);
 
 
+        app.get('/api/dbstore/getMessageUserInformation', dbstoreController.getMessageUserInformation);
 
 
         app.post('/api/dbstore/getRentHouseVideo360List', jwtauth, dbstoreController.getRentHouseVideo360List);

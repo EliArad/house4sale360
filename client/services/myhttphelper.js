@@ -19,13 +19,15 @@ app.factory("myhttphelper", function($http, $q,myConfig){
     }
     var doGet = function(command)
     {
-        return $http.get(command).
+        var url = myConfig.url + command;
+        return $http.get(url).
             then(sendResponseData).
             catch(sendResponseError)
     }
     var doPut = function(command)
     {
-        return $http.put(command).
+        var url = myConfig.url + "/api/" + command;
+        return $http.put(url).
             then(sendResponseData).
             catch(sendResponseError)
     }

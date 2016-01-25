@@ -78,7 +78,7 @@
             <div class="row" ng-hide="showstate2">
                 <div class="col-md-4">
                     <div class="form-group" style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.propertyType.$error.required && form.propertyType.$dirty }">
+                         ng-class="{ 'has-error': form.propertyType.$error.required }">
                         <label class="control-label col-sm-3" for="propertyType">סוג הנכס</label>
 
                         <div class="col-sm-9">
@@ -178,7 +178,7 @@
 
 
                     <div class="form-group" style="white-space:nowrap"
-                         ng-class="{ 'has-error': (form.housenumber.$error.required &&  form.housenumber.$dirty)}">
+                         ng-class="{ 'has-error': (form.housenumber.$error.required)}">
                         <label class="control-label col-sm-3" for="housenumber">מספר הבית</label>
 
                         <div class="col-sm-9">
@@ -190,7 +190,7 @@
                     </div>
 
                     <div class="form-group" style="white-space:nowrap"
-                         ng-class="{ 'has-error': (form.yearsofproperty.$error.required && form.yearsofproperty.$dirty)}">
+                         ng-class="{ 'has-error': (form.yearsofproperty.$error.required)}">
                         <label class="control-label col-sm-3" for="yearsofproperty">גיל הנכס</label>
 
                         <div class="col-sm-9">
@@ -228,7 +228,7 @@
                     </div>
 
                     <div class="form-group" style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.squresize.$error.required && form.squresize.$dirty}">
+                         ng-class="{ 'has-error': form.squresize.$error.required}">
                         <label class="control-label col-sm-3" for="squresize">גודל דירה</label>
 
                         <div class="col-sm-9">
@@ -288,7 +288,8 @@
 
                         <div class="col-sm-9">
                             <select name="romates" class="form-control"
-                                    ng-model="item.romates">
+                                    ng-change="saveModel()"
+                                    ng-model="vm.card.romates">
                                 <option>כן</option>
                                 <option>לא</option>
                                 </option>
@@ -304,6 +305,7 @@
 
                         <div class="col-sm-9">
                             <select name="furnatures" class="form-control"
+                                    ng-change="saveModel()"
                                     ng-model="vm.card.furnatures">
                                 <option>כן</option>
                                 <option>לא</option>
@@ -317,7 +319,7 @@
                         <label class="control-label col-sm-3" for="furnaturedetails">פרוט הריהוט</label>
 
                         <div class="col-sm-9">
-                            <textarea id="new_message"
+                            <textarea id="new_message1"
                                       style="border-color: gray;width: 100%"
                                       placeholder="פרט בבקשה עך הריהוט בבית"
                                       rows="8" cols="50" ng-model="vm.card.furnaturedetails"/>
@@ -335,7 +337,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group"
-                         ng-class="{ 'has-error': form.aircond.$error.required && form.aircond.$dirty }">
+                         ng-class="{ 'has-error': form.aircond.$error.required }">
                         <label class="control-label col-sm-3" for="aircond">מזגן </label>
 
                         <div class="col-sm-9">
@@ -357,7 +359,7 @@
                     </div>
 
                     <div class="form-group"
-                         ng-class="{ 'has-error': form.parking.$error.required && form.parking.$dirty }">
+                         ng-class="{ 'has-error': form.parking.$error.required }">
                         <label class="control-label col-sm-3" for="parking">חנייה </label>
 
                         <div class="col-sm-9">
@@ -375,7 +377,7 @@
 
                     <div class="form-group" ng-show="shoparkingoptions"
                          style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.parkingtype.$error.required && form.parkingtype.$dirty }">
+                         ng-class="{ 'has-error': form.parkingtype.$error.required }">
                         <label class="control-label col-sm-3" for="parkingtype">מיקום החנייה</label>
 
                         <div class="col-sm-9">
@@ -391,7 +393,7 @@
 
                     <div class="form-group" ng-show="shoparkingoptions"
                          style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.parkingtype2.$error.required && form.parkingtype2.$dirty }">
+                         ng-class="{ 'has-error': form.parkingtype2.$error.required }">
                         <label class="control-label col-sm-3" for="parkingtype2">אופי החנייה</label>
 
                         <div class="col-sm-9">
@@ -408,7 +410,7 @@
 
                     <div class="form-group"
                          style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.warehouse.$error.required && form.warehouse.$dirty }">
+                         ng-class="{ 'has-error': form.warehouse.$error.required }">
                         <label class="control-label col-sm-3" for="warehouse">מחסן</label>
 
                         <div class="col-sm-9">
@@ -425,7 +427,7 @@
 
                     <div class="form-group"
                          style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.elevator.$error.required && form.elevator.$dirty }">
+                         ng-class="{ 'has-error': form.elevator.$error.required }">
                         <label class="control-label col-sm-3" for="elevator">מעליות</label>
 
                         <div class="col-sm-9">
@@ -446,7 +448,7 @@
 
                     <div class="form-group"
                          style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.mamad.$error.required && form.mamad.$dirty }">
+                         ng-class="{ 'has-error': form.mamad.$error.required  }">
                         <label class="control-label col-sm-3" for="elevator">מרחב מוגן</label>
 
                         <div class="col-sm-9">
@@ -463,7 +465,7 @@
 
                     <div class="form-group"
                          style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.renovated.$error.required && form.renovated.$dirty }">
+                         ng-class="{ 'has-error': form.renovated.$error.required  }">
                         <label class="control-label col-sm-3" for="renovated">מצב הדירה</label>
 
                         <div class="col-sm-9">
@@ -484,7 +486,7 @@
 
                     <div class="form-group" ng-show="shoprenovatedexp"
                          style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.renovatedexplnation.$error.required && form.renovatedexplnation.$dirty}">
+                         ng-class="{ 'has-error': form.renovatedexplnation.$error.required }">
                         <label class="control-label col-sm-3" for="renovatedexplnation">פרט
                             מצב</label>
 
@@ -498,7 +500,7 @@
 
                     <div class="form-group"
                          style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.price.$error.required && form.price.$dirty}">
+                         ng-class="{ 'has-error': form.price.$error.required}">
                         <label class="control-label col-sm-3" for="price">מחיר</label>
 
                         <div class="col-sm-9">
@@ -510,7 +512,7 @@
 
                     <div class="form-group"
                          style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.handycupt.$error.required && form.handycupt.$dirty}">
+                         ng-class="{ 'has-error': form.handycupt.$error.required }">
 
                         <div class="col-sm-5 col-sm-offset-2">
                             <label for="handycupt" class="btn btn-info">גישה לנכים
@@ -547,16 +549,17 @@
                         <div class="panel-heading">פרטים ליצירת קשר</div>
                         <div class="panel-body">
 
-                            <div class="form-group" style="white-space:nowrap"
-                                 ng-class="{ 'has-error': (form.primarycellphone.$error.required && form.primarycellphone.$dirty)}">
+                            <div class="form-group" style="white-space:nowrap">
                                 <label class="control-label col-sm-3" for="primarycellphone">נייד
                                     ראשי</label>
 
                                 <div class="col-sm-9">
-                                    <input type="number" name="primarycellphone" required
-                                           placeholder="מספר טלפון נייד ראשי" class="form-control"
+                                    <input class="form-control input-phone" style="direction: ltr"
+                                           placeholder="מספר טלפון נייד ראשי"
+                                           class="form-control"
                                            ng-change="saveModel()"
-                                           ng-model="vm.card.primarycellphone">
+                                           name="primarycellphone" type='text' phone-input
+                                           ng-model="vm.card.primarycellphone"/>
                                 </div>
                             </div>
                             <div class="form-group" style="white-space:nowrap">
@@ -564,42 +567,48 @@
                                     משני</label>
 
                                 <div class="col-sm-9">
-                                    <input type="number" name="secondarycellphone"
-                                           placeholder="מספר טלפון נייד משני" class="form-control"
+                                    <input class="form-control input-phone" style="direction: ltr"
+                                           placeholder="מספר טלפון נייד משני"
+                                           class="form-control"
                                            ng-change="saveModel()"
-                                           ng-model="vm.card.secondarycellphone">
+                                           name="secondarycellphone" type='text' phone-input
+                                           ng-model="vm.card.secondarycellphone"/>
+
                                 </div>
                             </div>
-                            <div class="form-group" style="white-space:nowrap"
-                                 ng-class="{ 'has-error': (form.homephome.$error.required &&  form.homephome.$dirty)}">
+                            <div class="form-group" style="white-space:nowrap">
                                 <label class="control-label col-sm-3" for="homephome">טלפון
                                     בבית</label>
 
                                 <div class="col-sm-9">
-                                    <input type="number" name="homephone" required
-                                           placeholder="טלפון בבית" class="form-control"
+                                    <input class="form-control input-phone" style="direction: ltr"
+                                           placeholder="טלפון בבית"
+                                           class="form-control"
                                            ng-change="saveModel()"
-                                           ng-model="vm.card.homephone">
+                                           name="homephone" type='text' phone-input
+                                           ng-model="vm.card.homephone"/>
+
                                 </div>
                             </div>
-                            <div class="form-group"
-                                 ng-class="{ 'has-error': (form.officephone.$error.required &&  form.officephone.$dirty)}">
+                            <div class="form-group">
                                 <label class="control-label col-sm-3" for="officephone">טלפון
                                     במישרד</label>
 
                                 <div class="col-sm-9">
-                                    <input type="number" name="officephone" required
+                                    <input class="form-control input-phone" style="direction: ltr"
+                                           placeholder="טלפון במישרד"
+                                           class="form-control"
                                            ng-change="saveModel()"
-                                           placeholder="טלפון במישרד" class="form-control"
-                                           ng-model="vm.card.officephone">
+                                           name="officephone" type='text' phone-input
+                                           ng-model="vm.card.officephone"/>
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group" ng-class="{ 'has-error': (form.email.$invalid )}">
                                 <label class="control-label col-sm-3" for="email">אימייל</label>
 
                                 <div class="col-sm-9">
-                                    <input type="email" name="email" required
+                                    <input type="email" name="email"
                                            ng-change="saveModel()"
                                            placeholder="אמייל - לא חייב להיות רשום"
                                            class="form-control"

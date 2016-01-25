@@ -33,7 +33,7 @@ app.controller('mypicturesController', ['$scope', 'Registration', 'general','myC
       $scope.showPicture13 = true;
       $scope.showPicture14 = true;
 
-      myhttphelper.doGet('/isauth').
+      myhttphelper.doGet('/api/isauth').
         then(sendResponseData1).
         catch(sendResponseError1);
 

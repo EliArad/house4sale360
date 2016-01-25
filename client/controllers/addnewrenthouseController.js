@@ -57,7 +57,7 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
         for (var i = 1; i < 35; i++) {
             vm.numberfloors.push(i);
         }
-        myhttphelper.doGet('/isauth').
+        myhttphelper.doGet('/api/isauth').
             then(sendResponseData).
             catch(sendResponseError);
 
@@ -250,7 +250,7 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
                 lat: 0,                 // initial lat for camera angle
                 loop: "loop",           // video loops by default
                 muted: true,            // video muted by default
-                autoplay: true          // video autoplays by default
+                autoplay: false          // video autoplays by default
             }
             $('.valiant360video').Valiant360(options);
             //console.log($.fn['eeeeee']);
@@ -620,6 +620,24 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
             } else {
                 card.mamad = 0;
             }
+
+            if (card.animals == 'כן') {
+                card.animals = 1;
+            } else {
+                card.animals = 0;
+            }
+            if (card.furnatures == 'כן') {
+                card.furnatures = 1;
+            } else {
+                card.furnatures = 0;
+            }
+            if (card.romates == 'כן') {
+                card.romates = 1;
+            } else {
+                card.romates = 0;
+            }
+
+
             switch(card.balcony)
             {
                 case 'אין':
@@ -646,7 +664,7 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
                 return;
             }
 
-            dboperations.saveHouseDetails(card).then(function (result) {
+            dboperations.saveRentDetails(card).then(function (result) {
                 vm.insertId = result.data.insertId;
 
                 vm.currentCard = card;

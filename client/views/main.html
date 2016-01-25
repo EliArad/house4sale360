@@ -74,7 +74,7 @@
 
 
 <div class="container1" ng-controller="MainController as vm">
-    <div id="media-width-detection-element"></div>
+
 
     <!-- Modal -->
     <div class="modal" id="msgbox" role="dialog">
@@ -88,12 +88,30 @@
                     <p>{{ vm.msgboxcontent }}</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" style="color:orange" data-dismiss="modal">Close
-                    </button>
+                    <button type="button" class="btn btn-default" style="color:orange" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
+
+
+
+    <div id="myModal360video" class="modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div id="video360div" class="valiant360video"     style="height: 580px;">
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"  data-dismiss="modal">סגור</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
     <!-- Modal -->
@@ -131,6 +149,85 @@
             </div>
         </div>
     </div>
+
+
+
+
+    <!-- Modal -->
+    <div class="modal" id="showCommModal" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">פרטי התקשרות עם בעל הנכס</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">פרטים ליצירת קשר</div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="form-group" style="white-space:nowrap">
+
+                                    <label class="control-label col-sm-5" for="primarycellphone">נייד
+                                        ראשי</label>
+
+                                    <div class="col-sm-4">
+                                        {{ vm.contact.primarycellphone }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="control-label col-sm-5" for="secondarycellphone">נייד
+                                    משני</label>
+
+                                <div class="col-sm-4">
+                                    {{ vm.contact.secondarycellphone }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="control-label col-sm-5" for="homephome">טלפון
+                                    בבית</label>
+
+                                <div class="col-sm-4">
+
+                                    {{ vm.contact.homephone }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="control-label col-sm-5" for="officephone">טלפון
+                                    במישרד</label>
+
+                                <div class="col-sm-4">
+                                    {{ vm.contact.officephone }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="control-label col-sm-5" for="email">אימייל</label>
+
+                                <div class="col-sm-6">
+                                    {{ vm.contact.email }}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="control-label col-sm-5" for="contactPerson">איש קשר</label>
+
+                                <div class="col-sm-6">
+                                    {{ vm.contact.contactPerson }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">סגור</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
     <!-- Modal -->
@@ -517,19 +614,18 @@
     </div>
 
     <div class="row" ng-show="showNoResultsMessage">
-        <div class=col-md-10 col-md-offset-2
-        ">
-        <h2 class="animated infinite bounce">
-            לא נמצאו תוצאות המתאימות לחיפוש</h2>
+        <div class= col-md-10 col-md-offset-2">
+            <h2 class="animated infinite bounce">
+                לא נמצאו תוצאות המתאימות לחיפוש</h2>
+        </div>
     </div>
-</div>
 
-<div class="row" ng-show="showerrorenable">
-    <div class="col-md-10 col-md-offset-2">
-        <h2 class="animated infinite bounce">{{ showerror }}</h2>
+    <div class="row" ng-show="showerrorenable">
+        <div class="col-md-10 col-md-offset-2">
+            <h2 class="animated infinite bounce">{{ showerror }}</h2>
 
+        </div>
     </div>
-</div>
 
 
 <div ng-repeat="item in vm.cards">
@@ -899,6 +995,11 @@
 
             </div>
         </div>
+            <div class="row" ng-show="item.show360video">
+                <a class="animated infinite pulse" style="cursor :pointer;margin-right: 20px;font-size: x-large" ng-click="Show360Video(item, $index)">
+                    {{ item.video360existlable }}
+                </a>
+            </div>
 
     </div>
 </div>

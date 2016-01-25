@@ -49,6 +49,9 @@ app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', function($s
     url: '/howto360?helptopic',
     controller: 'howto360Controller',
     templateUrl: '/client/views/howto360.html'
+  }).state('admin', {
+    url: '/admin',
+    templateUrl: '/client/views/admin.html'
   });
 
 

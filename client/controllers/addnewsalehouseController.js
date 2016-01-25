@@ -57,7 +57,7 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
         for (var i = 1; i < 35; i++) {
             vm.numberfloors.push(i);
         }
-        myhttphelper.doGet('/isauth').
+        myhttphelper.doGet('/api/isauth').
             then(sendResponseData).
             catch(sendResponseError);
 
@@ -250,7 +250,7 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
                 lat: 0,                 // initial lat for camera angle
                 loop: "loop",           // video loops by default
                 muted: true,            // video muted by default
-                autoplay: true          // video autoplays by default
+                autoplay: false          // video autoplays by default
             }
             $('.valiant360video').Valiant360(options);
             //console.log($.fn['eeeeee']);

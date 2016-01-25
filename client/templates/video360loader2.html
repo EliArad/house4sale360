@@ -9,7 +9,7 @@
                      accept="video/mp4,video/x-m4v,video/*"
                      type="file"
                      multiple="false"
-                     data-animal-type='{{ item.id }}'
+                     data-itemid ="{{ item.id }}"
                      onchange="angular.element(this).scope().video360LoaderInputChanged(this)"
                       />
                   </span>

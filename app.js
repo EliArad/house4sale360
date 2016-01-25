@@ -106,7 +106,7 @@ mkdirp('./uploadvideo/', function (err) {
 
 var registerController = require('./server/controller/register')(sqlserver);
 var dbstoreController = require('./server/controller/dbstore')(sqlserver);
-
+var storage = require('./server/modules/storage')(sqlserver);
 
 //var membersRouter = require('./server/routes/members')(membersController, membersModel.membersModel, registerController);
 //var getmembersRouters = membersRouter.routes;
@@ -126,7 +126,7 @@ app.use(bodyParser.json());
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 
-var commandsRoutes = require('./server/routes/commands')(app);
+var commandsRoutes = require('./server/routes/commands')(app, sqlserver);
 var mailverify = require('./server/modules/nodemailer')(app, sqlserver);
 var registerRoutes = require('./server/routes/register')(sqlserver, registerController);
 var dbstoreRoutes = require('./server/routes/dbstore')(app, dbstoreController).init();
@@ -136,8 +136,10 @@ var dbstoreRoutes = require('./server/routes/dbstore')(app, dbstoreController).i
 //var adminRoutes = require('./server/routes/admin')(notifyServer);
 
 var salequeryController = require('./server/controller/salequery')(sqlserver);
-var mailController = require('./server/controller/mail')(sqlserver,mailverify);
+var mailController = require('./server/controller/mail')(sqlserver, mailverify);
 var mailRoutes = require('./server/routes/mail')(app, mailController).init();
+var generalController = require('./server/controller/general')(sqlserver);
+var generalRoutes = require('./server/routes/general')(app, generalController).init();
 
 
 var tasksController = require('./server/controller/tasks')(sqlserver);
@@ -174,6 +176,13 @@ app.post('/api/upload', jwtauth, bodyParser({
 
     var x = util.inspect(req.body.images);
 
+    var tabletype;
+    if (req.body.tabletype == 'renthouse') {
+        tabletype = 'renthouseblobs';
+    } else if (req.body.tabletype == 'salehouse') {
+        tabletype = 'salehouseblobs';
+    }
+
     try {
 
         var dirToCreateRaw = './uploadimages/' + req.idFromToken + '/' + req.body.tabletype + '/' + req.body.insertId + '/';
@@ -195,50 +204,63 @@ app.post('/api/upload', jwtauth, bodyParser({
 
             //console.log("saving file: " + fileNameRaw);
             var status = 500;
-            fs.writeFile(fileNameRaw, buff, function (err) {
-                if (err) {
-                    res.sendStatus(500);
-                } else {
+            //console.log(req.body.filesize);
 
-                    var datatoinsert = {
-                        filename: req.body.filename,
-                        tableid: req.body.insertId,
-                        is360image: req.body.is360image,
-                        isvideo: false,
-                        is360video:false
-                    };
+            sqlserver.get(function (err, con) {
+                storage.addToStorage(req.idFromToken, req.body.filesize, con, function (err) {
+                    //console.log(err);
+                    if (err == null) {
+                        fs.writeFile(fileNameRaw, buff, function (err) {
+                            if (err) {
+                                sqlserver.release(con);
+                                res.sendStatus(500);
+                            } else {
+
+                                var datatoinsert = {
+                                    filename: req.body.filename,
+                                    tableid: req.body.insertId,
+                                    is360image: req.body.is360image,
+                                    isvideo: false,
+                                    is360video: false,
+                                    filesize:req.body.filesize
+                                };
+
+                                // save the entry to database salehouseblobs
 
 
-                    // save the entry to database salehouseblobs
-                    sqlserver.get(function (err, con) {
-                        if (!err) {
-                            var sql = 'SELECT * FROM salehouseblobs WHERE tableid = ' + con.escape(req.body.insertId) + ' AND filename = ' + con.escape(req.body.filename) + ' AND isvideo = false AND is360image = ' + con.escape(req.body.is360image);
-                            var query = con.query(sql, function (err, rows) {
-                                if (err) {
-                                    sqlserver.release(con);
-                                    return res.sendStatus(500);
-                                } else {
-                                    if (rows.length > 0) {
-                                        console.log('there is already file in that name in this id');
-                                        sqlserver.release(con);
-                                        return res.send('ok');
-                                    }
-                                }
-
-                                var query = con.query('INSERT INTO salehouseblobs SET ?', datatoinsert, function (err, result) {
-                                    sqlserver.release(con);
+                                var sql = 'SELECT * FROM ' + tabletype + ' WHERE tableid = ' + con.escape(req.body.insertId) + ' AND filename = ' + con.escape(req.body.filename) + ' AND isvideo = false AND is360image = ' + con.escape(req.body.is360image);
+                                var query = con.query(sql, function (err, rows) {
                                     if (err) {
-                                        res.sendStatus(500);
+                                        sqlserver.release(con);
+                                        return res.sendStatus(500);
                                     } else {
-                                        res.send(result);
+                                        if (rows.length > 0) {
+                                            console.log('there is already file in that name in this id');
+                                            sqlserver.release(con);
+                                            return res.send('ok');
+                                        }
                                     }
+
+                                    var query = con.query('INSERT INTO ' + tabletype + ' SET ?', datatoinsert, function (err, result) {
+                                        sqlserver.release(con);
+                                        if (err) {
+                                            res.sendStatus(500);
+                                        } else {
+                                            res.send(result);
+                                        }
+                                    });
                                 });
-                            });
-                        } else {
-                            res.sendStatus(500);
-                        }
-                    });
-                }
+                            }
+                        });
+                    } else {
+                        sqlserver.release(con);
+                        console.log(err);
+                        return res.json({
+                            error: 500,
+                            msg: "exceed size"
+                        });
+                    }
+                });
             });
         });
     } catch (e) {
@@ -266,7 +288,20 @@ app.post('/api/uploadvideo', jwtauth, bodyParser({
     var x = util.inspect(req.body.video);
     try {
 
-        var dirToCreateRaw = './uploadvideo/' + req.idFromToken + '/' + req.body.tabletype + '/' + req.body.insertId + '/';
+
+        var tabletype;
+        if (req.body.tabletype == 'renthouse') {
+            tabletype = 'renthouseblobs';
+        } else if (req.body.tabletype == 'salehouse') {
+            tabletype = 'salehouseblobs';
+        }
+        var dirToCreateRaw;
+        if (req.body.is360video == false) {
+            dirToCreateRaw = './uploadvideo/' + req.idFromToken + '/' + req.body.tabletype + '/' + req.body.insertId + '/';
+        } else {
+            dirToCreateRaw = './upload360video/' + req.idFromToken + '/' + req.body.tabletype + '/' + req.body.insertId + '/';
+        }
+        console.log('dirToCreateRaw: ' + dirToCreateRaw);
         mkdirp(dirToCreateRaw, function (err) {
 
             var r = x.search('data:video/mp4;base64,');
@@ -282,6 +317,9 @@ app.post('/api/uploadvideo', jwtauth, bodyParser({
             //console.log(fileNameRaw);
 
             var status = 500;
+
+            //console.log(fileNameRaw);
+
             fs.writeFile(fileNameRaw, buff, function (err) {
                 if (err) {
                     console.log(err);
@@ -292,30 +330,32 @@ app.post('/api/uploadvideo', jwtauth, bodyParser({
                         filename: req.body.filename,
                         tableid: req.body.insertId,
                         is360video: req.body.is360video,
-                        is360image:false,
-                        isvideo:true
+                        is360image: false,
+                        isvideo: true
                     };
                     sqlserver.get(function (err, con) {
                         if (!err) {
-                            var sql = 'SELECT * FROM salehouseblobs WHERE tableid = ' + con.escape(req.body.insertId) + ' AND isvideo = true  AND filename = ' + con.escape(req.body.filename) + ' AND is360video = ' + con.escape(req.body.is360video);
+                            var sql = 'SELECT * FROM ' + tabletype + ' WHERE tableid = ' + con.escape(req.body.insertId) + ' AND isvideo = true  AND filename = ' + con.escape(req.body.filename) + ' AND is360video = ' + con.escape(req.body.is360video);
+                            console.log(sql);
                             var query = con.query(sql, function (err, rows) {
                                 if (err) {
                                     sqlserver.release(con);
                                     return res.sendStatus(500);
                                 } else {
+                                    console.log(rows.length);
                                     if (rows.length > 0) {
                                         sqlserver.release(con);
                                         console.log('there is already file in that name in this id');
-                                        return res.json({status: 'ok' , filename:fileNameRaw});
+                                        return res.json({status: 'ok', filename: fileNameRaw});
                                     }
                                 }
-                                var query = con.query('INSERT INTO salehouseblobs SET ?', datatoinsert, function (err, result) {
+                                var query = con.query('INSERT INTO ' + tabletype + ' SET ?', datatoinsert, function (err, result) {
                                     sqlserver.release(con);
                                     if (err) {
                                         console.log(err);
                                         res.sendStatus(500);
                                     } else {
-                                        return res.json({status: 'ok' , filename:fileNameRaw});
+                                        return res.json({status: 'ok', filename: fileNameRaw});
                                     }
                                 });
                             });
@@ -334,7 +374,7 @@ app.post('/api/uploadvideo', jwtauth, bodyParser({
 });
 
 
-app.get('/isauth', jwtauth, function (req, res, next) {
+app.get('/api/isauth', jwtauth, function (req, res, next) {
     res.sendStatus(200); // must return a response!!!
 });
 

@@ -292,6 +292,20 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             }
         }
 
+        $scope.ShowCommDetails = function (item) {
+            vm.userMessageId = item.id;
+            var type = vm.search.messagetype == 'מכירה'  ? 0 : 1;
+
+            dboperations.getMessageUserInformation(item.id, type).then(function(result)
+            {
+                console.log(result.data);
+                vm.contact = result.data;
+                $('#showCommModal').modal('show');
+            }).catch(function(result){
+
+            });
+
+        }
         $scope.SendUserMessage = function (item) {
             vm.userMessageId = item.id;
             $('#sendMessageModal').modal('show');
@@ -497,18 +511,21 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             buildSearchSummery();
 
             var type;
+
+            var directory = vm.search.messagetype == 'מכירה'  ? '/salehouse/' : '/renthouse/';
             if (search.messagetype == 'השכרה')
             {
                type = 1;
             } else {
                 type = 0;
             }
-
             dboperations.GetHouseQueryResults(search, false,type).then(function (result) {
 
                 $scope.showerrorenable = false;
                 if (result.data.length == 0) {
                     $scope.showNoResultsMessage = true;
+                    vm.cards = [];
+                    vm.cards1 = [];
                 } else {
                     $scope.showNoResultsMessage = false;
                 }
@@ -546,13 +563,17 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                     card.imageExists = false;
                     card.video360Exists = false;
                     card.videosourceurl = [];
+                    card.video360sourceurl = [];
                     card.videoExists = false;
                     card.showVideo = 0;
                     card.showregularvideo = false;
+                    card.show360video = false;
+                    card.show3dtour = value[0].show;
                     card.videoExists = false;
                     card.slides = [];
                     card.hideheader = false;
                     card.sphere360index = 0;
+                    vm.cards.push(card);
                     var city = card.city;
                     var area = card.area;
                     var napa = card.napa;
@@ -563,8 +584,6 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                     } else {
                         card.numberofrooms = card.numberofrooms + 'חדרים';
                     }
-
-
                     var x = {
                         'city': city,
                         'area': area,
@@ -605,7 +624,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                                 card.imageExists = true;
                             }
                             var userid = value[k].userid;
-                            var imgsrc = './uploadimages/' + userid + '/salehouse/' + value[k].tableid + '/' + value[k].filename;
+                            var imgsrc = './uploadimages/' + userid + directory + value[k].tableid + '/' + value[k].filename;
                             //console.log(imgsrc);
                             card.slides.push({
                                 image: imgsrc,
@@ -630,7 +649,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                             }
 
                             var userid = value[k].userid;
-                            var imgsrc = './uploadimages/' + userid + '/salehouse/' + value[k].tableid + '/' + value[k].filename;
+                            var imgsrc = './uploadimages/' + userid + directory + value[k].tableid + '/' + value[k].filename;
                             card.sphere360.push(imgsrc);
 
                             if (card.sphere360index == 0) {
@@ -675,7 +694,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                             var userid1 = value[f].userid;
                             var tableid = value[f].tableid;
                             var videofilename = value[f].filename;
-                            var videosrouceurl = './uploadvideo/' + userid1 + '/salehouse/' + tableid + '/' + videofilename;
+                            var videosrouceurl = './uploadvideo/' + userid1 + directory + tableid + '/' + videofilename;
                             card.videosourceurl.push(videosrouceurl);
                             card.showregularvideo = true;
                             card.videoexistlable = 'יש גם וידאו - הראה לי';
@@ -683,7 +702,31 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                         }
                     }
 
-                    vm.cards.push(card);
+                    for (var f = 0; f < value.length; f++) {
+                        if (value[f].isvideo != null &&
+                            value[f].tableid != null &&
+                            value[f].filename != null &&
+                            value[f].is360image != null &&
+                            value[f].isvideo == 1 &&
+                            value[f].is360video == 1 &&
+                            value[f].is360image == 0) {
+                            var userid1 = value[f].userid;
+                            var tableid = value[f].tableid;
+                            var videofilename = value[f].filename;
+                            var videosrouceurl = './upload360video/' + userid1 + directory+ tableid + '/' + videofilename;
+                            card.video360sourceurl.push(videosrouceurl);
+                            card.show360video = true;
+                            card.video360existlable = 'יש גם וידאו 360  - הראה לי';
+                            break;
+                        }
+                    }
+                    //vm.cards.push(card);
+                    if (card.show3dtour == 1) {
+                        setTimeout(function(index){
+                            console.log(index);
+                            document.getElementById('touriframeid' + index).src = '/virtualtours/57/132/tour3dvistaplayer.html';
+                        }, 2000, i)
+                    }
                     i++;
                 });
             }).catch(function (result) {
@@ -692,6 +735,56 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 $scope.showNoResultsMessage = true;
             })
         }
+
+
+        $scope.Show3dTour = function(item, index)
+        {
+
+        }
+
+        $scope.Show360Video = function(item, index)
+        {
+            if (item.video360existlable == 'הסתר וידאו')
+            {
+                item.video360existlable = 'יש גם וידאו 360  - הראה לי';
+            } else {
+                item.video360existlable = 'הסתר וידאו';
+                $('#myModal360video').modal('show');
+                var imgsrc = item.video360sourceurl[0];
+                //console.log(imgsrc);
+                vm.current360IdPlay = index;
+                load360Video(imgsrc);
+            }
+        }
+
+
+        $('#myModal360video').on('hidden.bs.modal', function () {
+
+            vm.cards[vm.current360IdPlay].video360existlable = 'יש גם וידאו 360  - הראה לי';
+        });
+
+
+        function load360Video(fileName) {
+            // initialize plugin, default options shown
+            var options = {
+                crossOrigin: 'anonymous',   // valid keywords: 'anonymous' or 'use-credentials'
+                clickAndDrag: true,    // use click-and-drag camera controls
+                flatProjection: false,  // map image to appear flat (often more distorted)
+                fov: 35,                // initial field of view
+                fovMin: 3,              // min field of view allowed
+                fovMax: 100,                // max field of view allowed
+                hideControls: false,    // hide player controls
+                lon: 0,                 // initial lon for camera angle
+                lat: 0,                 // initial lat for camera angle
+                loop: "loop",           // video loops by default
+                muted: true,            // video muted by default
+                autoplay: true          // video autoplays by default
+            }
+
+            $('.valiant360video').Valiant360(options);
+            $.fn['eeeeee']._video.src = fileName;
+        }
+
 
         $scope.ShowRegularVideo = function(item)
         {

@@ -7,7 +7,7 @@
     function($scope,$state, authToken,$http,myConfig,appCookieStore,myhttphelper,$timeout) {
 
 
-      myhttphelper.doGet('/isauth').
+      myhttphelper.doGet('/api/isauth').
         then(sendResponseData1).
         catch(sendResponseError1);
 

@@ -203,6 +203,67 @@
 
 
 
+        <div class="form-group" style="white-space:nowrap"
+             ng-class="{ 'has-error': form.romates.$error.required }">
+            <label  class="control-label col-sm-3" for="romates">מאפשר שותפים?</label>
+
+            <div class="col-sm-9">
+                <select name="romates" class="form-control"
+                        ng-change="saveModel()"
+                        ng-model="item.romates">
+                    <option>כן</option>
+                    <option>לא</option>
+                    </option>
+                </select>
+            </div>
+        </div>
+
+
+
+        <div class="form-group" style="white-space:nowrap"
+             ng-class="{ 'has-error': form.furnatures.$error.required }">
+            <label class="control-label col-sm-3" for="furnatures">ריהוט</label>
+
+            <div class="col-sm-9">
+                <select name="furnatures" class="form-control"
+                        ng-model="item.furnatures">
+                    <option>כן</option>
+                    <option>לא</option>
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group"
+             style="white-space:nowrap">
+            <label class="control-label col-sm-3" for="furnaturedetails">פרוט הריהוט</label>
+
+            <div class="col-sm-9">
+                            <textarea id="new_message1"
+                                      style="border-color: gray;width: 100%"
+                                      placeholder="פרט בבקשה עך הריהוט בבית"
+                                      rows="8" cols="50" ng-model="item.furnaturedetails"/>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     </div>
     <div class="col-md-4">
         <div class="form-group"
@@ -411,21 +472,22 @@
 
     <div class="col-md-4">
 
-
         <div class="panel panel-info">
             <div class="panel-heading">פרטים ליצירת קשר</div>
             <div class="panel-body">
 
 
-                <div class="form-group" style="white-space:nowrap"
-                     ng-class="{ 'has-error': (form.primarycellphone.$error.required &&  form.primarycellphone.$dirty)}">
+                <div class="form-group" style="white-space:nowrap">
                     <label class="control-label col-sm-3" for="primarycellphone">נייד
                         ראשי</label>
 
                     <div class="col-sm-9">
-                        <input type="number" name="primarycellphone" required
-                               placeholder="מספר טלפון נייד ראשי" class="form-control"
-                               ng-model="item.primarycellphone">
+
+                        <input class="form-control input-phone" style="direction: ltr"
+                               placeholder="מספר טלפון נייד ראשי"
+                               class="form-control"
+                               name="primarycellphone" type='text' phone-input
+                               ng-model="item.primarycellphone"/>
                     </div>
                 </div>
 
@@ -434,47 +496,53 @@
                         משני</label>
 
                     <div class="col-sm-9">
-                        <input type="number" name="secondarycellphone"
-                               placeholder="מספר טלפון נייד משני" class="form-control"
-                               ng-model="item.secondarycellphone">
+                        <input class="form-control input-phone" style="direction: ltr"
+                               placeholder="מספר טלפון נייד משני"
+                               class="form-control"
+                               name="secondarycellphone" type='text' phone-input
+                               ng-model="item.secondarycellphone"/>
+
                     </div>
                 </div>
 
-                <div class="form-group" style="white-space:nowrap"
-                     ng-class="{ 'has-error': (form.homephome.$error.required &&  form.homephome.$dirty)}">
+                <div class="form-group" style="white-space:nowrap">
                     <label class="control-label col-sm-3" for="homephome">טלפון
                         בבית</label>
 
                     <div class="col-sm-9">
-                        <input type="number" name="homephone" required
+
+                        <input class="form-control input-phone" style="direction: ltr"
                                placeholder="טלפון בבית" class="form-control"
-                               ng-model="item.homephone">
+                               name="homephone" type='text' phone-input
+                               ng-model="item.homephone"/>
+
                     </div>
                 </div>
 
 
-                <div class="form-group"
-                     ng-class="{ 'has-error': (form.officephone.$error.required &&  form.officephone.$dirty)}">
+                <div class="form-group">
                     <label class="control-label col-sm-3" for="officephone">טלפון
                         במישרד</label>
 
                     <div class="col-sm-9">
-                        <input type="number" name="officephone" required
+                        <input class="form-control input-phone" style="direction: ltr"
                                placeholder="טלפון במישרד" class="form-control"
-                               ng-model="item.officephone">
+                               name="officephone" type='text' phone-input
+                               ng-model="item.officephone"/>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="control-label col-sm-3" for="email">אימייל</label>
+                <div class="form-group" ng-class="{ 'has-error': (form.email.$invalid )}">
+                    <label class="control-label col-sm-3">אימייל</label>
 
                     <div class="col-sm-9">
-                        <input type="email" name="email" required
+                        <input type="email" name="email"
                                placeholder="אמייל - לא חייב להיות הרשום"
                                class="form-control"
                                ng-model="item.email">
                     </div>
                 </div>
+
             </div>
         </div>
 

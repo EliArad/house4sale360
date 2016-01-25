@@ -49,7 +49,7 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
             window.location.reload(true);
         }
 
-        myhttphelper.doGet('/isauth').
+        myhttphelper.doGet('/api/isauth').
             then(sendResponseData).
             catch(sendResponseError);
 
@@ -408,6 +408,24 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
                     vm.cards[i].warehouse = vm.cards[i].warehouse.toString();
                 }
 
+                if (vm.cards[i].animals == 0) {
+                    vm.cards[i].animals = 'לא';
+                } else {
+                    vm.cards[i].animals = 'כן';
+                }
+
+                if (vm.cards[i].romates == 0) {
+                    vm.cards[i].romates = 'לא';
+                } else {
+                    vm.cards[i].romates = 'כן';
+                }
+
+                if (vm.cards[i].furnatures == 0) {
+                    vm.cards[i].furnatures = 'לא';
+                } else {
+                    vm.cards[i].furnatures   = 'כן';
+                }
+
                 if (vm.cards[i].mamad.data[0] == 0) {
                     vm.cards[i].mamad = 'לא';
                 } else {
@@ -631,7 +649,23 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
                     break;
             }
 
-            console.log(card);
+
+            if (card.animals == 'כן') {
+                card.animals = 1;
+            } else {
+                card.animals = 0;
+            }
+            if (card.furnatures == 'כן') {
+                card.furnatures = 1;
+            } else {
+                card.furnatures = 0;
+            }
+            if (card.romates == 'כן') {
+                card.romates = 1;
+            } else {
+                card.romates = 0;
+            }
+
 
             dboperations.updateRentHouseDetails(card).then(function (result) {
 

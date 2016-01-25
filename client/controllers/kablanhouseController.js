@@ -50,7 +50,7 @@ app.controller('kablanhouseController', ['$scope', 'Members', 'general', 'appCoo
             window.location.reload(true);
         }
 
-        myhttphelper.doGet('/isauth').
+        myhttphelper.doGet('/api/isauth').
             then(sendResponseData).
             catch(sendResponseError);
 

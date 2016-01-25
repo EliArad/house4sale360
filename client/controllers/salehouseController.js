@@ -49,7 +49,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
             window.location.reload(true);
         }
 
-        myhttphelper.doGet('/isauth').
+        myhttphelper.doGet('/api/isauth').
             then(sendResponseData).
             catch(sendResponseError);
 
@@ -138,7 +138,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
             $scope.uploadFile2(fileInputElement.files[0]);
         }
 
-        var ajaxUpload = function (result, fileName, id) {
+        var ajaxUpload = function (result, fileName, filesize, id) {
 
             var xid;
             if (id == null) {
@@ -152,12 +152,19 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                 "tabletype": "salehouse",
                 "insertId": xid,
                 'is360image': false,
-                'isvideo': false
+                'isvideo': false,
+                filesize:filesize
             };
 
             myhttphelper.doPost('/api/upload', data).
                 then(function (res) {
-                    addPictureToCrousleSlider(result, 'eeeee');
+                    console.log(res);
+                    if (res.error == 500)
+                    {
+                        alert('אין אפשרות להעלות תמונות יותר.חרגת מה 150 מגה לחשבון זה');
+                    } else {
+                        addPictureToCrousleSlider(result, 'eeeee');
+                    }
                 }).
                 catch(function (res) {
 
@@ -207,7 +214,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                             alert(msg);
                             return;
                         }
-                        ajaxUpload(result, file.name, id);
+                        ajaxUpload(result, file.name,file.size, id);
                     };
                     i.src = result;
                 });
@@ -326,24 +333,6 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                 }, 400);
             });
 
-
-            dboperations.getSaleHouseVideo360List(obj.id).then(function (result) {
-                var imgsrc;
-                vm.video360 = [];
-                vm.video360index = 0;
-
-                if (result.data.rows.length > 0) {
-
-                }
-                for (var i = 0; i < result.data.rows.length; i++) {
-                    var imgsrc = './upload360video/' + result.data.userid + '/salehouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
-                    console.log(imgsrc);
-                    if (i == 0)
-                        load360Video(imgsrc);
-                    vm.video360index++;
-                }
-
-            });
         }
 
         $scope.removeSlide = function () {
@@ -374,7 +363,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
 
 
                 vm.cards[i].shownapa = true;
-                console.log(vm.cards[i].code);
+                //console.log(vm.cards[i].code);
 
                 var streetName = vm.cards[i].street;
                 var x1 = {
@@ -466,7 +455,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
         });
 
         $scope.video360LoaderInputChanged = function (obj) {
-            var id = obj.getAttribute("data-animal-type");
+            var id = obj.getAttribute("data-itemid");
             var fileInputElement = document.getElementById("video360LoaderInput" + id);
             var size = fileInputElement.files[0].size / (1024 * 1024);
             if (size > 50) {
@@ -479,20 +468,20 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
         function upload360Video(file, id) {
             fileReader.readAsDataUrl(file, $scope)
                 .then(function (result) {
-                    ajaxUpload360Video(result, file, function (err, res) {
+                    ajaxUpload360Video(result, file,id, function (err, res) {
                         if (err != 'ok') {
                             vm.showwaitcircle = false;
                             alert(err + ' ' + res);
                         } else {
                             vm.showwaitcircle = false;
                             $scope.showvideo360single = true;
-                            load360Video(res.filename, id);
+                            load360Video(res.filename);
                         }
                     });
                 });
         }
 
-        function load360Video(fileName, id) {
+        function load360Video(fileName) {
             // initialize plugin, default options shown
             var options = {
                 crossOrigin: 'anonymous',   // valid keywords: 'anonymous' or 'use-credentials'
@@ -509,13 +498,8 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                 autoplay: true          // video autoplays by default
             }
 
-            var x = document.getElementById('video360div' + id);
-            console.log(x);
-            $.fn['eeee'] = new Plugin('video360div' + id, options);
-
-            //$('.valiant360video' + id).Valiant360(options);
-            $.fn['eeee' + id]._video.src = fileName;
-
+            $('.valiant360video').Valiant360(options);
+            $.fn['eeeeee']._video.src = fileName;
         }
 
         $scope.getrenovated = function (selectedItem) {
@@ -823,19 +807,37 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                 });
         }
 
-        function ajaxUpload360Video(result, fileName, callback) {
+        $scope.Show360Video = function(id)
+        {
+            $('#myModal360video').modal('show');
 
-            if (vm.insertId == -1) {
-                if (callback)
-                    callback("failed", "cannot attached to new message");
-                return;
-            }
+            dboperations.getSaleHouseVideo360List(id).then(function (result) {
+                var imgsrc;
+                vm.video360 = [];
+                vm.video360index = 0;
+
+                if (result.data.rows.length > 0) {
+
+                }
+
+                for (var i = 0; i < result.data.rows.length; i++) {
+                    var imgsrc = './upload360video/' + result.data.userid + '/salehouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
+                    console.log(imgsrc);
+                    if (i == 0)
+                        load360Video(imgsrc, result.data.rows[i].tableid);
+                    vm.video360index++;
+                }
+
+            });
+        }
+
+        function ajaxUpload360Video(result, fileName, id, callback) {
 
             var data = {
                 "video": result,
                 "filename": fileName.name,
                 "tabletype": "salehouse",
-                "insertId": vm.insertId,
+                "insertId": id,
                 'is360video': true
             };
 

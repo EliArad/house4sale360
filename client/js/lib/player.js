@@ -9,7 +9,7 @@ function loadTour(settings)
         var preloadError = document.getElementById('preloadError');
         preloadError.style.visibility = 'visible';
         if(preloadError)
-            preloadError.innerHTML += '<div style="text-align:left; color:#000; "><DIV STYLE="text-align:center;"><SPAN STYLE="letter-spacing:0px;color:#000000;font-size:12px;font-family:Arial, Helvetica, sans-serif;"><SPAN STYLE="color:#666666;">If you can\'t see this virtual tour, click</SPAN> <SPAN STYLE="color:#0000ff;"><A TARGET="_blank" HREF="http://www.3dvista.com/error.htm" STYLE="text-decoration:none; color:inherit;"><SPAN STYLE="color:#999999;"><U>here</U></SPAN></A></SPAN></SPAN></DIV><DIV STYLE="text-align:center;"><SPAN STYLE="letter-spacing:0px;color:#000000;font-size:12px;font-family:Arial, Helvetica, sans-serif;"><SPAN STYLE="color:#666666;">Si no puede ver esta visita virtual, pulse</SPAN> <SPAN STYLE="color:#0000ff;"><A TARGET="_blank" HREF="http://www.3dvista.com/error.htm" STYLE="text-decoration:none; color:inherit;"><SPAN STYLE="color:#999999;"><U>aquí</U></SPAN></A></SPAN></SPAN></DIV></div>';
+            preloadError.innerHTML += '<div style="text-align:left; color:#000; "><DIV STYLE="text-align:center;"><SPAN STYLE="letter-spacing:0px;color:#000000;font-size:12px;font-family:Arial, Helvetica, sans-serif;"><SPAN STYLE="color:#666666;">If you can\'t see this virtual tour, click</SPAN> <SPAN STYLE="color:#0000ff;"><A TARGET="_blank" HREF="http://www.3dvista.com/error.htm" STYLE="text-decoration:none; color:inherit;"><SPAN STYLE="color:#999999;"><U>here</U></SPAN></A></SPAN></SPAN></DIV><DIV STYLE="text-align:center;"><SPAN STYLE="letter-spacing:0px;color:#000000;font-size:12px;font-family:Arial, Helvetica, sans-serif;"><SPAN STYLE="color:#666666;">Si no puede ver esta visita virtual, pulse</SPAN> <SPAN STYLE="color:#0000ff;"><A TARGET="_blank" HREF="http://www.3dvista.com/error.htm" STYLE="text-decoration:none; color:inherit;"><SPAN STYLE="color:#999999;"><U>aqu?</U></SPAN></A></SPAN></SPAN></DIV></div>';
     };
 
     var timeoutID = setTimeout(errorFunction, 20000);
@@ -28,6 +28,7 @@ function loadTour(settings)
         window.parent.postMessage("tourLoaded", '*');
 
         disposePreloader();
+        pauseTour();
     };
 
 

@@ -46,7 +46,6 @@ module.exports = function (sqlserver, mailer) {
         },
         SendEmailToUser: function (req, res, next) {
 
-            console.log('SendEmailToUser');
             sqlserver.get(function (err, con) {
                 if (!err) {
 

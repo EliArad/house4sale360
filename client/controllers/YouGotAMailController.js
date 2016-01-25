@@ -17,7 +17,7 @@
       var cssUpdateTimer1;
       $scope.currentMemberToShow = {};
 
-      myhttphelper.doGet('/isauth').
+      myhttphelper.doGet('/api/isauth').
         then(sendResponseData1).
         catch(sendResponseError1);
 

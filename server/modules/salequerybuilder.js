@@ -1,12 +1,14 @@
 module.exports = function () {
     function build(con, opt) {
 
-        var sql = 'SELECT sellhousedetails.* , salehouseblobs.filename, salehouseblobs.tableid , salehouseblobs.is360image , salehouseblobs.is360video , salehouseblobs.isvideo\
+        var sql = 'SELECT sellhousedetails.* , salehouseblobs.filename, salehouseblobs.tableid , salehouseblobs.is360image , salehouseblobs.is360video , salehouseblobs.isvideo ,  tours3d.*\
                     FROM sellhousedetails\
                     INNER JOIN users\
                     ON users.id = sellhousedetails.userid\
                     LEFT JOIN salehouseblobs\
-                    ON salehouseblobs.tableid  = sellhousedetails.id ';
+                    ON salehouseblobs.tableid  = sellhousedetails.id\
+                    LEFT JOIN tours3d\
+                    ON sellhousedetails.id = tours3d.tableid ';
 
         var i = 0;
         sql = sql + '\n';

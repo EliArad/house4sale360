@@ -7,7 +7,7 @@ app.controller('deletecardController', ['$scope','$state','authToken','myhttphel
 
       $scope.pageClass = 'page-home';
 
-      myhttphelper.doGet('/isauth').
+      myhttphelper.doGet('/api/isauth').
         then(sendResponseData1).
         catch(sendResponseError1);
 

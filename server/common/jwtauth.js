@@ -3,10 +3,11 @@ var secret = require('./config').secret;
 
 module.exports = function (req, res, next) {
 
-
-    if (req.body.auth == false) {
-        req.body.auth = false;
-        return next();
+    if (req.body.auth != undefined) {
+        if (req.body.auth == false) {
+            req.body.auth = false;
+            return next();
+        }
     }
 
     req.body.auth = true;

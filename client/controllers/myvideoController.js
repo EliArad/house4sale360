@@ -256,7 +256,7 @@ app.controller('myvideoController', ['$scope','$state', 'authToken','myhttphelpe
       alert (response);
     }
 
-    myhttphelper.doGet('/isauth').
+    myhttphelper.doGet('/api/isauth').
       then(sendResponseData1).
       catch(sendResponseError1);
 

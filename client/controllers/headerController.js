@@ -30,9 +30,16 @@ app.controller('HeaderController', ['$scope', '$state', 'authToken', 'API',
             });
             $rootScope.$broadcast("updateHeader", authToken.getToken());
         }
+        $scope.isAdmin = false;
+        var scookie = SessionStorageService.getSessionStorage('apt360isadmin');
+        if (scookie != undefined && scookie == 1)
+        {
+            $scope.isAdmin = 1;
+        }
 
         $scope.$on("userrule", function (e, rule) {
             if (rule == 1) {
+                SessionStorageService.setSessionStorage('apt360isadmin', 1);
                 $scope.isAdmin = true;
             } else {
                 $scope.isAdmin = false;

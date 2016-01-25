@@ -138,7 +138,7 @@ app.controller('videogalleryController', ['$scope', '$state', 'authToken', '$win
 
     appCookieStore.set('mainview', 'gallery');
 
-    myhttphelper.doGet('/isauth').
+    myhttphelper.doGet('/api/isauth').
       then(sendResponseData1).
       catch(sendResponseError1);
 

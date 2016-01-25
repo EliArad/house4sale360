@@ -143,11 +143,12 @@ module.exports = function (sqlserver) {
             sqlserver.get(function (err, con) {
                 if (!err) {
                     var condition = {id: req.body.data.id};
-                    var query = con.query('UPDATE renthoursedetails SET ? WHERE ?', [req.body.data, condition], function (err, result) {
+                    var query = con.query('UPDATE renthousedetails SET ? WHERE ?', [req.body.data, condition], function (err, rows) {
                         sqlserver.release(con);
-                        if (err)
+                        if (err) {
+                            console.log(err);
                             res.sendStatus(500);
-                        else
+                        } else
                             res.send(rows);
                     });
                 } else {
@@ -224,7 +225,7 @@ module.exports = function (sqlserver) {
             });
         },
         saveHouseDetails: function (req, res, next) {
-            console.log('saveHouseDetails');
+
             sqlserver.get(function (err, con) {
                 if (!err) {
                     req.body.data.userid = req.idFromToken;
@@ -301,7 +302,7 @@ module.exports = function (sqlserver) {
                         sql = 'SELECT renthouseblobs.*,renthousedetails.userid\
                         FROM renthouseblobs\
                         INNER JOIN renthousedetails\
-                        ON renthouseblobs.tableid = sellhousedetails.id\
+                        ON renthouseblobs.tableid = renthousedetails.id\
                         AND renthouseblobs.isvideo = false\
                         WHERE renthouseblobs.is360image = true AND renthouseblobs.tableid = ' + con.escape(req.body.id) + ' AND renthousedetails.userid = ' + req.idFromToken;
                     }
@@ -312,7 +313,8 @@ module.exports = function (sqlserver) {
                         else {
                             res.json({
                                 rows: rows,
-                                index: req.body.index
+                                index: req.body.index,
+                                userid: req.idFromToken
                             });
                         }
                     });
@@ -394,10 +396,9 @@ module.exports = function (sqlserver) {
                 if (!err) {
                     console.log(req.body);
                     if (req.body.tablename == 'sale') {
-                        con.query('UPDATE sellhousedetails SET ? WHERE ?', [{suspend: req.body.suspend}, {id: req.body.id}], function(err, result){
+                        con.query('UPDATE sellhousedetails SET ? WHERE ?', [{suspend: req.body.suspend}, {id: req.body.id}], function (err, result) {
                             sqlserver.release(con);
-                            if (err)
-                            {
+                            if (err) {
                                 console.log(err);
                                 return res.status(500).send(err);
                             } else {
@@ -405,12 +406,11 @@ module.exports = function (sqlserver) {
                                 return res.send('ok');
                             }
                         });
-                    }  else {
+                    } else {
                         if (req.body.tablename == 'rent') {
-                            con.query('UPDATE renthousedetails SET ? WHERE ?', [{suspend: req.body.suspend}, {id: req.body.id}], function(err,result){
+                            con.query('UPDATE renthousedetails SET ? WHERE ?', [{suspend: req.body.suspend}, {id: req.body.id}], function (err, result) {
                                 sqlserver.release(con);
-                                if (err)
-                                {
+                                if (err) {
                                     return res.status(500).send(err);
                                 } else {
                                     return res.send('ok');
@@ -428,7 +428,24 @@ module.exports = function (sqlserver) {
             console.log('deleteMessage');
             res.send('ok');
         },
-
+        getMessageUserInformation: function (req, res, next) {
+            var sql;
+            //console.log(req.query);
+            sqlserver.get(function (err, con) {
+                if (req.query.type == 0)
+                    sql = 'SELECT * FROM sellhousedetails WHERE id = ' + con.escape(req.query.id);
+                else if (req.query.type == 1)
+                    sql = 'SELECT * FROM renthousedetails WHERE id = ' + con.escape(req.query.id);
+                var query = con.query(sql, function (err, rows) {
+                    sqlserver.release(con);
+                    if (err) {
+                        res.sendStatus(500);
+                    } else {
+                        return res.send(rows[0]);
+                    }
+                });
+            });
+        },
         getRentHousePictureList: function (req, res, next) {
             sqlserver.get(function (err, con) {
                 if (!err) {
@@ -446,7 +463,7 @@ module.exports = function (sqlserver) {
                         FROM renthouseblobs\
                         INNER JOIN renthousedetails\
                         ON renthouseblobs.tableid = renthousedetails.id\
-                        WHERE salehouseblobs.is360image = false AND renthouseblobs.tableid = ' + con.escape(req.body.id) + ' AND renthousedetails.userid = ' + req.idFromToken;
+                        WHERE renthouseblobs.is360image = false AND renthouseblobs.tableid = ' + con.escape(req.body.id) + ' AND renthousedetails.userid = ' + req.idFromToken;
                     }
                     var query = con.query(sql, function (err, rows) {
                         sqlserver.release(con);

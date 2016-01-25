@@ -58,7 +58,7 @@ app.controller('addnewblankhouseController', ['$scope', 'Members', 'general', 'a
         for (var i = 1; i < 35; i++) {
             vm.numberfloors.push(i);
         }
-        myhttphelper.doGet('/isauth').
+        myhttphelper.doGet('/api/isauth').
             then(sendResponseData).
             catch(sendResponseError);
 
@@ -245,13 +245,13 @@ app.controller('addnewblankhouseController', ['$scope', 'Members', 'general', 'a
                 flatProjection: false,  // map image to appear flat (often more distorted)
                 fov: 35,                // initial field of view
                 fovMin: 3,              // min field of view allowed
-                fovMax: 100,                // max field of view allowed
+                fovMax: 100,            // max field of view allowed
                 hideControls: false,    // hide player controls
                 lon: 0,                 // initial lon for camera angle
                 lat: 0,                 // initial lat for camera angle
                 loop: "loop",           // video loops by default
                 muted: true,            // video muted by default
-                autoplay: true          // video autoplays by default
+                autoplay: false          // video autoplays by default
             }
             $('.valiant360video').Valiant360(options);
             //console.log($.fn['eeeeee']);

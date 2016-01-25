@@ -55,6 +55,17 @@ app.factory('dboperations', function ($http, myConfig) {
         return $http.post(membersAPI, {id: id, index:i, auth:needauth});
     }
 
+    function getMessageUserInformation(id, type)
+    {
+
+        var membersAPI = myConfig.url + "/api/dbstore/getMessageUserInformation";
+        return $http({
+            url: membersAPI,
+            method: "GET",
+            params: {id: id,type:type }
+        });
+    }
+
     function getRentHousePictureList(id,i,needauth) {
         var membersAPI = myConfig.url + "/api/dbstore/getRentHousePictureList";
         return $http.post(membersAPI, {id: id, index:i, auth:needauth});
@@ -124,8 +135,10 @@ app.factory('dboperations', function ($http, myConfig) {
         GetHouseQueryResults:GetHouseQueryResults,
         getRentHouse360PictureList:getRentHouse360PictureList,
         suspendMessage:suspendMessage,
-        deleteMessage:deleteMessage
-
+        deleteMessage:deleteMessage,
+        getRentHouseVideo360List:getRentHouseVideo360List,
+        getRentHouseDetails:getRentHouseDetails,
+        getMessageUserInformation:getMessageUserInformation
     };
 
 
