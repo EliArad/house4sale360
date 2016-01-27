@@ -73,6 +73,36 @@ sqlserver.get(function (err, con) {
 sqlserver.get(function (err, con) {
     if (!err) {
         var sql = "\
+            CREATE TABLE `contactus` (\
+            `id` int(11) NOT NULL AUTO_INCREMENT,\
+            `phoneNumber` varchar(75) DEFAULT NULL,\
+            `freetext` varchar(500) NOT NULL,\
+            `email` varchar(45) NOT NULL,\
+            `Dated` date DEFAULT NULL,\
+            PRIMARY KEY (`id`),\
+            UNIQUE KEY `id_UNIQUE` (`id`),\
+            UNIQUE KEY `email_UNIQUE` (`email`)\
+            ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;";
+
+        var query = con.query(sql, function (err, rows) {
+            sqlserver.release(con);
+            if (err) {
+                console.log('error');
+            } else {
+                console.log('ok');
+            }
+        });
+    }
+})
+
+
+
+
+
+
+sqlserver.get(function (err, con) {
+    if (!err) {
+        var sql = "\
          CREATE TABLE `tours3d` (\
         `ID` int(11) NOT NULL,\
         `tableid` int(11) DEFAULT NULL,\
