@@ -5,9 +5,19 @@ upstream project {
 
 server {
 	listen 80;
-	server_name  apt360.co.il  ;
+	server_name  apt360.co.il www.apt360.co.il ;
 	client_max_body_size 50M;
 	root /home/first/projects/house4sale360/;
+	index index.html;
+	access_log off;
+
+	gzip on;
+	gzip_min_length  1100;
+	gzip_buffers  4 32k;
+	gzip_types    text/plain application/x-javascript text/xml text/css;
+	gzip_vary on;
+
+
 	location / {
 		 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
@@ -21,7 +31,7 @@ server {
 
 		   if ($request_method = 'OPTIONS') {
 
-        		add_header 'Access-Control-Allow-Origin' 'http://apt360.co.il';
+        		add_header 'Access-Control-Allow-Origin' '*';
 		        add_header 'Access-Control-Allow-Credentials' 'true';
 		        add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE,
 		        OPTIONS';
@@ -33,12 +43,38 @@ server {
 		  }
 	}
 
-	location ~* \.(css|js|gif|jpg|png)$ {
-	    expires 168h;
+	#location ~* \.(css|js|gif|jpg|png)$ {
+	#    expires 168h;
+	#}
 
-	}
+
+	#location ~ ^/(images/|img/|directives/|js/|css/|styles/|services/|fonts/|views/|directives|controllers|favicon.ico) {
+        #    root /home/first/projects/house4sale360/client;
+        #    access_log off;
+        #    expires max;
+        #}
+
+       #location ~* ^/images/.+.(jpg|jpeg|gif|png|ico|css)$
+       #{
+       #     root  /home/first/projects/house4sale360/client/;
+       #}
+       #location ~* ^/stylesheets/.+.(css)$
+       #{
+       #     root  /home/first/projects/house4sale360/client/styles/;
+       #}
+       #location ~* ^/javascript/.+.(js)$
+       #{
+       #     root  /home/first/projects/house4sale360/client/;
+       #}
 
 
+       location ~* ^.+.(jpg|jpeg|gif|png|ico|css|txt|wav|bmp|rtf|js|flv|swf|html|htm)$
+       {
+            root  /home/first/projects/house4sale360/;
+ 	    access_log off;
+            expires max;
+
+       }
 
 
 }
