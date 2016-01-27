@@ -1,4 +1,4 @@
-<div class="container" style="margin: 20px">
+<div class="container">
     <div class="row">
 
         <div class="col-md-4">
@@ -17,15 +17,19 @@
                 </div>
                 <div class="form-actions">
                     <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">Login</button>
-                    <a href="#/register" class="btn btn-link">Register</a>
+                    <a href="#/register" class="btn btn-link">הרשם</a>
                 </div>
                 <div>
                     <h1  id="loginfailureid" ng-show="loginfailure" ng-class="{ 'animated bounce': loginfailure}">כניסה שגויה</h1></h1>
                 </div>
             </form>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-8" ng-include="'/client/templates/loginsidetext.html'">
 
         </div>
+    </div>
+    <div class="row" style="height: 456px">
+
+
     </div>
 </div>

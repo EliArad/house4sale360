@@ -386,6 +386,46 @@ app.use(function (err, req, res, next) {
 });
 
 
+app.get('/verify', function (req, res) {
+    console.log('/ Verify');
+    console.log(req.query.id);
+
+    sqlserver.get(function (err, con) {
+        if (!err) {
+            var sql = 'SELECT * FROM users WHERE  userguid = ' +  con.escape(req.query.id);
+            var query = con.query(sql, function (err, rows) {
+
+                if (err)
+                {
+                    sqlserver.release(con);
+                    console.log('verified but error on set');
+                    res.redirect('/');
+                } else {
+                    var thisHost = req.protocol + "://" + req.get('host');
+                    console.log('thisHost: ' + thisHost);
+                    if (rows.length == 1 && rows[0].host == thisHost){
+                        console.log('verified, need to set in db');
+                        var condition = {userguid: req.query.id};
+                        rows[0].verified = 1;
+                        var query = con.query('UPDATE users SET ? WHERE ?', [rows[0], condition], function (err, result) {
+                            console.log(err);
+                            sqlserver.release(con);
+                            if (err) {
+                                res.redirect('/');
+                            } else {
+                                res.redirect('/#/verifiedok');
+                            }
+                        });
+                    } else {
+                        res.redirect('/');
+                    }
+                }
+            });
+        }
+    });
+
+});
+
 app.get('*', function (req, res) {
     res.status(500).send('error 4000');
 });

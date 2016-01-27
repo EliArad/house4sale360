@@ -138,7 +138,7 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
             $scope.uploadFile2(fileInputElement.files[0]);
         }
 
-        var ajaxUpload = function (result, fileName, id) {
+        var ajaxUpload = function (result, fileName, filesize, id) {
 
             var xid;
             if (id == null) {
@@ -152,7 +152,8 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
                 "tabletype": "renthouse",
                 "insertId": xid,
                 'is360image': false,
-                'isvideo': false
+                'isvideo': false,
+                filesize:filesize
             };
 
             myhttphelper.doPost('/api/upload', data).
@@ -207,7 +208,7 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
                             alert(msg);
                             return;
                         }
-                        ajaxUpload(result, file.name, id);
+                        ajaxUpload(result, file.name,file.size, id);
                     };
                     i.src = result;
                 });

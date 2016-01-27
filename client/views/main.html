@@ -1,6 +1,10 @@
 <style>
 
 
+    .caro {
+        max-height: 500px;
+    }
+
     .didd {
         width: 100%;
         float: left;
@@ -10,34 +14,6 @@
     input[type=number]::-webkit-outer-spin-button {
         -webkit-appearance: none;
         margin: 0;
-    }
-
-    .container1 {
-        width: auto;
-        margin-right: 20px;
-        margin-left: 20px;
-
-    }
-
-    .ui-select-bootstrap .ui-select-toggle > .caret {
-        right: initial;
-        left: 10px;
-        /* or any other value - it should be the same as the original right value */
-    }
-
-    .ui-select-bootstrap > .ui-select-match > .btn {
-        text-align: right !important;
-        direction: rtl;
-        background-color: white;
-        color: black;
-    }
-
-    .ui-select-bootstrap > .ui-select-choices > .btn > span.pull-left {
-        float: right !important;
-    }
-
-    .ui-select-bootstrap > .ui-select-match > .btn > span.pull-left {
-        float: right !important;
     }
 
     .btn-default:hover,
@@ -68,13 +44,9 @@
         color: black;
         background-color: white
     }
-
-
 </style>
 
-
-<div class="container1" ng-controller="MainController as vm">
-
+<div class="container-fluid" ng-controller="MainController as vm">
 
     <!-- Modal -->
     <div class="modal" id="msgbox" role="dialog">
@@ -88,30 +60,28 @@
                     <p>{{ vm.msgboxcontent }}</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" style="color:orange" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" style="color:orange" data-dismiss="modal">Close
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-
-
 
     <div id="myModal360video" class="modal" role="dialog">
         <div class="modal-dialog modal-lg">
 
             <!-- Modal content-->
             <div class="modal-content">
-                <div id="video360div" class="valiant360video"     style="height: 580px;">
+                <div id="video360div" class="valiant360video" style="height: 580px;">
 
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default"  data-dismiss="modal">סגור</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">סגור</button>
                 </div>
             </div>
         </div>
     </div>
-
 
 
     <!-- Modal -->
@@ -149,8 +119,6 @@
             </div>
         </div>
     </div>
-
-
 
 
     <!-- Modal -->
@@ -229,7 +197,6 @@
     </div>
 
 
-
     <!-- Modal -->
     <div class="modal" id="myModal" role="dialog">
         <div class="modal-dialog modal-lg">
@@ -264,10 +231,8 @@
                             </select>
                         </div>
                     </div>
-
                 </div>
                 <div class="modal-body">
-
                     <div class="form-horizontal">
                         <form name="form">
 
@@ -599,33 +564,39 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" style="margin-right:1px">
         <button type="button" class="btn btn-default" style="color:orange" data-toggle="modal" data-target="#myModal">
             הגדר את אפשרויות
             החיפוש שלך
 
         </button>
+        <div class="row">
         <span ng-hide="showNoResultsMessage">
 
         {{ vm.searchsummery}}
 
-    </span>
+        </span>
+        </div>
 
     </div>
 
     <div class="row" ng-show="showNoResultsMessage">
-        <div class= col-md-10 col-md-offset-2">
-            <h2 class="animated infinite bounce">
-                לא נמצאו תוצאות המתאימות לחיפוש</h2>
-        </div>
+        <div class=col-md-10 col-md-offset-2
+        ">
+        <h2 class="animated infinite bounce">
+            לא נמצאו תוצאות המתאימות לחיפוש</h2>
     </div>
-
-    <div class="row" ng-show="showerrorenable">
-        <div class="col-md-10 col-md-offset-2">
-            <h2 class="animated infinite bounce">{{ showerror }}</h2>
-
-        </div>
+    <div class="row" style="height: 1024px">
+        &nbsp;
     </div>
+</div>
+
+<div class="row" ng-show="showerrorenable">
+    <div class="col-md-10 col-md-offset-2">
+        <h2 class="animated infinite bounce">{{ showerror }}</h2>
+
+    </div>
+</div>
 
 
 <div ng-repeat="item in vm.cards">
@@ -951,8 +922,14 @@
                 </div>
             </div>
         </div>
-
-        <div class="row" style="margin-top:-20px" ng-show="item.showPictures > 0">
+        <div class="row" ng-show="item.show3dtour">
+            <div class="h_iframe">
+                <img class="ratio" src="/client/images/placeholder.png"/>
+                <iframe id="touriframeid{{ $index }}" width="100%" allowfullscreen
+                        frameborder="0"></iframe>
+            </div>
+        </div>
+        <div class="row" ng-show="item.showPictures > 0">
             <div ng-class="{ 'col-md-12 col-xs-12 col-lg-12 col-sm-12':  !item.imageExists, 'col-md-7 col-xs-12 col-lg-7 col-sm-12':  item.imageExists}"
                  ng-show="item.image360Exists">
                 <div id="your-pano{{ item.id }}" style="height:500px">
@@ -961,14 +938,14 @@
             </div>
             <div ng-class="{ 'col-md-12  col-xs-12 col-lg-12 col-sm-12':  !item.image360Exists, 'col-md-5 col-xs-12 col-lg-5 col-sm-12':  item.image360Exists}"
                  ng-show="item.imageExists">
-                <div>
+                <div style="height: 400px">
                     <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
                         <uib-slide ng-repeat="slide in item.slides" active="slide.active">
                             <img ng-src="{{slide.image}}"
                                  class="img-responsive"
                                  ng-mouseover="mo()"
                                  ng-mouseleave="ml()"
-                                 style="margin:auto;max-height: 500px">
+                                 style="margin:auto;max-height: 400px">
 
                             <div class="carousel-caption">
                                 <!--<h4>Slide {{$index}}</h4>-->
@@ -995,12 +972,12 @@
 
             </div>
         </div>
-            <div class="row" ng-show="item.show360video">
-                <a class="animated infinite pulse" style="cursor :pointer;margin-right: 20px;font-size: x-large" ng-click="Show360Video(item, $index)">
-                    {{ item.video360existlable }}
-                </a>
-            </div>
-
+        <div class="row" ng-show="item.show360video">
+            <a class="animated infinite pulse" style="cursor :pointer;margin-right: 20px;font-size: x-large"
+               ng-click="Show360Video(item, $index)">
+                {{ item.video360existlable }}
+            </a>
+        </div>
     </div>
 </div>
 

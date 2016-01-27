@@ -157,7 +157,7 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
             $scope.uploadFile2(fileInputElement.files[0]);
         }
 
-        var ajaxUpload = function (result, fileName, callback) {
+        var ajaxUpload = function (result, fileName,filesize, callback) {
 
             if (vm.insertId == -1) {
                 if (callback)
@@ -170,7 +170,8 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
                 "filename": fileName,
                 "tabletype": "renthouse",
                 "insertId": vm.insertId,
-                'is360image': false
+                'is360image': false,
+                filesize:filesize
             };
 
 
@@ -412,10 +413,10 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
                 });
         }
 
-        $scope.uploadFile1 = function (fileName, index) {
+        $scope.uploadFile1 = function (file, index) {
 
             $scope.progress = 0;
-            fileReader.readAsDataUrl(fileName, $scope)
+            fileReader.readAsDataUrl(file, $scope)
                 .then(function (result) {
                     var i = new Image();
                     i.onload = function () {
@@ -427,7 +428,7 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
                             alert(msg);
                             return;
                         }
-                        ajaxUpload(result, fileName.name);
+                        ajaxUpload(result, file.name, file.size);
                     };
                     i.src = result;
                 });

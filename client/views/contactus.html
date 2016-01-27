@@ -1,0 +1,97 @@
+<style>
+
+    textarea#freetext.form-control.ng-invalid.ng-dirty {
+        border: 1px solid red;
+    }
+
+    textarea#freetext.form-control.ng-invalid.ng-dirty {
+        border: 1px solid red;
+    }
+
+    input#hwAvg.form-control.ng-invalid.ng-dirty {
+        border: 1px solid red;
+    }
+
+    textarea {
+        resize: none;
+    }
+
+    /*
+    input.ng-invalid.ng-dirty {
+        border: 1px solid red;
+    }
+    */
+
+    .badinput {
+        border: 1px solid red;
+    }
+</style>
+
+<div class="container" ng-controller="contactusController as vm">
+
+    <div class="row" style="font-family: arial, sans-serif">
+
+        <div class="col-md-6 col-md-offset-3">
+
+
+            <form name="frm" novalidate>
+
+                <div class="form-group">
+
+                    <label> אמייל </label>
+
+                    <input type="email" name="email" id="email" required
+                           class="form-control" ng-model="vm.contactForm.email"
+                           placeholder="כתובת אמייל"/>
+
+                    <div style="color:red">
+                    <span ng-show="frm.email.$error.required">נדרש</span>
+                        &nbsp;&nbsp;&nbsp;
+                    <span ng-show="frm.email.$invalid">כתובת אמייל לא תקינה</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <label> טלפון </label>
+
+                    <input class="form-control input-phone" style="direction: ltr;text-align: right"
+                           placeholder="מספר טלפון"
+                           class="form-control"
+
+                           name="phonenumber" type='text' phone-input
+                           ng-model="vm.contactForm.phoneNumber"/>
+
+                </div>
+
+
+                <label>טקסט חופשי</label>
+
+
+                <div class="form-group">
+            <textarea rows="14" cols="10" type="text" name="freetext" id="freetext" ng-change="updateText()"
+                      class="form-control" ng-model="vm.contactForm.freetext" ng-maxlength="400"
+                      placeholder="טטקסט חופשי" required/>
+
+                    <span ng-show="frm.freetext.$dirty && frm.freetext.$error.required">!נדרש</span>
+                    <span ng-show="frm.freetext.$dirty && frm.freetext.$error.maxlength">מספר התווים הוא 500</span>
+                </div>
+
+                <span style="color:red" ng-show="showErrorMessage">{{ errorMessage }}</span>
+
+                <div class="form-group">
+                    <button class="btn btn-primary" style="width: 100px" ng-disabled="frm.$invalid" ng-click="submit($valid)">שלח
+                    </button>
+                    <h1 style="display:inline" ng-show="changesuccess" ng-class="{ 'animated bounce': changesuccess}">
+                        ההודעה נשלחה</h1>
+                </div>
+
+
+            </form>
+
+
+        </div>
+
+    </div>
+</div>
+

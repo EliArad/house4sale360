@@ -157,7 +157,7 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
             $scope.uploadFile2(fileInputElement.files[0]);
         }
 
-        var ajaxUpload = function (result, fileName, callback) {
+        var ajaxUpload = function (result, fileName, filesize , callback) {
 
             if (vm.insertId == -1) {
                 if (callback)
@@ -170,7 +170,8 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
                 "filename": fileName,
                 "tabletype": "salehouse",
                 "insertId": vm.insertId,
-                'is360image': false
+                'is360image': false,
+                filesize:filesize
             };
 
 
@@ -272,10 +273,10 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
         }
 
 
-        function uploadVideo(filename) {
-            fileReader.readAsDataUrl(filename, $scope)
+        function uploadVideo(file) {
+            fileReader.readAsDataUrl(file, $scope)
                 .then(function (result) {
-                    ajaxUploadVideo(result, filename, function(err, res){
+                    ajaxUploadVideo(result, file, function(err, res){
                         if (err != 'ok')
                         {
                             vm.showwaitcircle = false;
@@ -307,7 +308,7 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
                 });
         }
 
-        function ajaxUploadVideo(result, fileName, callback) {
+        function ajaxUploadVideo(result, file, callback) {
 
             if (vm.insertId == -1) {
                 if (callback)
@@ -317,10 +318,11 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
 
             var data = {
                 "video": result,
-                "filename": fileName.name,
+                "filename": file.name,
                 "tabletype": "salehouse",
                 "insertId": vm.insertId,
-                'is360video': false
+                'is360video': false,
+                filesize:file.size
             };
 
             myhttphelper.doPost('/api/uploadvideo', data).

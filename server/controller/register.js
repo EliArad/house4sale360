@@ -54,6 +54,7 @@ module.exports = function (sqlserver) {
                             var randomGuid;
                             randomGuid = guid.create();
                             req.body.userguid = randomGuid;
+                            req.body.host = "http://" + req.get('host');
                             var query = con.query('INSERT INTO users SET ?', req.body, function (err, result) {
                                 sqlserver.release(con);
                                 if (err) {

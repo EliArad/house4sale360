@@ -7,9 +7,7 @@
 
 body {
   padding: 0;
-  background:
-  radial-gradient(closest-corner, rgba(16, 47, 70, 0) 60%, rgba(16, 47, 70, 0.26)),
-  linear-gradient(108deg, #26D0CE, #1A2980 90%);
+  overflow-x: hidden;
 }
 
 .input-phone{
@@ -28,6 +26,23 @@ body {
 .footer {
   padding-left: 15px;
   padding-right: 15px;
+}
+
+@font-face {
+  font-family: monslight;
+  src: url('/client/fonts/Montserrat-Light.otf');
+}
+@font-face {
+  font-family: monsbold;
+  src: url('/client/fonts/Montserrat-Bold.otf');
+}
+@font-face {
+  font-family: monsexbold;
+  src: url('/client/fonts/Montserrat-ExtraBold.otf');
+}
+@font-face {
+  font-family: monsesemibold;
+  src: url('/client/fonts/Montserrat-SemiBold.otf');
 }
 
 /* Custom page header */
@@ -138,3 +153,68 @@ body {
   opacity: 0;
 }
 */
+.ui-select-bootstrap .ui-select-toggle > .caret {
+  right: initial;
+  left: 10px;
+  /* or any other value - it should be the same as the original right value */
+}
+
+.ui-select-bootstrap > .ui-select-match > .btn {
+  text-align: right !important;
+  direction: rtl;
+  background-color: white;
+  color: black;
+}
+
+.ui-select-bootstrap > .ui-select-choices > .btn > span.pull-left {
+  float: right !important;
+}
+
+.ui-select-bootstrap > .ui-select-match > .btn > span.pull-left {
+  float: right !important;
+}
+
+
+.h_iframe {
+  position: relative;
+}
+
+.h_iframe .ratio {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.h_iframe iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.txtcol {
+  color: white;
+}
+
+.ltxtcol {
+  font-size: 22pt;
+  font-family: arial, sans-serif;
+}
+
+.fc{
+  color:white;
+}
+
+ .footerdiv
+ {
+   color:white;
+   text-align: center;
+   width: auto;
+   height: 60px;
+   background: purple; /* For browsers that do not support gradients */
+   background: -webkit-linear-gradient(#182978, #1fa7ac); /* For Safari 5.1 to 6.0 */
+   background: -o-linear-gradient(#182978, #1fa7ac); /* For Opera 11.1 to 12.0 */
+   background: -moz-linear-gradient(#182978, #1fa7ac); /* For Firefox 3.6 to 15 */
+   background: linear-gradient(#182978, #1fa7ac); /* Standard syntax (must be last) */
+ }

@@ -1,0 +1,38 @@
+<div class="container" ng-controller="adminController as vm">
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead>
+                <td>ID</td>
+                <td>User Id</td>
+                <td>User Email</td>
+                <td>Guid</td>
+                <td>Date</td>
+                <td>Count</td>
+                </thead>
+                <tr ng-repeat="visitor in vm.visitors">
+                    <td>
+                        {{ visitor.id }}
+                    </td>
+                    <td>
+                        {{ visitor.userid }}
+                    </td>
+                    <td>
+                        {{ visitor.email }}
+                    </td>
+                    <td>
+                        {{ visitor.guid }}
+                    </td>
+                    <td>
+                        {{ visitor.dated }}
+                    </td>
+                    <td>
+                        {{ visitor.count }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+
+</div>

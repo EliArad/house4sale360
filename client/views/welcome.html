@@ -1,4 +1,7 @@
 <style>
+
+
+
     .btn-default:hover,
     .btn-default:focus,
     .btn-default:active,
@@ -28,13 +31,6 @@
         background-color: white
     }
 
-    .video-container {
-        position: relative; /* keeps the aspect ratio */
-        padding-bottom: 56.25%; /* fine tunes the video positioning */
-        padding-top: 60px;
-        overflow: hidden;
-    }
-
     .video-container iframe,
     .video-container object,
     .video-container embed {
@@ -45,67 +41,213 @@
         height: 100%;
     }
 
-    .container1 {
-        margin-left: 20px;
-        margin-right: 20px;
+    #grad1 {
+        margin-top: -20px;
+        height: 50%;
+        width: auto;
+        background: purple; /* For browsers that do not support gradients */
+        background: -webkit-linear-gradient(#182978, #1fa7ac); /* For Safari 5.1 to 6.0 */
+        background: -o-linear-gradient(#182978, #1fa7ac); /* For Opera 11.1 to 12.0 */
+        background: -moz-linear-gradient(#182978, #1fa7ac); /* For Firefox 3.6 to 15 */
+        background: linear-gradient(#182978, #1fa7ac); /* Standard syntax (must be last) */
+    }
+
+    .fastsearch {
+        background: purple; /* For browsers that do not support gradients */
+        background: -webkit-linear-gradient(#1fa7ac, #182978); /* For Safari 5.1 to 6.0 */
+        background: -o-linear-gradient(#1fa7ac, #182978); /* For Opera 11.1 to 12.0 */
+        background: -moz-linear-gradient(#1fa7ac, #182978); /* For Firefox 3.6 to 15 */
+        background: linear-gradient(#1fa7ac, #182978); /* Standard syntax (must be last) */
     }
 
 </style>
-<div class="container1" ng-controller="welcomeController as vm">
-
-    <!--<a ui-sref="virtualtour">vtssssssssssssssss</a>-->
-
-
-    <div class="row">
-        <iframe  width="100%" height="1024px" src="/client/views/tour3dvistaplayer.html"></iframe>
-    </div>
-
-
-    <div class="row" style="margin-top: 10px">
-        <div style="margin-right: 20px">
-            <div dir="rtl">&nbsp;<span style="font-family:arial,helvetica,sans-serif;">ברוכים הבאים לאתר דירות ב 360 - 360 appartments. אתר חדשני לחיפוש דירות לקנייה והשכרה מאנשים פרטיים,מתווכים ודירות חדשות של קבלנים.</span>
+<div class="container-fluid" ng-controller="welcomeController as vm">
+    <div class="row" id="grad1">
+        <div class="col-md-4">
+            <div class="row">
+                <img src="/client/images/logo.png">
             </div>
-            <div dir="rtl"><font face="arial, helvetica, sans-serif">לחץ והזז את העכבר לראות את הוידאו ב 360.</font>
+            <div class="row" style="font-size: 24pt;color:white;margin-right: 20px">
+
+                ברוכים הבאים למנוע חיפוש דירות למכירה וקנייה
+                ב 360 מעלות
+
             </div>
-            <div dir="rtl"><font face="arial, helvetica, sans-serif">כל המוכרים יכולים להעלות תמונות רגילות באיכות
-                גבוהה,
-                תמונות 360, וידאו וידאו ב 360. לפרטים נוספים לחץ <a href="http://ddd">כאן</a></font>
-                <button type="button" ui-sref="main" class="btn btn-default"
-                        style="color:orange;float:left;width: 200px">
-                    חפש דירות
-                </button>
+            <div class="row" style="margin-top:5px;word-wrap: break-word;font-size:12pt;color:white;margin-right: 20px">
+                סיור וירטואלי בדירה לפני שמגיעים
+                וידאו ב 360 מעלות , תמונות גדולות
+                אפשרות להעלות עד 150 מגה
+                שרותי צילום וסיור וירטואלי לדירה
+
+
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="h_iframe">
+                <img class="ratio" src="/client/images/placeholder.png"/>
+                <iframe width="100%" src="/client/views/tour3dvistaplayer.html" allowfullscreen
+                        frameborder="0"></iframe>
+
             </div>
         </div>
     </div>
+    <div class="row fastsearch">
+        <div class="row" style="text-align: center">
+        <span style="font-size: 14pt;color:white">
+     חיפוש מהיר
+        </span>
+        </div>
+        <div class="row" style="margin-right: 10px">
+            <div class="col-md-2 col-xs-11">
+                <label class="txtcol control-label" for="agent">בעל המודעה</label>
+                <select class="form-control"
+                        placeholder="האם אתה קבלן, מתווך או אדם פרטי"
+                        name="agent"
+                        ng-change="UpdateMessageType()"
+                        ng-model="vm.search.agent">
+                    <option>פרטי</option>
+                    <option>מתווך</option>
+                    <option>קבלן</option>
+                </select>
+            </div>
+            <div class="col-md-2 col-xs-11">
+                <label ng-show="showmessagetype" class="txtcol control-label" for="msggtype">סוג המודעה</label>
+                <select class="form-control" ng-show="showmessagetype"
+                        placeholder="מכירה או השכרה"
+                        name="msggtype"
+                        ng-model="vm.search.messagetype">
+                    <option>מכירה</option>
+                    <option> השכרה</option>
+                </select>
+            </div>
+            <div class="col-md-2 col-xs-11">
+                <label class="txtcol control-label" for="propertyType">עיר</label>
 
-    <div class="row" style="margin-top: 15px">
-        <div class="col-md-6  col-lg-6">
+                <ui-select id="city"
+                           on-select="getcity(vm.search.city)"
+                           theme="bootstrap" ng-model="vm.search.city"
+                           required>
+                    <ui-select-match placeholder="בחר עיר">
+                        <span ng-bind="$select.selected"></span>
+                    </ui-select-match>
+                    <ui-select-choices
+                            repeat="city in vm.citiesOnly |filter : $select.search">
+                        <span ng-bind-html="city | highlight : $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="col-md-2 col-xs-11">
+                <div class="row">
+                    <label class="txtcol control-label" for="propertyType">סוג הנכס</label>
+                </div>
+                <div class="row">
+                    <select class="form-control"
+                            id="selectPropertyType" multiple="multiple"
+                            placeholder="בחר את סוג הנכס למכירה"
+                            name="propertyType"
+                            ng-model="vm.search.propertyType">
+                        <option>דירה</option>
+                        <option>דירת גן</option>
+                        <option>דירת גג/פנטהאוז</option>
+                        <option>סטודיו</option>
+                        <option>מרתף/פרטר</option>
+                        <option>דופלקס</option>
+                        <option>טריפלקס</option>
+                        <option>דו משפחתי</option>
+                        <option>יחידת דיור</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-2 col-xs-11">
+                <div class="form-group" style="white-space:nowrap">
+                    <label class="txtcol control-label" for="numberofrooms">מספר חדרים</label>
 
+                    <select name="numberOfRooms"
+                            class="form-control" ng-model="vm.search.numberofrooms">
+
+                        <option ng-repeat="item in vm.numberOfRooms" value="{{item}}">
+                            {{item}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-2 col-xs-11">
+                <div class="row">
+                    <label class="control-label" for="numberofrooms">&nbsp;  </label>
+                </div>
+                <div class="row">
+                    <button type="button" class="btn btn-default" style="color:orange;width:100px;font-weight: bold"
+                            ng-click="onFastSearch()"
+                            data-dismiss="modal">חפש
+                    </button>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <p class="ltxtcol">
+                דירות ב 360 מציעה לכם לפרסם ממודעות עם כיתוב בלבד, תמונות סטילס, וידאו ממצלמה
+                תמונות 360 , וידאו ב 360
+                וסיור וירטואלי מלא בבית.
+                <br>
+                האתר מותאם לכל המסכים, ממחשב ועד טלפון נייד
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-offset-1 col-md-4">
+            תמונת 360 מעלות. אפשר לראות את כל האזור על ידי לחיצה על העכבר והזזה.
+            <br>
+            ניתן להעלות כמה תמונות שרוצים עד 150 מגה
+            <br>
+            את הצילום ניתן לעשות עם טלפון נייד באפליקציה sourround shotting או google street view ב אייפון
+            <a style="cursor:pointer" ui-sref="image360howto({ helptopic: 'image360' })">לפרטים נוספים</a>
+
+        </div>
+        <div class="col-md-6">
 
             <div id="welcome360imageid" class="welcome360image" style="height: 580px">
 
 
             </div>
-            תמונת 360 מעלות. אפשר לראות את כל האזור על ידי לחיצה על העכבר והזזה.
-            <br>
-            את הצילום ניתן לעשות עם טלפון נייד באפליקציה sourround shotting או google street view ב אייפון
-            <a style="cursor:pointer" ui-sref="image360howto({ helptopic: 'image360' })">לפרטים נוספים</a>
-        </div>
-        <div class="col-md-6 col-lg-6">
-
-            <!--
-            <div id="welcomevideodiv" class="valiant360video" style="height: 580px">
-
-            </div>
-            -->
-            <div class="video-container">
-                <iframe width="48%" height="50%" src="https://www.youtube.com/embed/ULixPLH-WA4" frameborder="0"
-                        allowfullscreen></iframe>
-            </div>
-            ניתן לצלם וידאו ב360 על ידי מצלמה מיוחדת
-            אנחנו נתונים את השרות במחיר של 75 שקלים בלבד
-            <a style="cursor:pointer" ui-sref="video360howto({ helptopic: 'video360' })">לפרטים נוספים</a>
-
         </div>
     </div>
+    <div class="row" style="margin-top: 10px">
+        <div class="col-md-offset-1 col-md-4">
+            video 360
+        </div>
+        <div class="col-md-6">
+            <div id="welcomevideodiv" class="valiant360video" style="height: 400px">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 10px">
+        <div class="col-md-offset-1 col-md-4">
+            תמונות
+        </div>
+        <div class="col-md-6">
+
+            <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
+                <uib-slide ng-repeat="slide in slides" active="slide.active">
+                    <img ng-src="{{slide.image}}"
+                         class="img-responsive"
+                         ng-mouseover="mo()"
+                         ng-mouseleave="ml()"
+                         style="margin:auto;max-height: 500px">
+
+                    <div class="carousel-caption">
+                        <p>{{slide.text}}</p>
+                    </div>
+                </uib-slide>
+            </uib-carousel>
+        </div>
+    </div>
+
 </div>
+

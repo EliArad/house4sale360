@@ -52,6 +52,13 @@ app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', function($s
   }).state('admin', {
     url: '/admin',
     templateUrl: '/client/views/admin.html'
+  }).state('verifiedok', {
+    url: '/verifiedok',
+    controller: 'verifiedokController',
+    templateUrl: '/client/views/verifiedok.html'
+  }).state('contactus', {
+    url: '/contactus',
+    templateUrl: '/client/views/contactus.html'
   });
 
 

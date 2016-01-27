@@ -70,64 +70,63 @@
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
-                <!--
-                <li ng-show="isAdmin && isAuthenticated" ui-sref-active="active"><a ui-sref="admin">admin</a></li>
-                <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="help">עזרה</a></li>
-                <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="contact">צור קשר</a></li>
-                <li ui-sref-active="active"><a ui-sref="about">אודותינו</a></li>-->
 
-                <!--<li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="mail">הודעות    <span ng-show="yougotmail" ng-class="{ 'animated infinite bounce': true}"   style="color:purple" class="badge">{{numberofmails}}</span></a></li>-->
+                    <li ng-show="isAdmin && isAuthenticated" style="cursor: pointer" ui-sref-active="active"><a ui-sref="admin">admin</a></li>
+                    <!--
+                    <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="help">עזרה</a></li>
+                    <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="contact">צור קשר</a></li>
+                    <li ui-sref-active="active"><a ui-sref="about">אודותינו</a></li>--?
 
-                <!--
-      <li ng-show="isAuthenticated" class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">API Test
-          <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="test"> test</a></li>
-          <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="picturecrousle"> picture crouse</a></li>
-          <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="nggallery"> ng Gallery</a></li>
-          <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="imgresizer"> img resizer</a></li>
-          <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="galleryall"> members gallery</a></li>
-        </ul>
-      </li>
-      -->
+                    <!--<li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="mail">הודעות    <span ng-show="yougotmail" ng-class="{ 'animated infinite bounce': true}"   style="color:purple" class="badge">{{numberofmails}}</span></a></li>-->
 
-                <!--
-                <li ng-show="isAuthenticated" class="dropdown">
-                  <a class="dropdown-toggle" data-toggle="dropdown" ui-sref="memberdetails">
-                    פרטים אישיים
-                    <span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                    <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="memberdetails">כל הפרטים האישיים</a></li>
-                    <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="coredetails">עדכן פרטי בסיס</a></li>
-                    <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="mypictures">רק תמונות</a></li>
-                    <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="deletecard">מחק כרטיס</a></li>
-                  </ul>
-                </li>
-                -->
-
-
-                <li ng-show="isAuthenticated && showagentpages" ui-sref-active="active"><a ui-sref="kablanref">הוסף
-                    או עדכן מודעות שלך</a></li>
-
-
-                <li ng-show="isAuthenticated && !showagentpages"
-                    style="cursor:pointer"
-                    class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown">
-                        הוסף או עדכן מודעות שלך
-                        <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li ng-show="isAuthenticated" ui-sref-active="active"><a
-                                ui-sref="advertisehousesale">מכירה</a></li>
-                        <li ng-show="isAuthenticated" ui-sref-active="active"><a
-                                ui-sref="advertisehouserent">השכרה </a></li>
-                    </ul>
-                </li>
-
+                    <!--
+          <li ng-show="isAuthenticated" class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">API Test
+              <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="test"> test</a></li>
+              <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="picturecrousle"> picture crouse</a></li>
+              <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="nggallery"> ng Gallery</a></li>
+              <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="imgresizer"> img resizer</a></li>
+              <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="galleryall"> members gallery</a></li>
             </ul>
-        </div>
+          </li>
+          -->
 
+                    <!--
+                    <li ng-show="isAuthenticated" class="dropdown">
+                      <a class="dropdown-toggle" data-toggle="dropdown" ui-sref="memberdetails">
+                        פרטים אישיים
+                        <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="memberdetails">כל הפרטים האישיים</a></li>
+                        <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="coredetails">עדכן פרטי בסיס</a></li>
+                        <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="mypictures">רק תמונות</a></li>
+                        <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="deletecard">מחק כרטיס</a></li>
+                      </ul>
+                    </li>
+                    -->
+
+
+                    <li ng-show="isAuthenticated && showagentpages" ui-sref-active="active"><a ui-sref="kablanref">הוסף או עדכן מודעות שלך</a></li>
+
+
+                    <li ng-show="isAuthenticated && !showagentpages"
+                        style="cursor:pointer"
+                        class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown">
+                            הוסף או עדכן מודעות שלך
+                            <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li ng-show="isAuthenticated" ui-sref-active="active"><a
+                                    ui-sref="advertisehousesale">מכירה</a></li>
+                            <li ng-show="isAuthenticated" ui-sref-active="active"><a
+                                    ui-sref="advertisehouserent">השכרה </a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
-
