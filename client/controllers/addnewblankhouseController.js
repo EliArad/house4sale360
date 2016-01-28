@@ -308,10 +308,10 @@ app.controller('addnewblankhouseController', ['$scope', 'Members', 'general', 'a
                 });
         }
 
-        function upload360Video(filename) {
-            fileReader.readAsDataUrl(filename, $scope)
+        function upload360Video(file) {
+            fileReader.readAsDataUrl(file, $scope)
                 .then(function (result) {
-                    ajaxUpload360Video(result, filename, function(err, res){
+                    ajaxUpload360Video(result, file, function(err, res){
                         if (err != 'ok')
                         {
                             vm.showwaitcircle = false;
@@ -353,7 +353,7 @@ app.controller('addnewblankhouseController', ['$scope', 'Members', 'general', 'a
                 });
         }
 
-        function ajaxUpload360Video(result, fileName, callback) {
+        function ajaxUpload360Video(result, file, callback) {
 
 
             if (vm.insertId == -1) {
@@ -364,10 +364,11 @@ app.controller('addnewblankhouseController', ['$scope', 'Members', 'general', 'a
 
             var data = {
                 "video": result,
-                "filename": fileName.name,
+                "filename": file.name,
                 "tabletype": "salehouse",
                 "insertId": vm.insertId,
-                'is360video': true
+                'is360video': true,
+                 filesize:file.size
             };
 
             myhttphelper.doPost('/api/uploadvideo', data).

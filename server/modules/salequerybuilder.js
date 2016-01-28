@@ -8,7 +8,7 @@ module.exports = function () {
                     LEFT JOIN salehouseblobs\
                     ON salehouseblobs.tableid  = sellhousedetails.id\
                     LEFT JOIN tours3d\
-                    ON sellhousedetails.id = tours3d.tableid ';
+                    ON sellhousedetails.id = tours3d.tableid3d ';
 
         var i = 0;
         sql = sql + '\n';

@@ -6,7 +6,8 @@ module.exports = function () {
                     INNER JOIN users\
                     ON users.id = renthousedetails.userid\
                     LEFT JOIN renthouseblobs\
-                    ON renthouseblobs.tableid  = renthousedetails.id ';
+                    ON renthouseblobs.tableid  = renthousedetails.id \
+                    LEFT JOIN tours3d  ON sellhousedetails.id = tours3d.tableid3d ';
 
         var i = 0;
         sql = sql + '\n';

@@ -50,6 +50,7 @@
     <link rel="stylesheet" href="bower_components/jquery-ui/themes/base/jquery-ui.min.css" />
     <link rel="stylesheet" href="client/styles/bootstrapautogrid.css" />
 
+    <link rel="stylesheet" href="client/styles/navbar.css"/>
 
     <link rel="stylesheet" href="client/styles/font-awesome.min.css">
     <link rel="stylesheet" href="bower_components/angular-carousel/dist/angular-carousel.min.css" />
@@ -74,11 +75,25 @@
     <div ui-view=""></div>
 
 
-    <div class="footer">
-        <div class="container">
-            <p><span class="glyphicon glyphicon-heart"></span>מכירה והשכרה ב Apt360</p>
+<div class="footer">
+    <div class="row footerdiv">
+        <div class="col-md-8 col-md-offset-4">
+            <table>
+                <tr>
+                    <td style="width: 100px">
+                        <a class="fc" ui-sref="contactus">צור קשר</a>
+                    </td>
+                    <td style="width: 100px">
+                        <a class="fc" ui-sref="contactus">עזרה</a>
+                    </td>
+                    <td style="width: 100px">
+                        <a class="fc" ui-sref="contactus">מחק חשבון</a>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
+</div>
 
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
@@ -180,6 +195,7 @@
     <script src="client/controllers/LoginController.js"></script>
     <script src="client/controllers/howto360Controller.js"></script>
     <script src="client/controllers/HelpController.js"></script>
+<script src="client/controllers/verifiedokController.js"></script>
     <script src="client/controllers/RegistrationController.js"></script>
     <script src="client/controllers/AboutController.js"></script>
     <script src="client/controllers/MainController.js"></script>
@@ -191,6 +207,7 @@
     <script src="client/controllers/welcomeContoller.js"></script>
     <script src="client/controllers/addnewblankhouseController.js"></script>
     <script src="client/controllers/kablanhouseController.js"></script>
+<script src="client/controllers/contactusController.js"></script>
     <script src="client/controllers/adminController.js"></script>
     <!--<script src="client/controllers/virtualTourController.js"></script>-->
 

@@ -171,7 +171,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                 });
         }
 
-        var ajaxUpload2 = function (result, fileName, id, callback) {
+        var ajaxUpload2 = function (result, fileName, id, filesize, callback) {
 
             if (id == -1) {
                 callback("failed", "cannot attached to new message");
@@ -183,7 +183,8 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                 "filename": fileName,
                 "tabletype": "salehouse",
                 "insertId": id,
-                'is360image': true
+                'is360image': true,
+                filesize:filesize
             };
 
 

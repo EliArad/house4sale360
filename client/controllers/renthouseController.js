@@ -165,7 +165,7 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
                 });
         }
 
-        var ajaxUpload2 = function (result, fileName, id, callback) {
+        var ajaxUpload2 = function (result, fileName, id, filesize,callback) {
 
             if (id == -1) {
                 callback("failed", "cannot attached to new message");
@@ -177,7 +177,8 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
                 "filename": fileName,
                 "tabletype": "renthouse",
                 "insertId": id,
-                'is360image': true
+                'is360image': true,
+                filesize:filesize
             };
 
 
@@ -375,7 +376,6 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
 
 
                 vm.cards[i].shownapa = true;
-                console.log(vm.cards[i].code);
 
                 var streetName = vm.cards[i].street;
                 var x1 = {
@@ -904,7 +904,7 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
             var reader = new FileReader();
 
             reader.onload = function () {
-                ajaxUpload2(reader.result, filename, id, function (err, results) {
+                ajaxUpload2(reader.result, filename, id, file.size, function (err, results) {
                     if (err == "ok") {
                         var PSV = new PhotoSphereViewer({
                             // Panorama, given in base 64
