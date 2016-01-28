@@ -171,7 +171,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                 });
         }
 
-        var ajaxUpload2 = function (result, fileName, id, filesize, callback) {
+        var ajaxUpload2 = function (result, file, id, callback) {
 
             if (id == -1) {
                 callback("failed", "cannot attached to new message");
@@ -180,11 +180,11 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
 
             var data = {
                 "images": result,
-                "filename": fileName,
+                "filename": file.name,
                 "tabletype": "salehouse",
                 "insertId": id,
                 'is360image': true,
-                filesize:filesize
+                filesize:file.size
             };
 
 
@@ -238,7 +238,7 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
             for (var i = 0; i < 10; i++) {
                 slides = $scope.slides = [];
             }
-            console.log(obj);
+            //console.log(obj);
             _displayStreets(obj.code, obj.napa, obj.area,index);
 
 
@@ -817,30 +817,34 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                 vm.video360 = [];
                 vm.video360index = 0;
 
+
                 if (result.data.rows.length > 0) {
 
                 }
 
                 for (var i = 0; i < result.data.rows.length; i++) {
                     var imgsrc = './upload360video/' + result.data.userid + '/salehouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
-                    console.log(imgsrc);
-                    if (i == 0)
+                    if (i == 0) {
                         load360Video(imgsrc, result.data.rows[i].tableid);
+                        console.log(imgsrc);
+                    }
                     vm.video360index++;
                 }
 
             });
         }
 
-        function ajaxUpload360Video(result, fileName, id, callback) {
+        function ajaxUpload360Video(result, file, id, callback) {
 
             var data = {
                 "video": result,
-                "filename": fileName.name,
+                "filename": file.name,
                 "tabletype": "salehouse",
                 "insertId": id,
-                'is360video': true
+                'is360video': true,
+                filesize:file.size
             };
+
 
             myhttphelper.doPost('/api/uploadvideo', data).
                 then(function (res) {
@@ -859,20 +863,20 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
             item = JSON.parse(item);
             var filename = obj.files[0].name;
             var file = obj.files[0];
-            upload(filename, item.id, file);
+            upload(item.id, file);
         }
 
 // Load a panorama stored on the user's computer
-        function upload(filename, id, file) {
-            _upload(filename, id, file);
+        function upload(id, file) {
+            _upload(id, file);
         }
 
-        function _upload(filename, id, file) {
+        function _upload(id, file) {
 
             var reader = new FileReader();
 
             reader.onload = function () {
-                ajaxUpload2(reader.result, filename, id, function (err, results) {
+                ajaxUpload2(reader.result, file, id, function (err, results) {
                     if (err == "ok") {
                         var PSV = new PhotoSphereViewer({
                             // Panorama, given in base 64
