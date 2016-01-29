@@ -4,16 +4,18 @@
 app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper', 'myutils',
     'appCookieStore', 'socketioservice', 'Idle', '$rootScope',
     'SessionStorageService', 'API', 'myConfig', '$http', '$window', '$timeout',
-    'dboperations', 'citiesservice', 'general', '$cookies', '$sce','versionReloader',
+    'dboperations', 'citiesservice', 'general', '$cookies', '$sce','versionReloader','communication','visitors',
     function ($scope, $state, authToken, myhttphelper, myutils,
               appCookieStore, socketioservice, Idle, $rootScope, SessionStorageService,
               API, myConfig, $http, $window, $timeout, dboperations,
-              citiesservice, general, $cookies, $sce,versionReloader) {
+              citiesservice, general, $cookies, $sce,versionReloader,communication,visitors) {
 
 
         var vm = this;
         var video360height = '500px';
         $scope.mobile = true;
+        $scope.virtualSearch = false;
+        $("[name='my-checkbox']").bootstrapSwitch('state', false);
         vm.searchsummery = '';
         vm.search = {};
         var cexp = general.getCookieExp();
@@ -37,20 +39,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             //{name:'תל אביב'}
         ];
 
-        $scope.mobile = false;
-        if ($(window).width() < 768) {
-            $scope.mobile = true;
-        }
-        else if ($(window).width() >= 768 &&  $(window).width() <= 992) {
-            // do something for medium screens
-        }
-        else if ($(window).width() > 992 &&  $(window).width() <= 1200) {
-            // do something for big screens
-        }
-        else  {
-            // do something for huge screens
-        }
-
+        $scope.mobile = general.isMobile();
 
         versionReloader.addPage(reloadFunction);
 
@@ -59,6 +48,9 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             window.location.reload(true);
         }
 
+        $('#switch-change').on('switchChange.bootstrapSwitch', function (event, state) {
+            $scope.virtualSearch = state;
+        });
 
         vm.cities = citiesservice.getcities_all_ready();
         vm.citiesOnly = citiesservice.getcities_ready();
@@ -149,7 +141,21 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
             }
 
-            ShowResults();
+            if (communication.isFastSearch() == true)
+            {
+                vm.search = communication.getSearch();
+                console.log(vm.search);
+                communication.setFastSearch(false);
+
+            }
+            if (communication.isAdvancedSearch() == true)
+            {
+                $('#myModal').modal('show');
+                communication.openAdvancedSearch(false);
+            } else {
+
+                ShowResults();
+            }
 
         });
 
@@ -177,6 +183,46 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             $cookies.put('aptstatus', s ,{expires: cexp});
 
             ShowResults();
+
+            var pstr = '';
+            var index = 0;
+            console.log(vm.search.propertyType);
+            vm.search.propertyType.forEach(function(t){
+                if (index > 0)
+                    pstr += ',';
+                else {
+                    pstr += t;
+                }
+                index++;
+            });
+
+
+            var pstr1= '';
+            index = 0;
+
+            for (var i = 0 ; i < vm.citiesSelected.length; i++)
+            {
+                if (index > 0)
+                    pstr1 += ',';
+                pstr1+= vm.citiesSelected[i].name;
+                index++;
+            }
+
+
+            var userguid = $cookies.get('apt360visitorguid');
+            var  userSearch = {
+                city: pstr1,
+                type: vm.search.messagetype,
+                propertytype: pstr,
+                userguid: userguid,
+                numofrooms: vm.search.numberofrooms,
+            }
+
+            visitors.saveVisitorSearch(userSearch).then(function(result){
+
+            }).catch(function(result){
+
+            })
 
 
 
@@ -721,11 +767,13 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                         }
                     }
                     //vm.cards.push(card);
+                    console.log('card.show3dtour ' + card.show3dtour);
                     if (card.show3dtour == 1) {
                         setTimeout(function(index){
-                            console.log(index);
-                            document.getElementById('touriframeid' + index).src = '/virtualtours/57/132/tour3dvistaplayer.html';
-                        }, 2000, i)
+                            var _src = '/virtualtours/' + userid1 + '/' + tableid + '/tour3dvistaplayer.html';
+                            console.log(_src);
+                            document.getElementById('touriframeid' + index).src = _src;
+                        }, 1000, i)
                     }
                     i++;
                 });
@@ -877,6 +925,8 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
 
         initcrousle();
+
+
 
 
         $(window).scroll(function () {

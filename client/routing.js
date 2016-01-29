@@ -59,6 +59,14 @@ app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', function($s
   }).state('contactus', {
     url: '/contactus',
     templateUrl: '/client/views/contactus.html'
+  }).state('vrpage', {
+    url: '/vrpage',
+    controller: 'vrController',
+    templateUrl: '/client/views/vr.html'
+  }).state('help', {
+    url: '/help',
+    controller: 'helpController',
+    templateUrl: '/client/views/help.html'
   });
 
 

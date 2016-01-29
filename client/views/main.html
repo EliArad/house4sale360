@@ -565,13 +565,19 @@
     </div>
 
     <div class="row" style="margin-right:1px">
+        <div class="col-md-5 col-cx-11">
         <button type="button" class="btn btn-default" style="color:orange" data-toggle="modal" data-target="#myModal">
             הגדר את אפשרויות
             החיפוש שלך
 
         </button>
-        <div class="row">
-        <span ng-hide="showNoResultsMessage">
+            &nbsp;
+            &nbsp;
+            חיפוש וירטואלי
+         <input type="checkbox"  id="switch-change"   name="my-checkbox" checked>
+        </div>
+        <div class="col-md-7 col-cs-11">
+        <span style="font-size: 14pt" ng-hide="showNoResultsMessage">
 
         {{ vm.searchsummery}}
 
@@ -601,12 +607,14 @@
 
 <div ng-repeat="item in vm.cards">
     <div class="row" ng-hide="item.hideheader">
-        <div class="panel panel-info">
+        <div class="panel searchpanel">
             <div class="panel-heading">
                 <div class="row">
-                    <div class="col-sm-12 col-lg-12 col-xs-12 col-md-12">
+                    <div class="col-sm-12 col-lg-12 col-xs-10 col-md-12">
                      <span style="font-weight: bold">
+
                     {{ item.propertyType }}
+
                     ב
                     {{ item.city.city }}
                          </span>
@@ -650,16 +658,23 @@
                         {{ item.price }}
                         </span>
 
-                        <button type="button" style="float:left" ng-click="SendUserMessage(item)"
-                                class="btn btn-sm btn-success">send message
+                        <button type="button" style="color:orange;float:left" ng-click="SendUserMessage(item)"
+                                class="btn btn-sm btn-default">שלח הודעה
                         </button>
+                        <button type="button" style="color:orange;float:left" ng-click="ShowCommDetails(item)"
+                                class="btn btn-sm btn-default">פרטי בעל הנכס
+                        </button>
+
+
                     </div>
                 </div>
                 <div class="row" ng-if="!mobile">
                     <div class="col-sm-1 col-md-1">
                         <div>
                             <div class="didd">
+                                <u>
                                 מרפסת
+                                </u>
                             </div>
                             <div class="didd">
                                 <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.balcony > 0) , 'glyphicon glyphicon glyphicon-remove': (item.balcony == 0)}"></span>
@@ -670,7 +685,9 @@
                     <div class="col-sm-1 col-md-1">
                         <div>
                             <div class="didd">
+                                <u>
                                 מזגן
+                                </u>
                             </div>
                             <div class="didd">
                                 <span ng-show="item.aircond != 'אין'">{{ item.aircond }}</span>
@@ -681,7 +698,9 @@
                     <div class="col-sm-1 col-md-1">
                         <div>
                             <div class="didd">
+                                <u>
                                 סורגים
+                                </u>
                             </div>
                             <div class="didd">
                                 <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.soragim == 1) , 'glyphicon glyphicon glyphicon-remove': (item.soragim == 0)}"></span>
@@ -691,9 +710,13 @@
                     <div class="col-sm-1 col-md-1">
                         <div>
                             <div class="didd">
+                                <u>
+
                                 גישה לנכים
+
+                                </u>
                             </div>
-                            <div class="didd">
+                            <div class="didd" style="white-space: nowrap">
                                 <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.handycupt == 1) , 'glyphicon glyphicon glyphicon-remove': (item.handycupt == 0)}"></span>
                             </div>
                         </div>
@@ -701,7 +724,9 @@
                     <div class="col-sm-1 col-md-1">
                         <div>
                             <div class="didd">
+                                <u>
                                 חנייה
+                                </u>
                             </div>
                             <div class="didd">
                                 <span ng-show="item.parking > 0">{{ item.parking }}</span>
@@ -712,7 +737,9 @@
                     <div class="col-sm-1 col-md-1" ng-show="item.parking > 0">
                         <div>
                             <div class="didd">
+                                <u>
                                 מיקום
+                                </u>
                             </div>
                             <div class="didd">
                                 {{ item.parkingType }}
@@ -722,7 +749,9 @@
                     <div class="col-sm-1 col-md-1" ng-show="item.parking > 1">
                         <div>
                             <div class="didd">
+                                <u>
                                 סוג חנייה
+                                </u>
                             </div>
                             <div class="didd">
                                 {{ item.parkingtype2 }}
@@ -732,7 +761,9 @@
                     <div class="col-sm-1 col-md-1">
                         <div>
                             <div class="didd">
+                                <u>
                                 ממ"ד
+                                </u>
                             </div>
                             <div class="didd">
                                 <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.mamad.data[0] == 1) , 'glyphicon glyphicon glyphicon-remove': (item.mamad.data[0] == 0)}"></span>
@@ -742,7 +773,9 @@
                     <div class="col-sm-1 col-md-1">
                         <div>
                             <div class="didd">
+                                <u>
                                 מחסן
+                                </u>
                             </div>
                             <div class="didd">
                                 <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.warehouse > 0) , 'glyphicon glyphicon glyphicon-remove': (item.warehouse == 0)}"></span>
@@ -753,7 +786,9 @@
                     <div class="col-sm-1 col-md-1">
                         <div>
                             <div class="didd">
+                                <u>
                                 מעליות
+                                </u>
                             </div>
                             <div class="didd">
                                 <span ng-show="item.elevator > 0">{{ item.elevator }}</span>
@@ -763,8 +798,10 @@
                     </div>
                     <div class="col-sm-1 col-md-1">
                         <div>
-                            <div class="didd">
+                            <div class="didd" style="white-space: nowrap">
+                                <u>
                                 גיל הנכס
+                                </u>
                             </div>
                             <div class="didd">
                                 {{ item.yearsofproperty }}
@@ -773,8 +810,10 @@
                     </div>
                     <div class="col-sm-1 col-md-1">
                         <div>
-                            <div class="didd">
+                            <div class="didd" style="white-space: nowrap">
+                                <u>
                                 מצב הנכס
+                                </u>
                             </div>
                             <div class="didd">
                                 {{ item.renovated }}
@@ -788,7 +827,10 @@
                     <div class="col-xs-2">
                         <div>
                             <div class="didd">
+                                <u>
                                 מרפסת
+                                </u>
+                                </u>
                             </div>
                             <div class="didd">
                                 <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.balcony > 0) , 'glyphicon glyphicon glyphicon-remove': (item.balcony == 0)}"></span>
@@ -799,7 +841,9 @@
                     <div class="col-xs-2">
                         <div>
                             <div class="didd">
+                                <u>
                                 מזגן
+                                </u>
                             </div>
                             <div class="didd">
                                 <span ng-show="item.aircond != 'אין'">{{ item.aircond }}</span>
@@ -810,7 +854,9 @@
                     <div class="col-xs-2">
                         <div>
                             <div class="didd">
+                                <u>
                                 סורגים
+                                </u>
                             </div>
                             <div class="didd">
                                 <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.soragim == 1) , 'glyphicon glyphicon glyphicon-remove': (item.soragim == 0)}"></span>
@@ -819,10 +865,12 @@
                     </div>
                     <div class="col-xs-2">
                         <div>
-                            <div class="didd">
+                            <div class="didd" style="white-space: nowrap">
+                                <u>
                                 גישה לנכים
+                                </u>
                             </div>
-                            <div class="didd">
+                            <div class="didd" style="white-space: nowrap">
                                 <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.handycupt == 1) , 'glyphicon glyphicon glyphicon-remove': (item.handycupt == 0)}"></span>
                             </div>
                         </div>
@@ -830,7 +878,9 @@
                     <div class="col-xs-2">
                         <div>
                             <div class="didd">
+                                <u>
                                 חנייה
+                                </u>
                             </div>
                             <div class="didd">
                                 <span ng-show="item.parking > 0">{{ item.parking }}</span>
@@ -841,7 +891,9 @@
                     <div class="col-xs-2" ng-show="item.parking > 0">
                         <div>
                             <div class="didd">
+                                <u>
                                 מיקום
+                                </u>
                             </div>
                             <div class="didd">
                                 {{ item.parkingType }}
@@ -854,8 +906,10 @@
 
                     <div class="col-xs-2" ng-show="item.parking > 1">
                         <div>
-                            <div class="didd">
+                            <div class="didd" style="white-space: nowrap">
+                                <u>
                                 סוג חנייה
+                                </u>
                             </div>
                             <div class="didd">
                                 {{ item.parkingtype2 }}
@@ -865,7 +919,9 @@
                     <div class="col-xs-2">
                         <div>
                             <div class="didd">
+                                <u>
                                 ממ"ד
+                                </u>
                             </div>
                             <div class="didd">
                                 <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.mamad.data[0] == 1) , 'glyphicon glyphicon glyphicon-remove': (item.mamad.data[0] == 0)}"></span>
@@ -875,7 +931,9 @@
                     <div class="col-xs-2">
                         <div>
                             <div class="didd">
+                                <u>
                                 מחסן
+                                </u>
                             </div>
                             <div class="didd">
                                 <span ng-class="{'glyphicon glyphicon glyphicon-ok': (item.warehouse > 0) , 'glyphicon glyphicon glyphicon-remove': (item.warehouse == 0)}"></span>
@@ -886,7 +944,9 @@
                     <div class="col-xs-2">
                         <div>
                             <div class="didd">
+                                <u>
                                 מעליות
+                                </u>
                             </div>
                             <div class="didd">
                                 <span ng-show="item.elevator > 0">{{ item.elevator }}</span>
@@ -896,8 +956,10 @@
                     </div>
                     <div class="col-xs-2">
                         <div>
-                            <div class="didd">
+                            <div class="didd" style="white-space: nowrap">
+                                <u>
                                 גיל הנכס
+                                </u>
                             </div>
                             <div class="didd">
                                 {{ item.yearsofproperty }}
@@ -906,8 +968,10 @@
                     </div>
                     <div class="col-xs-2">
                         <div>
-                            <div class="didd">
+                            <div class="didd" style="white-space: nowrap">
+                                <u>
                                 מצב הנכס
+                                </u>
                             </div>
                             <div class="didd">
                                 {{ item.renovated }}
@@ -922,14 +986,17 @@
                 </div>
             </div>
         </div>
-        <div class="row" ng-show="item.show3dtour">
-            <div class="h_iframe">
+        <div class="row" ng-show="item.show3dtour && !virtualSearch">
+            <div class="h_iframe" style="margin-left: 18px">
                 <img class="ratio" src="/client/images/placeholder.png"/>
                 <iframe id="touriframeid{{ $index }}" width="100%" allowfullscreen
                         frameborder="0"></iframe>
             </div>
         </div>
-        <div class="row" ng-show="item.showPictures > 0">
+        <div class="row contback"  ng-show="mobile && item.show3dtour" style="height: 50px;text-align: center;font-weight: bold">
+            השתמש באזור זה לגלול את המסך במובייל
+        </div>
+        <div class="row" ng-show="item.showPictures > 0 && !virtualSearch">
             <div ng-class="{ 'col-md-12 col-xs-12 col-lg-12 col-sm-12':  !item.imageExists, 'col-md-7 col-xs-12 col-lg-7 col-sm-12':  item.imageExists}"
                  ng-show="item.image360Exists">
                 <div id="your-pano{{ item.id }}" style="height:500px">
@@ -937,8 +1004,8 @@
                 </div>
             </div>
             <div ng-class="{ 'col-md-12  col-xs-12 col-lg-12 col-sm-12':  !item.image360Exists, 'col-md-5 col-xs-12 col-lg-5 col-sm-12':  item.image360Exists}"
-                 ng-show="item.imageExists">
-                <div style="height: 400px">
+                 ng-show="item.imageExists && !virtualSearch">
+                <div style="height: 400px;margin-left: 1px">
                     <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
                         <uib-slide ng-repeat="slide in item.slides" active="slide.active">
                             <img ng-src="{{slide.image}}"
@@ -956,7 +1023,7 @@
                 </div>
             </div>
         </div>
-        <div class="row" ng-show="item.showregularvideo">
+        <div class="row" ng-show="item.showregularvideo && !virtualSearch">
             <a class="animated infinite pulse" style="cursor :pointer;margin-right: 20px;font-size: x-large"
                ng-click="ShowRegularVideo(item)">
                 {{ item.videoexistlable }}
@@ -964,7 +1031,7 @@
 
         </div>
 
-        <div class="row">
+        <div class="row" ng-show="!virtualSearch">
             <div class="col-md-4 col-md-offset-3" ng-show="false"
                  ng-include="'/client/templates/waitcircle.html'">
             </div>
@@ -972,11 +1039,21 @@
 
             </div>
         </div>
-        <div class="row" ng-show="item.show360video">
+        <div class="row" ng-show="item.show360video && !virtualSearch">
             <a class="animated infinite pulse" style="cursor :pointer;margin-right: 20px;font-size: x-large"
                ng-click="Show360Video(item, $index)">
                 {{ item.video360existlable }}
             </a>
+        </div>
+        <div class="row" ng-if="virtualSearch">
+            <div class="col-md-12">
+                <div class="h_iframe" style="margin-right: 5px;margin-left: 1px">
+                    <!-- a transparent image is preferable -->
+                    <img class="ratio" src="http://placehold.it/16x9"/>
+                    <iframe  src="/upload360video/welcome.mp4" frameborder="0"
+                             allowfullscreen></iframe>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -213,6 +213,7 @@ three.js r65 or higher
                 this._video.muted = this.options.muted;
                 this._texture = new THREE.Texture( this._video );
 
+                this._video.setAttribute("crossorigin", 'anonymous');
                 // make a self reference we can pass to our callbacks
                 var self = this;
 

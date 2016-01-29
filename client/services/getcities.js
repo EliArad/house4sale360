@@ -40,7 +40,7 @@ app.factory("citiesservice", function($http, $q,myConfig)
                         console.log('error happend');
                         return;
                     }
-                    chunk = Math.min(50, size);
+                    chunk = Math.min(100, size);
                     size-=chunk;
                     //console.log('size:' + size);
                     url = myConfig.url + '/api/getcitieschunk';
@@ -52,9 +52,19 @@ app.factory("citiesservice", function($http, $q,myConfig)
                         //console.log('adding: ' + resize);
                         var x = 0;
                         for (var j = result.data.index ; j < (result.data.index + resize); j++) {
-                            citiesDataOnly[j] = (result.data.a[x].city);
-                            citiesDataAll[j] = (result.data.a[x]);
-                            x++;
+                            try {
+
+
+                                citiesDataOnly[j] = (result.data.a[x].city);
+                                citiesDataAll[j] = (result.data.a[x]);
+                                x++;
+                            }
+                            catch (e)
+                            {
+
+                                console.log(e + '  ' + x);
+                                console.log(result.data);
+                            }
                         }
                         if (result.data.size == 0)
                         {

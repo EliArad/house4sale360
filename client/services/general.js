@@ -55,6 +55,31 @@ app.factory("general", function ($http, $q, myConfig, appCookieStore) {
         return exp;
     }
 
+    function isMobile()
+    {
+
+        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+            return true;
+        } else {
+            return false;
+        }
+        /*
+        if ($(window).width() < 768) {
+            return true;
+        }
+        else if ($(window).width() >= 768 &&  $(window).width() <= 992) {
+            return true;
+        }
+        else if ($(window).width() > 992 &&  $(window).width() <= 1200) {
+            return false;
+        }
+        else  {
+            return false;
+        }
+        return false;
+        */
+    }
+
     var SendEmailToUser = function (id, message) {
         var data = {
             'id': id,
@@ -69,6 +94,7 @@ app.factory("general", function ($http, $q, myConfig, appCookieStore) {
         getSchonot: getSchonot,
         SendEmailToUser: SendEmailToUser,
         getVersion:getVersion,
-        getCookieExp:getCookieExp
+        getCookieExp:getCookieExp,
+        isMobile:isMobile
     };
 });

@@ -25,7 +25,7 @@ app.factory("visitors", function ($cookies, $http, myConfig) {
         } else {
             userguid = $cookies.get('apt360visitorguid');
         }
-        $cookies.remove("apt360visitor");
+        //$cookies.remove("apt360visitor");
         var d = $cookies.get('apt360visitor');
         if (d == undefined) {
 
@@ -58,10 +58,17 @@ app.factory("visitors", function ($cookies, $http, myConfig) {
 
     }
 
+    function saveVisitorSearch(search)
+    {
+        var url = myConfig.url + "/api/general/saveVisitorSearch";
+        return $http.post(url, search);
+    }
+
     return {
         initLocation: initLocation,
         determineVisit: determineVisit,
-        getAllVisitors:getAllVisitors
+        getAllVisitors:getAllVisitors,
+        saveVisitorSearch:saveVisitorSearch
     }
 
 });
