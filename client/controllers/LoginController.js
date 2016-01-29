@@ -39,6 +39,7 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
 
             authToken.RemoveToken();
 
+            $scope.vm.user.email = $scope.vm.user.email.toLowerCase();
             myhttphelper.doPost('/api/login', $scope.vm.user).
             then(sendResponseData).
             catch(sendResponseError);

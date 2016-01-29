@@ -6,13 +6,13 @@
     <title></title>
     <meta name="description" content="">
     <!--<meta name="viewport" content="width=device-width">-->
-    <meta name="viewport" 
-                content="width=device-width, 
+    <meta name="viewport"
+          content="width=device-width,
                 initial-scale=1, 
                 maximum-scale=1, 
                 user-scalable=no">
-    
-    
+
+
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
@@ -24,7 +24,7 @@
     <script src="client/js/lib/player.js"></script>
 
 
-    <link rel="stylesheet" href="client/styles/loginscreen.css" />
+    <link rel="stylesheet" href="client/styles/loginscreen.css"/>
     <link rel="stylesheet" href="client/styles/main.css">
     <link rel="stylesheet" href="client/styles/styles.css">
     <link rel="stylesheet" href="client/styles/waitlogin.css">
@@ -35,28 +35,28 @@
 
 
     <!--<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />-->
-    <link rel="stylesheet" href="client/styles/bootstrap-orange.css" />
-    <link rel="stylesheet" href="bower_components/bootstrap-select/dist/css/bootstrap-select.min.css" />
-    <link rel="stylesheet" href="bower_components/bootstrap-rtl/dist/css/bootstrap-rtl.min.css" />
+    <link rel="stylesheet" href="client/styles/bootstrap-orange.css"/>
+    <link rel="stylesheet" href="bower_components/bootstrap-select/dist/css/bootstrap-select.min.css"/>
+    <link rel="stylesheet" href="bower_components/bootstrap-rtl/dist/css/bootstrap-rtl.min.css"/>
 
 
-    <link rel="stylesheet" href="bower_components/ui-select/dist/select.min.css" />
+    <link rel="stylesheet" href="bower_components/ui-select/dist/select.min.css"/>
 
 
-    <link rel="stylesheet" href="client/styles/animate.css" />
-    <link rel="stylesheet" href="bower_components/angular-motion/dist/angular-motion.min.css" />
+    <link rel="stylesheet" href="client/styles/animate.css"/>
+    <link rel="stylesheet" href="bower_components/angular-motion/dist/angular-motion.min.css"/>
     <link rel="stylesheet" href="client/styles/picturesstyle.css">
     <link rel="stylesheet" href="client/styles/responsivemail.css">
-    <link rel="stylesheet" href="bower_components/jquery-ui/themes/base/jquery-ui.min.css" />
-    <link rel="stylesheet" href="client/styles/bootstrapautogrid.css" />
+    <link rel="stylesheet" href="bower_components/jquery-ui/themes/base/jquery-ui.min.css"/>
+    <link rel="stylesheet" href="client/styles/bootstrapautogrid.css"/>
 
     <link rel="stylesheet" href="client/styles/navbar.css"/>
 
     <link rel="stylesheet" href="client/styles/font-awesome.min.css">
-    <link rel="stylesheet" href="bower_components/angular-carousel/dist/angular-carousel.min.css" />
+    <link rel="stylesheet" href="bower_components/angular-carousel/dist/angular-carousel.min.css"/>
     <link rel="stylesheet" href="bower_components/bootstrap-vertical-tabs/bootstrap.vertical-tabs.min.css">
 
-    <link rel="stylesheet" href="client/styles/last.css" />
+    <link rel="stylesheet" href="client/styles/last.css"/>
     <link rel="stylesheet" href="client/styles/fontrules.css">
     <link rel="stylesheet" href="client/styles/badgebox.css">
     <!-- endbuild -->
@@ -64,15 +64,16 @@
 
 <body ng-app="app">
 
-    <!--[if lt IE 7]>
-<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<!--[if lt IE 7]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+    your browser</a> to improve your experience.</p>
 <![endif]-->
 
-    <!-- Add your site or application content here -->
+<!-- Add your site or application content here -->
 
-    <div ng-include="'client/views/header.html'"></div>
-    <!--<div class="{{ pageClass }}"  ui-view=""></div>-->
-    <div ui-view=""></div>
+<div ng-include="'client/views/header.html'"></div>
+<!--<div class="{{ pageClass }}"  ui-view=""></div>-->
+<div ui-view=""></div>
 
 
 <div class="footer">
@@ -84,10 +85,16 @@
                         <a class="fc" ui-sref="contactus">צור קשר</a>
                     </td>
                     <td style="width: 100px">
-                        <a class="fc" ui-sref="contactus">עזרה</a>
+                        <a class="fc" ui-sref="help">עזרה</a>
                     </td>
                     <td style="width: 100px">
-                        <a class="fc" ui-sref="contactus">מחק חשבון</a>
+                        <a class="fc" ui-sref="deleteaccount">מחק חשבון</a>
+                    </td>
+                    <td style="width: 100px">
+                        <a class="fc" ui-sref="privacyinfo">מידע על פרטיות</a>
+                    </td>
+                    <td style="width: 100px">
+                        <a class="fc" ui-sref="sitehandle">תקנון האתר</a>
                     </td>
                 </tr>
             </table>
@@ -96,168 +103,176 @@
 </div>
 
 
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-    <script>
-        ! function (A, n, g, u, l, a, r) {
-            A.GoogleAnalyticsObject = l, A[l] = A[l] || function () {
+<!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
+<script>
+    !function (A, n, g, u, l, a, r) {
+        A.GoogleAnalyticsObject = l, A[l] = A[l] || function () {
                     (A[l].q = A[l].q || []).push(arguments)
                 }, A[l].l = +new Date, a = n.createElement(g),
                 r = n.getElementsByTagName(g)[0], a.src = u, r.parentNode.insertBefore(a, r)
-        }(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+    }(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-        ga('create', 'UA-XXXXX-X');
-        ga('send', 'pageview');
-    </script>
+    ga('create', 'UA-XXXXX-X');
+    ga('send', 'pageview');
+</script>
 
 
+<!-- build:js(.) scripts/vendor.js -->
+<!-- bower:js -->
+<!-- <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script> -->
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
 
-    <!-- build:js(.) scripts/vendor.js -->
-    <!-- bower:js -->
-    <!-- <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script> -->
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+<script src="bower_components/moment/moment.js"></script>
 
     <script src="bower_components/moment/moment.js"></script>
 
+<script src="client/vr/PhotoSphereViewer/photo-sphere-viewer.min.js"></script>
+<script src="client/vr/PhotoSphereViewer/three.min.js"></script>
+<!-- External library, but included in the build -->
+<script src="client/vr/PhotoSphereViewer/src/sphoords.js"></script>
+<!-- Photo Sphere Viewer files -->
+<!--<script src="client/vr/PhotoSphereViewer/src/PhotoSphereViewer.min.js"></script>-->
+<script src="client/vr/PhotoSphereViewer/src/PSVNavBar.js"></script>
+<script src="client/vr/PhotoSphereViewer/src/PSVNavBarButton.js"></script>
+<!--<script src="client/vr/photosphereviewer/test.js"></script>-->
 
-    <script src="client/vr/PhotoSphereViewer/photo-sphere-viewer.min.js"></script>
-    <script src="client/vr/PhotoSphereViewer/three.min.js"></script>
-    <!-- External library, but included in the build -->
-    <script src="client/vr/PhotoSphereViewer/src/sphoords.js"></script>
-    <!-- Photo Sphere Viewer files -->
-    <!--<script src="client/vr/PhotoSphereViewer/src/PhotoSphereViewer.min.js"></script>-->
-    <script src="client/vr/PhotoSphereViewer/src/PSVNavBar.js"></script>
-    <script src="client/vr/PhotoSphereViewer/src/PSVNavBarButton.js"></script>
-    <!--<script src="client/vr/photosphereviewer/test.js"></script>-->
+<script src="client/vr/valiant360/jquery.valiant360.js"></script>
+<link rel="stylesheet" type="text/css" href="client/vr/valiant360/css/valiant360.css"/>
+<script src="bower_components/angular/angular.min.js"></script>
 
     <script src="client/vr/valiant360/jquery.valiant360.min.js"></script>
     <link rel="stylesheet" type="text/css" href="client/vr/valiant360/css/valiant360.css" />
     <script src="bower_components/angular/angular.min.js"></script>
 
+<script src="bower_components/ui-select/dist/select.min.js"></script>
 
+<!--<script src="node_modules/socket.io-client/socket.io.js"></script>-->
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="bower_components/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
 
+<script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="bower_components/angular-aria/angular-aria.min.js"></script>
+<script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
+<script src="bower_components/angular-messages/angular-messages.min.js"></script>
+<script src="bower_components/angular-resource/angular-resource.min.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+<script src="bower_components/angular-touch/angular-touch.min.js"></script>
+<script src="bower_components/angular-carousel/dist/angular-carousel.min.js"></script>
+<script src="bower_components/angular-swipe/dist/angular-swipe.min.js"></script>
+<script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
 
     <script src="bower_components/ui-select/dist/select.min.js"></script>
 
-    <!--<script src="node_modules/socket.io-client/socket.io.js"></script>-->
-    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="bower_components/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+<script src="bower_components/ng-password-strength/dist/scripts/ng-password-strength.min.js"></script>
 
-    <script src="bower_components/angular-animate/angular-animate.js"></script>
-    <script src="bower_components/angular-aria/angular-aria.min.js"></script>
-    <script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
-    <script src="bower_components/angular-messages/angular-messages.min.js"></script>
-    <script src="bower_components/angular-resource/angular-resource.min.js"></script>
-    <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
-    <script src="bower_components/angular-touch/angular-touch.min.js"></script>
-    <script src="bower_components/angular-carousel/dist/angular-carousel.min.js"></script>
-    <script src="bower_components/angular-swipe/dist/angular-swipe.min.js"></script>
-    <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script src="bower_components/lodash/lodash.min.js"></script>
+<script type="text/javascript" src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
+<script type="text/javascript" src="bower_components/ng-file-upload/ng-file-upload-shim.min.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 
 
-    <script src="bower_components/ng-password-strength/dist/scripts/ng-password-strength.min.js"></script>
+<script src="bower_components/videogular/videogular.min.js"></script>
+<script src="bower_components/videogular-controls/vg-controls.min.js"></script>
+<script src="bower_components/videogular-overlay-play/vg-overlay-play.min.js"></script>
+<script src="bower_components/videogular-poster/vg-poster.min.js"></script>
+<script src="bower_components/videogular-buffering/vg-buffering.min.js"></script>
 
-    <script src="bower_components/lodash/lodash.min.js"></script>
-    <script type="text/javascript" src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
-    <script type="text/javascript" src="bower_components/ng-file-upload/ng-file-upload-shim.min.js"></script>
-    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-
-
-    <script src="bower_components/videogular/videogular.min.js"></script>
-    <script src="bower_components/videogular-controls/vg-controls.min.js"></script>
-    <script src="bower_components/videogular-overlay-play/vg-overlay-play.min.js"></script>
-    <script src="bower_components/videogular-poster/vg-poster.min.js"></script>
-    <script src="bower_components/videogular-buffering/vg-buffering.min.js"></script>
-
-    <script src="bower_components/ng-idle/angular-idle.min.js"></script>
+<script src="bower_components/ng-idle/angular-idle.min.js"></script>
 
 
-    <!--
+<!--
 <script src="bower_components/video.js/dist/video-js.min.css"></script>
 <script src="bower_components/video.js/dist/video.min.js"></script>
 -->
 
 
-    <script type="text/javascript" src="client/js/bootstrap-multiselect.js"></script>
-    <link rel="stylesheet" href="client/styles/bootstrap-multiselect.css" type="text/css"/>
-    <!--  THETA VIEWER -->
+<script type="text/javascript" src="client/js/bootstrap-multiselect.js"></script>
+<link rel="stylesheet" href="client/styles/bootstrap-multiselect.css" type="text/css"/>
+<!--  THETA VIEWER -->
 
-    <script type="text/javascript" src="client/js/msinit.js"></script>
+<script type="text/javascript" src="client/js/msinit.js"></script>
 
-    <!-- endbower -->
-    <!-- endbuild -->
+<!-- endbower -->
+<!-- endbuild -->
 
-    <!-- build:js({.tmp,app}) scripts/scripts.js -->
-    <script src="client/app.js"></script>
-    <script src="client/routing.js"></script>
-    <script src="client/controllers/headerController.js"></script>
-    <script src="client/controllers/LogoutController.js"></script>
-    <script src="client/controllers/LoginController.js"></script>
-    <script src="client/controllers/howto360Controller.js"></script>
-    <script src="client/controllers/HelpController.js"></script>
+<!-- build:js({.tmp,app}) scripts/scripts.js -->
+<script src="client/app.js"></script>
+<script src="client/routing.js"></script>
+<script src="client/controllers/headerController.js"></script>
+<script src="client/controllers/LogoutController.js"></script>
+<script src="client/controllers/LoginController.js"></script>
+<script src="client/controllers/howto360Controller.js"></script>
 <script src="client/controllers/verifiedokController.js"></script>
-    <script src="client/controllers/RegistrationController.js"></script>
-    <script src="client/controllers/AboutController.js"></script>
-    <script src="client/controllers/MainController.js"></script>
-    <script src="client/controllers/renthouseController.js"></script>
-    <script src="client/controllers/salehouseController.js"></script>
-    <script src="client/controllers/renthouseController.js"></script>
-    <script src="client/controllers/addnewsalehouseController.js"></script>
-    <script src="client/controllers/addnewrenthouseController.js"></script>
-    <script src="client/controllers/welcomeContoller.js"></script>
-    <script src="client/controllers/addnewblankhouseController.js"></script>
-    <script src="client/controllers/kablanhouseController.js"></script>
+<script src="client/controllers/RegistrationController.js"></script>
+<script src="client/controllers/AboutController.js"></script>
+<script src="client/controllers/MainController.js"></script>
+<script src="client/controllers/renthouseController.js"></script>
+<script src="client/controllers/salehouseController.js"></script>
+<script src="client/controllers/renthouseController.js"></script>
+<script src="client/controllers/addnewsalehouseController.js"></script>
+<script src="client/controllers/addnewrenthouseController.js"></script>
+<script src="client/controllers/welcomeContoller.js"></script>
+<script src="client/controllers/addnewblankhouseController.js"></script>
+<script src="client/controllers/kablanhouseController.js"></script>
 <script src="client/controllers/contactusController.js"></script>
-    <script src="client/controllers/adminController.js"></script>
-    <!--<script src="client/controllers/virtualTourController.js"></script>-->
+<script src="client/controllers/adminController.js"></script>
+<script src="client/controllers/vrController.js"></script>
+<!--<script src="client/controllers/virtualTourController.js"></script>-->
 
 
-    <script src="client/services/visitors.js"></script>
-    <script src="client/services/GetSchonotBackground.js"></script>
-    <script src="client/services/getcities.js"></script>
-    <script src="client/services/dboperations.js"></script>
-    <script src="client/services/Registration.js"></script>
-    <script src="client/directives/validinput.js"></script>
-    <script src="client/directives/inputphone.js"></script>
-    <script src="client/directives/bootstrapmodal.js"></script>
-    <script src="client/directives/appdirectives.js "></script>
-    <script src="client/directives/fileuploader.js"></script>
-    <script src="client/directives/modelshow.js"></script>
-    <script src="client/directives/checklistModel.js"></script>
-    <script src="client/directives/dynamichomepage.js"></script>
-    <script src="client/directives/fileModel.js"></script>
-    <script src="client/directives/slider1.js"></script>
-    <script src="client/services/general.js"></script>
-    <script src="client/services/versionReloader.js"></script>
-    <script src="client/services/Members.js"></script>
-    <script src="client/services/authIntercepter.js"></script>
-    <script src="client/services/authtoken.js"></script>
-    <script src="client/services/myhttphelper.js"></script>
-    <script src="client/services/SessionStorageService.js"></script>
-    <script src="client/services/LocalStorageService.js"></script>
-    <script src="client/services/appcache.js"></script>
-    <script src="client/services/admin.js"></script>
-    <script src="client/services/chatroomregistration.js"></script>
-    <script src="client/services/appCookieStore.js"></script>
-    <script src="client/services/apiservice.js"></script>
-    <script src="client/services/fileReader.js"></script>
-    <script src="client/services/fileUpload.js"></script>
-    <script src="client/services/PassServiceParams.js"></script>
-    <script src="client/services/myutils.js"></script>
-    <script src="client/services/socketioservice.js"></script>
-    <script src="client/services/picturesManager.js"></script>
+<script src="client/services/communiction.js"></script>
+<script src="client/services/visitors.js"></script>
+<script src="client/services/GetSchonotBackground.js"></script>
+<script src="client/services/getcities.js"></script>
+<script src="client/services/dboperations.js"></script>
+<script src="client/services/Registration.js"></script>
+<script src="client/directives/validinput.js"></script>
+<script src="client/directives/inputphone.js"></script>
+<script src="client/directives/bootstrapmodal.js"></script>
+<script src="client/directives/appdirectives.js "></script>
+<script src="client/directives/fileuploader.js"></script>
+<script src="client/directives/modelshow.js"></script>
+<script src="client/directives/checklistModel.js"></script>
+<script src="client/directives/dynamichomepage.js"></script>
+<script src="client/directives/fileModel.js"></script>
+<script src="client/directives/slider1.js"></script>
+<script src="client/services/general.js"></script>
+<script src="client/services/versionReloader.js"></script>
+<script src="client/services/Members.js"></script>
+<script src="client/services/authIntercepter.js"></script>
+<script src="client/services/authtoken.js"></script>
+<script src="client/services/myhttphelper.js"></script>
+<script src="client/services/SessionStorageService.js"></script>
+<script src="client/services/LocalStorageService.js"></script>
+<script src="client/services/appcache.js"></script>
+<script src="client/services/admin.js"></script>
+<script src="client/services/chatroomregistration.js"></script>
+<script src="client/services/appCookieStore.js"></script>
+<script src="client/services/apiservice.js"></script>
+<script src="client/services/fileReader.js"></script>
+<script src="client/services/fileUpload.js"></script>
+<script src="client/services/PassServiceParams.js"></script>
+<script src="client/services/myutils.js"></script>
+<script src="client/services/socketioservice.js"></script>
+<script src="client/services/picturesManager.js"></script>
 
-    <!--<script src="require.js" data-main="client/utils/cityloader.js"></script>-->
-    <script src="client/js/imagetools.js"></script>
-    <script src="client/controllers/globalController.js"></script>
-    <script src="client/js/jQueryRotate.js"></script>
+<!--<script src="require.js" data-main="client/utils/cityloader.js"></script>-->
+<script src="client/js/imagetools.js"></script>
+<script src="client/controllers/globalController.js"></script>
+<script src="client/js/jQueryRotate.js"></script>
 
 
-    <script src="bower_components/angularjs-scroll-glue/src/scrollglue.js"></script>
+<script src="bower_components/angularjs-scroll-glue/src/scrollglue.js"></script>
 
-    <!--  JQuery plugins-->
-    <!-- endbuild -->
-    <!-- Include the plugin's CSS and JS: -->
+
+<link rel="stylesheet" href="client/styles/bootstrap-switch.min.css"/>
+<script src="client/js/bootstrap-switch.min.js"></script>
+
+
+<!--  JQuery plugins-->
+<!-- endbuild -->
+<!-- Include the plugin's CSS and JS: -->
 
 
 </body>

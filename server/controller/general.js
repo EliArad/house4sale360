@@ -81,6 +81,57 @@ module.exports = function (sqlserver) {
                 }
             });
         },
+        saveVisitorSearch: function (req, res, next) {
+            sqlserver.get(function (err, con) {
+                if (!err) {
+                    console.log(req.body);
+                    var sql = 'SELECT * FROM yad2vr.usersearch where userguid = ' + con.escape(req.body.userguid);
+                    var query = con.query(sql, function (err, rows) {
+                        if (err)
+                        {
+                            console.log(err);
+                            sqlserver.release(con);
+                            res.sendStatus(500);
+                        } else {
+                            if (rows.length > 0)
+                            {
+                                console.log('upupupp');
+                                con.query('UPDATE yad2vr.usersearch SET ? WHERE ?', [{
+                                    city: req.body.city,
+                                    numofrooms: req.body.numofrooms,
+                                    type: req.body.type,
+                                    propertytype: req.body.propertytype,
+                                }, {userguid: req.body.userguid}], function (err, result) {
+                                    if (err)
+                                    {
+                                        console.log(err);
+                                        sqlserver.release(con);
+                                        res.sendStatus(500);
+                                    } else {
+                                        sqlserver.release(con);
+                                        res.send('ok');
+                                    }
+                                });
+                            } else {
+                                var queryres = con.query('INSERT INTO yad2vr.usersearch SET ?', req.body, function (err, result) {
+                                    if (err)
+                                    {
+                                        console.log(err);
+                                        sqlserver.release(con);
+                                        res.sendStatus(500);
+                                    } else {
+                                        sqlserver.release(con);
+                                        res.send('ok');
+                                    }
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    res.sendStatus(500);
+                }
+            });
+        },
 
         setvisitor: function (req, res, next) {
 

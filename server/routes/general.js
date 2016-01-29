@@ -14,6 +14,8 @@ module.exports = function (app,visitorController) {
         router.get('/getallvisitors', visitorController.getallvisitors);
         router.get('/isverified',  visitorController.isverified);
         router.post('/contactus', visitorController.contactus);
+        router.post('/saveVisitorSearch', visitorController.saveVisitorSearch);
+
 
 
         app.use('/api/general', router);

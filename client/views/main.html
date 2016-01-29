@@ -573,8 +573,10 @@
         </button>
             &nbsp;
             &nbsp;
-            חיפוש וירטואלי
+            <div>
+            חיפוש במשקפת VR
          <input type="checkbox"  id="switch-change"   name="my-checkbox" checked>
+            </div>
         </div>
         <div class="col-md-7 col-cs-11">
         <span style="font-size: 14pt" ng-hide="showNoResultsMessage">
@@ -1039,7 +1041,7 @@
 
             </div>
         </div>
-        <div class="row" ng-show="item.show360video && !virtualSearch">
+        <div class="row" ng-show="item.show360video && !mobile && !virtualSearch">
             <a class="animated infinite pulse" style="cursor :pointer;margin-right: 20px;font-size: x-large"
                ng-click="Show360Video(item, $index)">
                 {{ item.video360existlable }}
