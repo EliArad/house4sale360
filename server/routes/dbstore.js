@@ -37,6 +37,7 @@ module.exports = function (app,dbstoreController) {
         app.post('/api/dbstore/getRentHouse360PictureList', jwtauth, dbstoreController.getRentHouse360PictureList);
         app.post('/api/dbstore/getRentHouseVideoList', jwtauth, dbstoreController.getRentHouseVideoList);
         app.post('/api/dbstore/getRentHouseDetails', jwtauth, dbstoreController.getRentHouseDetails);
+        app.post('/api/dbstore/SavePrivacyCode', jwtauth, dbstoreController.SavePrivacyCode);
 
 
     }

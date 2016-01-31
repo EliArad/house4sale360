@@ -119,6 +119,44 @@
                                    style="float: left;color:orange;margin-left: 7px;cursor: pointer">מחק</a>
                             </h4>
                         </div>
+                        <div id="collapsePrivacy{{ $index}}" class="panel-collapse collapse out">
+                            <div class="panel-body">
+                                <div id="panelprivacycontent{{ item.id }}" ng-show="vm.uuu[item.id]">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="default" class="btn btn-primary">אשר לכולם לראות את הסיור
+                                                הוירטואלי, תמונות 360 ווידאן 360<input ng-model="item.privacyEnabled == 1? true:false"
+                                                                                       type="checkbox" id="default"
+                                                                                       class="badgebox"><span
+                                                        class="badge">&check;</span></label>
+                                        </div>
+                                        <div class="col-md-6" ng-show="item.privacyEnabled">
+                                            <form class="form-inline" role="form">
+                                                <div class="form-group">
+                                                    <div class="col-sm-3">
+                                                        <input type="text"
+                                                               name="password"
+                                                               placeholder="את הקוד הזה תתן למתעניינים בדירה שלך"
+                                                               id="password"
+                                                               maxlength="4"
+                                                               class="form-control" ng-model="item.privacyPassword"
+                                                               required/>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-sm-3">
+                                                        <button ng-click="SavePrivacyCode(item)"
+                                                                type="submit" class="btn btn-primary">שמור קוד
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div id="collapse{{ $index}}" class="panel-collapse collapse out">
 
                             <div class="panel-body">

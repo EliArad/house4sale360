@@ -446,6 +446,25 @@ module.exports = function (sqlserver) {
                 });
             });
         },
+
+        SavePrivacyCode: function (req, res, next) {
+
+
+            var tablename = req.body.data.tablename;
+            delete req.body.data.tablename;
+            console.log(req.body.data);
+            sqlserver.get(function (err, con) {
+                var condition = {'id': req.body.data.id};
+                var query = con.query('UPDATE ' + tablename + ' SET ? WHERE ?', [req.body.data, condition], function (err, result) {
+                    console.log(err);
+                    sqlserver.release(con);
+                    if (err) {
+                        res.sendStatus(500);
+                    } else
+                        res.send('ok');
+                });
+            });
+        },
         getRentHousePictureList: function (req, res, next) {
             sqlserver.get(function (err, con) {
                 if (!err) {

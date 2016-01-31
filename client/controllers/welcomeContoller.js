@@ -5,8 +5,9 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
     function ($scope, $state, authToken,versionReloader,citiesservice,$cookies,general,communication,visitors)
     {
         var vm = this;
+
         vm.search = {};
-        $('#selectPropertyType').multiselect('select', vm.search.propertyType);
+
         $scope.showmessagetype = true;
         $scope.iframeFullScreen = false;
         $scope.mobile = general.isMobile();
@@ -60,6 +61,20 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
 
         $scope.onFastSearch = function()
         {
+
+            if (vm.search.propertyType == undefined)
+            {
+                document.getElementById('protypeid').style.color = "red";
+                document.getElementById('protypeid').className = 'animated pulse';
+                document.getElementById('protypeid').innerHTML = "בחר סוג הנכס";
+                setTimeout(function(){
+                    document.getElementById('protypeid').className = '';
+                    document.getElementById('protypeid').style.color = "black";
+                    document.getElementById('protypeid').innerHTML = "סוג הנכס";
+                },3000)
+                return;
+            }
+
             var s = JSON.stringify(vm.search);
             $cookies.put('apt360fastsearch', s ,{expires: cexp});
 
@@ -132,10 +147,27 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
         initcrousle();
 
 
-        if ($scope.mobile == false)
-            load360Video();
-        loadPhotoScphere('welcome360imageid', '400px', './uploadimages/welcome360.jpg');
+        $(document).ready(function () {
 
+            var ressearch = $cookies.get('apt360fastsearch');
+            if (ressearch != undefined)
+                vm.search = JSON.parse(ressearch);
+
+            initcrousle();
+            try {
+                $('#selectPropertyType').multiselect('select', vm.search.propertyType);
+
+                if ($scope.mobile == false)
+                    load360Video();
+                loadPhotoScphere('welcome360imageid', '400px', './uploadimages/welcome360.jpg');
+            }
+            catch (e)
+            {
+                console.log(e);
+                //location.reload();
+                return;
+            }
+        });
 
 
 

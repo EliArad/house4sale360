@@ -80,8 +80,9 @@
 
             </div>
             <div class="row" style="margin-right: 1px">
-                מציג:  סיור וירטואלי בבית.לחץ והזז את העכבר לכל הכיוונים.חפש את החצים או העיגול המוביל לחדרים נוספים והתקדם בבית
-                <a id="linkFullScreen" style="cursor: pointer"  class="txt" ng-click="togleFullScreenTour()">מסך מלא</a>
+                מציג: סיור וירטואלי בבית.לחץ והזז את העכבר לכל הכיוונים.חפש את החצים או העיגול המוביל לחדרים נוספים
+                והתקדם בבית
+                <a id="linkFullScreen" style="cursor: pointer" class="txt" ng-click="togleFullScreenTour()">מסך מלא</a>
             </div>
         </div>
     </div>
@@ -93,94 +94,101 @@
      חיפוש מהיר
         </span>
         </div>
-        <div class="row" style="margin-right: 10px">
-            <div class="col-md-2 col-xs-11">
-                <label class="txtcol control-label" for="agent">בעל המודעה</label>
-                <select class="form-control"
-                        placeholder="האם אתה קבלן, מתווך או אדם פרטי"
-                        name="agent"
-                        ng-change="UpdateMessageType()"
-                        ng-model="vm.search.agent">
-                    <option>פרטי</option>
-                    <option>מתווך</option>
-                    <option>קבלן</option>
-                </select>
-            </div>
-            <div class="col-md-2 col-xs-11">
-                <label ng-show="showmessagetype" class="txtcol control-label" for="msggtype">סוג המודעה</label>
-                <select class="form-control" ng-show="showmessagetype"
-                        placeholder="מכירה או השכרה"
-                        name="msggtype"
-                        ng-model="vm.search.messagetype">
-                    <option>מכירה</option>
-                    <option> השכרה</option>
-                </select>
-            </div>
-            <div class="col-md-2 col-xs-11">
-                <label class="txtcol control-label" for="propertyType">עיר</label>
-
-                <ui-select id="city"
-                           on-select="getcity(vm.search.city)"
-                           theme="bootstrap" ng-model="vm.search.city"
-                           required>
-                    <ui-select-match placeholder="בחר עיר">
-                        <span ng-bind="$select.selected"></span>
-                    </ui-select-match>
-                    <ui-select-choices
-                            repeat="city in vm.citiesOnly |filter : $select.search">
-                        <span ng-bind-html="city | highlight : $select.search"></span>
-                    </ui-select-choices>
-                </ui-select>
-            </div>
-            <div class="col-md-2 col-xs-11">
-                <div class="row">
-                    <label class="txtcol control-label" for="propertyType">סוג הנכס</label>
-                </div>
-                <div class="row">
+        <form name="fastformsearch">
+            <div class="row" style="margin-right: 10px">
+                <div class="col-md-2 col-xs-11">
+                    <label class="txtcol control-label" for="agent">בעל המודעה</label>
                     <select class="form-control"
-                            id="selectPropertyType" multiple="multiple"
-                            placeholder="בחר את סוג הנכס למכירה"
-                            name="propertyType"
-                            ng-model="vm.search.propertyType">
-                        <option>דירה</option>
-                        <option>דירת גן</option>
-                        <option>דירת גג/פנטהאוז</option>
-                        <option>סטודיו</option>
-                        <option>מרתף/פרטר</option>
-                        <option>דופלקס</option>
-                        <option>טריפלקס</option>
-                        <option>דו משפחתי</option>
-                        <option>יחידת דיור</option>
+                            placeholder="האם אתה קבלן, מתווך או אדם פרטי"
+                            name="agent"
+                            required
+                            ng-change="UpdateMessageType()"
+                            ng-model="vm.search.agent">
+                        <option>פרטי</option>
+                        <option>מתווך</option>
+                        <option>קבלן</option>
                     </select>
                 </div>
-            </div>
-            <div class="col-md-2 col-xs-11">
-                <div class="form-group" style="white-space:nowrap">
-                    <label class="txtcol control-label" for="numberofrooms">מספר חדרים</label>
-
-                    <select name="numberOfRooms"
-                            class="form-control" ng-model="vm.search.numberofrooms">
-
-                        <option ng-repeat="item in vm.numberOfRooms" value="{{item}}">
-                            {{item}}
-                        </option>
+                <div class="col-md-2 col-xs-11">
+                    <label ng-show="showmessagetype" class="txtcol control-label" for="msggtype">סוג המודעה</label>
+                    <select class="form-control" ng-show="showmessagetype"
+                            placeholder="מכירה או השכרה"
+                            required
+                            name="msggtype"
+                            ng-model="vm.search.messagetype">
+                        <option>מכירה</option>
+                        <option> השכרה</option>
                     </select>
                 </div>
-            </div>
-            <div class="col-md-2 col-xs-11">
-                <div class="row">
-                    <label class="control-label" for="numberofrooms">&nbsp;  </label>
+                <div class="col-md-2 col-xs-11">
+                    <label class="txtcol control-label" for="propertyType">עיר</label>
+
+                    <ui-select id="city"
+                               on-select="getcity(vm.search.city)"
+                               theme="bootstrap" ng-model="vm.search.city"
+                               required>
+                        <ui-select-match placeholder="בחר עיר">
+                            <span ng-bind="$select.selected"></span>
+                        </ui-select-match>
+                        <ui-select-choices
+                                repeat="city in vm.citiesOnly |filter : $select.search">
+                            <span ng-bind-html="city | highlight : $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
                 </div>
-                <div class="row">
-                    <button type="button" class="btn btn-default" style="color:orange;width:100px;font-weight: bold"
-                            ng-click="onFastSearch()"
-                            data-dismiss="modal">חפש
-                    </button>
+                <div class="col-md-2 col-xs-11">
+                    <div class="row">
+                        <label id="protypeid" class="txtcol control-label" for="propertyType">סוג הנכס</label>
+                    </div>
+                    <div class="row">
+                        <select class="form-control "
+                                id="selectPropertyType" multiple="multiple"
+                                placeholder="בחר את סוג הנכס למכירה"
+                                required
+                                name="propertyType"
+                                ng-model="vm.search.propertyType">
+                            <option>דירה</option>
+                            <option>דירת גן</option>
+                            <option>דירת גג/פנטהאוז</option>
+                            <option>סטודיו</option>
+                            <option>מרתף/פרטר</option>
+                            <option>דופלקס</option>
+                            <option>טריפלקס</option>
+                            <option>דו משפחתי</option>
+                            <option>יחידת דיור</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2 col-xs-11">
+                    <div class="form-group" style="white-space:nowrap">
+                        <label class="txtcol control-label" for="numberofrooms">מספר חדרים</label>
+
+                        <select name="numberOfRooms"
+                                class="form-control" required ng-model="vm.search.numberofrooms">
+
+                            <option ng-repeat="item in vm.numberOfRooms" value="{{item}}">
+                                {{item}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2 col-xs-11">
+                    <div class="row">
+                        <label class="control-label" for="numberofrooms">&nbsp;  </label>
+                    </div>
+
+                    <div class="row">
+                        <button type="button" class="btn btn-default" style="color:orange;width:100px;font-weight: bold"
+                                ng-click="onFastSearch()"
+                                ng-disabled="fastformsearch.$invalid"
+                                data-dismiss="modal">חפש
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
         <div class="row" style="margin-right: 10px">
-            <div class="col-md-4" >
+            <div class="col-md-4">
                 <a style="font-size: 16pt;cursor: pointer" ng-click="AdvancedSearch()">חיפוש מתקדם</a>
             </div>
         </div>

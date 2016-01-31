@@ -12,6 +12,8 @@ app.controller('HeaderController', ['$scope', '$state', 'authToken', 'API',
             $scope.hellousername = ' hello ' + username;
         }
 
+        $scope.isAgent = false;
+
         $scope.partyDetail = function () {
             $state.go('main', {}, {
                 reload: true
@@ -47,7 +49,13 @@ app.controller('HeaderController', ['$scope', '$state', 'authToken', 'API',
         });
         function _show(agent)
         {
-            console.log(agent);
+            if (agent == 'agent')
+            {
+                $scope.isAgent = true;
+            } else {
+                $scope.isAgent = false;
+            }
+
             if (agent == 'kablan') {
                 $scope.showagentpages = true;
             } else {

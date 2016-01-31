@@ -106,6 +106,10 @@ app.factory('dboperations', function ($http, myConfig) {
         return $http.post(membersAPI, {query:query, auth:needauth, type:type});
     }
 
+    function GetAllMyResults() {
+        var membersAPI = myConfig.url + "/api/salequery/GetAllMyResults";
+        return $http.get(membersAPI);
+    }
 
     function suspendMessage(id, tablename,suspend) {
         var membersAPI = myConfig.url + "/api/dbstore/suspendMessage";
@@ -115,6 +119,13 @@ app.factory('dboperations', function ($http, myConfig) {
         var membersAPI = myConfig.url + "/api/dbstore/deleteMessage";
         return $http.post(membersAPI, {id:id, 'tablename': tablename});
     }
+
+    function SavePrivacyCode(data) {
+        var membersAPI = myConfig.url + "/api/dbstore/SavePrivacyCode";
+        return $http.post(membersAPI, {data:data});
+    }
+
+
 
     return {
         getSaleHousePictureList:getSaleHousePictureList,
@@ -138,7 +149,9 @@ app.factory('dboperations', function ($http, myConfig) {
         deleteMessage:deleteMessage,
         getRentHouseVideo360List:getRentHouseVideo360List,
         getRentHouseDetails:getRentHouseDetails,
-        getMessageUserInformation:getMessageUserInformation
+        getMessageUserInformation:getMessageUserInformation,
+        GetAllMyResults:GetAllMyResults,
+        SavePrivacyCode:SavePrivacyCode
     };
 
 

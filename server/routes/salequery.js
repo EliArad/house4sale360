@@ -12,7 +12,7 @@ module.exports = function (app,salequeryController) {
 
         var router = express.Router();
         router.post('/GetHouseQueryResults', salequeryController.GetHouseQueryResults);
-
+        router.get('/GetAllMyResults', salequeryController.GetAllMyResults);
         app.use('/api/salequery', router);
 
     }

@@ -74,7 +74,21 @@
 
             <ul class="nav navbar-nav navbar-right">
 
-                    <li ng-show="isAdmin && isAuthenticated" style="cursor: pointer" ui-sref-active="active"><a ui-sref="admin">admin</a></li>
+
+                    <li ng-show="isAuthenticated && isAdmin" class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin
+                            <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li ng-show="isAdmin && isAuthenticated" style="cursor: pointer" ui-sref-active="active"><a ui-sref="admin">Visitors</a></li>
+                            <li ng-show="isAdmin && isAuthenticated" style="cursor: pointer" ui-sref-active="active"><a ui-sref="admincontactus">Contact us</a></li>
+
+                        </ul>
+                    </li>
+
+
+
+
+
                     <!--
                     <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="help">עזרה</a></li>
                     <li ng-show="isAuthenticated" ui-sref-active="active"><a ui-sref="contact">צור קשר</a></li>
@@ -128,7 +142,7 @@
                         </ul>
                     </li>
 
-                    <li ng-show="isAuthenticated && isAgent" style="cursor: pointer"  ui-sref-active="active"><a ui-sref="agentpage">המודעות שלי</a></li>
+                    <li ng-show="isAuthenticated" style="cursor: pointer"  ui-sref-active="active"><a ui-sref="mypage">המודעות שלי</a></li>
 
                 </ul>
             </div>

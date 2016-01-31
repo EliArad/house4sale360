@@ -31,3 +31,50 @@
   animation: shake 400ms ease-in-out;
 }
  
+
+
+
+
+.caro {
+  max-height: 500px;
+}
+
+.didd {
+  width: 100%;
+  float: left;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active,
+.btn-default.active {
+  color: black;
+  background-color: white;
+}
+
+.btn-default:active, .btn-default.active, .btn-default:visited
+.btn-default:active:hover, .btn-default.active:hover {
+  color: black;
+  background-color: white;
+}
+
+.btn-default {
+  color: black;
+  background-color: white;
+}
+
+.btn-default:hover {
+  color: black;
+  background-color: white
+}
+
+.btn-default:focus {
+  color: black;
+  background-color: white
+}

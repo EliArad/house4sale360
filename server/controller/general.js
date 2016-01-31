@@ -41,6 +41,8 @@ module.exports = function (sqlserver) {
                             res.send('verifiedok');
                         }
                     });
+                } else {
+                    res.sendStatus(500);
                 }
             });
         },
@@ -58,9 +60,30 @@ module.exports = function (sqlserver) {
                             res.send('verifiedok');
                         }
                     });
+                } else {
+                    res.sendStatus(500);
                 }
             });
         },
+
+        getContactusMessages: function (req, res, next) {
+            sqlserver.get(function (err, con) {
+                if (!err) {
+                    var sql = 'SELECT * FROM yad2vr.contactus';
+                    var query = con.query(sql, function (err, rows) {
+                        sqlserver.release(con);
+                        if (err) {
+                            res.sendStatus(500);
+                        } else {
+                            res.send(rows);
+                        }
+                    });
+                } else {
+                    res.sendStatus(500);
+                }
+            });
+        },
+
         getallvisitors: function (req, res, next) {
 
             sqlserver.get(function (err, con) {
@@ -78,6 +101,8 @@ module.exports = function (sqlserver) {
                             res.send(rows);
                         }
                     });
+                } else {
+                    res.sendStatus(500);
                 }
             });
         },
@@ -87,14 +112,13 @@ module.exports = function (sqlserver) {
                     console.log(req.body);
                     var sql = 'SELECT * FROM yad2vr.usersearch where userguid = ' + con.escape(req.body.userguid);
                     var query = con.query(sql, function (err, rows) {
-                        if (err)
-                        {
+                        if (err) {
                             console.log(err);
                             sqlserver.release(con);
                             res.sendStatus(500);
                         } else {
-                            if (rows.length > 0)
-                            {
+                            console.log(rows);
+                            if (rows.length > 0) {
                                 console.log('upupupp');
                                 con.query('UPDATE yad2vr.usersearch SET ? WHERE ?', [{
                                     city: req.body.city,
@@ -102,8 +126,7 @@ module.exports = function (sqlserver) {
                                     type: req.body.type,
                                     propertytype: req.body.propertytype,
                                 }, {userguid: req.body.userguid}], function (err, result) {
-                                    if (err)
-                                    {
+                                    if (err) {
                                         console.log(err);
                                         sqlserver.release(con);
                                         res.sendStatus(500);
@@ -114,8 +137,7 @@ module.exports = function (sqlserver) {
                                 });
                             } else {
                                 var queryres = con.query('INSERT INTO yad2vr.usersearch SET ?', req.body, function (err, result) {
-                                    if (err)
-                                    {
+                                    if (err) {
                                         console.log(err);
                                         sqlserver.release(con);
                                         res.sendStatus(500);

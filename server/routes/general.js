@@ -12,6 +12,8 @@ module.exports = function (app,visitorController) {
         var router = express.Router();
         router.post('/setvisitor', visitorController.setvisitor);
         router.get('/getallvisitors', visitorController.getallvisitors);
+        router.get('/getContactusMessages', visitorController.getContactusMessages);
+
         router.get('/isverified',  visitorController.isverified);
         router.post('/contactus', visitorController.contactus);
         router.post('/saveVisitorSearch', visitorController.saveVisitorSearch);

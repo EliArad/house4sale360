@@ -277,6 +277,7 @@
                         <div class="col-sm-9">
                             <select class="form-control" placeholder="בחר את התצורה של המזגנים בבית"
                                     name="aircond"
+                                    required
                                     ng-change="getaircond(vm.card.aircond)"
                                     ng-model="vm.card.aircond">
                                 <option>אין</option>
@@ -299,6 +300,7 @@
                         <div class="col-sm-9">
                             <select class="form-control" placeholder="בחר את התצורה של החנייה אם יש"
                                     name="parking"
+                                    required
                                     ng-change="getparking(vm.card.parking)"
                                     ng-model="vm.card.parking">
                                 <option>אין</option>
@@ -317,6 +319,7 @@
                         <div class="col-sm-9">
                             <select class="form-control" placeholder="בחר את סוג החנייה"
                                     ng-change="saveModel()"
+                                    required
                                     name="parkingtype"
                                     ng-model="vm.card.parkingtype">
                                 <option>קרקע</option>
@@ -333,6 +336,7 @@
                         <div class="col-sm-9">
                             <select class="form-control" placeholder="בחר את סוג החנייה"
                                     name="parkingtype2"
+                                    required
                                     ng-change="saveModel()"
                                     ng-model="vm.card.parkingtype2">
                                 <option>צמודות אחת ליד השנייה</option>
@@ -350,6 +354,7 @@
                         <div class="col-sm-9">
                             <select class="form-control" placeholder="מספר מחסנים"
                                     ng-change="saveModel()"
+                                    required
                                     name="warehouse"
                                     ng-model="vm.card.warehouse">
                                 <option>אין</option>
@@ -367,6 +372,7 @@
                         <div class="col-sm-9">
                             <select class="form-control" placeholder="מספר מעליות"
                                     ng-change="saveModel()"
+                                    required
                                     name="elevator"
                                     ng-model="vm.card.elevator">
                                 <option>אין</option>
@@ -389,6 +395,7 @@
                             <select class="form-control" placeholder="האם יש בבית מרחב מוגן?"
                                     ng-change="saveModel()"
                                     name="mamad"
+                                    required
                                     ng-model="vm.card.mamad">
                                 <option>כן</option>
                                 <option>לא</option>
@@ -405,6 +412,7 @@
                         <div class="col-sm-9">
                             <select class="form-control" placeholder="מצב הדירה"
                                     name="renovated"
+                                    required
                                     ng-change="getrenovated(vm.card.renovated)"
                                     ng-model="vm.card.renovated">
                                 <option>כחדשה</option>
@@ -560,6 +568,18 @@
                                            class="form-control"
                                            ng-model="vm.card.contactPerson">
                                 </div>
+                            </div>
+                            <div>
+
+                                <span style="color:lightcoral">
+                                    כל נתוני התקשורות אינם חובה מתוך כיבוד שמירת הפרטיות
+                                    <br>
+                                    שליחת ההודעה תהיה מהמייל של האתר וכן באמצעות
+                                    <br>
+                                    מערכת מספרים אוטומטית 1900
+                                    <br>
+                                    מתווכים צריכים להשאיר מספר פרטי התקשרות
+                                </span>
                             </div>
                         </div>
                     </div>

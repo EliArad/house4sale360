@@ -419,7 +419,13 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                         break;
                 }
 
-                vm.cards[i].numberofrooms = vm.cards[i].numberofrooms.toString();
+                try {
+                    vm.cards[i].numberofrooms = vm.cards[i].numberofrooms.toString();
+                }
+                catch (err)
+                {
+                    console.log(err)
+                }
                 vm.cards[i].floor = vm.cards[i].floor.toString();
                 vm.cards[i].fromfloor = vm.cards[i].fromfloor.toString();
 
@@ -968,6 +974,22 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                     return vm.cities[i];
                 }
             }
+        }
+
+        $scope.SavePrivacyCode = function(item)
+        {
+            //console.log(item.privacyPassword);
+            //console.log(item.privacyEnabled);
+            var data = {
+                tablename:'sellhousedetails',
+                privacyPassword : item.privacyPassword,
+                id: item.id,
+                privacyEnabled:item.privacyEnabled
+
+            }
+            dboperations.SavePrivacyCode(data).then(function (result) {
+
+            });
         }
 
         $scope.getcity = function (selectedItem, index) {

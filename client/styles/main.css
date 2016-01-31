@@ -170,7 +170,7 @@ body {
 
 .ui-select-bootstrap > .ui-select-match > .btn {
     text-align: right !important;
-    direction: rtl;
+    direction: ltr;
     background-color: white;
     color: black;
 }
@@ -182,6 +182,8 @@ body {
 .ui-select-bootstrap > .ui-select-match > .btn > span.pull-left {
     float: right !important;
 }
+
+
 
 .h_iframe {
     position: relative;
@@ -259,3 +261,7 @@ body {
 }
 
 
+.pointer
+{
+    cursor: pointer;
+}

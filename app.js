@@ -98,6 +98,8 @@ mkdirp('./uploadvideo/', function (err) {
 //console.log(__dirname);
 
 
+app.use(require('prerender-node').set('prerenderToken', 'm5l7gsCs5aJ1DhNp43Fy'));
+
 //var notifyServerModule = require('./server/modules/MailNotify');
 //var notifyServer = new notifyServerModule(io, lastonlineModel, usersFunction, membersModel.membersModel);
 

@@ -32,7 +32,7 @@ var app = angular
         //"url": "http://192.168.22.32:8000",
         //"url": "http://80.178.121.130",
         //"url": "http://80.178.121.130",
-        "url": 'http://apt360.co.il',
+        "url": 'http://www.apt360.co.il',
         //"url": "http://apt360.co.il",
         //"url": "http://localhost:8000",
         //"url": "http://192.168.22.28:8000",
@@ -41,3 +41,8 @@ var app = angular
         'idletimeSeconds': 1100,
         "MaxPicturesForMember": 14
     })
+
+app.config(function($locationProvider) {
+    //$locationProvider.html5Mode(true);
+    $locationProvider.hashPrefix('!');
+});

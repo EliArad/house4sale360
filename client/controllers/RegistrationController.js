@@ -56,8 +56,10 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
 
                     $scope.showRegistration = false;
 
+                    var email = vm.user.email.toLowerCase();
+
                     var mailParams = {
-                        to: vm.user.email
+                        to: email
                     };
                     //general.sendMail(mailParams);
 
@@ -93,12 +95,16 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
         vm.submit = function (isValid) {
 
             if ($scope.passStrength < 100) {
-                // vm.message = 'password strength should be 100';
-                //return;
+                $scope.showerrormessage = true;
+                $scope.messagetoshow = 'חוזק הססמא צריל להיות 100.';
+                $scope.messagetoshow += 'השתמש באות גדולה אחת לפחות'
+                $scope.messagetoshow += 'השתמש באחד מהסימנים !@#$%^&*';
+                return;
             }
 
             if (isValid) {
                 vm.showwaitcircle = true;
+                vm.user.email = vm.user.email.toLowerCase();
                 $scope.save(vm.user);
             }
         }

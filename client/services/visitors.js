@@ -8,6 +8,11 @@ app.factory("visitors", function ($cookies, $http, myConfig) {
         return (S4() + S4() + "-" + S4() + "-4" + S4().substr(0, 3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
     }
 
+
+    function getContactusMessages()
+    {
+        return $http.get(myConfig.url + "/api/general/getContactusMessages");
+    }
     function getAllVisitors()
     {
         return $http.get(myConfig.url + "/api/general/getallvisitors");
@@ -68,7 +73,8 @@ app.factory("visitors", function ($cookies, $http, myConfig) {
         initLocation: initLocation,
         determineVisit: determineVisit,
         getAllVisitors:getAllVisitors,
-        saveVisitorSearch:saveVisitorSearch
+        saveVisitorSearch:saveVisitorSearch,
+        getContactusMessages:getContactusMessages
     }
 
 });

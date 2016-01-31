@@ -8,6 +8,40 @@ module.exports = function (sqlserver) {
 
     return {
 
+
+        GetAllMyResults: function (req, res, next) {
+            sqlserver.get(function (err, con) {
+                if (!err) {
+
+                    var sql = 'SELECT sellhousedetails.*, users.*, salehouseblobs.* FROM yad2vr.sellhousedetails\
+                    inner join users\
+                    on users.id = sellhousedetails.userid\
+                    LEFT JOIN salehouseblobs\
+                    ON salehouseblobs.tableid = sellhousedetails.id\
+                    WHERE sellhousedetails.userid = 79'
+                    var query = con.query(sql, function (err, rows) {
+                        if (err) {
+                            return res.sendStatus(500);
+                        } else {
+                            for (var i = 0; i < rows.length; i++) {
+                                delete rows[i].email;
+                                delete rows[i].homephone;
+                                delete rows[i].secondarycellphone;
+                                delete rows[i].secondarycellphone;
+                                delete rows[i].officephone;
+                                delete rows[i].primarycellphone;
+                                delete rows[i].contactPerson;
+                            }
+                            return res.send(rows);
+                        }
+                    });
+                } else {
+                    return res.sendStatus(500);
+                }
+            });
+
+        },
+
         GetHouseQueryResults: function (req, res, next) {
             sqlserver.get(function (err, con) {
                 if (!err) {

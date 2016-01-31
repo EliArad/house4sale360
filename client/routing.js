@@ -67,6 +67,12 @@ app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', function($s
     url: '/help',
     controller: 'helpController',
     templateUrl: '/client/views/help.html'
+  }).state('admincontactus', {
+    url: '/admincontactus',
+    templateUrl: '/client/views/admincontactus.html'
+  }).state('mypage', {
+    url: '/mypage',
+    templateUrl: '/client/views/mypage.html'
   });
 
 

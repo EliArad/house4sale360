@@ -24,7 +24,22 @@ dbServer.prototype = function () {
     {
         con.release();
         connum--;
+        //console.log('released : '  + connum);
     },
+
+    pool.on('connection', function (connection) {
+        //connection.query('SET SESSION auto_increment_increment=1')
+        console.log('new sql connection');
+    });
+
+    pool.on('enqueue', function () {
+        console.log('Waiting for available connection slot');
+    });
+
+    pool.on('error', function (err) {
+        console.log('connum:' + connum);
+        callback(err,null);
+    });
 
     get = function (callback) {
 
@@ -32,10 +47,7 @@ dbServer.prototype = function () {
 
             connum++;
             callback(err,connection);
-            connection.on('error', function (err) {
-                console.log('connum:' + connum);
-                callback(err,null);
-            });
+
         });
     }
     return {

@@ -376,6 +376,7 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
 
 
                 vm.cards[i].shownapa = true;
+                
 
                 var streetName = vm.cards[i].street;
                 var x1 = {
@@ -996,6 +997,20 @@ app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCooki
                     return vm.cities[i];
                 }
             }
+        }
+
+        $scope.SavePrivacyCode = function(item)
+        {
+            var data = {
+                tablename:'renthousedetails',
+                privacyPassword : item.privacyPassword,
+                id: item.id,
+                privacyEnabled:item.privacyEnabled
+
+            }
+            dboperations.SavePrivacyCode(data).then(function (result) {
+
+            });
         }
 
         $scope.getcity = function (selectedItem, index) {

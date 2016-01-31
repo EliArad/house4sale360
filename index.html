@@ -3,8 +3,17 @@
 
 <head>
     <meta charset="utf-8">
-    <title></title>
-    <meta name="description" content="">
+    <title>Apt 360 חיפוש דירות ב 360</title>
+    <meta name="description" content="חיפוש דירות להשכרה ומכירה באתר חדשני עם תמונות ב 360 מעלות, virtual reality , סיור וירטואלי בבית ועוד">
+    <meta name="fragment" content="!">
+    <meta charset="UTF-8">
+    <meta name="keywords" content="דירות להשכרה,דירות למכירה,חיפוש דירות ב360,
+    מנוע חיפוש דירות חדשני, כלי חיפוש למתווכים,חיפוש דירות במשקפת VR, חיפוש דירות מהנייד,
+    פרסום מודעות לדירות להשכרה בגל סוגי המדיה">
+    <meta name="author" content="apt360">
+    <base href="/">
+
+
     <!--<meta name="viewport" content="width=device-width">-->
     <meta name="viewport"
           content="width=device-width,
@@ -23,6 +32,10 @@
     <script src="client/js/lib/tdvplayer.js"></script>
     <script src="client/js/lib/player.js"></script>
 
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+
+
 
     <link rel="stylesheet" href="client/styles/loginscreen.css"/>
     <link rel="stylesheet" href="client/styles/main.css">
@@ -40,19 +53,25 @@
     <link rel="stylesheet" href="bower_components/bootstrap-rtl/dist/css/bootstrap-rtl.min.css"/>
 
 
-    <link rel="stylesheet" href="bower_components/ui-select/dist/select.min.css"/>
-
+    <script type="text/javascript" src="client/js/bootstrap-multiselect.js"></script>
+    <link rel="stylesheet" href="client/styles/bootstrap-multiselect.css" type="text/css"/>
 
     <link rel="stylesheet" href="client/styles/animate.css"/>
-    <link rel="stylesheet" href="bower_components/angular-motion/dist/angular-motion.min.css"/>
+    <link rel="stylesheet" href="client/styles/styles.css">
     <link rel="stylesheet" href="client/styles/picturesstyle.css">
     <link rel="stylesheet" href="client/styles/responsivemail.css">
-    <link rel="stylesheet" href="bower_components/jquery-ui/themes/base/jquery-ui.min.css"/>
+    <link rel="stylesheet" href="client/styles/navbar.css"/>
+    <link rel="stylesheet" href="client/styles/font-awesome.min.css">
     <link rel="stylesheet" href="client/styles/bootstrapautogrid.css"/>
+    <link rel="stylesheet" href="client/styles/last.css"/>
+    <link rel="stylesheet" href="client/styles/fontrules.css">
+    <link rel="stylesheet" href="client/styles/badgebox.css">
 
     <link rel="stylesheet" href="client/styles/navbar.css"/>
 
-    <link rel="stylesheet" href="client/styles/font-awesome.min.css">
+    <link rel="stylesheet" href="bower_components/ui-select/dist/select.min.css"/>
+    <link rel="stylesheet" href="bower_components/angular-motion/dist/angular-motion.min.css"/>
+    <link rel="stylesheet" href="bower_components/jquery-ui/themes/base/jquery-ui.min.css"/>
     <link rel="stylesheet" href="bower_components/angular-carousel/dist/angular-carousel.min.css"/>
     <link rel="stylesheet" href="bower_components/bootstrap-vertical-tabs/bootstrap.vertical-tabs.min.css">
 
@@ -125,7 +144,6 @@
 
 <script src="bower_components/moment/moment.js"></script>
 
-    <script src="bower_components/moment/moment.js"></script>
 
 <script src="client/vr/PhotoSphereViewer/photo-sphere-viewer.min.js"></script>
 <script src="client/vr/PhotoSphereViewer/three.min.js"></script>
@@ -141,10 +159,10 @@
 <link rel="stylesheet" type="text/css" href="client/vr/valiant360/css/valiant360.css"/>
 <script src="bower_components/angular/angular.min.js"></script>
 
-    <script src="client/vr/valiant360/jquery.valiant360.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="client/vr/valiant360/css/valiant360.css" />
-    <script src="bower_components/angular/angular.min.js"></script>
 
+
+
+<script src="bower_components/angular/angular.min.js"></script>
 <script src="bower_components/ui-select/dist/select.min.js"></script>
 
 <!--<script src="node_modules/socket.io-client/socket.io.js"></script>-->
@@ -162,7 +180,9 @@
 <script src="bower_components/angular-swipe/dist/angular-swipe.min.js"></script>
 <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
 
-    <script src="bower_components/ui-select/dist/select.min.js"></script>
+
+
+
 
 <script src="bower_components/ng-password-strength/dist/scripts/ng-password-strength.min.js"></script>
 
@@ -207,6 +227,7 @@
 <script src="client/controllers/RegistrationController.js"></script>
 <script src="client/controllers/AboutController.js"></script>
 <script src="client/controllers/MainController.js"></script>
+<script src="client/controllers/mypageController.js"></script>
 <script src="client/controllers/renthouseController.js"></script>
 <script src="client/controllers/salehouseController.js"></script>
 <script src="client/controllers/renthouseController.js"></script>
@@ -218,6 +239,8 @@
 <script src="client/controllers/contactusController.js"></script>
 <script src="client/controllers/adminController.js"></script>
 <script src="client/controllers/vrController.js"></script>
+<script src="client/controllers/admincontactusController.js"></script>
+
 <!--<script src="client/controllers/virtualTourController.js"></script>-->
 
 
@@ -265,9 +288,11 @@
 
 <script src="bower_components/angularjs-scroll-glue/src/scrollglue.js"></script>
 
-
+<!--
 <link rel="stylesheet" href="client/styles/bootstrap-switch.min.css"/>
 <script src="client/js/bootstrap-switch.min.js"></script>
+-->
+
 
 
 <!--  JQuery plugins-->
