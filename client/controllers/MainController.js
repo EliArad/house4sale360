@@ -122,9 +122,10 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             window.location.reload(true);
         }
 
-        $('#switch-change').on('switchChange.bootstrapSwitch', function (event, state) {
-            $scope.virtualSearch = state;
-        });
+
+        //$('#switch-change').on('switchChange.bootstrapSwitch', function (event, state) {
+          //
+        //});
 
         vm.cities = citiesservice.getcities_all_ready();
         vm.citiesOnly = citiesservice.getcities_ready();
@@ -137,6 +138,33 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
             vm.citiesSelected.splice(index, 1);
         }
+
+        $scope.getparking = function (s) {
+
+            switch (s) {
+                case 'לא משנה לי':
+                    $scope.shoparkingoptions = false;
+                    break;
+                case 'לפחות אחת':
+                case 'לפחות שתיים':
+                case 'לפחות שלוש':
+                    $scope.shoparkingoptions = true;
+                    break;
+            }
+
+            switch (s) {
+                case 'לא משנה לי':
+                case 'לפחות אחת':
+                    $scope.shoparkingoptions2 = false;
+                    break;
+                case 'לפחות שתיים':
+                case 'לפחות שלוש':
+                    $scope.shoparkingoptions2 = true;
+                    break;
+            }
+
+        }
+
 
         function setDefaultSearch() {
             if (vm.search.agent == undefined) {
@@ -240,7 +268,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 communication.openAdvancedSearch(false);
             } else {
 
-                ShowResults();
+                ShowResults(false);
             }
 
         });
@@ -499,7 +527,8 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
         function ShowResults(fast)
         {
-            if (vm.citiesSelected.length == 0) {
+
+            if (vm.citiesSelected.length == 0 && fast == false) {
                 vm.msgboxcontent = 'בחר עיר אחת לפחות';
                
 
@@ -544,8 +573,16 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
             console.log(vm.search);
             var search = angular.copy(vm.search);
-            if (fast == false)
+            if (fast == false) {
                 search.city = vm.citiesSelected;
+            } else {
+                search.city = [];
+                var o = {
+                    name:vm.search.city
+                }
+                search.city.push(o);
+                console.log(search.city);
+            }
             search.propertyType = vm.search.propertyType;
             search.renovated = vm.search.renovated;
             search.toprice = vm.search.toprice;
@@ -739,6 +776,8 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                     card.showregularvideo = false;
                     card.show360video = false;
                     card.show3dtour = value[0].show;
+                    if (card.show3dtour == undefined)
+                        card.show3dtour = false;
                     card.videoExists = false;
                     card.slides = [];
                     card.hideheader = false;
@@ -798,7 +837,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                             //console.log(imgsrc);
                             card.slides.push({
                                 image: imgsrc,
-                                text: 'rrrr'
+                                text: ''
                             });
                         }
                     }

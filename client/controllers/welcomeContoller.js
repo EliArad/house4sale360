@@ -78,7 +78,7 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
             var s = JSON.stringify(vm.search);
             $cookies.put('apt360fastsearch', s ,{expires: cexp});
 
-            ressearch = $cookies.get('apt360fscsel');
+            var ressearch = $cookies.get('apt360fscsel');
 
             if (ressearch != undefined)
                 vm.citiesSelected = JSON.parse(ressearch);
