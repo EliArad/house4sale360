@@ -83,15 +83,22 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
                     });
                 },
                 function (err) {
-                    if (err.data.error.code == 'ER_DUP_ENTRY') {
-                        vm.showwaitcircle = false;
-                        vm.errormessage = 'שגיאה - יש אמייל כבר רשום';
-                        $('#myModal').modal('show');
-                    } else {
-                        vm.showwaitcircle = false;
-                        alert(err);
+                    try {
+                        if (err.data.error.code == 'ER_DUP_ENTRY') {
+                            vm.showwaitcircle = false;
+                            vm.errormessage = 'שגיאה - יש אמייל כבר רשום';
+                            $('#myModal').modal('show');
+                        } else {
+                            vm.showwaitcircle = false;
+                            alert(err);
+                        }
                     }
-                    
+                    catch (e)
+                    {
+                        vm.showwaitcircle = false;
+                        $scope.showerrormessage = true;
+                        $scope.messagetoshow = err.data;
+                    }
                 });
         };
 
