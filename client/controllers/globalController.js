@@ -13,9 +13,9 @@ app.controller('GlobalController', ['$scope', '$state', 'authToken', 'PassServic
         SchonotBackg.getStreets(3000);
 
 
-        var socket = io.connect('80.178.121.130');
+        //var socket = io.connect('80.178.121.130');
 
-        citiesservice.getcities(function (err, result) {
+        citiesservice.getcitiesatonce(function (err, result) {
 
         });
         visitors.initLocation();

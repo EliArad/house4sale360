@@ -143,6 +143,7 @@ var routes = function (app, sqlserver,mailer) {
 
     app.get('/api/getcities', function (req, res, next) {
 
+        console.log('getcities');
         cityLoader.basic(function (err, data) {
             if (err) {
                 console.log(err);
@@ -152,8 +153,20 @@ var routes = function (app, sqlserver,mailer) {
                 for (var i = 0; i < data.length; i++) {
                     cities.push(data[i]);
                 }
-                //console.log(cities);
+               
                 res.send(s.toString());
+            }
+        });
+    });
+
+    app.get('/api/getcitiesatonce', function (req, res, next) {
+
+        cityLoader.basic(function (err, data) {
+            if (err) {
+                console.log(err);
+                return res.status(500).send({error: err});
+            } else {
+                res.send(data);
             }
         });
     });

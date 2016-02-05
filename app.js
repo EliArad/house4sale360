@@ -39,7 +39,7 @@ var gbot = require('./server/common/googlebot')(app);
 
 var http = require('http');
 var server = http.createServer(app);
-var io = require('socket.io')(server);
+//var io = require('socket.io')(server);
 
 /*
 app.use(function (req, res, next) {
@@ -481,6 +481,7 @@ app.get('/resetpassword', function (req, res) {
 
 
 var count = 0
+/*
 io.on('connection', function(client) {
     count++;
     console.log("Users online: " + count);
@@ -488,7 +489,7 @@ io.on('connection', function(client) {
         count--;
     })
 })
-
+*/
 app.get( '/*', function( req, res ) {
     return res.sendfile('./index.html');
 })

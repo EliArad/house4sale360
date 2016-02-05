@@ -116,9 +116,10 @@
             <label class="control-label col-sm-3" for="yearsofproperty">גיל הנכס</label>
 
             <div class="col-sm-9">
-                <input type="number" ng-max="100" name="yearsofproperty" required
+                <input type="number" ng-max="150" name="yearsofproperty" required
                        placeholder="כמה שנים הנכס קיים בשנים" class="form-control"
                        ng-model="item.yearsofproperty">
+                <span style="color:red" ng-show="form.yearsofproperty.$error.max">גיל הנכס גדול מ 150</span>
             </div>
         </div>
         <div class="form-group">

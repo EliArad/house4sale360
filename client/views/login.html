@@ -17,7 +17,11 @@
                 </div>
                 <div class="form-actions">
                     <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">Login</button>
-                    <a href="#/register" class="btn btn-link">הרשם</a>
+                    <a ui-sref="register" class="btn btn-link">הרשם</a>
+                    <a  ng-click="ForgetPassword()" class="btn btn-link">שכחתי ססמא</a>
+                </div>
+                <div>
+                    <span ng-show="notifyUserMsg !=''">{{notifyUserMsg}}</span>
                 </div>
                 <div>
                     <h1  id="loginfailureid" ng-show="loginfailure" ng-class="{ 'animated bounce': loginfailure}">כניסה שגויה</h1></h1>

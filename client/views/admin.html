@@ -9,6 +9,7 @@
                 <td>Guid</td>
                 <td>Date</td>
                 <td>Count</td>
+                <td>IP</td>
                 </thead>
                 <tr ng-repeat="visitor in vm.visitors">
                     <td>
@@ -28,6 +29,9 @@
                     </td>
                     <td>
                         {{ visitor.count }}
+                    </td>
+                    <td>
+                        {{ visitor.ip }}
                     </td>
                 </tr>
             </table>

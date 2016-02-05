@@ -109,7 +109,6 @@
     </div>
 
 
-
     <a ui-sref="addnewsalehouse">הוסף חדש</a>
 
 
@@ -179,7 +178,7 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label for="default" class="btn btn-primary">אשר לכולם לראות את הסיור
-                                                הוירטואלי, תמונות 360 ווידאן 360<input ng-model="item.privacyEnabled == 1?true :false"
+                                                הוירטואלי, תמונות 360 ווידאן 360<input ng-model="item.privacyEnabled"
                                                                                        type="checkbox" id="default"
                                                                                        class="badgebox"><span
                                                         class="badge">&check;</span></label>
@@ -215,7 +214,6 @@
                             <div class="panel-body">
                                 <div id="panelcontent{{ item.id }}" ng-show="vm.uuu[item.id]"
                                      ng-include="'/client/templates/salehousepanelbody.html'">
-
                                 </div>
                             </div>
                         </div>

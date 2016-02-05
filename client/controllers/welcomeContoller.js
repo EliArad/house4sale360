@@ -13,9 +13,17 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
         $scope.iframeFullScreen = false;
         $scope.mobile = general.isMobile();
 
+        function citiesLoaderCallback(data, citiesOnly)
+        {
+            vm.cities = angular.copy(data);
+            vm.citiesOnly = angular.copy(citiesOnly);
+        }
+        citiesservice.registerCitiesLoaded(citiesLoaderCallback);
 
         vm.cities = citiesservice.getcities_all_ready();
         vm.citiesOnly = citiesservice.getcities_ready();
+
+
         vm.numberOfRooms = ['הכל', 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 9, 10, 'יותר מעשרה'];
         var cexp = general.getCookieExp();
 

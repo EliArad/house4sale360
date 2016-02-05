@@ -10,10 +10,50 @@ app.factory("citiesservice", ['$http', '$q','myConfig',
 
             return citiesDataOnly;
         }
+        var citiesLoaderCallback = [];
+
+        function registerCitiesLoaded(callback)
+        {
+            citiesLoaderCallback.push(callback);
+        }
 
         function getcities_all_ready() {
 
             return citiesDataAll;
+        }
+
+        function getcitiesatonce(callback) {
+            if (inaction == true) {
+                callback('inprocess', citiesDataAll);
+                return;
+            }
+
+            var url = myConfig.url + '/api/getcitiesatonce';
+            $http.get(url).then(function (result) {
+                citiesDataAll = angular.copy(result.data);
+                for (var j = 0; j < (result.data.length); j++) {
+                    try {
+                        //console.log(result.data[j].city);
+                        citiesDataOnly[j] = (result.data[j].city);
+                    }
+                    catch (e) {
+                        console.log(e);
+                    }
+                }
+                if (citiesLoaderCallback != [])
+                {
+                    for (var i = 0 ; i < citiesLoaderCallback.length; i++) {
+                        citiesLoaderCallback[i](citiesDataAll, citiesDataOnly);
+                    }
+                }
+                //console.log(citiesDataAll);
+                callback(null, citiesDataAll);
+            }).catch(function (result) {
+                citiesDataAll = [];
+                //console.log('error get cities');
+                callback('error', result);
+                inaction = false;
+            });
         }
 
         function getcities(callback) {
@@ -37,7 +77,8 @@ app.factory("citiesservice", ['$http', '$q','myConfig',
                             console.log('error happend');
                             return;
                         }
-                        chunk = Math.min(100, size);
+                        //chunk = Math.min(50, size);
+                        chunk = size;
                         size -= chunk;
                         //console.log('size:' + size);
                         url = myConfig.url + '/api/getcitieschunk';
@@ -93,7 +134,9 @@ app.factory("citiesservice", ['$http', '$q','myConfig',
         return {
             getcities: getcities,
             getcities_ready: getcities_ready,
-            getcities_all_ready: getcities_all_ready
+            getcities_all_ready: getcities_all_ready,
+            getcitiesatonce:getcitiesatonce,
+            registerCitiesLoaded:registerCitiesLoaded
         }
     }
 ]);

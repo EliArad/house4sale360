@@ -127,8 +127,16 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
           //
         //});
 
+        function citiesLoaderCallback(data, citiesOnly)
+        {
+            vm.cities = angular.copy(data);
+            vm.citiesOnly = angular.copy(citiesOnly);
+        }
+
+        citiesservice.registerCitiesLoaded(citiesLoaderCallback);
         vm.cities = citiesservice.getcities_all_ready();
         vm.citiesOnly = citiesservice.getcities_ready();
+
 
 
         $scope.removeSchonaFromList = function (index) {
