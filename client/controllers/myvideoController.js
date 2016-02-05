@@ -1,8 +1,8 @@
 'use strict';
 
 app.controller('myvideoController', ['$scope','$state', 'authToken','myhttphelper',
-               '$sce','fileReader','$window','video','API','SessionStorageService','versionReloader',
-  function($scope,$state, authToken,myhttphelper,$sce,fileReader,$window,video,API,SessionStorageService,versionReloader)
+               '$sce','fileReader','$window','video','SessionStorageService','versionReloader',
+  function($scope,$state, authToken,myhttphelper,$sce,fileReader,$window,video,SessionStorageService,versionReloader)
   {
     var vm = this;
     $scope.pageClass = 'page-home';

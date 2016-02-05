@@ -1,13 +1,13 @@
 'use strict';
 
 
-app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCookieStore', '$window',
-    '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope', 'API',
+app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$window',
+    '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope',
     'SessionStorageService', '$cookieStore', 'dboperations', 'fileReader', '$sce', 'citiesservice',
     'versionReloader','SchonotBackg',
-    function ($scope, Members, general, appCookieStore, $window,
+    function ($scope, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
-              $state, myhttphelper, $rootScope, API, SessionStorageService,
+              $state, myhttphelper, $rootScope, SessionStorageService,
               $cookieStore, dboperations, fileReader, $sce,
               citiesservice, versionReloader,SchonotBackg) {
 
@@ -364,7 +364,9 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
 
 
                 vm.cards[i].shownapa = true;
+
                 //console.log(vm.cards[i].code);
+                //console.log(vm.cards[i]);
 
                 var streetName = vm.cards[i].street;
                 var x1 = {
@@ -823,17 +825,15 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                 vm.video360 = [];
                 vm.video360index = 0;
 
-
                 if (result.data.rows.length > 0) {
 
                 }
 
                 for (var i = 0; i < result.data.rows.length; i++) {
                     var imgsrc = './upload360video/' + result.data.userid + '/salehouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
-                    if (i == 0) {
+                    //console.log(imgsrc);
+                    if (i == 0)
                         load360Video(imgsrc, result.data.rows[i].tableid);
-                        console.log(imgsrc);
-                    }
                     vm.video360index++;
                 }
 
@@ -850,7 +850,6 @@ app.controller('salehouseController', ['$scope', 'Members', 'general', 'appCooki
                 'is360video': true,
                 filesize:file.size
             };
-
 
             myhttphelper.doPost('/api/uploadvideo', data).
                 then(function (res) {

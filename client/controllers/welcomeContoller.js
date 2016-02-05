@@ -1,13 +1,14 @@
 'use strict';
 
 app.controller('welcomeController', ['$scope', '$state', 'authToken',
-               'versionReloader','citiesservice','$cookies','general','communication','visitors',
-    function ($scope, $state, authToken,versionReloader,citiesservice,$cookies,general,communication,visitors)
-    {
+    'versionReloader', 'citiesservice', '$cookies', 'general', 'communication', 'visitors', '$q', '$timeout',
+    function ($scope, $state, authToken, versionReloader,
+              citiesservice, $cookies, general, communication, visitors, $q, $timeout) {
         var vm = this;
 
-        vm.search = {};
+        var start = new Date().getTime();
 
+        vm.search = {};
         $scope.showmessagetype = true;
         $scope.iframeFullScreen = false;
         $scope.mobile = general.isMobile();
@@ -21,22 +22,12 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
         vm.citiesSelected = [];
 
         versionReloader.addPage(reloadFunction);
-        function reloadFunction()
-        {
+        function reloadFunction() {
             window.location.reload(true);
         }
 
-        var ressearch = $cookies.get('apt360fastsearch');
-        if (ressearch != undefined)
-            vm.search = JSON.parse(ressearch);
 
-        $('#selectPropertyType').multiselect('select', vm.search.propertyType);
-
-
-
-
-        $scope.togleFullScreenTour = function()
-        {
+        $scope.togleFullScreenTour = function () {
             if ($scope.iframeFullScreen == false) {
                 $scope.iframeFullScreen = true;
                 document.getElementById('Idiframetour3d').className = 'col-md-12';
@@ -49,9 +40,7 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
         }
 
 
-
-        $scope.AdvancedSearch = function()
-        {
+        $scope.AdvancedSearch = function () {
             communication.setFastSearch(false);
             communication.openAdvancedSearch(true);
             $state.go('main', {}, {
@@ -59,24 +48,22 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
             });
         }
 
-        $scope.onFastSearch = function()
-        {
+        $scope.onFastSearch = function () {
 
-            if (vm.search.propertyType == undefined)
-            {
+            if (vm.search.propertyType == undefined) {
                 document.getElementById('protypeid').style.color = "red";
                 document.getElementById('protypeid').className = 'animated pulse';
                 document.getElementById('protypeid').innerHTML = "בחר סוג הנכס";
-                setTimeout(function(){
+                setTimeout(function () {
                     document.getElementById('protypeid').className = '';
                     document.getElementById('protypeid').style.color = "black";
                     document.getElementById('protypeid').innerHTML = "סוג הנכס";
-                },3000)
+                }, 3000)
                 return;
             }
 
             var s = JSON.stringify(vm.search);
-            $cookies.put('apt360fastsearch', s ,{expires: cexp});
+            $cookies.put('apt360fastsearch', s, {expires: cexp});
 
             var ressearch = $cookies.get('apt360fscsel');
 
@@ -87,7 +74,7 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
 
             var pstr = '';
             var index = 0;
-            vm.search.propertyType.forEach(function(t){
+            vm.search.propertyType.forEach(function (t) {
                 if (index > 0)
                     pstr += ',';
                 else {
@@ -96,17 +83,17 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
                 index++;
             });
 
-            var  userSearch = {
+            var userSearch = {
                 city: vm.search.city,
                 type: vm.search.messagetype,
                 propertytype: pstr,
                 userguid: userguid,
-                numofrooms: vm.search.numberofrooms,
+                numofrooms: vm.search.numberofrooms
             }
 
-            visitors.saveVisitorSearch(userSearch).then(function(result){
+            visitors.saveVisitorSearch(userSearch).then(function (result) {
 
-            }).catch(function(result){
+            }).catch(function (result) {
 
             })
 
@@ -118,8 +105,7 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
 
 
         }
-        function load360Video(fileName)
-        {
+        function load360Video(fileName) {
             // initialize plugin, default options shown
             var options = {
                 crossOrigin: 'anonymous',   // valid keywords: 'anonymous' or 'use-credentials'
@@ -144,7 +130,6 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
             $scope.myInterval = 4000;
             $scope.noWrapSlides = false;
         }
-        initcrousle();
 
 
         $(document).ready(function () {
@@ -153,37 +138,87 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
             if (ressearch != undefined)
                 vm.search = JSON.parse(ressearch);
 
-            initcrousle();
+
             try {
                 $('#selectPropertyType').multiselect('select', vm.search.propertyType);
 
-                if ($scope.mobile == false)
-                    load360Video();
-                loadPhotoScphere('welcome360imageid', '400px', './uploadimages/welcome360.jpg');
+                if ($scope.mobile == false) {
+                    var promise1 = load360VideoAsync()
+                        .then(function (string) {
+                            console.log('then: ' + string);
+                    });
+                }
+
+                var promise2 = loadPhotoSphereAsync()
+                    .then(function (string) {
+                        console.log('then: ' + string);
+                });
+
+                var promise3 = loadCarouselSlidesAsync()
+                    .then(function (string) {
+                        console.log('then: ' + string);
+                    });
+
+
+                var end = new Date().getTime();
+                var time = end - start;
+                console.log('Welcome execution time: ' + time);
+
+
             }
-            catch (e)
-            {
+            catch (e) {
                 console.log(e);
                 //location.reload();
                 return;
             }
         });
 
+        function load360VideoAsync() {
+            var defer = $q.defer()
 
+            // simulated async function
+            $timeout(function () {
+                initcrousle();
+                load360Video();
+                defer.resolve('video 360 loaded');
+            }, 1);
+            return defer.promise;
+        }
 
-        $scope.slides = [];
-        var welcomeImage = ['1.jpg','2.jpg','3.jpg','4.jpg'];
-        for (var i = 0 ; i < welcomeImage.length; i++) {
-            var imgsrc = './uploadimages/welcome/' + welcomeImage[i];
-            $scope.slides.push({
-                image: imgsrc,
-                text: ''
-            });
+        function loadPhotoSphereAsync() {
+            var defer = $q.defer();
+
+            // simulated async function
+            $timeout(function () {
+                loadPhotoSphere('welcome360imageid', '400px', './uploadimages/welcome360.jpg');
+                defer.resolve('Image 360 loaded');
+            }, 1);
+            return defer.promise;
         }
 
 
-        function loadPhotoScphere(divid, hight, filename)
-        {
+        function loadCarouselSlidesAsync() {
+
+            var defer = $q.defer();
+
+            $timeout(function () {
+
+                $scope.slides = [];
+                var welcomeImage = ['1.jpg', '2.jpg', '3.jpg', '4.jpg'];
+                for (var i = 0; i < welcomeImage.length; i++) {
+                    var imgsrc = './uploadimages/welcome/' + welcomeImage[i];
+                    $scope.slides.push({
+                        image: imgsrc,
+                        text: ''
+                    });
+                }
+                defer.resolve('Slides were loaded');
+            }, 1);
+            return defer.promise;
+        }
+
+
+        function loadPhotoSphere(divid, hight, filename) {
 
             var PSV = new PhotoSphereViewer({
                 // Panorama, given in base 64

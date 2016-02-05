@@ -43,8 +43,9 @@ module.exports = function (sqlserver) {
          * Create a member
          */
 
-        create: function (req, res) {
-            console.log('create new user');                    
+        create: function (req, res, next) {
+            console.log('create new user');
+
             sqlserver.get(function (err, con) {
                 if (!err) {
                     mypasswordhash.encrypt(req.body.password, function (err, hash) {
@@ -55,6 +56,8 @@ module.exports = function (sqlserver) {
                             randomGuid = guid.create();
                             req.body.userguid = randomGuid;
                             req.body.host = "http://" + req.get('host');
+                            delete req.body.confirmPassword;
+
                             var query = con.query('INSERT INTO users SET ?', req.body, function (err, result) {
                                 sqlserver.release(con);
                                 if (err) {
@@ -70,7 +73,7 @@ module.exports = function (sqlserver) {
                                     }
 
                                     var token = jwt.sign(payload, secret, {
-                                        expiresInMinutes: 60 * 5
+                                        expiresIn: '2 days'
                                     });
                                     res.json({
                                         token: token

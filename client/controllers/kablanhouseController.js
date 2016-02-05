@@ -2,11 +2,11 @@
 
 
 app.controller('kablanhouseController', ['$scope', 'Members', 'general', 'appCookieStore', '$window',
-    '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope', 'API',
+    '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope',
     'SessionStorageService', '$cookies', 'dboperations', 'fileReader', '$sce', 'citiesservice','versionReloader',
     function ($scope, Members, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
-              $state, myhttphelper, $rootScope, API, SessionStorageService,
+              $state, myhttphelper, $rootScope, SessionStorageService,
               $cookies, dboperations, fileReader, $sce,
               citiesservice,versionReloader) {
 

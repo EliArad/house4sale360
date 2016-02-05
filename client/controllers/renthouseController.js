@@ -1,13 +1,13 @@
 'use strict';
 
 
-app.controller('renthouseController', ['$scope', 'Members', 'general', 'appCookieStore', '$window',
-    '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope', 'API',
+app.controller('renthouseController', ['$scope', 'general', 'appCookieStore', '$window',
+    '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope',
     'SessionStorageService', '$cookieStore', 'dboperations', 'fileReader', '$sce', 'citiesservice',
     'versionReloader','SchonotBackg',
-    function ($scope, Members, general, appCookieStore, $window,
+    function ($scope, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
-              $state, myhttphelper, $rootScope, API, SessionStorageService,
+              $state, myhttphelper, $rootScope, SessionStorageService,
               $cookieStore, dboperations, fileReader, $sce,
               citiesservice, versionReloader,SchonotBackg) {
 

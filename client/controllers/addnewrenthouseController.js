@@ -1,12 +1,12 @@
 'use strict';
 
 
-app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'appCookieStore', '$window',
-    '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope', 'API',
+app.controller('addnewrenthouseController', ['$scope','general', 'appCookieStore', '$window',
+    '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope',
     'SessionStorageService', '$cookies', 'dboperations', 'fileReader', '$sce','citiesservice','versionReloader',
-    function ($scope, Members, general, appCookieStore, $window,
+    function ($scope, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
-              $state, myhttphelper, $rootScope, API, SessionStorageService,
+              $state, myhttphelper, $rootScope, SessionStorageService,
               $cookies, dboperations, fileReader, $sce,citiesservice,versionReloader) {
 
 
@@ -734,8 +734,9 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
         $scope.getcity = function (selectedItem) {
 
 
+
             var objectData = getCityObject(selectedItem);
-            console.log(objectData);
+            //console.log(objectData);
             vm.card.napa = objectData.napa;
             vm.card.code = objectData.code;
             vm.card.city = selectedItem;
@@ -746,13 +747,13 @@ app.controller('addnewrenthouseController', ['$scope', 'Members', 'general', 'ap
                     vm.card.street = '';
                     vm.streets = result.data;
                 })
+                console.log(objectData);
                 general.getSchonot(objectData.code).then(function (result) {
                     vm.card.neighborhood = '';
                     vm.neighborhoods = result.data;
                 })
             }
             lastCity = objectData.code;
-
 
             if (objectData.area == 'merkaz') {
                 $scope.AREA = 'אזור המרכז';

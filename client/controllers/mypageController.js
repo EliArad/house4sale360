@@ -1,14 +1,16 @@
 'use strict';
 
 
-app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelper', 'myutils',
+app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelper',
     'appCookieStore', 'socketioservice', 'Idle', '$rootScope',
-    'SessionStorageService', 'API', 'myConfig', '$http', '$window', '$timeout',
-    'dboperations', 'citiesservice', 'general', '$cookies', '$sce','versionReloader','communication','visitors',
-    function ($scope, $state, authToken, myhttphelper, myutils,
+    'SessionStorageService', 'myConfig', '$http', '$window', '$timeout',
+    'dboperations', 'citiesservice', 'general', '$cookies', '$sce',
+    'versionReloader','communication','visitors',
+    function ($scope, $state, authToken, myhttphelper,
               appCookieStore, socketioservice, Idle, $rootScope, SessionStorageService,
-              API, myConfig, $http, $window, $timeout, dboperations,
+              myConfig, $http, $window, $timeout, dboperations,
               citiesservice, general, $cookies, $sce,versionReloader,communication,visitors) {
+
 
 
         var vm = this;
@@ -182,9 +184,10 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
                 $('#myModal').modal('show');
                 communication.openAdvancedSearch(false);
             } else {
-
                 ShowResults();
             }
+
+
 
         });
 
@@ -633,7 +636,7 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
                         }
                     }
                     //vm.cards.push(card);
-                    console.log('card.show3dtour ' + card.show3dtour);
+                    //console.log('card.show3dtour ' + card.show3dtour);
                     if (card.show3dtour == 1) {
                         setTimeout(function(index){
                             var _src = '/virtualtours/' + userid1 + '/' + tableid + '/tour3dvistaplayer.html';

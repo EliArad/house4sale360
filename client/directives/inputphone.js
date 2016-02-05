@@ -1,50 +1,55 @@
-app.directive('phoneInput', function($filter, $browser) {
-    return {
-        require: 'ngModel',
-        link: function($scope, $element, $attrs, ngModelCtrl) {
-            var listener = function() {
-                var value = $element.val().replace(/[^0-9]/g, '');
-                $element.val($filter('tel')(value, false));
-            };
+app.directive('phoneInput', ['$filter', '$browser',
+    function ($filter, $browser) {
+        return {
+            require: 'ngModel',
+            link: function ($scope, $element, $attrs, ngModelCtrl) {
+                var listener = function () {
+                    var value = $element.val().replace(/[^0-9]/g, '');
+                    $element.val($filter('tel')(value, false));
+                };
 
-            // This runs when we update the text field
-            ngModelCtrl.$parsers.push(function(viewValue) {
-                return viewValue.replace(/[^0-9]/g, '').slice(0,10);
-            });
+                // This runs when we update the text field
+                ngModelCtrl.$parsers.push(function (viewValue) {
+                    return viewValue.replace(/[^0-9]/g, '').slice(0, 10);
+                });
 
-            // This runs when the model gets updated on the scope directly and keeps our view in sync
-            ngModelCtrl.$render = function() {
-                $element.val($filter('tel')(ngModelCtrl.$viewValue, false));
-            };
+                // This runs when the model gets updated on the scope directly and keeps our view in sync
+                ngModelCtrl.$render = function () {
+                    $element.val($filter('tel')(ngModelCtrl.$viewValue, false));
+                };
 
-            $element.bind('change', listener);
-            $element.bind('keydown', function(event) {
-                var key = event.keyCode;
-                // If the keys include the CTRL, SHIFT, ALT, or META keys, or the arrow keys, do nothing.
-                // This lets us support copy and paste too
-                if (key == 91 || (15 < key && key < 19) || (37 <= key && key <= 40)){
-                    return;
-                }
-                $browser.defer(listener); // Have to do this or changes don't get picked up properly
-            });
+                $element.bind('change', listener);
+                $element.bind('keydown', function (event) {
+                    var key = event.keyCode;
+                    // If the keys include the CTRL, SHIFT, ALT, or META keys, or the arrow keys, do nothing.
+                    // This lets us support copy and paste too
+                    if (key == 91 || (15 < key && key < 19) || (37 <= key && key <= 40)) {
+                        return;
+                    }
+                    $browser.defer(listener); // Have to do this or changes don't get picked up properly
+                });
 
-            $element.bind('paste cut', function() {
-                $browser.defer(listener);
-            });
-        }
+                $element.bind('paste cut', function () {
+                    $browser.defer(listener);
+                });
+            }
 
-    };
-});
+        };
+    }
+]);
+
 app.filter('tel', function () {
     return function (tel) {
-        if (!tel) { return ''; }
+        if (!tel) {
+            return '';
+        }
         //console.log(tel);
         var slicsesize = 3;
 
-        var numbers = ['03', '09', '08','04', '02'];
-        numbers.forEach(function(entry){
+        var numbers = ['03', '09', '08', '04', '02'];
+        numbers.forEach(function (entry) {
             n = tel.indexOf(entry);
-            if (n == 0){
+            if (n == 0) {
                 slicsesize = 2;
             }
         });
@@ -71,19 +76,20 @@ app.filter('tel', function () {
         }
 
 
-        if(number){
-            if(number.length > slicsesize){
-                number = number.slice(0, 3) + '-' + number.slice(3,7);
+        if (number) {
+            if (number.length > slicsesize) {
+                number = number.slice(0, 3) + '-' + number.slice(3, 7);
             }
-            else{
+            else {
                 number = number;
             }
 
             return ("(" + city + ") " + number).trim();
         }
-        else{
+        else {
             return "(" + city;
         }
 
     };
 });
+

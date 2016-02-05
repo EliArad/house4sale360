@@ -1,13 +1,13 @@
 'use strict';
 
 
-app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper', 'myutils',
+app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper',
     'appCookieStore', 'socketioservice', 'Idle', '$rootScope',
-    'SessionStorageService', 'API', 'myConfig', '$http', '$window', '$timeout',
+    'SessionStorageService', 'myConfig', '$http', '$window', '$timeout',
     'dboperations', 'citiesservice', 'general', '$cookies', '$sce','versionReloader','communication','visitors',
-    function ($scope, $state, authToken, myhttphelper, myutils,
+    function ($scope, $state, authToken, myhttphelper,
               appCookieStore, socketioservice, Idle, $rootScope, SessionStorageService,
-              API, myConfig, $http, $window, $timeout, dboperations,
+              myConfig, $http, $window, $timeout, dboperations,
               citiesservice, general, $cookies, $sce,versionReloader,communication,visitors) {
 
 
@@ -235,7 +235,6 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 if (ressearch != undefined)
                     vm.aptstatus = JSON.parse(ressearch);
 
-
                 $('#selectPropertyType').multiselect('select', vm.search.propertyType);
                 $('#selectrenovated').multiselect('select', vm.search.renovated);
 
@@ -302,7 +301,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
             var pstr = '';
             var index = 0;
-            console.log(vm.search.propertyType);
+            //console.log(vm.search.propertyType);
             vm.search.propertyType.forEach(function(t){
                 if (index > 0)
                     pstr += ',';
@@ -375,60 +374,6 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
         }
 
-        $scope.onAptStatus = function () {
-
-            if ($scope.aptstatus == false) {
-                $scope.showaptselect = true;
-            } else {
-                $scope.showaptselect = false;
-            }
-        }
-        function getCityObject(selectedItem)
-        {
-            for (var i = 0 ; i < vm.cities.length ;i++)
-            {
-                if (selectedItem == vm.cities[i].city)
-                {
-                    return vm.cities[i];
-                }
-            }
-        }
-
-        $scope.getcity = function (selectedItem) {
-
-
-            //vm.search.napa = selectedItem.napa;
-            //vm.search.code = selectedItem.code;
-
-            vm.search.city = selectedItem;
-
-            vm.citiesSelected.push({name: vm.search.city});
-
-            var objectData = getCityObject(selectedItem);
-
-
-            $scope.shownapa = true;
-            if (lastCity == undefined || lastCity != objectData.code) {
-                console.log('selectedItem.code : ' + objectData.code);
-                general.getSchonot(objectData.code).then(function (result) {
-                    vm.search.neighborhood = '';
-                    vm.neighborhoods = result.data;
-                })
-            }
-            lastCity = objectData.code;
-
-            if (objectData.area == 'merkaz') {
-                vm.search.area = 'אזור המרכז';
-            } else if (objectData.area == 'darom') {
-                vm.search.area = 'אזור הדרום';
-            } else if (objectData.area == 'jerusalem') {
-                vm.search.area = 'אזור ירושלים';
-            } else if (objectData.area == 'zafon') {
-                vm.search.area = 'אזור הצפון';
-            } else if (objectData.area == 'haifa') {
-                vm.search.area = 'אזור חיפה';
-            }
-        }
 
         $scope.sendEmailToUser = function (id) {
 
@@ -460,7 +405,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
             dboperations.getMessageUserInformation(item.id, type).then(function(result)
             {
-                console.log(result.data);
+                //console.log(result.data);
                 vm.contact = result.data;
                 $('#showCommModal').modal('show');
             }).catch(function(result){
@@ -512,26 +457,13 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 this.values[key] = value;
             };
         };
-        $scope.getparking = function (s) {
 
-            switch (s) {
-                case 'לא משנה לי':
-                    $scope.shoparkingoptions = false;
-                    break;
-                case 'לפחות אחת':
-                case 'לפחות שתיים':
-                case 'לפחות שלוש':
-                    $scope.shoparkingoptions = true;
-                    break;
-            }
 
         function ShowResults(fast)
         {
 
             if (vm.citiesSelected.length == 0 && fast == false) {
                 vm.msgboxcontent = 'בחר עיר אחת לפחות';
-               
-
                 return;
             }
             if (vm.search.aircond == undefined)
@@ -571,7 +503,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 vm.search.aircond = 'הכל';
             }
 
-            console.log(vm.search);
+            //console.log(vm.search);
             var search = angular.copy(vm.search);
             if (fast == false) {
                 search.city = vm.citiesSelected;
@@ -581,7 +513,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                     name:vm.search.city
                 }
                 search.city.push(o);
-                console.log(search.city);
+                //console.log(search.city);
             }
             search.propertyType = vm.search.propertyType;
             search.renovated = vm.search.renovated;
@@ -717,6 +649,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             } else {
                 type = 0;
             }
+            //console.log(search);
             dboperations.GetHouseQueryResults(search, false,type).then(function (result) {
 
                 $scope.showerrorenable = false;
@@ -1106,26 +1039,6 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             vm.config.loop = false;
             vm.config.preload = true;
         };
-
-        $scope.UpdateMessageType = function()
-        {
-
-            if (vm.search.agent == 'קבלן')
-            {
-                $scope.showmessagetype = false;
-            } else {
-                $scope.showmessagetype = true;
-            }
-        }
-
-        function initcrousle() {
-            $scope.myInterval = 4000;
-            $scope.noWrapSlides = false;
-        }
-
-
-        initcrousle();
-
 
 
 

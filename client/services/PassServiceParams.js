@@ -1,3 +1,5 @@
+'use_strict'
+
 app.factory("PassServiceParams", function()
 {
   var  Store = {};

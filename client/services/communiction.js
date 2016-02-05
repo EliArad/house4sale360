@@ -1,3 +1,4 @@
+'use_strict'
 app.factory("communication", function () {
 
     var search = {};
@@ -15,8 +16,6 @@ app.factory("communication", function () {
     function setFastSearch(s)
     {
         fastSearch =  s;
-        console.log('fastSearch' + fastSearch);
-
     }
     function isFastSearch()
     {
@@ -25,7 +24,6 @@ app.factory("communication", function () {
     function saveSearch(s)
     {
         search = s;
-        console.log('search' + search);
     }
     function getSearch()
     {

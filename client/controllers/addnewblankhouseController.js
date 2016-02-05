@@ -1,12 +1,12 @@
 'use strict';
 
 
-app.controller('addnewblankhouseController', ['$scope', 'Members', 'general', 'appCookieStore', '$window',
-    '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope', 'API',
+app.controller('addnewblankhouseController', ['$scope', 'general', 'appCookieStore', '$window',
+    '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope',
     'SessionStorageService', '$cookies', 'dboperations', 'fileReader', '$sce','citiesservice','versionReloader',
-    function ($scope, Members, general, appCookieStore, $window,
+    function ($scope, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
-              $state, myhttphelper, $rootScope, API, SessionStorageService,
+              $state, myhttphelper, $rootScope, SessionStorageService,
               $cookies, dboperations, fileReader, $sce,citiesservice,versionReloader) {
 
 

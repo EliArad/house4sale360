@@ -1,11 +1,11 @@
 'use strict';
 
-app.controller('LogoutController', ['$scope', '$state', 'authToken', '$rootScope', 'socketioservice', 'API',
-    function ($scope, $state, authToken, $rootScope, socketioservice, API)
+app.controller('LogoutController', ['$scope', '$state', 'authToken', '$rootScope', 'socketioservice',
+    function ($scope, $state, authToken, $rootScope, socketioservice)
     {
 
         authToken.RemoveToken();
-        $state.go('welcome', {}, {
+        $state.go('/', {}, {
             reload: true
         });
         $rootScope.$broadcast("updateHeader", authToken.getToken());

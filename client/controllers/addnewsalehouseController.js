@@ -1,12 +1,12 @@
 'use strict';
 
 
-app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'appCookieStore', '$window',
-    '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope', 'API',
+app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStore', '$window',
+    '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope',
     'SessionStorageService', '$cookies', 'dboperations', 'fileReader', '$sce','citiesservice','versionReloader',
-    function ($scope, Members, general, appCookieStore, $window,
+    function ($scope, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
-              $state, myhttphelper, $rootScope, API, SessionStorageService,
+              $state, myhttphelper, $rootScope, SessionStorageService,
               $cookies, dboperations, fileReader, $sce,citiesservice,versionReloader) {
 
 
@@ -717,7 +717,7 @@ app.controller('addnewsalehouseController', ['$scope', 'Members', 'general', 'ap
 
 
             var objectData = getCityObject(selectedItem);
-            console.log(objectData);
+            //console.log(objectData);
             vm.card.napa = objectData.napa;
             vm.card.code = objectData.code;
             vm.card.city = selectedItem;

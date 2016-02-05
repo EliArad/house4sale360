@@ -6,6 +6,7 @@
 
         $scope.pageClass = 'page-home';
 
+
         myhttphelper.doGet('/api/isauth').
           then(sendResponseData1).
           catch(sendResponseError1);
@@ -17,9 +18,11 @@
           {
             $state.go('login', {}, {reload: true});
           }
+
         }
         function sendResponseError1(response)
         {
+
           $state.go('login', {}, {reload: true});
         }
 

@@ -19,9 +19,6 @@ app.controller('adminController', ['$scope', '$state', 'authToken','admin','myht
           } else {
               visitors.getAllVisitors().then(function(result){
                   vm.visitors = result.data;
-                  for (var i = 0 ; i < result.data.length; i++) {
-                      console.log(result.data[i]);
-                  }
               });
           }
       }

@@ -1,3 +1,4 @@
+'use_strict'
 app.service('fileUpload', ['$http', function ($http)
 {
 

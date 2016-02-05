@@ -4,10 +4,10 @@
 
 
   app.controller('YouGotAMailController', ['$scope','$state', 'authToken','myhttphelper',
-                  'picturesManager','API','$uibModal','$log','$rootScope',
+                  'picturesManager','$uibModal','$log','$rootScope',
                   '$timeout','$window','myConfig','$http','PassServiceParams',
     function($scope,$state, authToken,myhttphelper,
-             picturesManager,API,$uibModal,$log,$rootScope,$timeout,
+             picturesManager,$uibModal,$log,$rootScope,$timeout,
              $window,myConfig,$http,PassServiceParams)
     {
 

@@ -11,7 +11,7 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
         var vm = this;
         $scope.pageClass = 'page-home';
 
-        vm.showwaitcircle = true;
+        vm.showwaitcircle = false;
         var currentUser = {};
         vm.message = '';
         vm.message1 = '';
@@ -49,10 +49,13 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
                 break;
             }
 
-            delete params.confirmPassword;
+            //delete params.confirmPassword;
+
+
             Registration.save(params,
                 function (resp, headers) {
                     //success callback
+
 
                     $scope.showRegistration = false;
 
@@ -94,9 +97,10 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
 
         vm.submit = function (isValid) {
 
-            if ($scope.passStrength < 100) {
+
+            if ($scope.passStrength < 1) {
                 $scope.showerrormessage = true;
-                $scope.messagetoshow = 'חוזק הססמא צריל להיות 100.';
+                $scope.messagetoshow = 'חוזק הססמא צריל להיות 80.';
                 $scope.messagetoshow += 'השתמש באות גדולה אחת לפחות'
                 $scope.messagetoshow += 'השתמש באחד מהסימנים !@#$%^&*';
                 return;
@@ -111,7 +115,7 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
         $scope.MoveToLoginPage = function()
         {
             $state.go('login', {}, {
-                reload: true
+                reload: false
             });
         }
 
@@ -125,6 +129,7 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
             vm.message2 += vm.user.email + ' לאישור';
             $scope.showloginbtn = true;
         }
+
 
         function sendResponseError(response) {
             authToken.RemoveToken();

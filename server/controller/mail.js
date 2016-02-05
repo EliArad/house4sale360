@@ -13,7 +13,7 @@ module.exports = function (sqlserver, mailer) {
         SendEmail : function(req, res , next)
         {
           
-            console.log('/api/send');
+            //console.log('/api/send');
             sqlserver.get(function (err, con) {
                 if (!err) {
                     var sql = 'SELECT * FROM users WHERE id = ' + con.escape(req.idFromToken);
@@ -24,8 +24,8 @@ module.exports = function (sqlserver, mailer) {
                         } else {
                             //var host = req.get('host');
                             //req.body.host = "http://" + host;
-                            console.log('sending mail..');
-                            console.log(rows);
+                            //console.log('sending mail..');
+                            //console.log(rows);
                             mailer.sendEmail(req, rows[0].userguid, function (error, response) {
                                 if (error) {
                                     //console.log(error);

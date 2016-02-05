@@ -3,9 +3,11 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Apt 360 חיפוש דירות ב 360</title>
+    <title>חיפוש דירות להשכרה ומכירה על ידי תמונות 360 מעלות,סיור וירטואלי</title>
+
+
     <meta name="description" content="חיפוש דירות להשכרה ומכירה באתר חדשני עם תמונות ב 360 מעלות, virtual reality , סיור וירטואלי בבית ועוד">
-    <meta name="fragment" content="!">
+    <meta name="fragment" content="!" />
     <meta charset="UTF-8">
     <meta name="keywords" content="דירות להשכרה,דירות למכירה,חיפוש דירות ב360,
     מנוע חיפוש דירות חדשני, כלי חיפוש למתווכים,חיפוש דירות במשקפת VR, חיפוש דירות מהנייד,
@@ -18,7 +20,7 @@
     <meta name="viewport"
           content="width=device-width,
                 initial-scale=1, 
-                maximum-scale=1, 
+                maximum-scale=1,
                 user-scalable=no">
 
 
@@ -29,26 +31,26 @@
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
 
-    <script src="client/js/lib/tdvplayer.js"></script>
-    <script src="client/js/lib/player.js"></script>
+    <script async src="client/js/lib/tdvplayer.js"></script>
+    <script async src="client/js/lib/player.js"></script>
 
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
 
 
 
-    <link rel="stylesheet" href="client/styles/loginscreen.css"/>
-    <link rel="stylesheet" href="client/styles/main.css">
-    <link rel="stylesheet" href="client/styles/styles.css">
-    <link rel="stylesheet" href="client/styles/waitlogin.css">
+    <link rel="stylesheet" href="client/styles/min/loginscreen.css"/>
+    <link rel="stylesheet" href="client/styles/min/main.css">
+    <link rel="stylesheet" href="client/styles/min/styles.css">
+    <link rel="stylesheet" href="client/styles/min/waitlogin.css">
 
     <!--<link rel="stylesheet" href="client/styles/animation.css">-->
     <!--<link rel="stylesheet" href="client/styles/viewanimation.css">-->
-    <link rel="stylesheet" href="client/styles/detailsandmypic.css">
+    <link rel="stylesheet" href="client/styles/min/detailsandmypic.css">
 
 
-    <!--<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />-->
-    <link rel="stylesheet" href="client/styles/bootstrap-orange.css"/>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="client/styles/min/bootstrap-orange.css"/>
     <link rel="stylesheet" href="bower_components/bootstrap-select/dist/css/bootstrap-select.min.css"/>
     <link rel="stylesheet" href="bower_components/bootstrap-rtl/dist/css/bootstrap-rtl.min.css"/>
 
@@ -56,18 +58,17 @@
     <script type="text/javascript" src="client/js/bootstrap-multiselect.js"></script>
     <link rel="stylesheet" href="client/styles/bootstrap-multiselect.css" type="text/css"/>
 
-    <link rel="stylesheet" href="client/styles/animate.css"/>
-    <link rel="stylesheet" href="client/styles/styles.css">
-    <link rel="stylesheet" href="client/styles/picturesstyle.css">
-    <link rel="stylesheet" href="client/styles/responsivemail.css">
-    <link rel="stylesheet" href="client/styles/navbar.css"/>
-    <link rel="stylesheet" href="client/styles/font-awesome.min.css">
-    <link rel="stylesheet" href="client/styles/bootstrapautogrid.css"/>
-    <link rel="stylesheet" href="client/styles/last.css"/>
-    <link rel="stylesheet" href="client/styles/fontrules.css">
-    <link rel="stylesheet" href="client/styles/badgebox.css">
+    <link rel="stylesheet" href="client/styles/min/animate.css"/>
+    <link rel="stylesheet" href="client/styles/min/styles.css">
+    <!--<link rel="stylesheet" href="client/styles/min/picturesstyle.css">-->
+    <link rel="stylesheet" href="client/styles/min/responsivemail.css">
+    <link rel="stylesheet" href="client/styles/min/navbar.css"/>
+    <!--<link rel="stylesheet" href="client/styles/font-awesome.min.css">-->
+    <link rel="stylesheet" href="client/styles/min/bootstrapautogrid.css"/>
+    <link rel="stylesheet" href="client/styles/min/last.css"/>
+    <link rel="stylesheet" href="client/styles/min/fontrules.css">
+    <link rel="stylesheet" href="client/styles/min/badgebox.css">
 
-    <link rel="stylesheet" href="client/styles/navbar.css"/>
 
     <link rel="stylesheet" href="bower_components/ui-select/dist/select.min.css"/>
     <link rel="stylesheet" href="bower_components/angular-motion/dist/angular-motion.min.css"/>
@@ -75,10 +76,9 @@
     <link rel="stylesheet" href="bower_components/angular-carousel/dist/angular-carousel.min.css"/>
     <link rel="stylesheet" href="bower_components/bootstrap-vertical-tabs/bootstrap.vertical-tabs.min.css">
 
-    <link rel="stylesheet" href="client/styles/last.css"/>
-    <link rel="stylesheet" href="client/styles/fontrules.css">
-    <link rel="stylesheet" href="client/styles/badgebox.css">
     <!-- endbuild -->
+
+
 </head>
 
 <body ng-app="app">
@@ -113,7 +113,7 @@
                         <a class="fc" ui-sref="privacyinfo">מידע על פרטיות</a>
                     </td>
                     <td style="width: 100px">
-                        <a class="fc" ui-sref="sitehandle">תקנון האתר</a>
+                        <a class="fc" ui-sref="siterules">תקנון האתר</a>
                     </td>
                 </tr>
             </table>
@@ -139,8 +139,6 @@
 <!-- build:js(.) scripts/vendor.js -->
 <!-- bower:js -->
 <!-- <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script> -->
-<script src="bower_components/jquery/dist/jquery.min.js"></script>
-<script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
 
 <script src="bower_components/moment/moment.js"></script>
 
@@ -148,27 +146,24 @@
 <script src="client/vr/PhotoSphereViewer/photo-sphere-viewer.min.js"></script>
 <script src="client/vr/PhotoSphereViewer/three.min.js"></script>
 <!-- External library, but included in the build -->
-<script src="client/vr/PhotoSphereViewer/src/sphoords.js"></script>
+<script src="client/vr/PhotoSphereViewer/src/minijs/sphoords.js"></script>
 <!-- Photo Sphere Viewer files -->
 <!--<script src="client/vr/PhotoSphereViewer/src/PhotoSphereViewer.min.js"></script>-->
-<script src="client/vr/PhotoSphereViewer/src/PSVNavBar.js"></script>
-<script src="client/vr/PhotoSphereViewer/src/PSVNavBarButton.js"></script>
+<script src="client/vr/PhotoSphereViewer/src/minijs/PSVNavBar.js"></script>
+<script src="client/vr/PhotoSphereViewer/src/minijs/PSVNavBarButton.js"></script>
 <!--<script src="client/vr/photosphereviewer/test.js"></script>-->
 
 <script src="client/vr/valiant360/jquery.valiant360.js"></script>
 <link rel="stylesheet" type="text/css" href="client/vr/valiant360/css/valiant360.css"/>
-<script src="bower_components/angular/angular.min.js"></script>
 
 
 
 
 <script src="bower_components/angular/angular.min.js"></script>
 <script src="bower_components/ui-select/dist/select.min.js"></script>
-
-<!--<script src="node_modules/socket.io-client/socket.io.js"></script>-->
+<script src="node_modules/socket.io-client/socket.io.js"></script>
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="bower_components/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
-
 <script src="bower_components/angular-animate/angular-animate.js"></script>
 <script src="bower_components/angular-aria/angular-aria.min.js"></script>
 <script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
@@ -181,11 +176,7 @@
 <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
 
 
-
-
-
 <script src="bower_components/ng-password-strength/dist/scripts/ng-password-strength.min.js"></script>
-
 <script src="bower_components/lodash/lodash.min.js"></script>
 <script type="text/javascript" src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
 <script type="text/javascript" src="bower_components/ng-file-upload/ng-file-upload-shim.min.js"></script>
@@ -199,91 +190,92 @@
 <script src="bower_components/videogular-buffering/vg-buffering.min.js"></script>
 
 <script src="bower_components/ng-idle/angular-idle.min.js"></script>
-
+<!--<script src="client/js/angular-seo.js"></script>-->
 
 <!--
 <script src="bower_components/video.js/dist/video-js.min.css"></script>
 <script src="bower_components/video.js/dist/video.min.js"></script>
 -->
 
-
-<script type="text/javascript" src="client/js/bootstrap-multiselect.js"></script>
-<link rel="stylesheet" href="client/styles/bootstrap-multiselect.css" type="text/css"/>
 <!--  THETA VIEWER -->
-
-<script type="text/javascript" src="client/js/msinit.js"></script>
 
 <!-- endbower -->
 <!-- endbuild -->
 
 <!-- build:js({.tmp,app}) scripts/scripts.js -->
+
+
 <script src="client/app.js"></script>
-<script src="client/routing.js"></script>
-<script src="client/controllers/headerController.js"></script>
-<script src="client/controllers/LogoutController.js"></script>
-<script src="client/controllers/LoginController.js"></script>
-<script src="client/controllers/howto360Controller.js"></script>
-<script src="client/controllers/verifiedokController.js"></script>
-<script src="client/controllers/RegistrationController.js"></script>
-<script src="client/controllers/AboutController.js"></script>
+<script src="client/services/minijs/myconfig.js"></script>
+<script src="client/minijs/routing.js"></script>
+
+<script src="client/controllers/minijs/globalController.js"></script>
+<script src="client/controllers/minijs/headerController.js"></script>
+<script src="client/controllers/minijs/LogoutController.js"></script>
+<script src="client/controllers/minijs/LoginController.js"></script>
+<script src="client/controllers/minijs/howto360Controller.js"></script>
+<script src="client/controllers/minijs/verifiedokController.js"></script>
+<script src="client/controllers/minijs/RegistrationController.js"></script>
+<script src="client/controllers/minijs/AboutController.js"></script>
+<script src="client/controllers/minijs/resetpasswordController.js"></script>
 <script src="client/controllers/MainController.js"></script>
 <script src="client/controllers/mypageController.js"></script>
-<script src="client/controllers/renthouseController.js"></script>
-<script src="client/controllers/salehouseController.js"></script>
-<script src="client/controllers/renthouseController.js"></script>
-<script src="client/controllers/addnewsalehouseController.js"></script>
-<script src="client/controllers/addnewrenthouseController.js"></script>
-<script src="client/controllers/welcomeContoller.js"></script>
-<script src="client/controllers/addnewblankhouseController.js"></script>
-<script src="client/controllers/kablanhouseController.js"></script>
-<script src="client/controllers/contactusController.js"></script>
-<script src="client/controllers/adminController.js"></script>
-<script src="client/controllers/vrController.js"></script>
-<script src="client/controllers/admincontactusController.js"></script>
+<script src="client/controllers/minijs/renthouseController.js"></script>
+<script src="client/controllers/minijs/salehouseController.js"></script>
+<script src="client/controllers/minijs/renthouseController.js"></script>
+<script src="client/controllers/minijs/addnewsalehouseController.js"></script>
+<script src="client/controllers/minijs/addnewrenthouseController.js"></script>
+<script src="client/controllers/minijs/welcomeContoller.js"></script>
+<script src="client/controllers/minijs/addnewblankhouseController.js"></script>
+<script src="client/controllers/minijs/kablanhouseController.js"></script>
+<script src="client/controllers/minijs/contactusController.js"></script>
+<script src="client/controllers/minijs/adminController.js"></script>
+<script src="client/controllers/minijs/vrController.js"></script>
+<script src="client/controllers/minijs/admincontactusController.js"></script>
+
 
 <!--<script src="client/controllers/virtualTourController.js"></script>-->
 
 
-<script src="client/services/communiction.js"></script>
-<script src="client/services/visitors.js"></script>
-<script src="client/services/GetSchonotBackground.js"></script>
-<script src="client/services/getcities.js"></script>
-<script src="client/services/dboperations.js"></script>
-<script src="client/services/Registration.js"></script>
-<script src="client/directives/validinput.js"></script>
-<script src="client/directives/inputphone.js"></script>
-<script src="client/directives/bootstrapmodal.js"></script>
-<script src="client/directives/appdirectives.js "></script>
-<script src="client/directives/fileuploader.js"></script>
-<script src="client/directives/modelshow.js"></script>
-<script src="client/directives/checklistModel.js"></script>
-<script src="client/directives/dynamichomepage.js"></script>
-<script src="client/directives/fileModel.js"></script>
-<script src="client/directives/slider1.js"></script>
-<script src="client/services/general.js"></script>
-<script src="client/services/versionReloader.js"></script>
-<script src="client/services/Members.js"></script>
-<script src="client/services/authIntercepter.js"></script>
-<script src="client/services/authtoken.js"></script>
-<script src="client/services/myhttphelper.js"></script>
-<script src="client/services/SessionStorageService.js"></script>
-<script src="client/services/LocalStorageService.js"></script>
-<script src="client/services/appcache.js"></script>
-<script src="client/services/admin.js"></script>
-<script src="client/services/chatroomregistration.js"></script>
-<script src="client/services/appCookieStore.js"></script>
-<script src="client/services/apiservice.js"></script>
-<script src="client/services/fileReader.js"></script>
-<script src="client/services/fileUpload.js"></script>
-<script src="client/services/PassServiceParams.js"></script>
-<script src="client/services/myutils.js"></script>
-<script src="client/services/socketioservice.js"></script>
-<script src="client/services/picturesManager.js"></script>
+<script src="client/services/minijs/communiction.js"></script>
+<script src="client/services/minijs/visitors.js"></script>
+<script src="client/services/minijs/GetSchonotBackground.js"></script>
+<script src="client/services/minijs/getcities.js"></script>
+<script src="client/services/minijs/dboperations.js"></script>
+<script src="client/services/minijs/Registration.js"></script>
+<script src="client/services/minijs/general.js"></script>
+<script src="client/services/minijs/versionReloader.js"></script>
+<script src="client/services/minijs/authIntercepter.js"></script>
+<script src="client/services/minijs/authtoken.js"></script>
+<script src="client/services/minijs/myhttphelper.js"></script>
+<script src="client/services/minijs/SessionStorageService.js"></script>
+<script src="client/services/minijs/LocalStorageService.js"></script>
+<script src="client/services/minijs/appcache.js"></script>
+<script src="client/services/minijs/admin.js"></script>
+<script src="client/services/minijs/appCookieStore.js"></script>
+<script src="client/services/minijs/fileReader.js"></script>
+<script src="client/services/minijs/fileUpload.js"></script>
+<script src="client/services/minijs/PassServiceParams.js"></script>
+<script src="client/services/minijs/socketioservice.js"></script>
+
+
+<script src="client/directives/minijs/validinput.js"></script>
+<script src="client/directives/minijs/inputphone.js"></script>
+<script src="client/directives/minijs/bootstrapmodal.js"></script>
+<script src="client/directives/minijs/appdirectives.js "></script>
+<script src="client/directives/minijs/fileuploader.js"></script>
+<script src="client/directives/minijs/modelshow.js"></script>
+<script src="client/directives/minijs/checklistModel.js"></script>
+<script src="client/directives/minijs/dynamichomepage.js"></script>
+<script src="client/directives/minijs/fileModel.js"></script>
+<script src="client/directives/minijs/slider1.js"></script>
+
+
 
 <!--<script src="require.js" data-main="client/utils/cityloader.js"></script>-->
-<script src="client/js/imagetools.js"></script>
-<script src="client/controllers/globalController.js"></script>
-<script src="client/js/jQueryRotate.js"></script>
+<!--<script src="client/js/imagetools.js"></script>-->
+
+<!--<script src="client/js/jQueryRotate.js"></script>-->
 
 
 <script src="bower_components/angularjs-scroll-glue/src/scrollglue.js"></script>
@@ -292,6 +284,7 @@
 <link rel="stylesheet" href="client/styles/bootstrap-switch.min.css"/>
 <script src="client/js/bootstrap-switch.min.js"></script>
 -->
+
 
 
 

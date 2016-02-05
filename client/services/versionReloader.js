@@ -1,40 +1,42 @@
-app.factory("versionReloader", function(general,$interval) {
+'use_strict'
 
-    var started = false;
-    var myVar;
+app.factory("versionReloader", ['general','$interval',
+    function(general,$interval) {
 
-    var pageCallbacks = [];
+        var started = false;
+        var myVar;
 
-    function addPage(callback)
-    {
-        pageCallbacks.push(callback);
+        var pageCallbacks = [];
+
+        function addPage(callback) {
+            pageCallbacks.push(callback);
+        }
+
+        function start() {
+
+            if (started == true)
+                return true;
+            started = true;
+
+            var self = general;
+            myVar = $interval(function () {
+                self.getVersion(function (reload) {
+                    if (reload == true) {
+                        console.log('need to reload');
+                        pageCallbacks.forEach(function (entry) {
+                            entry();
+                        });
+                    } else {
+                        console.log('no need to reload');
+                    }
+                });
+
+            }, 60000, self);
+        }
+
+        return {
+            start: start,
+            addPage: addPage
+        }
     }
-
-    function start() {
-
-        if (started == true)
-            return true;
-        started = true;
-
-        var self = general;
-        myVar = $interval(function() {
-            self.getVersion(function (reload) {
-                if (reload == true) {
-                    console.log('need to reload');
-                    pageCallbacks.forEach(function(entry) {
-                        entry();
-                    });
-                } else {
-                    console.log('no need to reload');
-                }
-            });
-
-        }, 60000, self);
-    }
-
-    return {
-        start:start,
-        addPage:addPage
-    }
-
-});
+]);

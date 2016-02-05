@@ -3,11 +3,12 @@
 
 app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
                  '$http', '$rootScope', 'myhttphelper', 'PassServiceParams',
-                 'socketioservice', 'SessionStorageService','$timeout','versionReloader',
+                 'socketioservice', 'SessionStorageService','$timeout','versionReloader','myConfig','visitors',
     function ($scope, $state, authToken, $cookies, $http, $rootScope,
               myhttphelper, PassServiceParams, socketioservice,
-              SessionStorageService,$timeout,versionReloader)
+              SessionStorageService,$timeout,versionReloader,myConfig,visitors)
     {
+
 
 
         $scope.loginfailure = false;
@@ -21,14 +22,32 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
             email: ""
         };
 
+
         versionReloader.addPage(reloadFunction);
+
 
         function reloadFunction()
         {
             window.location.reload(true);
         }
 
+        $scope.ForgetPassword = function()
+        {
 
+            if ($scope.vm.user.email == null || $scope.vm.user.email == undefined)
+            {
+                $scope.notifyUserMsg = 'אנא הכנס מייל';
+                return;
+            }
+            var email = $scope.vm.user.email;
+            var url = myConfig.url + "/api/forgotPassword";
+            $http.post(url , {email:email} ).then(function(result){
+
+                console.log(result);
+            }).catch(function(err){
+                console.log(err);
+            })
+        }
 
         $scope.vm.clearError = function () {
             $scope.loginfailure = false;
@@ -48,6 +67,12 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
 
                 authToken.setToken(response.token);
                 SessionStorageService.setSessionStorage('userid', response.id);
+
+                //$.getJSON("http://jsonip.com?callback=?", function (data) {
+                    //alert("Your ip: " + data.ip);
+                    visitors.determineVisit('0.0.0.0');
+                //})
+
 
 
                 SessionStorageService.setSessionStorage('username', response.username);

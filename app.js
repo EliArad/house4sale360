@@ -5,6 +5,8 @@ var express = require('express'),
 args = require('yargs').argv;
 var util = require('util');
 
+
+
 //var cors = require('./server/common/cors');
 
 
@@ -33,6 +35,7 @@ var path = require('path'),
 const bearerToken = require('express-bearer-token');
 var app = express();
 var jwtauth = require('./server/common/jwtauth');
+var gbot = require('./server/common/googlebot')(app);
 
 var http = require('http');
 var server = http.createServer(app);
@@ -51,6 +54,9 @@ app.use(function (req, res, next) {
     }
 });
 */
+// or here or in nginx
+
+
 app.use(function(req, res, next) {
     var oneof = false;
     if(req.headers.origin) {
@@ -98,7 +104,7 @@ mkdirp('./uploadvideo/', function (err) {
 //console.log(__dirname);
 
 
-app.use(require('prerender-node').set('prerenderToken', 'm5l7gsCs5aJ1DhNp43Fy'));
+
 
 //var notifyServerModule = require('./server/modules/MailNotify');
 //var notifyServer = new notifyServerModule(io, lastonlineModel, usersFunction, membersModel.membersModel);
@@ -125,11 +131,14 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
+//app.use(require('prerender-node').set('prerenderToken', 'm5l7gsCs5aJ1DhNp43Fy'));
+
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 
 var commandsRoutes = require('./server/routes/commands')(app, sqlserver);
 var mailverify = require('./server/modules/nodemailer')(app, sqlserver);
+var commandsRoutes = require('./server/routes/commands')(app, sqlserver,mailverify);
 var registerRoutes = require('./server/routes/register')(sqlserver, registerController);
 var dbstoreRoutes = require('./server/routes/dbstore')(app, dbstoreController).init();
 
@@ -425,7 +434,7 @@ app.get('/verify', function (req, res) {
                             if (err) {
                                 res.redirect('/');
                             } else {
-                                res.redirect('/#/verifiedok');
+                                res.redirect('/verifiedok');
                             }
                         });
                     } else {
@@ -438,13 +447,61 @@ app.get('/verify', function (req, res) {
 
 });
 
-app.get('*', function (req, res) {
-    res.status(500).send('error 4000');
+
+app.get('/resetpassword', function (req, res) {
+    console.log('/ resetpassword');
+    console.log(req.query.id);
+
+    sqlserver.get(function (err, con) {
+        if (!err) {
+            var sql = 'SELECT * FROM users WHERE  userguid = ' +  con.escape(req.query.id);
+            var query = con.query(sql, function (err, rows) {
+                if (err || rows.length == 0)
+                {
+                    sqlserver.release(con);
+                    console.log('verified but error on set');
+                    res.redirect('/');
+                } else {
+                    console.log('okoko');
+                    var thisHost = req.protocol + "://" + req.get('host');
+                    console.log(thisHost);
+                    console.log(rows[0].host);
+                    if (rows.length == 1 && rows[0].host == thisHost){
+                        console.log('eeeeeeeeeeeeee');
+                        res.redirect('/#!/resetpassword?=' + req.query.id);
+                    } else {
+                        res.redirect('/');
+                    }
+                }
+            });
+        }
+    });
 });
 
-app.post('*', function (req, res) {
-    res.status(500).send('error 5000');
+
+
+var count = 0
+io.on('connection', function(client) {
+    count++;
+    console.log("Users online: " + count);
+    client.on('disconnect', function(){
+        count--;
+    })
+})
+
+app.get( '/*', function( req, res ) {
+    return res.sendfile('./index.html');
+})
+/*
+app.get('*', function (req, res) {
+    res.redirect('/');
 });
+*/
+app.post('*', function (req, res) {
+    res.redirect('/');
+});
+
+
 //server.listen(port);
 server.listen(port, '192.168.22.32');
 //server.listen(port, '192.168.22.28'); // at work

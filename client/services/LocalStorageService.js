@@ -1,3 +1,4 @@
+'use_strict'
 app.factory("localStorageService", function() {
 
 

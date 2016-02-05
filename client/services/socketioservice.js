@@ -1,9 +1,9 @@
-app.factory("socketioservice", function ($rootScope, $http, authToken, myConfig) {
+
+app.factory("socketioservice", ['$rootScope', '$http', 'authToken', 'myConfig',
+    function ($rootScope, $http, authToken, myConfig) {
 
 
+      return {}
+    }
 
-  return {
-
-  }
-
-});
+]);

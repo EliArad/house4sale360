@@ -1,26 +1,28 @@
-app.factory("admin", function ($http, $q, myConfig, myutils) {
+'use strict';
+
+app.factory("admin", ['$http', '$q', 'myConfig',
+    function ($http, $q, myConfig) {
 
 
+        function logoutAllUsers() {
+            console.log('logoutAllUsers');
+            var membersAPI = myConfig.url + "/api/admin/logoutAllUsers";
+            return $http.get(membersAPI).then(sendResponseData).catch(sendResponseError);
 
-  function logoutAllUsers() {
-    console.log('logoutAllUsers');
-    var membersAPI = myConfig.url + "/api/admin/logoutAllUsers";
-    return $http.get(membersAPI).then(sendResponseData).catch(sendResponseError);
+        }
 
-  }
+        function sendResponseData(response) {
+            return response.data;
+        }
 
-  function sendResponseData(response) {
-    return response.data;
-  }
+        function sendResponseError(response) {
+            //console.log("error from send " + response);
+            return $q.reject("error from send " + response.status);
+        }
 
-  function sendResponseError(response) {
-    //console.log("error from send " + response);
-    return $q.reject("error from send " + response.status);
-  }
+        return {
+            logoutAllUsers: logoutAllUsers
+        }
 
-  return {
-    logoutAllUsers: logoutAllUsers
-  }
-
-
-});
+    }
+]);

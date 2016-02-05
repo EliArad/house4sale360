@@ -1,28 +1,32 @@
-app.factory("authToken", function($cookies) {
+'use strict';
 
-  var setToken = function (token) {
-    //$cookies.put('token', token);
-    sessionStorage.setItem('token', token);
-  }
+app.factory("authToken", ['$cookies',
+    function($cookies) {
 
-  function getToken() {
-     //return $cookies.get('token');
-     return sessionStorage.getItem('token');
-  }
+      var setToken = function (token) {
+        //$cookies.put('token', token);
+        sessionStorage.setItem('token', token);
+      }
 
-  function isAuthenticated() {
-    return !!getToken();
-  }
-  function RemoveToken() {
-    //$cookies.remove('token');
-    sessionStorage.removeItem('token');
-  }
+      function getToken() {
+        //return $cookies.get('token');
+        return sessionStorage.getItem('token');
+      }
 
-  return {
-    setToken: setToken,
-    getToken: getToken,
-    isAuthenticated : isAuthenticated,
-    RemoveToken:RemoveToken
-  };
+      function isAuthenticated() {
+        return !!getToken();
+      }
 
-});
+      function RemoveToken() {
+        //$cookies.remove('token');
+        sessionStorage.removeItem('token');
+      }
+
+      return {
+        setToken: setToken,
+        getToken: getToken,
+        isAuthenticated: isAuthenticated,
+        RemoveToken: RemoveToken
+      };
+    }
+]);

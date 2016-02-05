@@ -1,9 +1,9 @@
 'use strict';
 
 
-app.controller('HeaderController', ['$scope', '$state', 'authToken', 'API',
+app.controller('HeaderController', ['$scope', '$state', 'authToken',
     'PassServiceParams', 'appCookieStore', 'socketioservice', '$rootScope', 'SessionStorageService',
-    function ($scope, $state, authToken, API, PassServiceParams, appCookieStore, socketioservice, $rootScope, SessionStorageService) {
+    function ($scope, $state, authToken, PassServiceParams, appCookieStore, socketioservice, $rootScope, SessionStorageService) {
 
         $scope.isAuthenticated = authToken.isAuthenticated();
 
