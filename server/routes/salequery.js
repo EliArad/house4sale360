@@ -2,7 +2,7 @@
 
 var express = require('express');
 var jwtauth = require('../common/jwtauth');
-
+var jwtauthnext = require('../common/jwtauthnext');
 
 module.exports = function (app,salequeryController) {
 
@@ -12,7 +12,7 @@ module.exports = function (app,salequeryController) {
 
         var router = express.Router();
         router.post('/GetHouseQueryResults', salequeryController.GetHouseQueryResults);
-        router.get('/GetAllMyResults', salequeryController.GetAllMyResults);
+        router.post('/GetAllMyResults',jwtauthnext,  salequeryController.GetAllMyResults);
         app.use('/api/salequery', router);
 
     }

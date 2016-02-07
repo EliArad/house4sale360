@@ -12,7 +12,7 @@ var routes = function (sqlserver, registerController) {
 
     // middleware for the register
     Router.use('/:registerId', function (req, res, next) {
-        console.log("register middleware " + req.params.registerId);
+        //console.log("register middleware " + req.params.registerId);
         var decoded = jwt.verify(req.params.registerId, secret);
         sqlserver.get(function (err, con) {
             if (!err) {
@@ -23,8 +23,8 @@ var routes = function (sqlserver, registerController) {
                         res.sendStatus(500);
                     } else {
                         var reguser = {};
-                        console.log(rows);
-                        console.log(rows[0]);
+                        //console.log(rows);
+                        //console.log(rows[0]);
                         reguser.email = rows[0].email;
                         req.reguser = reguser;
                         next();

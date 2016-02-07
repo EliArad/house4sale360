@@ -57,19 +57,19 @@ var routes = function (app, sqlserver,mailer) {
                 var query = con.query(sql, function (err, rows) {
                     if (err || rows.length == 0)
                     {
-                        console.log(err);
+                        //console.log(err);
                         sqlserver.release(con);
                         return res.sendStatus(403);
                     } else {
                         var randomGuid;
                         randomGuid = guid.create();
-                        console.log(req.body.email);
-                        console.log('mail is ok , we are sending him email');
+                        //console.log(req.body.email);
+                        //console.log('mail is ok , we are sending him email');
                         // update in the iser  that it is not verifed and the guid again
 
                         var condition = {email: req.body.email};
                         var query = con.query('UPDATE users SET ? WHERE ?', [{userguid:randomGuid, verified:0}, condition], function (err, result) {
-                            console.log('update:  ' + err);
+                            //console.log('update:  ' + err);
                             sqlserver.release(con);
                             if (err) {
                                 res.sendStatus(500);
@@ -125,9 +125,9 @@ var routes = function (app, sqlserver,mailer) {
                     {
                         res.send(403);
                     } else {
-                        if (rows[0].email == 'easp13@gmail.com'){
-                            console.log('is admin');
-                                                return res.send('88792832321');
+                        if (rows[0].email == 'easp13@gmail.com')
+                        {
+                            return res.send('88792832321');
                         } else {
                             res.send(403);
                         }
@@ -143,18 +143,65 @@ var routes = function (app, sqlserver,mailer) {
 
     app.get('/api/getcities', function (req, res, next) {
 
-        console.log('getcities');
+
         cityLoader.basic(function (err, data) {
             if (err) {
-                console.log(err);
+                //console.log(err);
                 return res.status(500).send({error: err});
             } else {
                 var s = data.length;
                 for (var i = 0; i < data.length; i++) {
                     cities.push(data[i]);
                 }
-               
+                 
                 res.send(s.toString());
+            }
+        });
+    });
+
+
+    app.post('/api/isValidGuid', function (req, res, next)
+    {
+
+        //console.log(req.body.userguid);
+        // get the email of the uder:
+        sqlserver.get(function (err, con) {
+            if (!err) {
+                var sql = 'SELECT * FROM yad2vr.users where userguid = ' + con.escape(req.body.userguid);
+                var query = con.query(sql, function (err, rows) {
+                    sqlserver.release(con);
+                    //console.log(rows);
+                    if (err || rows.length == 0)
+                    {
+                        res.send(403);
+                    } else {
+                        res.send(rows[0].userguid);
+                    }
+                });
+            } else {
+                res.send(500);
+            }
+        });
+    });
+
+    app.get('/api/getuserguid', jwtauth, function (req, res, next)
+    {
+        var id = req.idFromToken;
+        // get the email of the uder:
+        sqlserver.get(function (err, con) {
+            if (!err) {
+                var sql = 'SELECT * FROM yad2vr.users where id = ' + con.escape(id);
+                var query = con.query(sql, function (err, rows) {
+                    sqlserver.release(con);
+                    if (err || rows.length == 0)
+                    {
+                        res.send(403);
+                    } else {
+                        res.send(rows[0].userguid);
+                    }
+                });
+            } else {
+                res.send(500);
             }
         });
     });
@@ -163,7 +210,7 @@ var routes = function (app, sqlserver,mailer) {
 
         cityLoader.basic(function (err, data) {
             if (err) {
-                console.log(err);
+                //console.log(err);
                 return res.status(500).send({error: err});
             } else {
                 res.send(data);
