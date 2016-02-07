@@ -15,7 +15,7 @@ var smtpTransport = nodemailer.createTransport({
 function sendEmail(req, randomGuid, callback) {
     var mailOptions, host, link;
 
-    console.log('sendEmail');
+    //console.log('sendEmail');
     host = req.get('host');
     //console.log("host " + host);
     link = "http://" + req.get('host') + "/verify?id=" + randomGuid;
@@ -47,7 +47,7 @@ function sendEmailToUser(address, subject, message, callback) {
     }
     //console.log(mailOptions);
     smtpTransport.sendMail(mailOptions, function (error, response) {
-        console.log(error + ' ' + response);
+        //console.log(error + ' ' + response);
         callback(error, response);
     });
 }

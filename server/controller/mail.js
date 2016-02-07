@@ -10,6 +10,25 @@ module.exports = function (sqlserver, mailer) {
 
 
         },
+
+        SendEmailToPerson : function(req, res , next)
+        {
+
+            console.log(req.body);
+
+            var subject = req.body.name  = " שלח לך לינק לאתר apt360.co.il לראות מודעות";
+            mailer.sendEmailToUser(req.body.email ,
+                                   subject,
+                                   req.body.message,
+                                   function(err, response) {
+                if (err)
+                    res.sendStatus(500);
+                else {
+                    res.send('ok');
+                }
+            });
+        },
+
         SendEmail : function(req, res , next)
         {
           

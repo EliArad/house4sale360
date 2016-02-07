@@ -42,14 +42,30 @@ exports.login = function (req, res) {
                         }
                         var payload = {
                             iss: req.hostname,
-                            sub: rows[0].id
+                            sub: rows[0].id,
+                            userguid:rows[0].userguid
                         };
+                        //console.log(rows[0]);
+                        //console.log(payload);
+
+
                         var userfrommail = email.match(/^([^@]*)@/)[1];
 
 
                         var token = jwt.sign(payload, secret, {
                             expiresInMinutes: 60 * 5
                         });
+
+                        if (rows[0].verified == 0)
+                        {
+                            res.json({
+                                id:rows[0].id,
+                                username:userfrommail,
+                                verified:rows[0].verified
+                            });
+                            return;
+                        }
+
                         res.json({
                             id:rows[0].id,
                             token: token,

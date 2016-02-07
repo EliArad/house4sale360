@@ -10,31 +10,158 @@ module.exports = function (sqlserver) {
 
 
         GetAllMyResults: function (req, res, next) {
+
+            //console.log('GetAllMyResults');
+
+            var userguid = undefined;
             sqlserver.get(function (err, con) {
                 if (!err) {
+                    if (req.body.userguid == undefined) {
+                        userguid = req.userguidFromToken;
+                        //console.log('111 ' + userguid);
+                        if (userguid == undefined) {
+                            return res.sendStatus(500);
+                        }
+                    } else {
+                        userguid = req.body.userguid;
+                    }
+                    //console.log(' user guid that need: ' + userguid);
 
-                    var sql = 'SELECT sellhousedetails.*, users.*, salehouseblobs.* FROM yad2vr.sellhousedetails\
+                    console.log(req.body.msgid);
+                    console.log(req.body.type);
+
+                    if (req.body.msgid == undefined || req.body.type == undefined) {
+
+                        var sql = 'SELECT sellhousedetails.*, users.userguid, salehouseblobs.tableid,salehouseblobs.filename,salehouseblobs.is360image, salehouseblobs.is360video, salehouseblobs.isvideo, salehouseblobs.filesize FROM yad2vr.sellhousedetails\
                     inner join users\
                     on users.id = sellhousedetails.userid\
                     LEFT JOIN salehouseblobs\
                     ON salehouseblobs.tableid = sellhousedetails.id\
-                    WHERE sellhousedetails.userid = 79'
-                    var query = con.query(sql, function (err, rows) {
-                        if (err) {
-                            return res.sendStatus(500);
-                        } else {
-                            for (var i = 0; i < rows.length; i++) {
-                                delete rows[i].email;
-                                delete rows[i].homephone;
-                                delete rows[i].secondarycellphone;
-                                delete rows[i].secondarycellphone;
-                                delete rows[i].officephone;
-                                delete rows[i].primarycellphone;
-                                delete rows[i].contactPerson;
+                    WHERE users.userguid = ' + con.escape(userguid);
+                        var query = con.query(sql, function (err, rows) {
+                            if (err) {
+                                sqlserver.release(con);
+                                return res.sendStatus(500);
+                            } else {
+                                //console.log(' results: ' + rows.length);
+                                for (var i = 0; i < rows.length; i++) {
+                                    delete rows[i].email;
+                                    delete rows[i].homephone;
+                                    delete rows[i].secondarycellphone;
+                                    delete rows[i].secondarycellphone;
+                                    delete rows[i].officephone;
+                                    delete rows[i].primarycellphone;
+                                    delete rows[i].contactPerson;
+                                }
+
+                                sql = 'SELECT renthousedetails.*, users.userguid, renthouseblobs.tableid,renthouseblobs.filename,renthouseblobs.is360image, renthouseblobs.is360video, renthouseblobs.isvideo, renthouseblobs.filesize FROM yad2vr.renthousedetails\
+                            inner join users\
+                            on users.id = renthousedetails.userid\
+                            LEFT JOIN renthouseblobs\
+                            ON renthouseblobs.tableid = renthousedetails.id\
+                            WHERE users.userguid = ' + con.escape(userguid);
+                                var query = con.query(sql, function (err, rows1) {
+                                    if (err) {
+                                        sqlserver.release(con);
+                                        return res.sendStatus(500);
+                                    } else {
+                                        //console.log(' results: ' + rows.length);
+                                        for (var i = 0; i < rows1.length; i++) {
+                                            delete rows1[i].email;
+                                            delete rows1[i].homephone;
+                                            delete rows1[i].secondarycellphone;
+                                            delete rows1[i].secondarycellphone;
+                                            delete rows1[i].officephone;
+                                            delete rows1[i].primarycellphone;
+                                            delete rows1[i].contactPerson;
+                                        }
+                                    }
+
+                                    sqlserver.release(con);
+                                    return res.json({
+                                        rows: rows,
+                                        rows1: rows1
+                                    });
+
+                                });
+
                             }
-                            return res.send(rows);
+                        });
+                    } else {
+                        if (req.body.type != undefined)
+                        {
+                            var tabledet;
+                            if (req.body.type  == 0)
+                            {
+                                if (req.body.msgid == undefined) {
+                                    sql = 'SELECT sellhousedetails.*, users.userguid, salehouseblobs.tableid,salehouseblobs.filename,salehouseblobs.is360image, salehouseblobs.is360video, salehouseblobs.isvideo, salehouseblobs.filesize FROM yad2vr.sellhousedetails\
+                                    inner join users\
+                                    on users.id = sellhousedetails.userid\
+                                    LEFT JOIN salehouseblobs\
+                                    ON salehouseblobs.tableid = sellhousedetails.id\
+                                    WHERE users.userguid = ' + con.escape(userguid);
+                                } else {
+                                    sql = 'SELECT sellhousedetails.*, users.userguid, salehouseblobs.tableid,salehouseblobs.filename,salehouseblobs.is360image, salehouseblobs.is360video, salehouseblobs.isvideo, salehouseblobs.filesize FROM yad2vr.sellhousedetails\
+                                    inner join users\
+                                    on users.id = sellhousedetails.userid\
+                                    LEFT JOIN salehouseblobs\
+                                    ON salehouseblobs.tableid = sellhousedetails.id\
+                                    WHERE users.userguid = ' + con.escape(userguid) + ' AND sellhousedetails.id = ' + con.escape(req.body.msgid);
+
+                                }
+                            } else {
+                                if (req.body.msgid == undefined) {
+
+                                    sql = 'SELECT renthousedetails.*, users.userguid, renthouseblobs.tableid,renthouseblobs.filename,renthouseblobs.is360image, renthouseblobs.is360video, renthouseblobs.isvideo, renthouseblobs.filesize FROM yad2vr.renthousedetails\
+                                    inner join users\
+                                    on users.id = renthousedetails.userid\
+                                    LEFT JOIN renthouseblobs\
+                                    ON renthouseblobs.tableid = renthousedetails.id\
+                                    WHERE users.userguid = ' + con.escape(userguid);
+                                } else {
+                                    sql = 'SELECT renthousedetails.*, users.userguid, renthouseblobs.tableid,renthouseblobs.filename,renthouseblobs.is360image, renthouseblobs.is360video, renthouseblobs.isvideo, renthouseblobs.filesize FROM yad2vr.renthousedetails\
+                                    inner join users\
+                                    on users.id = renthousedetails.userid\
+                                    LEFT JOIN renthouseblobs\
+                                    ON renthouseblobs.tableid = renthousedetails.id\
+                                    WHERE users.userguid = ' + con.escape(userguid) + ' AND renthousedetails.id = ' + con.escape(req.body.msgid);
+
+                                }
+                            }
+
+                            var query = con.query(sql, function (err, rows) {
+                                if (err) {
+                                    sqlserver.release(con);
+                                    return res.sendStatus(500);
+                                } else {
+                                    //console.log(' results: ' + rows.length);
+                                    for (var i = 0; i < rows.length; i++) {
+                                        delete rows[i].email;
+                                        delete rows[i].homephone;
+                                        delete rows[i].secondarycellphone;
+                                        delete rows[i].secondarycellphone;
+                                        delete rows[i].officephone;
+                                        delete rows[i].primarycellphone;
+                                        delete rows[i].contactPerson;
+                                    }
+                                }
+
+                                sqlserver.release(con);
+                                if (req.body.type == 0)
+                                {
+                                    return res.json({
+                                        rows: rows,
+                                        rows1: []
+                                    });
+                                } else {
+                                    return res.json({
+                                        rows: [],
+                                        rows1: rows
+                                    });
+                                }
+                            });
                         }
-                    });
+                    }
                 } else {
                     return res.sendStatus(500);
                 }

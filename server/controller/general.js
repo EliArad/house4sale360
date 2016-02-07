@@ -136,7 +136,7 @@ module.exports = function (sqlserver) {
                             } else {
                                 var queryres = con.query('INSERT INTO yad2vr.usersearch SET ?', req.body, function (err, result) {
                                     if (err) {
-                                        console.log(err);
+                                        //console.log(err);
                                         sqlserver.release(con);
                                         res.sendStatus(500);
                                     } else {

@@ -18,18 +18,20 @@ module.exports = function (sqlserver) {
     return {
 
 
+
+
         all: function (req, res) {
-            console.log("get all registrators");
+            //console.log("get all registrators");
             res.send("error, not implemented");
         },
 
         deleteAll: function (req, res) {
-            console.log("delete all registrators");
+            //console.log("delete all registrators");
             res.send("error, not implemented");
         },
 
         show: function (req, res) {
-            console.log("Show one registrator");
+            //console.log("Show one registrator");
             res.json({
                 user: req.reguser
             });
@@ -44,7 +46,7 @@ module.exports = function (sqlserver) {
          */
 
         create: function (req, res, next) {
-            console.log('create new user');
+            //console.log('create new user');
 
             sqlserver.get(function (err, con) {
                 if (!err) {
@@ -61,7 +63,7 @@ module.exports = function (sqlserver) {
                             var query = con.query('INSERT INTO users SET ?', req.body, function (err, result) {
                                 sqlserver.release(con);
                                 if (err) {
-                                    console.log(err);
+                                    //console.log(err);
                                     if ((contains(err, 'Duplicate entry') && (contains(err, 'email')))) {
                                         err = 'duplicate email';
                                     }
@@ -69,7 +71,8 @@ module.exports = function (sqlserver) {
                                 } else {
                                     var payload = {
                                         iss: req.hostname,
-                                        sub: result.insertId
+                                        sub: result.insertId,
+                                        userguid:randomGuid
                                     }
 
                                     var token = jwt.sign(payload, secret, {
@@ -81,12 +84,12 @@ module.exports = function (sqlserver) {
                                 }
                             });
                         } else {
-                            console.log(err);
+                            //console.log(err);
                             res.sendStatus(500);
                         }
                     });
                 } else {
-                    console.log(err);
+                    //console.log(err);
                     res.sendStatus(500);
                 }
             });

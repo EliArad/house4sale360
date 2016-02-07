@@ -37,31 +37,31 @@ var mailNotify = function (io, LastonlineModel, usersFunction, membersModel) {
     });
 
     client.on('join', function (token) {
-      console.log('got join %s' , token);
+      //console.log('got join %s' , token);
       var id = jwt.verify(token, secret);
       //client.broadcast.emit('useridconnected' , id.sub);
       usersFunction.userExists(id.sub, function (err) {
         if (err == false) {
-          console.log('user does not exists %s ', id.sub);
+          //console.log('user does not exists %s ', id.sub);
           return;
         }
         markUserasOnline(id.sub, client.id, true, function () {
-          console.log(id.sub);
+          //console.log(id.sub);
           //io.sockets.emit('useridconnected', id.sub, token);
           client.broadcast.emit('useridconnected', id.sub, token);
-          console.log('user %s is online', id.sub);
+          //console.log('user %s is online', id.sub);
           //console.log('online size: ' + getAllClientSize(allClients));
           updateAllUsersOnlineCount();
         });
       });
     });
     client.on('disconnect', function () {
-      console.log('Got disconnect!' + client.id);
+      //console.log('Got disconnect!' + client.id);
 
       var cid = client.id;
       LastonlineModel.find({clientId: cid}).exec(function (err, results) {
-        if (err)
-          console.log(err);
+        //if (err)
+          //console.log(err);
         if (results.length > 0) {
           markUserasOnline(results[0].registrationObjectId, client.id, false, function () {
             updateAllUsersOnlineCount();
@@ -91,7 +91,7 @@ var mailNotify = function (io, LastonlineModel, usersFunction, membersModel) {
     LastonlineModel.find({isOnline: true}).exec(function (err, users) {
       if (!err) {
         var count = users.length;
-        console.log('!!!!!!!!!number of online users: ' + count);
+        //console.log('!!!!!!!!!number of online users: ' + count);
         io.emit('onlinecount', count);
       }
     });
