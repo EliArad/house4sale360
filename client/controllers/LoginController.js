@@ -3,10 +3,11 @@
 
 app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
                  '$http', '$rootScope', 'myhttphelper', 'PassServiceParams',
-                 'socketioservice', 'SessionStorageService','$timeout','versionReloader','myConfig','visitors',
+                 'socketioservice', 'SessionStorageService','$timeout','versionReloader',
+    'myConfig','visitors','$stateParams',
     function ($scope, $state, authToken, $cookies, $http, $rootScope,
               myhttphelper, PassServiceParams, socketioservice,
-              SessionStorageService,$timeout,versionReloader,myConfig,visitors)
+              SessionStorageService,$timeout,versionReloader,myConfig,visitors,$stateParams)
     {
 
 
@@ -21,6 +22,8 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
             password: "",
             email: ""
         };
+
+        console.log($stateParams.msg);
 
 
         versionReloader.addPage(reloadFunction);
@@ -65,6 +68,14 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
 
             function sendResponseData(response) {
 
+
+                if (response.verified == 0)
+                {
+                    $scope.errorToShow = 'עדיין לא אישרת את המייל שלך';
+                    showblizeError();
+                    return;
+                }
+
                 authToken.setToken(response.token);
                 SessionStorageService.setSessionStorage('userid', response.id);
 
@@ -87,7 +98,10 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
                 });
             }
 
-            function sendResponseError(response) {
+            function sendResponseError(response)
+            {
+
+                $scope.errorToShow = 'כניסה שגויה';
                 $scope.loginfailure = true;
 
                 if (cssUpdateTimer != undefined && cssUpdateTimer != null) {

@@ -498,9 +498,7 @@ app.get('*', function (req, res) {
     res.redirect('/');
 });
 */
-app.post('*', function (req, res) {
-    res.redirect('/');
-});
+
 
 
 //server.listen(port);

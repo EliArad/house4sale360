@@ -13,13 +13,14 @@ CREATE TABLE `contactus` (
 
 CREATE TABLE `tours3d` (
   `ID` int(11) NOT NULL,
-  `tableid` int(11) DEFAULT NULL,
+  `tableid3d` int(11) DEFAULT NULL,
   `show` int(1) DEFAULT NULL,
   `expireddate` date DEFAULT NULL,
   `autoplay` int(1) DEFAULT NULL,
   `wide` int(1) DEFAULT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE `renthouseblobs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -88,7 +89,16 @@ CREATE TABLE `renthousedetails` (
 
 
 
-
+CREATE TABLE `usersearch` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `userguid` varchar(145) CHARACTER SET latin1 DEFAULT NULL,
+  `city` varchar(85) DEFAULT NULL,
+  `numofrooms` int(4) DEFAULT NULL,
+  `type` varchar(45) DEFAULT NULL,
+  `propertytype` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `userguid_UNIQUE` (`userguid`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
 
 

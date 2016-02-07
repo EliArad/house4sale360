@@ -31,6 +31,20 @@ app.factory("general", ['$http', '$q', 'myConfig', 'appCookieStore',
             });
         }
 
+        var SendEmailToPerson = function(email, name, message)
+        {
+
+            return $http.post(myConfig.url + "/api/mail/SendEmailToPerson",
+                {email:email, message:message, name:name});
+        }
+
+        var isValidGuid = function (userguid) {
+            return $http.post(myConfig.url + "/api/isValidGuid" , {userguid:userguid});
+        }
+
+        var getuserguid = function () {
+            return $http.get(myConfig.url + "/api/getuserguid");
+        }
 
         var sendMail = function (mailParams) {
             console.log('going to send mail : ' + myConfig.url + "/api/mail/SendEmail");
@@ -93,7 +107,10 @@ app.factory("general", ['$http', '$q', 'myConfig', 'appCookieStore',
             SendEmailToUser: SendEmailToUser,
             getVersion: getVersion,
             getCookieExp: getCookieExp,
-            isMobile: isMobile
+            isMobile: isMobile,
+            getuserguid:getuserguid,
+            isValidGuid:isValidGuid,
+            SendEmailToPerson:SendEmailToPerson
         };
     }
 ]);

@@ -126,7 +126,7 @@ module.exports = function (sqlserver) {
                 if (!err) {
                     var condition = {id: req.body.data.id};
                     var query = con.query('UPDATE sellhousedetails SET ? WHERE ?', [req.body.data, condition], function (err, result) {
-                        console.log(err);
+                        //console.log(err);
                         sqlserver.release(con);
                         if (err) {
                             res.sendStatus(500);
@@ -146,7 +146,7 @@ module.exports = function (sqlserver) {
                     var query = con.query('UPDATE renthousedetails SET ? WHERE ?', [req.body.data, condition], function (err, rows) {
                         sqlserver.release(con);
                         if (err) {
-                            console.log(err);
+                            //console.log(err);
                             res.sendStatus(500);
                         } else
                             res.send(rows);
@@ -235,14 +235,14 @@ module.exports = function (sqlserver) {
                     var query = con.query('INSERT INTO sellhousedetails SET ?', req.body.data, function (err, result) {
                         sqlserver.release(con);
                         if (err) {
-                            console.log(err);
+                            //console.log(err);
                             res.sendStatus(500);
                         } else {
                             res.send(result);
                         }
                     });
                 } else {
-                    console.log(err);
+                    //console.log(err);
                     res.sendStatus(500);
                 }
             });
@@ -383,26 +383,26 @@ module.exports = function (sqlserver) {
             });
         },
         getHouseDetails: function (req, res, next) {
-            console.log('getHouseDetails');
+            //console.log('getHouseDetails');
             res.send('ok');
         },
         getRentDetails: function (req, res, next) {
-            console.log('getRentDetails');
+            //console.log('getRentDetails');
             res.send('ok');
         },
         suspendMessage: function (req, res, next) {
 
             sqlserver.get(function (err, con) {
                 if (!err) {
-                    console.log(req.body);
+                    //console.log(req.body);
                     if (req.body.tablename == 'sale') {
                         con.query('UPDATE sellhousedetails SET ? WHERE ?', [{suspend: req.body.suspend}, {id: req.body.id}], function (err, result) {
                             sqlserver.release(con);
                             if (err) {
-                                console.log(err);
+                                //console.log(err);
                                 return res.status(500).send(err);
                             } else {
-                                console.log(result);
+                                //console.log(result);
                                 return res.send('ok');
                             }
                         });
@@ -425,7 +425,7 @@ module.exports = function (sqlserver) {
             });
         },
         deleteMessage: function (req, res, next) {
-            console.log('deleteMessage');
+            //console.log('deleteMessage');
             res.send('ok');
         },
         getMessageUserInformation: function (req, res, next) {
@@ -452,11 +452,11 @@ module.exports = function (sqlserver) {
 
             var tablename = req.body.data.tablename;
             delete req.body.data.tablename;
-            console.log(req.body.data);
+            //console.log(req.body.data);
             sqlserver.get(function (err, con) {
                 var condition = {'id': req.body.data.id};
                 var query = con.query('UPDATE ' + tablename + ' SET ? WHERE ?', [req.body.data, condition], function (err, result) {
-                    console.log(err);
+                    //console.log(err);
                     sqlserver.release(con);
                     if (err) {
                         res.sendStatus(500);

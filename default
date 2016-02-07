@@ -17,6 +17,28 @@ server {
 	gzip_types    text/plain application/x-javascript text/xml text/css;
 	gzip_vary on;
 
+	error_page 404 /errorpages/custom_404.html;
+        location = /custom_404.html {
+            root /home/first/projects/house4sale360/;
+            internal;
+        }
+ 	error_page 500 /errorpages/custom_500.html;
+        location = /custom_500.html {
+            root /home/first/projects/house4sale360/;
+            internal;
+        }
+
+ 	error_page 403 /errorpages/custom_403.html;
+        location = /custom_403.html {
+            root /home/first/projects/house4sale360/;
+            internal;
+        }
+
+
+
+
+
+
 
 	location / {
 		 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -25,9 +47,25 @@ server {
 		   proxy_set_header X-Real-IP $remote_addr;
 		   proxy_set_header X-NginX-Proxy true;
 
+		   #proxy_set_header X-Prerender-Token m5l7gsCs5aJ1DhNp43Fy;
+
 		   proxy_redirect off;
 
 		   proxy_pass http://project;
+
+
+
+
+		   # maby will help socketio
+        	   proxy_http_version 1.1;
+        	   proxy_set_header Upgrade $http_upgrade;
+        	   proxy_set_header Connection "upgrade";
+       		  
+
+
+
+
+
 
 		   if ($request_method = 'OPTIONS') {
 

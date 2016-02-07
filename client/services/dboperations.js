@@ -108,9 +108,9 @@ app.factory('dboperations', ['$http', 'myConfig',
             return $http.post(membersAPI, {query: query, auth: needauth, type: type});
         }
 
-        function GetAllMyResults() {
+        function GetAllMyResults(userguid, msgid, type) {
             var membersAPI = myConfig.url + "/api/salequery/GetAllMyResults";
-            return $http.get(membersAPI);
+            return $http.post(membersAPI , {userguid:userguid, msgid:msgid, type:type});
         }
 
         function suspendMessage(id, tablename, suspend) {
@@ -153,7 +153,7 @@ app.factory('dboperations', ['$http', 'myConfig',
             getRentHouseDetails: getRentHouseDetails,
             getMessageUserInformation: getMessageUserInformation,
             GetAllMyResults: GetAllMyResults,
-            SavePrivacyCode: SavePrivacyCode
+            SavePrivacyCode: SavePrivacyCode,
         };
     }
 

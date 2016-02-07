@@ -5,11 +5,12 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
     'appCookieStore', 'socketioservice', 'Idle', '$rootScope',
     'SessionStorageService', 'myConfig', '$http', '$window', '$timeout',
     'dboperations', 'citiesservice', 'general', '$cookies', '$sce',
-    'versionReloader','communication','visitors',
+    'versionReloader','communication','visitors','$stateParams','messageToLink',
     function ($scope, $state, authToken, myhttphelper,
               appCookieStore, socketioservice, Idle, $rootScope, SessionStorageService,
               myConfig, $http, $window, $timeout, dboperations,
-              citiesservice, general, $cookies, $sce,versionReloader,communication,visitors) {
+              citiesservice, general, $cookies, $sce,versionReloader,communication,
+              visitors,$stateParams,messageToLink) {
 
 
 
@@ -17,6 +18,22 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
         var video360height = '500px';
         $scope.mobile = true;
         $scope.virtualSearch = false;
+
+
+        console.log($stateParams.id);
+        console.log($stateParams.type);
+        console.log($stateParams.g);
+
+
+        var token = authToken.getToken();
+        if ($stateParams.g == undefined && token == undefined)
+        {
+            $state.go('/', {}, {
+                reload: false
+            });
+            return;
+        }
+
 
         vm.searchsummery = '';
         vm.search = {};
@@ -44,6 +61,15 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
         $scope.mobile = general.isMobile();
 
         versionReloader.addPage(reloadFunction);
+
+        $scope.CopyToclipBoard = function()
+        {
+            general.getuserguid().then(function(result){
+
+            }).catch(function(result){
+
+            });
+        }
 
 
         $scope.UpdateMessageType = function()
@@ -133,8 +159,100 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
             }
         }
 
+
+
         $(document).ready(function () {
 
+            if ($stateParams.g != undefined) {
+                general.isValidGuid($stateParams.g).then(function(result)
+                {
+
+                    PerformResults($stateParams.g, $stateParams.id, $stateParams.type);
+
+                }).catch(function(result){
+                    $state.go('/', {}, {
+                        reload: false
+                    });
+                    return;
+                })
+            } else {
+                PerformResults(undefined);
+            }
+
+        });
+
+        $scope.SendToAFriendAllPosts = function()
+        {
+
+            $('#sendAllMessageModal').modal('show');
+        }
+
+        $scope.SendPageLinkToAFriend = function()
+        {
+
+            general.getuserguid().then(function(result){
+
+                var userguid = result.data;
+                var messagebody = '';
+                messagebody += '<div style="direction: rtl;text-align: right">';
+                messagebody = ' הי<br> ' +
+                    $scope.personName + ' שלח לך לינק מאתר  apt360 לראות מודעה למכירה או קנייה של בית <br><br> www.apt360.co.il?g=' + userguid;
+
+                messagebody += '<br><br><br>';
+                messagebody += $scope.messagebody;
+
+                messagebody += '</div>';
+                general.SendEmailToPerson($scope.emailToperson, $scope.personName, messagebody).then(function (result) {
+
+                    alert('ההודעה נשלחה בהצלחה');
+                }).catch(function (result) {
+                    alert('קרתה שגיאה וההודעה לא נשלחה');
+                })
+
+            }).catch(function(result) {
+                alert('שגיאה בשליחת ההודעה');
+                $state.go('login', {}, {
+                    reload: false
+                });
+            });
+
+        }
+
+        $scope.SendLinkToAFriend = function()
+        {
+
+
+            general.getuserguid().then(function(result){
+
+                var item = vm.cards[vm.userMessageIndex];
+                var link = messageToLink.buildLink(result.data , item.id, item.messagetype);
+                var messagebody = ' הי<br> ' +
+                $scope.personName + ' שלח לך לינק מאתר  apt360 לראות מודעה למכירה או קנייה של בית <br><br>' + link;
+
+                console.log(messagebody);
+
+                general.SendEmailToPerson($scope.emailToperson, $scope.personName, messagebody).then(function (result) {
+
+                    alert('ההודעה נשלחה בהצלחה');
+                }).catch(function (result) {
+                    alert('קרתה שגיאה וההודעה לא נשלחה');
+                })
+
+            }).catch(function(result) {
+                alert('שגיאה בשליחת ההודעה');
+            });
+
+        }
+        $scope.SendToAFriend = function(item, index)
+        {
+
+            vm.userMessageIndex = index;
+            vm.userMessageId = item.id;
+            $('#sendMessageModal').modal('show');
+        }
+
+        function PerformResults(userguid, msgid, type)
+        {
             try {
 
                 //$("[name='my-checkbox']").bootstrapSwitch('state', false);
@@ -184,12 +302,9 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
                 $('#myModal').modal('show');
                 communication.openAdvancedSearch(false);
             } else {
-                ShowResults();
+                ShowResults(userguid, msgid, type);
             }
-
-
-
-        });
+        }
 
         $scope.getschona = function (selectedItem) {
 
@@ -420,16 +535,16 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
         }
 
 
-        function ShowResults() {
+        function ShowResults(userguid, msgid, type) {
 
             buildSearchSummery();
 
             var type;
 
-            var directory = ['/salehouse/'];
+            var directory = ['/salehouse/' , '/renthouse/'];
             var iterator = 0;
 
-            dboperations.GetAllMyResults().then(function (result) {
+            dboperations.GetAllMyResults(userguid, msgid , type).then(function (result) {
 
                 $scope.showerrorenable = false;
                 if (result.data.length == 0) {
@@ -441,10 +556,12 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
                 }
                 //console.log(result.data);
 
-                vm.cards1 = result.data;
+                vm.cards1 = result.data.rows;
+                vm.cards2 = result.data.rows1;
                 var dic = new Dictionary();
 
                 //http://stackoverflow.com/questions/17787754/creating-a-net-like-dictionary-object-in-javascript
+
 
                 for (var i = 0; i < vm.cards1.length; i++) {
                     var c = dic.containsKey(vm.cards1[i].id);
@@ -456,6 +573,20 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
                         var x = [];
                         x.push(vm.cards1[i]);
                         dic.add(vm.cards1[i].id, x);
+                    }
+                }
+
+
+                for (var i = 0; i < vm.cards2.length; i++) {
+                    var c = dic.containsKey(vm.cards2[i].id);
+                    if (c) {
+                        var x = dic.lookup(vm.cards2[i].id);
+                        x.push(vm.cards2[i]);
+                        dic.add(vm.cards2[i].id, x);
+                    } else {
+                        var x = [];
+                        x.push(vm.cards2[i]);
+                        dic.add(vm.cards2[i].id, x);
                     }
                 }
 
@@ -493,6 +624,8 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
                     var area = card.area;
                     var napa = card.napa;
                     var code = card.code;
+
+                    iterator = parseInt(card.messagetype);
 
                     if (card.numberofrooms == 1) {
                         card.numberofrooms = 'חדר אחד';

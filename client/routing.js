@@ -7,7 +7,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$locationP
             url: '/register',
             templateUrl: '/client/views/register.html'
         }).state('login', {
-            url: '/login',
+            url: '/login?msg',
             templateUrl: '/client/views/login.html',
             controller: 'LoginController'
         }).state('main', {
@@ -17,11 +17,11 @@ app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$locationP
             url: '/logout',
             controller: 'LogoutController'
         }).state('advertisehousesale', {
-            url: '/advertisehousecsale',
-            templateUrl: '/client/views/salehouse.html'
+            url: '/advertisehousesale',
+            templateUrl: '/client/views/advertisehousesale.html'
         }).state('advertisehouserent', {
             url: '/advertisehouserent',
-            templateUrl: '/client/views/renthouse.html'
+            templateUrl: '/client/views/advertisehouserent.html'
         }).state('addnewsalehouse', {
             url: '/addnewsalehouse',
             templateUrl: '/client/views/addnewsalehouse.html'
@@ -55,10 +55,10 @@ app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$locationP
         }).state('contactus', {
             url: '/contactus',
             templateUrl: '/client/views/contactus.html'
-        }).state('vrpage', {
-            url: '/vrpage',
+        }).state('virtualrealityrpage', {
+            url: '/virtualrealityrpage',
             controller: 'vrController',
-            templateUrl: '/client/views/vr.html'
+            templateUrl: '/client/views/virtualrealityrpage.html'
         }).state('help', {
             url: '/help',
             templateUrl: '/client/views/help.html'
@@ -69,7 +69,8 @@ app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$locationP
             url: '/admincontactus',
             templateUrl: '/client/views/admincontactus.html'
         }).state('mypage', {
-            url: '/mypage',
+            //url: '/mypage?g=&y=',
+            url: '/mypage?g&id=&type=',
             templateUrl: '/client/views/mypage.html'
         }).state('resetpassword', {
             url: '/resetpassword?id',

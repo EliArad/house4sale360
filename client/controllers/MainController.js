@@ -4,11 +4,13 @@
 app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper',
     'appCookieStore', 'socketioservice', 'Idle', '$rootScope',
     'SessionStorageService', 'myConfig', '$http', '$window', '$timeout',
-    'dboperations', 'citiesservice', 'general', '$cookies', '$sce','versionReloader','communication','visitors',
+    'dboperations', 'citiesservice', 'general', '$cookies', '$sce',
+    'versionReloader','communication','visitors','messageToLink',
     function ($scope, $state, authToken, myhttphelper,
               appCookieStore, socketioservice, Idle, $rootScope, SessionStorageService,
               myConfig, $http, $window, $timeout, dboperations,
-              citiesservice, general, $cookies, $sce,versionReloader,communication,visitors) {
+              citiesservice, general, $cookies, $sce,versionReloader,communication,
+              visitors,messageToLink) {
 
 
         var vm = this;
@@ -407,6 +409,37 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             }
         }
 
+        $scope.SendToAFriendAllPosts = function()
+        {
+
+            $('#sendAllMessageModal').modal('show');
+        }
+
+
+        $scope.SendPageLinkToAFriend = function()
+        {
+
+            var link = messageToLink.BuildLinkFromSearch(vm.search);
+            return;
+            var messagebody = '';
+            messagebody += '<div style="direction: rtl;text-align: right">';
+            messagebody = ' הי<br> ' +
+            $scope.personName + ' שלח לך לינק מאתר  apt360 לראות מודעה למכירה או קנייה של בית <br><br> ' + link;
+
+            messagebody += '<br><br><br>';
+            messagebody += $scope.messagebody;
+
+            messagebody += '</div>';
+            general.SendEmailToPerson($scope.emailToperson, $scope.personName, messagebody).then(function (result) {
+
+                alert('ההודעה נשלחה בהצלחה');
+            }).catch(function (result) {
+                alert('קרתה שגיאה וההודעה לא נשלחה');
+            })
+
+        }
+
+
         $scope.ShowCommDetails = function (item) {
             vm.userMessageId = item.id;
             var type = vm.search.messagetype == 'מכירה'  ? 0 : 1;
@@ -470,6 +503,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         function ShowResults(fast)
         {
 
+            $scope.showNoResultsMessage = false;
             if (vm.citiesSelected.length == 0 && fast == false) {
                 vm.msgboxcontent = 'בחר עיר אחת לפחות';
                 return;
@@ -506,9 +540,9 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             {
                 vm.search.balcony = 'לא משנה לי';
             }
-            if (vm.search.numberOfRooms == undefined)
+            if (vm.search.numberofrooms == undefined)
             {
-                vm.search.aircond = 'הכל';
+                vm.search.numberofrooms = 'הכל';
             }
 
             //console.log(vm.search);

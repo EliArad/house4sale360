@@ -5,105 +5,15 @@
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 	<url>
-		<loc>http://www.apt360.co.il/vrpage</loc>
-	</url>
-	<url>
-		<loc>http://apt360.co.il/vrpage</loc>
-	</url>
-	<url>
-		<loc>http://apt360.co.il/logout</loc>
-	</url>
-	<url>
 		<loc>http://apt360.co.il/</loc>
-	</url>
-	<url>
-		<loc>http://apt360.co.il/advertisehousecsale</loc>
-	</url>
-	<url>
-		<loc>http://apt360.co.il/help</loc>
-	</url>
-	<url>
-		<loc>http://apt360.co.il/admin</loc>
-	</url>
-	<url>
-		<loc>http://apt360.co.il/advertisehouserent</loc>
-	</url>
-	<url>
-		<loc>http://apt360.co.il/</loc>
-	</url>
-	<url>
-		<loc>http://apt360.co.il/?helptopic=image360howto360</loc>
-	</url>
-	<url>
-		<loc>http://www.apt360.co.il/logout</loc>
-	</url>
-	<url>
-		<loc>http://www.apt360.co.il/</loc>
-	</url>
-	<url>
-		<loc>http://www.apt360.co.il/mypage</loc>
-	</url>
-	<url>
-		<loc>http://www.apt360.co.il/advertisehouserent</loc>
-	</url>
-	<url>
-		<loc>http://apt360.co.il/addnewrenthouse</loc>
-	</url>
-	<url>
-		<loc>http://apt360.co.il/login</loc>
-	</url>
-	<url>
-		<loc>http://apt360.co.il/mypage</loc>
-	</url>
-	<url>
-		<loc>http://apt360.co.il/register</loc>
-	</url>
-	<url>
-		<loc>http://apt360.co.il/admincontactus</loc>
-	</url>
-	<url>
-		<loc>http://apt360.co.il/addnewsalehouse</loc>
-	</url>
-	<url>
-		<loc>http://www.apt360.co.il/help</loc>
-	</url>
-	<url>
-		<loc>http://www.apt360.co.il/admin</loc>
-	</url>
-	<url>
-		<loc>http://www.apt360.co.il/login</loc>
-	</url>
-	<url>
-		<loc>http://www.apt360.co.il/welcome</loc>
-	</url>
-	<url>
-		<loc>http://www.apt360.co.il/register</loc>
-	</url>
-	<url>
-		<loc>http://www.apt360.co.il/kablanref</loc>
-	</url>
-	<url>
-		<loc>http://www.apt360.co.il/contactus</loc>
-	</url>
-	<url>
-		<loc>http://www.apt360.co.il/admincontactus</loc>
-	</url>
-	<url>
-		<loc>http://www.apt360.co.il/advertisehousecsale</loc>
-	</url>
-	<url>
-		<loc>http://www.apt360.co.il/?helptopic=image360howto360</loc>
-	</url>
-	<url>
-		<loc>http://apt360.co.il/contactus</loc>
-	</url>
-	<url>
-		<loc>http://apt360.co.il/kablanref</loc>
 	</url>
 	<url>
 		<loc>http://apt360.co.il/privacyinfo</loc>
 	</url>
 	<url>
-		<loc>http://apt360.co.il/deleteaccount</loc>
+		<loc>http://apt360.co.il/help</loc>
+	</url>
+	<url>
+		<loc>http://www.apt360.co.il/contactus</loc>
 	</url>
 </urlset>

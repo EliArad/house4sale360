@@ -3,14 +3,7 @@ var secret = require('./config').secret;
 
 module.exports = function (req, res, next) {
 
-    if (req.body.auth != undefined) {
-        if (req.body.auth == false) {
-            req.body.auth = false;
-            return next();
-        }
-    }
 
-    req.body.auth = true;
     var bearerToken;
     var bearerHeader = req.headers['authorization'];
 
@@ -29,15 +22,12 @@ module.exports = function (req, res, next) {
             req.userguidFromToken = decoded.userguid;
             //console.log('req.idFromToken: ' + req.idFromToken);
 
-            //console.log('the user id from the token is: ' + decoded.sub);
             return next();
+
         } catch (err) {
-            console.log('error 1 in jwtauth ' + err);
-            return res.sendStatus(401);
-            //return next();
+            return next();
         }
     } else {
-        console.log('no bearerHeader is undefined');
-        return res.sendStatus(401);
+        return next();
     }
 };

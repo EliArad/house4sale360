@@ -29,7 +29,7 @@ module.exports = function (sqlserver) {
     return {
 
         contactus: function (req, res, next) {
-            console.log('contactus');
+            //console.log('contactus');
             sqlserver.get(function (err, con) {
                 if (!err) {
                     req.body.dated = new Date();
@@ -107,17 +107,17 @@ module.exports = function (sqlserver) {
         saveVisitorSearch: function (req, res, next) {
             sqlserver.get(function (err, con) {
                 if (!err) {
-                    console.log(req.body);
+                    //console.log(req.body);
                     var sql = 'SELECT * FROM yad2vr.usersearch where userguid = ' + con.escape(req.body.userguid);
                     var query = con.query(sql, function (err, rows) {
                         if (err) {
-                            console.log(err);
+                            //console.log(err);
                             sqlserver.release(con);
                             res.sendStatus(500);
                         } else {
-                            console.log(rows);
+                            //console.log(rows);
                             if (rows.length > 0) {
-                                console.log('upupupp');
+                                //console.log('upupupp');
                                 con.query('UPDATE yad2vr.usersearch SET ? WHERE ?', [{
                                     city: req.body.city,
                                     numofrooms: req.body.numofrooms,
@@ -125,7 +125,7 @@ module.exports = function (sqlserver) {
                                     propertytype: req.body.propertytype,
                                 }, {userguid: req.body.userguid}], function (err, result) {
                                     if (err) {
-                                        console.log(err);
+                                        //console.log(err);
                                         sqlserver.release(con);
                                         res.sendStatus(500);
                                     } else {
@@ -205,7 +205,7 @@ module.exports = function (sqlserver) {
                             var queryres = con.query('INSERT INTO yad2vr.visitors SET ?',
                                 data, function (err, result) {
                                 if (err) {
-                                    console.log(err);
+                                    //console.log(err);
                                     sqlserver.release(con);
                                     res.sendStatus(500);
                                 } else {

@@ -1,5 +1,111 @@
 <div class="container-fluid" ng-controller="mypageController as vm">
 
+
+    <!-- Modal -->
+    <div class="modal" id="sendAllMessageModal" role="dialog">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">שלח את הלינק לעמוד שלך במייל</h4>
+                </div>
+                <form name="form1" accept-charset="UTF-8">
+                    <div class="modal-body">
+
+                        <div class="well" style="padding-bottom:50px">
+
+
+                            <div class="form-group" ng-class="{ 'has-error': (form1.personname.$invalid )}">
+                                <label>שמך</label>
+                                <input type="text" name="personname"
+                                       placeholder="שמך בבקשה שיופיע במייל"
+                                       required
+                                       class="form-control"
+                                       ng-model="personName">
+
+                            </div>
+
+                            <div class="form-group" ng-class="{ 'has-error': (form1.emailtosend.$invalid )}">
+                                <label>אמייל</label>
+                                <input type="email" name="emailtosend"
+                                       placeholder="רשום את המייל של מקבל ההודעה כאן"
+                                       required
+                                       class="form-control"
+                                       ng-model="emailToperson">
+
+                            </div>
+                            <div>
+                                       <textarea id="msgbody1" required class="form-control"
+                                                 rows="5" id="new_message1"
+                                                 name="messagebody"
+                                                 ng-model="messagebody"
+                                                 placeholder="הוסף כמה מילים אם תרצה למקבל ההודעה. המייל יופיע מכתובת האתר apt360"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default"  ng-click="SendPageLinkToAFriend()"  ng-disabled="form1.emailtosend.$invalid"   data-dismiss="modal">סגור ושלח</button>
+                        <button type="button" class="btn btn-default"  data-dismiss="modal">בטל</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Modal -->
+    <div class="modal" id="sendMessageModal" role="dialog">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">שלח את המודעה הזו למייל</h4>
+                </div>
+                <form name="form1" accept-charset="UTF-8">
+                    <div class="modal-body">
+
+                        <div class="well" style="padding-bottom:50px">
+
+
+                                <div class="form-group" ng-class="{ 'has-error': (form1.personname.$invalid )}">
+                                    <label>שמך</label>
+                                    <input type="text" name="personname"
+                                           placeholder="שמך בבקשה שיופיע במייל"
+                                           required
+                                           class="form-control"
+                                           ng-model="personName">
+
+                                </div>
+
+                                <div class="form-group" ng-class="{ 'has-error': (form1.emailtosend.$invalid )}">
+                                    <label>אמייל</label>
+                                    <input type="email" name="emailtosend"
+                                           placeholder="רשום את המייל של מקבל ההודעה כאן"
+                                           required
+                                           class="form-control"
+                                           ng-model="emailToperson">
+
+                                </div>
+                                <div>
+                                       <textarea id="msgbody" required class="form-control"
+                                                 rows="5" id="new_message"
+                                                 name="messagebody"
+                                                 ng-model="messagebody"
+                                                 placeholder="הוסף כמה מילים אם תרצה למקבל ההודעה. המייל יופיע מכתובת האתר apt360"></textarea>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default"  ng-click="SendLinkToAFriend()"  ng-disabled="form1.emailtosend.$invalid"   data-dismiss="modal">סגור ושלח</button>
+                        <button type="button" class="btn btn-default"  data-dismiss="modal">בטל</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Modal -->
     <div class="modal" id="msgbox" role="dialog">
         <div class="modal-dialog modal-sm">
@@ -52,6 +158,12 @@
         {{ vm.searchsummery}}
 
         </span>
+
+
+            <button type="button" style="color:orange;float:left" ng-click="SendToAFriendAllPosts()"
+                    class="btn btn-sm btn-default">שלח לינק למייל לכל ההודעות
+            </button>
+
         </div>
 
     </div>
@@ -83,6 +195,12 @@
                      <span style="font-weight: bold">
 
                     {{ item.propertyType }}
+                    <span ng-if="item.messagetype == 0" style="font-weight: bold;color:blue">
+                        למכירה
+                    </span>
+                    <span ng-if="item.messagetype == 1" style="font-weight: bold;color:blue">
+                        להשכרה
+                    </span>
 
                     ב
                     {{ item.city.city }}
@@ -127,11 +245,9 @@
                         {{ item.price }}
                         </span>
 
-                            <button type="button" style="color:orange;float:left" ng-click="SendUserMessage(item)"
-                                    class="btn btn-sm btn-default">שלח הודעה
-                            </button>
-                            <button type="button" style="color:orange;float:left" ng-click="ShowCommDetails(item)"
-                                    class="btn btn-sm btn-default">פרטי בעל הנכס
+
+                            <button type="button" style="color:orange;float:left" ng-click="SendToAFriend(item, $index)"
+                                    class="btn btn-sm btn-default"> שלח לינק למייל
                             </button>
                         </div>
                     </div>
