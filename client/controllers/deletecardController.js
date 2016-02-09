@@ -1,15 +1,19 @@
 'use strict';
 
 
-app.controller('deletecardController', ['$scope','$state','authToken','myhttphelper',
-    function($scope,$state,authToken,myhttphelper)
+app.controller('deletecardController', ['$scope','$state','authToken','myhttphelper','vcRecaptchaService',
+    function($scope,$state,authToken,myhttphelper,vcRecaptchaService)
     {
 
-      $scope.pageClass = 'page-home';
 
       myhttphelper.doGet('/api/isauth').
         then(sendResponseData1).
         catch(sendResponseError1);
+
+      $scope.capdata = {
+         userselect : '??? ????? ?? ?????? ???',
+         response:''
+      };
 
 
       function sendResponseData1(response)
@@ -25,23 +29,24 @@ app.controller('deletecardController', ['$scope','$state','authToken','myhttphel
       }
 
 
-      myhttphelper.doGet('/api/getcaptch').
-        then(sendResponseData).
-        catch(sendResponseError);
-
-      function sendResponseData(response)
-      {
-          $scope.captchcode = response.value;
-      }
-      function sendResponseError(response)
-      {
-        console.log(response);
-      }
-
       $scope.submit = function(isValid)
       {
 
-        myhttphelper.doPost('/api/deletepospondcard', {capdata : $scope.capdata}).
+        console.log($scope.capdata);
+        if ($scope.capdata.userselect == '??? ????? ?? ?????? ???')
+        {
+           $scope.capdata.userselect = 0;
+        }  else {
+           $scope.capdata.userselect = 1;
+        }
+        $scope.capdata.response = vcRecaptchaService.getResponse(); // returns the string response
+        if ($scope.capdata.response == undefined || $scope.capdata.response == null || $scope.capdata.response == "")
+        {
+           alert('?????');
+           return;
+        }
+
+        myhttphelper.doPost('/api/deleteuser', {capdata : $scope.capdata}).
           then(sendResponseData1).
           catch(sendResponseError1);
 
@@ -57,9 +62,6 @@ app.controller('deletecardController', ['$scope','$state','authToken','myhttphel
           console.log(response);
           $state.go('login', {}, {reload: true});
         }
-
-
-
       }
     }
 

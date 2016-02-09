@@ -11,6 +11,8 @@ var randomstring = require("randomstring");
 var cityLoaderobject = require('../../classhelpers').siteHelper;
 var cityLoader = new cityLoaderobject();
 var cors = require('../common/cors');
+var request = require('request');
+
 
 var cities = [];
 
@@ -204,6 +206,38 @@ var routes = function (app, sqlserver,mailer) {
                 res.send(500);
             }
         });
+    });
+
+    app.post('/api/deleteuser', function (req, res, next) {
+
+
+
+        request({
+            url: 'https://www.google.com/recaptcha/api/siteverify',
+            qs: {secret:'6Lf-zBcTAAAAAEMLlVNjBUKaIgjVfz_akFJ0JMLd',  response:req.body.capdata.response}, //Query string data
+            method: 'POST',
+            //headers: {
+              //  'Content-Type': 'MyContentType',
+                //'Custom-Header': 'Custom Value'
+            //},
+            body: ''
+        }, function(error, response, body){
+            if(error) {
+                console.log(error);
+                res.send('not deleted');
+            } else {
+
+
+                var s = JSON.parse(body);
+                console.log(s);
+                if (s.success == false) {
+                    res.send('not deleted');
+                } else {
+                    res.send('deleted');
+                }
+            }
+        });
+
     });
 
     app.get('/api/getcitiesatonce', function (req, res, next) {

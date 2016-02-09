@@ -42,36 +42,36 @@ var server = http.createServer(app);
 //var io = require('socket.io')(server);
 
 /*
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.header("Access-Control-Allow-Methods", 'PUT', 'GET', 'POST', 'DELETE', 'OPTIONS');
-    // intercept OPTIONS method
-    if ('OPTIONS' == req.method) {
-        res.send(200);
-    } else {
-        next();
-    }
-});
-*/
+ app.use(function (req, res, next) {
+ res.header("Access-Control-Allow-Origin", "*");
+ res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+ res.header("Access-Control-Allow-Methods", 'PUT', 'GET', 'POST', 'DELETE', 'OPTIONS');
+ // intercept OPTIONS method
+ if ('OPTIONS' == req.method) {
+ res.send(200);
+ } else {
+ next();
+ }
+ });
+ */
 // or here or in nginx
 
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     var oneof = false;
-    if(req.headers.origin) {
+    if (req.headers.origin) {
         res.header('Access-Control-Allow-Origin', req.headers.origin);
         oneof = true;
     }
-    if(req.headers['access-control-request-method']) {
+    if (req.headers['access-control-request-method']) {
         res.header('Access-Control-Allow-Methods', req.headers['access-control-request-method']);
         oneof = true;
     }
-    if(req.headers['access-control-request-headers']) {
+    if (req.headers['access-control-request-headers']) {
         res.header('Access-Control-Allow-Headers', req.headers['access-control-request-headers']);
         oneof = true;
     }
-    if(oneof) {
+    if (oneof) {
         res.header('Access-Control-Max-Age', 60 * 60 * 24 * 365);
     }
 
@@ -138,7 +138,7 @@ var session = require('express-session');
 
 var commandsRoutes = require('./server/routes/commands')(app, sqlserver);
 var mailverify = require('./server/modules/nodemailer')(app, sqlserver);
-var commandsRoutes = require('./server/routes/commands')(app, sqlserver,mailverify);
+var commandsRoutes = require('./server/routes/commands')(app, sqlserver, mailverify);
 var registerRoutes = require('./server/routes/register')(sqlserver, registerController);
 var dbstoreRoutes = require('./server/routes/dbstore')(app, dbstoreController).init();
 
@@ -233,7 +233,7 @@ app.post('/api/upload', jwtauth, bodyParser({
                                     is360image: req.body.is360image,
                                     isvideo: false,
                                     is360video: false,
-                                    filesize:req.body.filesize
+                                    filesize: req.body.filesize
                                 };
 
                                 // save the entry to database salehouseblobs
@@ -425,18 +425,17 @@ app.get('/verify', function (req, res) {
 
     sqlserver.get(function (err, con) {
         if (!err) {
-            var sql = 'SELECT * FROM users WHERE  userguid = ' +  con.escape(req.query.id);
+            var sql = 'SELECT * FROM users WHERE  userguid = ' + con.escape(req.query.id);
             var query = con.query(sql, function (err, rows) {
 
-                if (err)
-                {
+                if (err) {
                     sqlserver.release(con);
                     console.log('verified but error on set');
                     res.redirect('/');
                 } else {
                     var thisHost = req.protocol + "://" + req.get('host');
                     console.log('thisHost: ' + thisHost);
-                    if (rows.length == 1 && rows[0].host == thisHost){
+                    if (rows.length == 1 && rows[0].host == thisHost) {
                         console.log('verified, need to set in db');
                         var condition = {userguid: req.query.id};
                         rows[0].verified = 1;
@@ -466,10 +465,9 @@ app.get('/resetpassword', function (req, res) {
 
     sqlserver.get(function (err, con) {
         if (!err) {
-            var sql = 'SELECT * FROM users WHERE  userguid = ' +  con.escape(req.query.id);
+            var sql = 'SELECT * FROM users WHERE  userguid = ' + con.escape(req.query.id);
             var query = con.query(sql, function (err, rows) {
-                if (err || rows.length == 0)
-                {
+                if (err || rows.length == 0) {
                     sqlserver.release(con);
                     console.log('verified but error on set');
                     res.redirect('/');
@@ -478,7 +476,7 @@ app.get('/resetpassword', function (req, res) {
                     var thisHost = req.protocol + "://" + req.get('host');
                     console.log(thisHost);
                     console.log(rows[0].host);
-                    if (rows.length == 1 && rows[0].host == thisHost){
+                    if (rows.length == 1 && rows[0].host == thisHost) {
                         console.log('eeeeeeeeeeeeee');
                         res.redirect('/#!/resetpassword?=' + req.query.id);
                     } else {

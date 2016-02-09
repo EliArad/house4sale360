@@ -83,7 +83,7 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
                 //})
 
 
-
+                $rootScope.$broadcast("updatestatus", 'loggedin');
                 SessionStorageService.setSessionStorage('username', response.username);
                 $rootScope.$broadcast("updateHeader", authToken.getToken());
                 $rootScope.$broadcast("updateAgent", response.agent);

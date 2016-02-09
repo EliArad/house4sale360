@@ -79,7 +79,15 @@ app.controller('HeaderController', ['$scope', '$state', 'authToken',
             if ($scope.isAuthenticated == true) {
                 var username = SessionStorageService.getSessionStorage('username');
                 $scope.hellousername = ' hello  ' + username;
+                document.getElementById('fotdeletaccountid').style.display = 'block';
+                document.getElementById('fotmymessagesid').style.display = 'block';
+                document.getElementById('publishsale').style.display = 'block';
+                document.getElementById('publishrent').style.display = 'block';
             } else {
+                document.getElementById('fotdeletaccountid').style.display = 'none';
+                document.getElementById('fotmymessagesid').style.display = 'none';
+                document.getElementById('publishsale').style.display = 'none';
+                document.getElementById('publishrent').style.display = 'none';
                 $scope.hellousername = '';
             }
         });

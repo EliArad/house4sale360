@@ -9,6 +9,7 @@ app.controller('LogoutController', ['$scope', '$state', 'authToken', '$rootScope
             reload: true
         });
         $rootScope.$broadcast("updateHeader", authToken.getToken());
+        $rootScope.$broadcast("updatestatus", 'loggedin');
     }
   ]);
 

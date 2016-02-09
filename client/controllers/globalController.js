@@ -8,10 +8,9 @@ app.controller('GlobalController', ['$scope', '$state', 'authToken', 'PassServic
               socketioservice, citiesservice,versionReloader,SchonotBackg,visitors,myConfig) {
 
         var m_vm = this;
-        console.log('global controller started');
+        //console.log('global controller started');
         versionReloader.start();
         SchonotBackg.getStreets(3000);
-
 
         //var socket = io.connect('80.178.121.130');
 

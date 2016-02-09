@@ -367,6 +367,13 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             vm.searchsummery = '';
             vm.searchsummery +=  'מציג ';
 
+            if (vm.search.agent == 'מתווך')
+            {
+                vm.searchTitle = 'מתיווך';
+            } else {
+                vm.searchTitle = vm.search.agent;
+            }
+
 
             if (vm.search.propertyType == undefined || vm.search.propertyType.length == 0)
             {
@@ -957,6 +964,17 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 vm.current360IdPlay = index;
                 load360Video(imgsrc);
             }
+        }
+
+        try {
+            var bt = $("[name='my-checkbox']").bootstrapSwitch();
+            $('#vrcheckboxid').on('switchChange.bootstrapSwitch', function (event, state) {
+                $scope.virtualSearch = state;
+            });
+        }
+        catch (e)
+        {
+            location.reload();
         }
 
 
