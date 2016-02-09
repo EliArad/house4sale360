@@ -10,6 +10,8 @@
                      type="file"
                      multiple="false"
                      data-vidlm='{{ item.id }}'
+                     data-index = {{$index}}
+                     data-item = {{item}}
                      onchange="angular.element(this).scope().videoregularloaderinputChanged(this)"
                       />
                   </span>

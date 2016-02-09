@@ -45,14 +45,15 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default"  ng-click="SendPageLinkToAFriend()"  ng-disabled="form1.emailtosend.$invalid"   data-dismiss="modal">סגור ושלח</button>
-                        <button type="button" class="btn btn-default"  data-dismiss="modal">בטל</button>
+                        <button type="button" class="btn btn-default" ng-click="SendPageLinkToAFriend()"
+                                ng-disabled="form1.emailtosend.$invalid" data-dismiss="modal">סגור ושלח
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">בטל</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-
 
 
     <!-- Modal -->
@@ -98,17 +99,15 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default"  ng-click="SendLinkToAFriend()"  ng-disabled="form1.emailtosend.$invalid"   data-dismiss="modal">סגור ושלח</button>
-                        <button type="button" class="btn btn-default"  data-dismiss="modal">בטל</button>
+                        <button type="button" class="btn btn-default" ng-click="SendLinkToAFriend()"
+                                ng-disabled="form1.emailtosend.$invalid" data-dismiss="modal">סגור ושלח
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">בטל</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-
-
-
-
 
 
     <!-- Modal -->
@@ -628,7 +627,7 @@
     </div>
 
     <div class="row" style="margin-right:1px">
-        <div class="col-md-5 col-cx-11">
+        <div class="col-md-5 col-xs-12">
             <button type="button" class="btn btn-default" style="color:orange" data-toggle="modal"
                     data-target="#myModal">
                 הגדר את אפשרויות
@@ -640,9 +639,16 @@
             <div>
                 חיפוש במשקפת VR
                 <input type="checkbox" ng-model="virtualSearch" name="my-checkbox" checked>
+
+
+                תצוגה רחבה
+                <input type="checkbox" id="large-video" ng-checked="largeScreens" ng-click="SetViewMode()"
+                       name="largeViewCheckbox" checked>
+
+
             </div>
         </div>
-        <div class="col-md-7 col-cs-11">
+        <div class="col-md-7 col-xs-11">
         <span style="font-size: 14pt" ng-hide="showNoResultsMessage">
 
         {{ vm.searchsummery}}
@@ -1066,13 +1072,16 @@
                 </div>
             </div>
 
-            <div class="row" ng-show="item.privacyEnabled == 1 && (item.show3dtour || item.show360video || item.image360Exists)">
+            <div class="row"
+                 ng-show="item.privacyEnabled == 1 && (item.show3dtour || item.show360video || item.image360Exists)">
                 <div class="col-md-9 col-md-offset-3">
                     <form class="form-inline" role="form">
                         <div class="form-group">
                             <div>
                                 <div>
-                                    <lable style="font-weight: bold" >בעל הדירה מבקש קוד לראות כל הסיור הוירטואלי ותמונות ה 360</lable>
+                                    <lable style="font-weight: bold">בעל הדירה מבקש קוד לראות כל הסיור הוירטואלי ותמונות
+                                        ה 360
+                                    </lable>
                                 </div>
                                 <div>
                                     <input type="text"
@@ -1104,36 +1113,85 @@
                  style="height: 50px;text-align: center;font-weight: bold">
                 השתמש באזור זה לגלול את המסך במובייל
             </div>
-            <div class="row" ng-show="item.showPictures > 0 && !virtualSearch && item.privacyEnabled == 0">
-                <div ng-class="{ 'col-md-12 col-xs-12 col-lg-12 col-sm-12':  !item.imageExists, 'col-md-7 col-xs-12 col-lg-7 col-sm-12':  item.imageExists}"
-                     ng-show="item.image360Exists">
-                    <div id="your-pano{{ item.id }}" style="height:500px">
 
-                    </div>
+
+            <div class="row">
+                <div class="col-md-3 col-md-offset-3">
+
+                    <a ng-click="loadPrev360Image(item, $index)" style="cursor: pointer">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                    {{ item.current360ImageStatus}}
+                    <a ng-click="loadNext360Image(item, $index)" style="cursor: pointer">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </a>
                 </div>
-                <div ng-class="{ 'col-md-12  col-xs-12 col-lg-12 col-sm-12':  !item.image360Exists, 'col-md-5 col-xs-12 col-lg-5 col-sm-12':  item.image360Exists}"
-                     ng-show="item.imageExists && !virtualSearch">
-                    <div style="margin-left: 1px">
-                        <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
-                            <uib-slide ng-repeat="slide in item.slides" active="slide.active">
-                                <img ng-src="{{slide.image}}"
-                                     class="img-responsive"
-                                     ng-mouseover="mo()"
-                                     ng-mouseleave="ml()"
-                                     style="margin:auto;max-height: 400px">
+            </div>
 
-                                <div class="carousel-caption">
-                                    <!--<h4>Slide {{$index}}</h4>-->
-                                    <p>{{slide.text}}</p>
-                                </div>
-                            </uib-slide>
-                        </uib-carousel>
+            <div ng-if="largeScreens">
+                <div class="row" ng-show="item.showPictures > 0 && !virtualSearch && item.privacyEnabled == 0">
+                    <div ng-class="{ 'col-md-12 col-xs-12 col-lg-12 col-sm-12':  !item.imageExists, 'col-md-7 col-xs-12 col-lg-7 col-sm-12':  item.imageExists}"
+                         ng-show="item.image360Exists">
+
+                        <div id="your-pano{{ item.id }}" style="height:500px">
+
+                        </div>
+                    </div>
+                    <div ng-class="{ 'col-md-12  col-xs-12 col-lg-12 col-sm-12':  !item.image360Exists, 'col-md-5 col-xs-12 col-lg-5 col-sm-12':  item.image360Exists}"
+                         ng-show="item.imageExists && !virtualSearch">
+                        <div style="margin-left: 1px">
+                            <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
+                                <uib-slide ng-repeat="slide in item.slides" active="slide.active">
+                                    <img ng-src="{{slide.image}}"
+                                         class="img-responsive"
+                                         ng-mouseover="mo()"
+                                         ng-mouseleave="ml()"
+                                         style="margin:auto;max-height: 400px">
+
+                                    <div class="carousel-caption">
+                                        <!--<h4>Slide {{$index}}</h4>-->
+                                        <p>{{slide.text}}</p>
+                                    </div>
+                                </uib-slide>
+                            </uib-carousel>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div ng-if="!largeScreens">
+                <div class="row" ng-show="item.showPictures > 0 && !virtualSearch && item.privacyEnabled == 0">
+                    <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12"
+                         ng-show="item.image360Exists">
+
+                        <div id="your-pano{{ item.id }}" style="height:500px">
+
+                        </div>
+                    </div>
+                    <div class="col-md-12  col-xs-12 col-lg-12 col-sm-12"
+                         ng-show="item.imageExists && !virtualSearch">
+                        <div style="margin-left: 1px">
+                            <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
+                                <uib-slide ng-repeat="slide in item.slides" active="slide.active">
+                                    <img ng-src="{{slide.image}}"
+                                         class="img-responsive"
+                                         ng-mouseover="mo()"
+                                         ng-mouseleave="ml()"
+                                         style="margin:auto;max-height: 600px">
+
+                                    <div class="carousel-caption">
+                                        <!--<h4>Slide {{$index}}</h4>-->
+                                        <p>{{slide.text}}</p>
+                                    </div>
+                                </uib-slide>
+                            </uib-carousel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="row" ng-if="item.showregularvideo && !virtualSearch">
                 <a class="animated infinite pulse" style="cursor :pointer;margin-right: 20px;font-size: x-large"
-                   ng-click="ShowRegularVideo(item)">
+                   ng-click="ShowRegularVideo(item, $index)">
                     {{ item.videoexistlable }}
                 </a>
             </div>

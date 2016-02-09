@@ -1,25 +1,59 @@
-<a href="#" id="go"></a>
-<div id="your-pano{{ item.id }}"></div>
-<div class="col-md-3">
-<span class="btn btn-primary btn-file">העלה תמונת 360
-<input type="file" name="pano" id="pane{{ item.id }}" data-animal-type="{{ item }}"
-       onchange="angular.element(this).scope().onOpen360File(this)"/>
-</span>
+<div style="text-align: center;font-size: 20pt">
+    תמונות פנורמה 360 מעלות
+</div>
+<div>
+    <p>
+        <span ng-show="isagent">
+            יש לכם עד 1GIGA מקום להעלות תמונות, וידאו, סיורים וירטואלים תמונות ,360 לכל  המודעות ביחד
+        </span>
+        <span ng-show="!isagent">
+יש לכם עד 150 מגה מקום להעלות תמונות, וידאו, סיורים וירטואלים ,תמונות 360 לכל  המודעות ביחד
+        </span>
+    </p>
 </div>
 
-<div id="image360glyps{{item.id}}" style="display: none" >
-    <div class="col-md-3 col-md-offset-3">
-        <p>
-            <a ng-click="loadPrev360Image(item)" style="cursor: pointer">
-                <span style="font-size: xx-large" class="glyphicon glyphicon-chevron-right"></span>
-            </a>
-        </p>
-    </div>
-    <div class="col-md-3">
-        <p>
-            <a ng-click="loadNext360Image(item)" style="cursor: pointer">
-                <span style="font-size: xx-large" class="glyphicon glyphicon-chevron-left"></span>
-            </a>
-        </p>
+<a href="#" id="go"></a>
+<div class="col-md-12">
+    <div class="row">
+        <div class="col-md-3">
+        <span class="btn btn-primary btn-file">העלה תמונת 360
+        <input type="file" name="pano" id="pane{{ item.id }}"
+               data-index-type="{{ $index }}"
+               data-animal-type="{{ item }}"
+               onchange="angular.element(this).scope().onOpen360File(this)"/>
+        </span>
+        </div>
+        <div class="col-md-3">
+            <input type="text" ng-model="item.Image360Name"
+                   placeholder="ניתן לתת ,מיקום שם לתמונה " class="form-control" id="nameofimage">
+        </div>
+        <div class="col-md-3">
+
+           <input type="button" class="btn btn-default" ng-click="SaveImage360Name(item)" value="שמור שם" />
+
+           <input type="button" class="btn btn-default" ng-click="DeleteImage360Picture(item)" value="מחק" />
+
+        </div>
+        <div class="col-md-3" id="image360glyps{{item.id}}" style="display: none">
+            <div class="row">
+                <div class="col-md-3 col-md-offset-3">
+                    <p>
+                        <a ng-click="loadPrev360Image(item, $index)" style="cursor: pointer">
+                            <span style="font-size: xx-large" class="glyphicon glyphicon-chevron-right"></span>
+                        </a>
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <p>
+                        <a ng-click="loadNext360Image(item, $index)" style="cursor: pointer">
+                            <span style="font-size: xx-large" class="glyphicon glyphicon-chevron-left"></span>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<div id="your-pano{{ item.id }}"></div>
+

@@ -332,56 +332,68 @@ app.post('/api/uploadvideo', jwtauth, bodyParser({
             //console.log(fileNameRaw);
 
             sqlserver.get(function (err, con) {
-                storage.addToStorage(req.idFromToken, req.body.filesize, con, function (err) {
-                    //console.log(err);
-                    if (err == null) {
-                        fs.writeFile(fileNameRaw, buff, function (err) {
-                            if (err) {
-                                sqlserver.release(con);
-                                res.sendStatus(500);
-                            } else {
 
-                                var datatoinsert = {
-                                    filename: req.body.filename,
-                                    tableid: req.body.insertId,
-                                    is360image: false,
-                                    isvideo: true,
-                                    is360video: req.body.is360video,
-                                    filesize:req.body.filesize
-                                };
-
-                                // save the entry to database salehouseblobs
-                                var sql = 'SELECT * FROM ' + tabletype + ' WHERE tableid = ' + con.escape(req.body.insertId) + ' AND filename = ' + con.escape(req.body.filename) +
-                                          ' AND isvideo = true AND is360video = ' + con.escape(req.body.is360video);
-                                var query = con.query(sql, function (err, rows) {
+                var sql = 'SELECT * FROM ' + tabletype + ' WHERE tableid = ' + con.escape(req.body.insertId) + ' AND filename = ' + con.escape(req.body.filename) +
+                    ' AND isvideo = true AND is360video = ' + con.escape(req.body.is360video);
+                var query = con.query(sql, function (err, rows) {
+                    if (err) {
+                        sqlserver.release(con);
+                        return res.sendStatus(500);
+                    } else {
+                        if (rows.length > 0) {
+                            console.log('there is already file in that name in this id');
+                            sqlserver.release(con);
+                            return res.send('ok');
+                        }
+                        storage.addToStorage(req.idFromToken, req.body.filesize, con, function (err) {
+                            //console.log(err);
+                            if (err == null) {
+                                fs.writeFile(fileNameRaw, buff, function (err) {
                                     if (err) {
                                         sqlserver.release(con);
-                                        return res.sendStatus(500);
+                                        res.sendStatus(500);
                                     } else {
-                                        if (rows.length > 0) {
-                                            console.log('there is already file in that name in this id');
-                                            sqlserver.release(con);
-                                            return res.send('ok');
-                                        }
-                                    }
 
-                                    var query = con.query('INSERT INTO ' + tabletype + ' SET ?', datatoinsert, function (err, result) {
-                                        sqlserver.release(con);
-                                        if (err) {
-                                            res.sendStatus(500);
-                                        } else {
-                                            res.send(result);
-                                        }
-                                    });
+                                        var datatoinsert = {
+                                            filename: req.body.filename,
+                                            tableid: req.body.insertId,
+                                            is360image: false,
+                                            isvideo: true,
+                                            is360video: req.body.is360video,
+                                            filesize: req.body.filesize
+                                        };
+
+                                        // save the entry to database salehouseblobs
+                                        var sql = 'SELECT * FROM ' + tabletype + ' WHERE tableid = ' + con.escape(req.body.insertId) + ' AND filename = ' + con.escape(req.body.filename) +
+                                            ' AND isvideo = true AND is360video = ' + con.escape(req.body.is360video);
+                                        var query = con.query(sql, function (err, rows) {
+                                            if (err) {
+                                                sqlserver.release(con);
+                                                return res.sendStatus(500);
+                                            } else {
+                                                if (rows.length > 0) {
+                                                    console.log('there is already file in that name in this id');
+                                                    sqlserver.release(con);
+                                                    return res.send('ok');
+                                                }
+                                            }
+
+                                            var query = con.query('INSERT INTO ' + tabletype + ' SET ?', datatoinsert, function (err, result) {
+                                                sqlserver.release(con);
+                                                if (err) {
+                                                    res.sendStatus(500);
+                                                } else {
+                                                    res.send('ok');
+                                                }
+                                            });
+                                        });
+                                    }
                                 });
+                            } else {
+                                sqlserver.release(con);
+                                console.log(err);
+                                return res.send("exceed size");
                             }
-                        });
-                    } else {
-                        sqlserver.release(con);
-                        console.log(err);
-                        return res.json({
-                            error: 500,
-                            msg: "exceed size"
                         });
                     }
                 });

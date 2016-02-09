@@ -27,8 +27,17 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
             currentTime: 0,
             duration: 0
         };
+        function citiesLoaderCallback(data, citiesOnly)
+        {
+            vm.cities = angular.copy(data);
+            vm.citiesOnly = angular.copy(citiesOnly);
+        }
+        citiesservice.registerCitiesLoaded(citiesLoaderCallback);
+
         vm.cities = citiesservice.getcities_all_ready();
         vm.citiesOnly = citiesservice.getcities_ready();
+
+
         var slides = $scope.slides = [];
         $scope.shownapa = false;
         $window.onbeforeunload = $scope.onExit;
@@ -89,7 +98,7 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
             var reader = new FileReader();
 
             reader.onload = function () {
-                ajaxUpload2(reader.result, file.name, function (err, results) {
+                ajaxUpload2(reader.result, file, function (err, results) {
                     if (err == "ok") {
                         var PSV = new PhotoSphereViewer({
                             // Panorama, given in base 64
@@ -157,7 +166,7 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
             $scope.uploadFile2(fileInputElement.files[0]);
         }
 
-        var ajaxUpload = function (result, fileName, filesize , callback) {
+        var ajaxUpload = function (result, file , callback) {
 
             if (vm.insertId == -1) {
                 if (callback)
@@ -167,11 +176,11 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
 
             var data = {
                 "images": result,
-                "filename": fileName,
+                "filename": file.name,
                 "tabletype": "salehouse",
                 "insertId": vm.insertId,
                 'is360image': false,
-                filesize:filesize
+                filesize:file.size
             };
 
 
@@ -290,10 +299,10 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
                 });
         }
 
-        function upload360Video(filename) {
-            fileReader.readAsDataUrl(filename, $scope)
+        function upload360Video(file) {
+            fileReader.readAsDataUrl(file, $scope)
                 .then(function (result) {
-                    ajaxUpload360Video(result, filename, function(err, res){
+                    ajaxUpload360Video(result, file, function(err, res){
                         if (err != 'ok')
                         {
                             vm.showwaitcircle = false;
@@ -336,7 +345,7 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
                 });
         }
 
-        function ajaxUpload360Video(result, fileName, callback) {
+        function ajaxUpload360Video(result, file, callback) {
 
 
             if (vm.insertId == -1) {
@@ -347,10 +356,11 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
 
             var data = {
                 "video": result,
-                "filename": fileName.name,
+                "filename": file.name,
                 "tabletype": "salehouse",
                 "insertId": vm.insertId,
-                'is360video': true
+                'is360video': true,
+                filesize:file.size
             };
 
             myhttphelper.doPost('/api/uploadvideo', data).
@@ -386,7 +396,7 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
         $scope.loadNext360Image = function () {
             alert('next');
         }
-        var ajaxUpload2 = function (result, fileName, callback) {
+        var ajaxUpload2 = function (result, file, callback) {
 
             if (vm.insertId == -1) {
                 callback("failed", "cannot attached to new message");
@@ -395,10 +405,11 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
 
             var data = {
                 "images": result,
-                "filename": fileName,
+                "filename": file.name,
                 "tabletype": "salehouse",
                 "insertId": vm.insertId,
-                'is360image': true
+                'is360image': true,
+                filesize:file.size
             };
 
 
@@ -414,10 +425,10 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
                 });
         }
 
-        $scope.uploadFile1 = function (fileName, index) {
+        $scope.uploadFile1 = function (file, index) {
 
             $scope.progress = 0;
-            fileReader.readAsDataUrl(fileName, $scope)
+            fileReader.readAsDataUrl(file, $scope)
                 .then(function (result) {
                     var i = new Image();
                     i.onload = function () {
@@ -429,7 +440,7 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
                             alert(msg);
                             return;
                         }
-                        ajaxUpload(result, fileName.name);
+                        ajaxUpload(result, file);
                     };
                     i.src = result;
                 });
@@ -580,7 +591,6 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
             card.city = vm.card.city;
             var objdata = getCityObject(vm.card.city);
             //console.log(card.city);
-            //console.log(objdata);
             card.napa = objdata.napa;
             card.code = objdata.code;
             card.area = objdata.area;
@@ -641,6 +651,14 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
                 break;
             }
 
+            if (card.floor == 'קרקע')
+            {
+                card.floor = 0;
+            }
+            if (card.fromfloor == 'קרקע')
+            {
+                card.fromfloor = 0;
+            }
 
 
             if (angular.equals(vm.currentCard, card) == true) {
@@ -661,7 +679,9 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
                 $scope.showstate2 = true;
 
             }).catch(function (result) {
-                console.log(result.data);
+                alert(result.data);
+                vm.showError = true;
+                vm.errorToShow = result.data;
             });
 
         }
@@ -717,7 +737,6 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
 
 
             var objectData = getCityObject(selectedItem);
-            //console.log(objectData);
             vm.card.napa = objectData.napa;
             vm.card.code = objectData.code;
             vm.card.city = selectedItem;

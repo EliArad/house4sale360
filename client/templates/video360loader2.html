@@ -1,6 +1,9 @@
-<form id="video360LoaderInputForm"
-      enctype="multipart/form-data"
-      method="post">
+<div class="row">
+    <div class="col-md-3">
+
+        <form id="video360LoaderInputForm"
+              enctype="multipart/form-data"
+              method="post">
               <span class="btn btn-primary btn-file">
 העלה וידאו 360
               <input id="video360LoaderInput{{ item.id }}"
@@ -9,8 +12,40 @@
                      accept="video/mp4,video/x-m4v,video/*"
                      type="file"
                      multiple="false"
-                     data-itemid ="{{ item.id }}"
+                     data-itemid="{{ item.id }}"
+                     data-index="{{ $index }}"
+                     data-item="{{ item }}"
                      onchange="angular.element(this).scope().video360LoaderInputChanged(this)"
-                      />
+              />
                   </span>
-</form>
+        </form>
+    </div>
+    <div class="col-md-3">
+        <input type="text" ng-model="item.video360Name"
+               placeholder="ניתן לתת ,מיקום שם לוידאו" class="form-control" id="nameofvideo360">
+    </div>
+    <div class="col-md-3">
+
+        <input type="button" class="btn btn-default" ng-click="SaveVideo360Name(item)" value="שמור שם"/>
+
+        <input type="button" class="btn btn-default" ng-click="DeleteVideo(item)" value="מחק" />
+
+    </div>
+    <div class="col-md-3" id="video360glyps{{item.id}}" style="display: none">
+        <div class="row">
+
+
+            <a ng-click="loadPrev360Video(item, $index)" style="cursor: pointer">
+                <span style="font-size: xx-large" class="glyphicon glyphicon-chevron-right"></span>
+            </a>
+
+            {{ vm.current360VideoStatus}}
+
+            <a ng-click="loadNext360Video(item, $index)" style="cursor: pointer">
+                <span style="font-size: xx-large" class="glyphicon glyphicon-chevron-left"></span>
+            </a>
+
+            </div>
+        </div>
+    </div>
+</div>

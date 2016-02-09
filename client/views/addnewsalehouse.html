@@ -594,6 +594,9 @@
                                 ng-click="saveChanges(form)"
                                 class="btn btn-primary">שמור נתונים
                         </button>
+                        <span ng-show="showError" style="color:red;font-size: 18pt">
+                            {{vm.errorToShow }}
+                        </span>
                     </div>
                 </div>
 

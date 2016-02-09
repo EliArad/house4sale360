@@ -18,8 +18,6 @@ module.exports = function (sqlserver) {
     return {
 
 
-
-
         all: function (req, res) {
             //console.log("get all registrators");
             res.send("error, not implemented");

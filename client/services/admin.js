@@ -20,9 +20,15 @@ app.factory("admin", ['$http', '$q', 'myConfig',
             return $q.reject("error from send " + response.status);
         }
 
-        return {
-            logoutAllUsers: logoutAllUsers
+
+        function getUsers() {
+            var membersAPI = myConfig.url + "/api/admin/getUsers";
+            return $http.get(membersAPI);
         }
 
+        return {
+            logoutAllUsers: logoutAllUsers,
+            getUsers:getUsers
+        }
     }
 ]);

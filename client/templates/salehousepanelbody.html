@@ -20,8 +20,6 @@
                 </select>
             </div>
         </div>
-
-
         <div class="form-group" style="white-space:nowrap"
              ng-class="{ 'has-error': form.city.$error.required }">
             <label class="control-label col-sm-3" for="propertyType">עיר</label>
@@ -41,8 +39,6 @@
                 </ui-select>
             </div>
         </div>
-
-
         <div class="form-group" style="white-space:nowrap"
              ng-class="{ 'has-error': form.area.$error.required }">
             <label class="control-label col-sm-3" for="">אזור</label>
@@ -60,7 +56,6 @@
                         </span>
             </div>
         </div>
-
         <div class="form-group" style="white-space:nowrap"
              ng-class="{ 'has-error': form.street.$error.required }">
             <label class="control-label col-sm-3" for="street">רחוב</label>
@@ -383,10 +378,10 @@
             <label class="control-label col-sm-3" for="freedetails"> מידע נוסף</label>
 
             <div class="col-sm-9">
-                                                    <textarea id="new_message"
-                                                              style="border-color: gray"
-                                                              placeholder="ספר על הדירה שלך"
-                                                              rows="4" cols="50" ng-model="item.freedetails"/>
+                        <textarea id="new_message"
+                                  style="border-color: gray"
+                                  placeholder="ספר על הדירה שלך"
+                                  rows="6" cols="50" ng-model="item.freedetails"/>
             </div>
         </div>
 
@@ -466,10 +461,24 @@
                                ng-model="item.email">
                     </div>
                 </div>
+                <div>
+
+                                <span style="color:lightcoral">
+                                    כל נתוני התקשורות אינם חובה מתוך כיבוד שמירת הפרטיות
+                                    <br>
+                                    שליחת ההודעה תהיה מהמייל של האתר וכן באמצעות
+                                    <br>
+                                    מערכת מספרים אוטומטית 1900
+                                    <br>
+                                    <span ng-show="isagent">
+                                    מתווכים יכולים להשאיר מספר פרטי התקשרות
+או גם להשתמש בשרות 1900
+                                    </span>
+                                </span>
+
+                </div>
             </div>
         </div>
-
-
     </div>
 </div>
 <div class="row" style="margin-top: 30px">
@@ -487,7 +496,27 @@
 
 </div>
 
-<div class="row">
+<div class="row" style="margin-right: 15px;border: inset">
+    <div>
+        <p style="font-size: 20pt">
+        <div style="text-align: center;font-size: 20pt">
+            תמונות סטילס
+        </div>
+        <span ng-show="isagent">
+            יש לכם עד 1GIGA מקום להעלות תמונות, וידאו, סיורים וירטואלים תמונות ,360 לכל  המודעות ביחד
+        </span>
+        <span ng-show="!isagent">
+יש לכם עד 150 מגה מקום להעלות תמונות, וידאו, סיורים וירטואלים ,תמונות 360 לכל  המודעות ביחד
+        </span>
+        </p>
+    </div>
+
+    <div ng-if="item.showwaitcircle" style="font-size:20pt; text-align: center; color: orangered"
+         class="animated infinite tada">
+
+        מעלה קובץ...
+
+    </div>
     <div ng-include="'client/templates/pictureupload11.html'">
 
     </div>
@@ -498,31 +527,107 @@
 
 
 </div>
-<div class="row" style="margin-top: 50px">
+<div class="row" style="margin-top: 50px;border: inset;margin-right: 10px">
+    <div ng-if="item.showwaitcircle360" style="font-size:20pt; text-align: center; color: orangered"
+         class="animated infinite tada">
+
+        מעלה קובץ...
+
+    </div>
     <div ng-include="'client/templates/image360.html'">
 
     </div>
 </div>
-<div class="row">
-    <div class="col-md-4 col-md-offset-3" ng-show="vm.showwaitcircle"
-         ng-include="'/client/templates/waitcircle.html'">
-    </div>
-    <div ng-include="'client/templates/videoregularloadermultiple.html'">
+<div class="row" style="border: inset;margin-top: 80px">
+
+
+    <div ng-if="item.showwaitcirclevideo" style="font-size:20pt; text-align: center; color: orangered"
+         class="animated infinite tada">
+
+        מעלה קובץ...
 
     </div>
+
+    <div style="text-align: center;font-size: 20pt">
+        וידאו רגיל - אפשר מכל מצלמה כולל נייד
+    </div>
+    <div>
+        <br>
+        שימו לב: בכדי להעלות וידאו שלא יתפוס מקום רב ותוכלו לצלם זמן ארוך יותר בטלפון שלכם
+        <br>
+        יש לכוון את ההגדרות של הוידאו למצב VGA.מצב זה יאפשר להקליט זמן ארוך יותר.
+        אל תשכחו להחזיר חזרה את ההגדרות לאיכות שהייתה קודם למשל full hd
+        ההגדרה הזו מורידה באיכות התמונה ולפיכך נותנת לכם זמן ארוך יותר באותו גודל.
+        <br>
+        <a ui-sref="howto360?recordlongvideo">
+            להסברים נוספים
+        </a>
+        <br>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-3">
+            <div ng-include="'client/templates/videoregularloadermultiple.html'">
+
+            </div>
+        </div>
+        <div class="col-md-3">
+            <input type="text" ng-model="item.videoName"
+                   placeholder="ניתן לתת ,מיקום שם לתמונה " class="form-control" id="nameofimage">
+        </div>
+        <div class="col-md-3">
+
+            <input type="button" class="btn btn-default" ng-click="SaveVideoName(item)" value="שמור שם"/>
+
+
+            <input type="button" class="btn btn-default" ng-click="DeleteVideo(item)" value="מחק" />
+
+
+        </div>
+        <div class="col-md-3" id="videoregularglyps{{item.id}}" style="display: none">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <a ng-click="loadPrevVideo(item, $index)" style="cursor: pointer">
+                        <span style="font-size: xx-large" class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                    {{ vm.currentVideoStatus}}
+                    <a ng-click="loadNextVideo(item, $index)" style="cursor: pointer">
+                        <span style="font-size: xx-large" class="glyphicon glyphicon-chevron-left"></span>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div ng-include="'client/templates/videoregular_multiple.html'">
 
     </div>
+
 </div>
-<div class="row">
-    <div class="col-md-4 col-md-offset-3" ng-show="vm.showwaitcircle" ng-include="'/client/templates/waitcircle.html'">
+<div class="row" style="margin-top: 50px;border: inset">
+
+    <div style="text-align: center;font-size: 20pt;margin-right: 10px">
+        וידאו 360 - וידאו ממצלמת 360 מיוחדת
+    </div>
+    <div>
+        וידאו ממצלמת 360 נותן לכם אפשרות לראות בתנועה ולשמוע ב 360 מעלות.
+        <br>
+        את הוידאו ניתן לראות גם משקפת וירטואל ראליטי ישירות מהאתר על ידי גלישה מהמשקפת בדפדפן VR
+        <br>
+        <a ui-sref="vrpage">ללפרטים נוספים על גלישה ב VR</a>
+    </div>
+
+
+    <div ng-if="item.showwaitcirclevideo360" style="font-size:20pt; text-align: center; color: orangered"
+         class="animated infinite tada">
+        מעלה קובץ...
     </div>
     <div ng-include="'client/templates/video360loader2.html'">
 
     </div>
-
-
     <button type="button" class="btn btn-info" ng-click="Show360Video(item.id)">הראה וידאו ב360</button>
-
 
 </div>

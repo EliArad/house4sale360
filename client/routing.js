@@ -81,6 +81,9 @@ app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$locationP
         }).state('deleteaccount', {
             url: '/deleteaccount',
             templateUrl: '/client/views/deleteaccount.html'
+        }).state('usersview', {
+            url: '/usersview',
+            templateUrl: '/client/views/usersview.html'
         });
 
 

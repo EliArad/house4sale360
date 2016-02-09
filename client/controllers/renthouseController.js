@@ -824,7 +824,7 @@ app.controller('renthouseController', ['$scope', 'general', 'appCookieStore', '$
 
             fileReader.readAsDataUrl(file, $scope)
                 .then(function (result) {
-                    ajaxUploadVideo(result, file.name, id, function (err, res) {
+                    ajaxUploadVideo(result, file, id, function (err, res) {
                         if (err != 'ok') {
                             vm.showwaitcircle = false;
                             alert(err + ' ' + res);
@@ -837,15 +837,16 @@ app.controller('renthouseController', ['$scope', 'general', 'appCookieStore', '$
                 });
         }
 
-        function ajaxUploadVideo(result, fileName, id, callback) {
+        function ajaxUploadVideo(result, file, id, callback) {
 
 
             var data = {
                 "video": result,
-                "filename": fileName,
+                "filename": file.name,
                 "tabletype": "renthouse",
                 "insertId": id,
-                'is360video': false
+                'is360video': false,
+                filesize:file.size
             };
 
             myhttphelper.doPost('/api/uploadvideo', data).

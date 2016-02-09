@@ -13,6 +13,58 @@
                     <div class="modal-body">
 
                         <div class="well" style="padding-bottom:50px">
+                            <div class="form-group" ng-class="{ 'has-error': (form1.personname.$invalid )}">
+                                <label>שמך</label>
+                                <input type="text" name="personname"
+                                       placeholder="שמך בבקשה שיופיע במייל"
+                                       required
+                                       class="form-control"
+                                       ng-model="personName">
+                            </div>
+
+                            <div class="form-group" ng-class="{ 'has-error': (form1.emailtosend.$invalid )}">
+                                <label>אמייל</label>
+                                <input type="email" name="emailtosend"
+                                       placeholder="רשום את המייל של מקבל ההודעה כאן"
+                                       required
+                                       class="form-control"
+                                       ng-model="emailToperson">
+                            </div>
+                            <div>
+                               <textarea id="msgbody1" required class="form-control"
+                                         rows="5" id="new_message1"
+                                         name="messagebody"
+                                         ng-model="messagebody"
+                                         placeholder="הוסף כמה מילים אם תרצה למקבל ההודעה. המייל יופיע מכתובת האתר apt360"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="linktoafriendbtnid{{ vm.userMessageId }}" type="button" class="btn btn-default"
+                                ng-click="SendPageLinkToAFriend()"
+                                ng-disabled="form1.emailtosend.$invalid">
+                            סגור ושלח
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">בטל</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal" id="sendMessageModal" role="dialog">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">שלח את המודעה הזו למייל</h4>
+                </div>
+                <form name="form1" accept-charset="UTF-8">
+                    <div class="modal-body">
+
+                        <div class="well" style="padding-bottom:50px">
 
 
                             <div class="form-group" ng-class="{ 'has-error': (form1.personname.$invalid )}">
@@ -35,8 +87,8 @@
 
                             </div>
                             <div>
-                                       <textarea id="msgbody1" required class="form-control"
-                                                 rows="5" id="new_message1"
+                                       <textarea id="msgbody" required class="form-control"
+                                                 rows="5" id="new_message"
                                                  name="messagebody"
                                                  ng-model="messagebody"
                                                  placeholder="הוסף כמה מילים אם תרצה למקבל ההודעה. המייל יופיע מכתובת האתר apt360"></textarea>
@@ -44,61 +96,11 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default"  ng-click="SendPageLinkToAFriend()"  ng-disabled="form1.emailtosend.$invalid"   data-dismiss="modal">סגור ושלח</button>
-                        <button type="button" class="btn btn-default"  data-dismiss="modal">בטל</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-
-
-    <!-- Modal -->
-    <div class="modal" id="sendMessageModal" role="dialog">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">שלח את המודעה הזו למייל</h4>
-                </div>
-                <form name="form1" accept-charset="UTF-8">
-                    <div class="modal-body">
-
-                        <div class="well" style="padding-bottom:50px">
-
-
-                                <div class="form-group" ng-class="{ 'has-error': (form1.personname.$invalid )}">
-                                    <label>שמך</label>
-                                    <input type="text" name="personname"
-                                           placeholder="שמך בבקשה שיופיע במייל"
-                                           required
-                                           class="form-control"
-                                           ng-model="personName">
-
-                                </div>
-
-                                <div class="form-group" ng-class="{ 'has-error': (form1.emailtosend.$invalid )}">
-                                    <label>אמייל</label>
-                                    <input type="email" name="emailtosend"
-                                           placeholder="רשום את המייל של מקבל ההודעה כאן"
-                                           required
-                                           class="form-control"
-                                           ng-model="emailToperson">
-
-                                </div>
-                                <div>
-                                       <textarea id="msgbody" required class="form-control"
-                                                 rows="5" id="new_message"
-                                                 name="messagebody"
-                                                 ng-model="messagebody"
-                                                 placeholder="הוסף כמה מילים אם תרצה למקבל ההודעה. המייל יופיע מכתובת האתר apt360"></textarea>
-                                </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default"  ng-click="SendLinkToAFriend()"  ng-disabled="form1.emailtosend.$invalid"   data-dismiss="modal">סגור ושלח</button>
-                        <button type="button" class="btn btn-default"  data-dismiss="modal">בטל</button>
+                        <button id="linktoafriendbtnid2{{ vm.userMessageId }}" type="button" class="btn btn-default"
+                                ng-click="SendLinkToAFriend()"
+                                ng-disabled="form1.emailtosend.$invalid">סגור ושלח
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">בטל</button>
                     </div>
                 </form>
             </div>
@@ -143,13 +145,21 @@
 
 
     <div class="row" style="margin-right:1px">
-        <div class="col-md-5 col-cx-11">
+        <div class="col-md-5 col-xs-12">
 
             &nbsp;
             &nbsp;
             <div>
                 חיפוש במשקפת VR
                 <input type="checkbox" id="switch-change" ng-model="virtualSearch" name="my-checkbox" checked>
+
+                &nbsp;
+                &nbsp;
+                &nbsp;
+                &nbsp;
+                תצוגה רחבה
+                <input type="checkbox" id="large-video" ng-checked="largeScreens" ng-click="SetViewMode()" name="largeViewCheckbox" checked>
+
             </div>
         </div>
         <div class="col-md-7 col-cs-11">
@@ -581,61 +591,112 @@
                 השתמש באזור זה לגלול את המסך במובייל
             </div>
             <div class="row" ng-show="item.showPictures > 0 && !virtualSearch">
-                <div ng-class="{ 'col-md-12 col-xs-12 col-lg-12 col-sm-12':  !item.imageExists, 'col-md-7 col-xs-12 col-lg-7 col-sm-12':  item.imageExists}"
-                     ng-show="item.image360Exists">
-                    <div id="your-pano{{ item.id }}" style="height:500px">
+                <div class="row">
+                    <div class="col-md-3 col-md-offset-3">
 
+                        <a ng-click="loadPrev360Image(item, $index)" style="cursor: pointer">
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                        </a>
+                        {{ item.current360ImageStatus}}
+                        <a ng-click="loadNext360Image(item, $index)" style="cursor: pointer">
+                            <span class="glyphicon glyphicon-chevron-left"></span>
+                        </a>
                     </div>
                 </div>
-                <div ng-class="{ 'col-md-12  col-xs-12 col-lg-12 col-sm-12':  !item.image360Exists, 'col-md-5 col-xs-12 col-lg-5 col-sm-12':  item.image360Exists}"
-                     ng-show="item.imageExists && !virtualSearch">
-                    <div style="margin-left: 1px">
-                        <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
-                            <uib-slide ng-repeat="slide in item.slides" active="slide.active">
-                                <img ng-src="{{slide.image}}"
-                                     class="img-responsive"
-                                     ng-mouseover="mo()"
-                                     ng-mouseleave="ml()"
-                                     style="margin:auto;max-height: 400px">
+                <div ng-if="largeScreens">
+                    <div ng-class="{ 'col-md-12 col-xs-12 col-lg-12 col-sm-12':  !item.imageExists, 'col-md-7 col-xs-12 col-lg-7 col-sm-12':  item.imageExists}"
+                         ng-show="item.image360Exists">
+                        <div id="your-pano{{ item.id }}" style="height:500px">
 
-                                <div class="carousel-caption">
-                                    <!--<h4>Slide {{$index}}</h4>-->
-                                    <p>{{slide.text}}</p>
-                                </div>
-                            </uib-slide>
-                        </uib-carousel>
+                        </div>
+                    </div>
+                    <div ng-class="{ 'col-md-12  col-xs-12 col-lg-12 col-sm-12':  !item.image360Exists, 'col-md-5 col-xs-12 col-lg-5 col-sm-12':  item.image360Exists}"
+                         ng-show="item.imageExists && !virtualSearch">
+                        <div style="margin-left: 1px">
+                            <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
+                                <uib-slide ng-repeat="slide in item.slides" active="slide.active">
+                                    <img ng-src="{{slide.image}}"
+                                         class="img-responsive"
+                                         ng-mouseover="mo()"
+                                         ng-mouseleave="ml()"
+                                         style="margin:auto;max-height: 600px">
+
+                                    <div class="carousel-caption">
+                                        <!--<h4>Slide {{$index}}</h4>-->
+                                        <p>{{slide.text}}</p>
+                                    </div>
+                                </uib-slide>
+                            </uib-carousel>
+                        </div>
+                    </div>
+                </div>
+                <div ng-if="!largeScreens">
+                    <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12"
+                         ng-show="item.image360Exists">
+                        <div id="your-pano{{ item.id }}" style="height:500px">
+
+                        </div>
+                    </div>
+                    <div class="col-md-12  col-xs-12 col-lg-12 col-sm-12"  ng-show="item.imageExists && !virtualSearch">
+                        <div style="margin-left: 1px">
+                            <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
+                                <uib-slide ng-repeat="slide in item.slides" active="slide.active">
+                                    <img ng-src="{{slide.image}}"
+                                         class="img-responsive"
+                                         ng-mouseover="mo()"
+                                         ng-mouseleave="ml()"
+                                         style="margin:auto;max-height: 500px">
+
+                                    <div class="carousel-caption">
+                                        <!--<h4>Slide {{$index}}</h4>-->
+                                        <p>{{slide.text}}</p>
+                                    </div>
+                                </uib-slide>
+                            </uib-carousel>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="row" ng-show="item.showregularvideo && !virtualSearch">
-                <a class="animated infinite pulse" style="cursor :pointer;margin-right: 20px;font-size: x-large"
-                   ng-click="ShowRegularVideo(item)">
-                    {{ item.videoexistlable }}
-                </a>
+                <div class="col-md-5">
 
-            </div>
-
-            <div class="row" ng-show="!virtualSearch">
-                <div class="col-md-4 col-md-offset-3" ng-show="false"
-                     ng-include="'/client/templates/waitcircle.html'">
+                    <a class="animated infinite pulse" style="cursor :pointer;margin-right: 20px;font-size: x-large"
+                       ng-click="ShowRegularVideo(item, $index)">
+                        {{ item.videoexistlable }}
+                    </a>
+                    <span ng-show="item.videoexistlable == 'הסתר וידאו'">
+                    <a ng-click="loadPrevVideo(item, $index)" style="cursor: pointer">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                    {{ item.currentVideoStatus}}
+                    <a ng-click="loadNextVideo(item, $index)" style="cursor: pointer">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </a>
+                    {{ item.currentvideoplayingStatus}}
+                    </span>
                 </div>
+            </div>
+            <div class="row" ng-show="item.showregularvideo && !virtualSearch">
                 <div ng-include="'client/templates/videoregular_multiple.html'">
 
                 </div>
             </div>
-            <div class="row" ng-if="item.show360video && !mobile && !virtualSearch">
-                <a class="animated infinite pulse" style="cursor :pointer;margin-right: 20px;font-size: x-large"
-                   ng-click="Show360Video(item, $index)">
-                    {{ item.video360existlable }}
-                </a>
-            </div>
-            <div class="row" ng-if="virtualSearch">
-                <div class="col-md-12">
-                    <div class="h_iframe" style="margin-right: 5px;margin-left: 1px">
-                        <!-- a transparent image is preferable -->
-                        <img class="ratio" src="http://placehold.it/16x9"/>
-                        <iframe src="/upload360video/welcome.mp4" frameborder="0"
-                                allowfullscreen></iframe>
+
+            <div class="row" ng-show="!virtualSearch">
+                <div class="row" ng-if="item.show360video && !mobile && !virtualSearch">
+                    <a class="animated infinite pulse" style="cursor :pointer;margin-right: 40px;font-size: x-large"
+                       ng-click="Show360Video(item, $index)">
+                        {{ item.video360existlable }}
+                    </a>
+                </div>
+                <div class="row" ng-if="virtualSearch">
+                    <div class="col-md-12">
+                        <div class="h_iframe" style="margin-right: 5px;margin-left: 1px">
+                            <!-- a transparent image is preferable -->
+                            <img class="ratio" src="http://placehold.it/16x9"/>
+                            <iframe src="/upload360video/welcome.mp4" frameborder="0"
+                                    allowfullscreen></iframe>
+                        </div>
                     </div>
                 </div>
             </div>

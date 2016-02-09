@@ -180,10 +180,10 @@ module.exports = function (sqlserver) {
                             con.query('UPDATE yad2vr.visitors SET ? WHERE ?', [data , {guid: req.body.guid}], function (err, result) {
                                 sqlserver.release(con);
                                 if (err) {
-                                    console.log(err);
+                                    //console.log(err);
                                     res.sendStatus(500);
                                 } else {
-                                    console.log(rows);
+                                    //console.log(rows);
                                     res.send('ok');
                                 }
                             });

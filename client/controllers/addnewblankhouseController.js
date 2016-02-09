@@ -27,8 +27,17 @@ app.controller('addnewblankhouseController', ['$scope', 'general', 'appCookieSto
             currentTime: 0,
             duration: 0
         };
+        function citiesLoaderCallback(data, citiesOnly)
+        {
+            vm.cities = angular.copy(data);
+            vm.citiesOnly = angular.copy(citiesOnly);
+        }
+        citiesservice.registerCitiesLoaded(citiesLoaderCallback);
+
         vm.cities = citiesservice.getcities_all_ready();
-        vm.citiesOnly = getcities_ready();
+        vm.citiesOnly = citiesservice.getcities_ready();
+
+
         var slides = $scope.slides = [];
         $scope.shownapa = false;
         $window.onbeforeunload = $scope.onExit;

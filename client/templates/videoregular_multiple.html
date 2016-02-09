@@ -1,9 +1,10 @@
 <div>
-    <div style="margin-top:10px;display: none" id="videodiv{{ item.id }}">
+
+    <div style="margin-top:10px;display: none; height: 600px" id="videodiv{{ item.id }}">
         <videogular vg-player-ready="vm.onPlayerReady($API)"
-                    vg-theme="vm.config.theme">
-            <vg-media vg-src="vm.config.sources"
-                      vg-tracks="vm.config.tracks">
+                    vg-theme="item.config.theme">
+            <vg-media vg-src="item.config.sources"
+                      vg-tracks="item.config.tracks">
             </vg-media>
             <vg-controls>
                 <vg-play-pause-button></vg-play-pause-button>
@@ -19,7 +20,16 @@
                 <vg-fullscreen-button></vg-fullscreen-button>
             </vg-controls>
             <vg-overlay-play></vg-overlay-play>
-            <vg-poster vg-url='vm.config.plugins.poster'></vg-poster>
+            <vg-poster vg-url='item.config.plugins.poster'></vg-poster>
         </videogular>
     </div>
+
+        <!--
+    <div class="h_iframe" id="videodiv{{ item.id }}">
+        <img class="ratio" src="http://placehold.it/16x9"/>
+        <iframe  src="{{item.videosrc}}" frameborder="0"
+                 allowfullscreen></iframe>
+    </div>
+    -->
+
 </div>

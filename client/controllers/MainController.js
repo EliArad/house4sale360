@@ -5,12 +5,12 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
     'appCookieStore', 'socketioservice', 'Idle', '$rootScope',
     'SessionStorageService', 'myConfig', '$http', '$window', '$timeout',
     'dboperations', 'citiesservice', 'general', '$cookies', '$sce',
-    'versionReloader','communication','visitors','messageToLink',
+    'versionReloader','communication','visitors','messageToLink','$q',
     function ($scope, $state, authToken, myhttphelper,
               appCookieStore, socketioservice, Idle, $rootScope, SessionStorageService,
               myConfig, $http, $window, $timeout, dboperations,
               citiesservice, general, $cookies, $sce,versionReloader,communication,
-              visitors,messageToLink) {
+              visitors,messageToLink,$q) {
 
 
         var vm = this;
@@ -18,7 +18,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         $scope.mobile = true;
         $scope.virtualSearch = false;
         $scope.UserAuthorizationKey = '';
-
+        $scope.largeScreens = true;
         vm.searchsummery = '';
         vm.search = {};
         var cexp = general.getCookieExp();
@@ -219,6 +219,17 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
             try {
 
+                var l = $cookies.get('largeScreens');
+
+                if (l == undefined)
+                    $scope.largeScreens = true;
+                else {
+                    if (l == 'true')
+                        $scope.largeScreens = true;
+                    else
+                        $scope.largeScreens = false;
+                }
+
                 var uc = $cookies.get('UserAuthCodeToView');
                 if (uc != undefined)
                     $scope.UserAuthorizationKey = uc;
@@ -312,15 +323,16 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             var pstr = '';
             var index = 0;
             //console.log(vm.search.propertyType);
-            vm.search.propertyType.forEach(function(t){
-                if (index > 0)
-                    pstr += ',';
-                else {
-                    pstr += t;
-                }
-                index++;
-            });
-
+            if (vm.search.propertyType != undefined) {
+                vm.search.propertyType.forEach(function (t) {
+                    if (index > 0)
+                        pstr += ',';
+                    else {
+                        pstr += t;
+                    }
+                    index++;
+                });
+            }
 
             var pstr1= '';
             index = 0;
@@ -348,10 +360,6 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             }).catch(function(result){
 
             })
-
-
-
-
         })
 
         function buildSearchSummery()
@@ -360,7 +368,12 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             vm.searchsummery +=  'מציג ';
 
 
-            vm.searchsummery+= vm.search.propertyType + ' ב';
+            if (vm.search.propertyType == undefined || vm.search.propertyType.length == 0)
+            {
+                vm.searchsummery += 'כל סוגי הדירות' + '  ב ';
+            } else {
+                vm.searchsummery += vm.search.propertyType + ' ב';
+            }
 
 
             vm.citiesSelected.forEach(function(en){
@@ -691,7 +704,6 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             } else {
                 type = 0;
             }
-            //console.log(search);
             dboperations.GetHouseQueryResults(search, false,type).then(function (result) {
 
                 $scope.showerrorenable = false;
@@ -757,6 +769,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                     card.slides = [];
                     card.hideheader = false;
                     card.sphere360index = 0;
+                    card.sphere360Description = [];
                     vm.cards.push(card);
                     var city = card.city;
                     var area = card.area;
@@ -792,7 +805,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                     card.floor = card.floor.toString();
                     card.fromfloor = card.fromfloor.toString();
                     card.balcony = card.balcony.toString();
-
+                    var firsttime1 = 0;
                     for (var k = 0; k < value.length; k++) {
                         if (value[k].isvideo != null &&
                             value[k].tableid != null &&
@@ -803,9 +816,10 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
                             //console.log(value[k]);
                             var imgsrc;
-                            if (k == 0) {
+                            if (firsttime1 == 0) {
                                 card.showPictures++;
                                 card.imageExists = true;
+                                firsttime1 = 1;
                             }
                             var userid = value[k].userid;
                             var imgsrc = './uploadimages/' + userid + directory + value[k].tableid + '/' + value[k].filename;
@@ -835,6 +849,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                             var userid = value[k].userid;
                             var imgsrc = './uploadimages/' + userid + directory + value[k].tableid + '/' + value[k].filename;
                             card.sphere360.push(imgsrc);
+                            card.sphere360Description.push(value[k].description);
 
                             if (card.sphere360index == 0) {
                                 setTimeout(function () {
@@ -874,7 +889,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                             value[f].is360image != null &&
                             value[f].isvideo == 1 &&
                             value[f].is360video == 0 &&
-                            value[f].ShowResultsis360image == 0) {
+                            value[f].is360image == 0) {
                             var userid1 = value[f].userid;
                             var tableid = value[f].tableid;
                             var videofilename = value[f].filename;
@@ -973,7 +988,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         }
 
 
-        $scope.ShowRegularVideo = function(item)
+        $scope.ShowRegularVideo = function(item, index)
         {
             if (item.videoexistlable == 'הסתר וידאו')
             {
@@ -981,7 +996,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 item.videoexistlable = 'יש גם וידאו - הראה לי';
             } else {
                 document.getElementById('videodiv' + item.id).style.display = 'block';
-                vm.changeSource(item.videosourceurl[0], item.id);
+                vm.changeSource(item.videosourceurl[0], item.id, index);
                 item.videoexistlable = 'הסתר וידאו';
             }
         }
@@ -1063,26 +1078,92 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             }
         }
 
-        vm.changeSource = function (result, id) {
+        vm.changeSource = function (videosrc, id, index) {
 
             document.getElementById('videodiv' + id).style.display = 'block';
             //console.log(result);
+            alert(index);
+            alert(videosrc);
 
-            vm.config = {
-                sources: [
-                    {src: $sce.trustAsResourceUrl(result), type: "video/mp4"}
-                ],
-                theme: "bower_components/videogular-themes-default/videogular.css",
-                plugins: {
-                    //poster: "http://www.videogular.com/assets/images/videogular.png"
-                }
-            };
-            vm.config.tracks = undefined;
-            vm.config.loop = false;
-            vm.config.preload = true;
+            if (true) {
+                 vm.cards[index].config = {
+                    sources: [
+                        {src: $sce.trustAsResourceUrl(videosrc), type: "video/mp4"}
+                    ],
+                    theme: "bower_components/videogular-themes-default/videogular.css",
+                    plugins: {
+                        //poster: "http://www.videogular.com/assets/images/videogular.png"
+                    }
+                };
+                vm.cards[index].config.tracks = undefined;
+                vm.cards[index].config.loop = false;
+                vm.cards[index].config.preload = 'none';
+            } else {
+                vm.cards[index].config.sources[0].src =  $sce.trustAsResourceUrl(videosrc);
+            }
         };
 
+        $scope.loadPrev360Image = function (item, index)
+        {
+            if (vm.cards[index].sphere360index > 0) {
+                vm.cards[index].sphere360index--;
+            } else {
+                vm.cards[index].sphere360index = vm.cards[index].sphere360.length - 1;
+            }
 
+            vm.cards[index].Image360Name = vm.cards[index].sphere360Description[vm.cards[index].sphere360index];
+
+            load360ImageAsync(item.id, vm.cards[index].sphere360[vm.cards[index].sphere360index]);
+
+        }
+        $scope.loadNext360Image = function (item, index) {
+            var size = vm.cards[index].sphere360.length;
+            vm.cards[index].sphere360index = (vm.cards[index].sphere360index + 1 ) % size;
+            vm.cards[index].Image360Name = vm.cards[index].sphere360Description[vm.cards[index].sphere360index];
+            load360ImageAsync(item.id, vm.cards[index].sphere360[vm.cards[index].sphere360index]);
+        }
+
+
+        $scope.SetViewMode = function()
+        {
+            $scope.largeScreens = !$scope.largeScreens;
+            console.log($scope.largeScreens);
+            $cookies.put('largeScreens', $scope.largeScreens ,{expires: cexp});
+
+            ShowResults(false);
+        }
+
+        function load360ImageAsync(id, src) {
+            var defer = $q.defer()
+
+            $timeout(function () {
+
+                var PSV = new PhotoSphereViewer({
+                    // Panorama, given in base 64
+                    panorama: src,
+
+                    // Container
+                    container: 'your-pano' + id,
+
+                    // Deactivate the animation
+                    time_anim: false,
+
+                    // Display the navigation bar
+                    navbar: true,
+
+                    // Resize the panorama
+                    size: {
+                        width: '100%',
+                        height: video360height
+                    },
+                    // No XMP data
+                    usexmpdata: false
+                });
+
+                defer.resolve('video 360 loaded');
+            }, 1);
+            return defer.promise;
+        }
 
         $(window).scroll(function () {
             if ($scope.allthumberspictures == false) {

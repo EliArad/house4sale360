@@ -27,17 +27,21 @@ module.exports = function (sqlserver) {
                     }
                     //console.log(' user guid that need: ' + userguid);
 
-                    console.log(req.body.msgid);
-                    console.log(req.body.type);
+                    //console.log(req.body.msgid);
+                    //console.log(req.body.type);
 
                     if (req.body.msgid == undefined || req.body.type == undefined) {
 
-                        var sql = 'SELECT sellhousedetails.*, users.userguid, salehouseblobs.tableid,salehouseblobs.filename,salehouseblobs.is360image, salehouseblobs.is360video, salehouseblobs.isvideo, salehouseblobs.filesize FROM yad2vr.sellhousedetails\
+                        var sql = 'SELECT sellhousedetails.*, users.userguid, salehouseblobs.tableid,salehouseblobs.filename,salehouseblobs.is360image, salehouseblobs.is360video, salehouseblobs.isvideo,salehouseblobs.description, salehouseblobs.filesize FROM yad2vr.sellhousedetails\
                     inner join users\
                     on users.id = sellhousedetails.userid\
                     LEFT JOIN salehouseblobs\
                     ON salehouseblobs.tableid = sellhousedetails.id\
                     WHERE users.userguid = ' + con.escape(userguid);
+
+                        fs.writeFile('./sqlmypage.txt', sql);
+
+
                         var query = con.query(sql, function (err, rows) {
                             if (err) {
                                 sqlserver.release(con);
@@ -54,7 +58,7 @@ module.exports = function (sqlserver) {
                                     delete rows[i].contactPerson;
                                 }
 
-                                sql = 'SELECT renthousedetails.*, users.userguid, renthouseblobs.tableid,renthouseblobs.filename,renthouseblobs.is360image, renthouseblobs.is360video, renthouseblobs.isvideo, renthouseblobs.filesize FROM yad2vr.renthousedetails\
+                                sql = 'SELECT renthousedetails.*, users.userguid, renthouseblobs.tableid,renthouseblobs.filename,renthouseblobs.is360image, renthouseblobs.is360video, renthouseblobs.description, renthouseblobs.isvideo, renthouseblobs.description,  renthouseblobs.filesize FROM yad2vr.renthousedetails\
                             inner join users\
                             on users.id = renthousedetails.userid\
                             LEFT JOIN renthouseblobs\
@@ -88,20 +92,18 @@ module.exports = function (sqlserver) {
                             }
                         });
                     } else {
-                        if (req.body.type != undefined)
-                        {
+                        if (req.body.type != undefined) {
                             var tabledet;
-                            if (req.body.type  == 0)
-                            {
+                            if (req.body.type == 0) {
                                 if (req.body.msgid == undefined) {
-                                    sql = 'SELECT sellhousedetails.*, users.userguid, salehouseblobs.tableid,salehouseblobs.filename,salehouseblobs.is360image, salehouseblobs.is360video, salehouseblobs.isvideo, salehouseblobs.filesize FROM yad2vr.sellhousedetails\
+                                    sql = 'SELECT sellhousedetails.*, users.userguid, salehouseblobs.tableid,salehouseblobs.filename,salehouseblobs.is360image, salehouseblobs.is360video, salehouseblobs.isvideo, salehouseblobs.description,salehouseblobs.filesize FROM yad2vr.sellhousedetails\
                                     inner join users\
                                     on users.id = sellhousedetails.userid\
                                     LEFT JOIN salehouseblobs\
                                     ON salehouseblobs.tableid = sellhousedetails.id\
                                     WHERE users.userguid = ' + con.escape(userguid);
                                 } else {
-                                    sql = 'SELECT sellhousedetails.*, users.userguid, salehouseblobs.tableid,salehouseblobs.filename,salehouseblobs.is360image, salehouseblobs.is360video, salehouseblobs.isvideo, salehouseblobs.filesize FROM yad2vr.sellhousedetails\
+                                    sql = 'SELECT sellhousedetails.*, users.userguid, salehouseblobs.tableid,salehouseblobs.filename,salehouseblobs.is360image, salehouseblobs.is360video, salehouseblobs.isvideo,salehouseblobs.description, salehouseblobs.filesize FROM yad2vr.sellhousedetails\
                                     inner join users\
                                     on users.id = sellhousedetails.userid\
                                     LEFT JOIN salehouseblobs\
@@ -112,14 +114,14 @@ module.exports = function (sqlserver) {
                             } else {
                                 if (req.body.msgid == undefined) {
 
-                                    sql = 'SELECT renthousedetails.*, users.userguid, renthouseblobs.tableid,renthouseblobs.filename,renthouseblobs.is360image, renthouseblobs.is360video, renthouseblobs.isvideo, renthouseblobs.filesize FROM yad2vr.renthousedetails\
+                                    sql = 'SELECT renthousedetails.*, users.userguid, renthouseblobs.tableid,renthouseblobs.filename,renthouseblobs.is360image, renthouseblobs.is360video,renthouseblobs.description, renthouseblobs.isvideo, renthouseblobs.filesize FROM yad2vr.renthousedetails\
                                     inner join users\
                                     on users.id = renthousedetails.userid\
                                     LEFT JOIN renthouseblobs\
                                     ON renthouseblobs.tableid = renthousedetails.id\
                                     WHERE users.userguid = ' + con.escape(userguid);
                                 } else {
-                                    sql = 'SELECT renthousedetails.*, users.userguid, renthouseblobs.tableid,renthouseblobs.filename,renthouseblobs.is360image, renthouseblobs.is360video, renthouseblobs.isvideo, renthouseblobs.filesize FROM yad2vr.renthousedetails\
+                                    sql = 'SELECT renthousedetails.*, users.userguid, renthouseblobs.tableid,renthouseblobs.filename,renthouseblobs.is360image, renthouseblobs.is360video, renthouseblobs.isvideo, renthouseblobs.description, renthouseblobs.filesize FROM yad2vr.renthousedetails\
                                     inner join users\
                                     on users.id = renthousedetails.userid\
                                     LEFT JOIN renthouseblobs\
@@ -147,8 +149,7 @@ module.exports = function (sqlserver) {
                                 }
 
                                 sqlserver.release(con);
-                                if (req.body.type == 0)
-                                {
+                                if (req.body.type == 0) {
                                     return res.json({
                                         rows: rows,
                                         rows1: []
@@ -177,7 +178,7 @@ module.exports = function (sqlserver) {
                         sql = builder_sale.build(con, req.body.query);
                     else if (req.body.type == 1)
                         sql = builder_rent.build(con, req.body.query);
-                        fs.writeFile('./sql.txt', sql, function (err) {
+	                fs.writeFile('./sql.txt', sql, function (err) {
                         if (err)
                             console.log(err);
                     });

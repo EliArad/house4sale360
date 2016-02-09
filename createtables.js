@@ -4,8 +4,7 @@ var sqlserver = new mysqlserver();
 
 sqlserver.get(function (err, con) {
     if (!err) {
-      var sql = "\
-            CREATE TABLE `renthousedetails` (\
+      var sql = "CREATE TABLE `renthousedetails` (\
             `id` int(11) NOT NULL AUTO_INCREMENT,\
             `propertyType` varchar(45) DEFAULT NULL,\
             `city` varchar(100) DEFAULT NULL,\
@@ -45,6 +44,8 @@ sqlserver.get(function (err, con) {
             `renovated` varchar(75) DEFAULT NULL,\
             `renovatedexplnation` varchar(245) DEFAULT NULL,\
             `suspend` tinyint(4) DEFAULT NULL,\
+            `privacyPassword` varchar(4) DEFAULT '0000',\
+            `privacyEnabled` int(1) DEFAULT '0',\
             `animals` int(2) DEFAULT NULL,\
             `furnatures` int(2) DEFAULT NULL,\
             `furnaturedetails` varchar(500) DEFAULT NULL,\

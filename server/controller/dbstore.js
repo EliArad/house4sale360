@@ -1,6 +1,7 @@
 'use strict';
 
 var secret = require('../common/config').secret;
+var fs = require("fs");
 
 module.exports = function (sqlserver) {
 
@@ -93,6 +94,110 @@ module.exports = function (sqlserver) {
                             });
                         }
                     });
+                } else {
+                    res.sendStatus(500);
+                }
+            });
+        },
+
+        DeletePicture: function (req, res, next) {
+            sqlserver.get(function (err, con) {
+                if (!err) {
+                    var condition = 'filename = ' + con.escape(req.body.filename) + ' AND isvideo = ' + con.escape(req.body.isvideo) +  ' AND is360video = ' + con.escape(req.body.is360video) + ' AND is360image = ' + con.escape(req.body.is360image);
+                    console.log(condition);
+                    var query = con.query('SELECT id FROM ' + req.body.tablename + ' WHERE ' + condition, function (err, rows) {
+                        if (err || rows.length == 0) {
+                            sqlserver.release(con);
+                            res.sendStatus(500);
+                        } else {
+                            var sql = 'DELETE FROM yad2vr.salehouseblobs WHERE id = ' + con.escape(rows[0].id);
+                            con.query(sql, function (err, rows) {
+                                sqlserver.release(con);
+                                if (err)
+                                {
+                                    res.sendStatus(500);
+                                } else {
+                                    //console.log(req.body.filePath);
+                                    fs.unlink(req.body.filePath, function(err) {
+                                        if (err) {
+                                            return console.error(err);
+                                        }
+                                        console.log("File deleted successfully!");
+                                    });
+
+                                    res.send('ok');
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    res.sendStatus(500);
+                }
+            });
+        },
+
+        updateVideo360Name: function (req, res, next) {
+            sqlserver.get(function (err, con) {
+                if (!err) {
+                    var data = {
+                        description: req.body.description
+                    };
+                    var condition = 'filename = ' + con.escape(req.body.filename) + ' AND isvideo = 1 AND is360video = 1';
+                    var query = con.query('UPDATE ' + req.body.tablename + '  SET ? WHERE ' + condition, [data], function (err, result) {
+                        sqlserver.release(con);
+                        if (err) {
+                            console.log(err);
+                            res.sendStatus(500);
+                        } else {
+                            res.send('ok');
+                        }
+                    });
+                } else {
+                    res.sendStatus(500);
+                }
+            });
+        },
+
+        updateVideoName: function (req, res, next) {
+            sqlserver.get(function (err, con) {
+                if (!err) {
+                    var data = {
+                        description: req.body.description
+                    };
+                    var condition = 'filename = ' + con.escape(req.body.filename) + ' AND isvideo = 1 AND is360video = 0';
+                    var query = con.query('UPDATE ' + req.body.tablename + '  SET ? WHERE ' + condition, [data], function (err, result) {
+                        sqlserver.release(con);
+                        if (err) {
+                            console.log(err);
+                            res.sendStatus(500);
+                        } else {
+                            res.send('ok');
+                        }
+                    });
+                } else {
+                    res.sendStatus(500);
+                }
+            });
+        },
+
+        updateImage360Name: function (req, res, next) {
+            sqlserver.get(function (err, con) {
+                if (!err) {
+                    var data = {
+                        description: req.body.description
+                    };
+                    var condition = 'filename = ' + con.escape(req.body.filename) + '  AND is360Image = 1 AND isvideo = 0 AND is360video = 0';
+                    var query = con.query('UPDATE ' + req.body.tablename + '  SET ? WHERE ' + condition,
+                        [data], function (err, result) {
+                            console.log(err);
+                            sqlserver.release(con);
+                            if (err) {
+
+                                res.sendStatus(500);
+                            } else {
+                                res.send('ok');
+                            }
+                        });
                 } else {
                     res.sendStatus(500);
                 }

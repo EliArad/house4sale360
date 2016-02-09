@@ -1,8 +1,9 @@
-
-<form name="fff" id="uploadForm1"
-      enctype="multipart/form-data"
-      action="/api/photo"
-      method="post">
+<div class="row">
+    <div class="col-md-3">
+    <form name="fff" id="uploadForm1"
+          enctype="multipart/form-data"
+          action="/api/photo"
+          method="post">
 
               <span class="btn btn-primary btn-file">
 
@@ -14,12 +15,27 @@
                      accept="image/jpeg"
                      type="file"
                      multiple="false"
-                     data-myd = '{{ item.id }}'
+                     data-myd='{{ item.id }}'
                      data-animal-type='{{ item.id }}'
+                     data-index-type='{{ $index }}'
                      data-ng-model="theFile1"
                      onchange="angular.element(this).scope().fileNameChanged1(this)"
-                      />
+              />
                   </span>
 
 
-</form>
+    </form>
+    </div>
+
+    <div class="col-md-3">
+        <input type="text" ng-model="item.videoName"
+               placeholder="ניתן לתת ,מיקום שם לתמונה " class="form-control" id="nameofimage">
+    </div>
+    <div class="col-md-3">
+
+        <input type="button" class="btn btn-default" ng-click="SaveVideoName(item)" value="שמור שם"/>
+
+        <input type="button" class="btn btn-default" ng-click="DeleteCarouselPicture(item)" value="מחק" />
+
+    </div>
+</div>

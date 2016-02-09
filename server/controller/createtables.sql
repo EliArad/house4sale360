@@ -21,7 +21,6 @@ CREATE TABLE `tours3d` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
 CREATE TABLE `renthouseblobs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tableid` int(11) DEFAULT NULL,

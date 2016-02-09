@@ -40,6 +40,13 @@ module.exports = function (app,dbstoreController) {
         app.post('/api/dbstore/SavePrivacyCode', jwtauth, dbstoreController.SavePrivacyCode);
 
 
+        app.post('/api/dbstore/updateImage360Name', jwtauth, dbstoreController.updateImage360Name);
+
+        app.post('/api/dbstore/updateVideoName', jwtauth, dbstoreController.updateVideoName);
+
+        app.post('/api/dbstore/updateVideo360Name', jwtauth, dbstoreController.updateVideo360Name);
+        app.post('/api/dbstore/DeletePicture', jwtauth, dbstoreController.DeletePicture);
+
     }
 
     return {

@@ -20,6 +20,11 @@ app.factory("visitors", ['$cookies', '$http', 'myConfig',
             return $http.get(myConfig.url + "/api/general/getallvisitors");
         }
 
+
+        function mysqlDate(date){
+            date = date || new Date();
+            return date.toISOString().split('T')[0];
+        }
         function determineVisit(ip) {
 
             var vguid = $cookies.get('apt360visitorguid');
@@ -41,9 +46,11 @@ app.factory("visitors", ['$cookies', '$http', 'myConfig',
                 var exp = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
                 //console.log(exp);
 
+                var date = mysqlDate();
+
                 var data = {
                     guid: userguid,
-                    dated: new Date(),
+                    dated: date,
                     ip: ip
                 };
                 var s = JSON.stringify(data);
@@ -57,10 +64,10 @@ app.factory("visitors", ['$cookies', '$http', 'myConfig',
             } else {
                 // console.log(' not a new user');
                 // update entry:
-
+                var date = mysqlDate();
                 var data = {
                     guid: userguid,
-                    dated: new Date(),
+                    dated: date,
                     ip: ip
                 };
 

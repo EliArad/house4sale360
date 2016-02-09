@@ -93,6 +93,31 @@ app.factory('dboperations', ['$http', 'myConfig',
             return $http.post(membersAPI, {id: id});
         }
 
+        function updateVideo360Name(filename, description, tablename) {
+            var membersAPI = myConfig.url + "/api/dbstore/updateVideo360Name";
+            return $http.post(membersAPI, {filename: filename ,description:description, tablename:tablename});
+        }
+
+        function updateVideoName(filename, description, tablename) {
+            var membersAPI = myConfig.url + "/api/dbstore/updateVideoName";
+            return $http.post(membersAPI, {filename: filename ,description:description, tablename:tablename});
+        }
+
+        function DeletePicture(filename, is360image , isvideo , is360video, filePath, tablename) {
+            var membersAPI = myConfig.url + "/api/dbstore/DeletePicture";
+            return $http.post(membersAPI, {filename: filename ,
+                                           is360image:is360image,
+                                           isvideo:isvideo,
+                                           is360video:is360video,
+                                           filePath:filePath,
+                                           tablename:tablename});
+        }
+
+        function updateImage360Name(filename, description, tablename) {
+            var membersAPI = myConfig.url + "/api/dbstore/updateImage360Name";
+            return $http.post(membersAPI, {filename: filename ,description:description, tablename:tablename});
+        }
+
         function getSaleHouse360PictureList(id, i, needauth) {
             var membersAPI = myConfig.url + "/api/dbstore/getSaleHouse360PictureList";
             return $http.post(membersAPI, {id: id, index: i, auth: needauth});
@@ -154,6 +179,10 @@ app.factory('dboperations', ['$http', 'myConfig',
             getMessageUserInformation: getMessageUserInformation,
             GetAllMyResults: GetAllMyResults,
             SavePrivacyCode: SavePrivacyCode,
+            updateImage360Name:updateImage360Name,
+            updateVideoName:updateVideoName,
+            updateVideo360Name:updateVideo360Name,
+            DeletePicture:DeletePicture
         };
     }
 

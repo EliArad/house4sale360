@@ -23,8 +23,6 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
             email: ""
         };
 
-        console.log($stateParams.msg);
-
 
         versionReloader.addPage(reloadFunction);
 
@@ -93,7 +91,7 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
                 var rule = response.rule;
                 $rootScope.$broadcast("userrule", rule);
 
-                $state.go('main', {}, {
+                $state.go('mypage', {}, {
                     reload: true
                 });
             }

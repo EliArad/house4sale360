@@ -15,15 +15,9 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
 
 
         var vm = this;
-        var video360height = '500px';
+        var video360height = '600px';
         $scope.mobile = true;
         $scope.virtualSearch = false;
-
-
-        console.log($stateParams.id);
-        console.log($stateParams.type);
-        console.log($stateParams.g);
-
 
         var token = authToken.getToken();
         if ($stateParams.g == undefined && token == undefined)
@@ -34,7 +28,7 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
             return;
         }
 
-
+        $scope.largeScreens = true;
         vm.searchsummery = '';
         vm.search = {};
         var cexp = general.getCookieExp();
@@ -62,16 +56,32 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
 
         versionReloader.addPage(reloadFunction);
 
-        $scope.CopyToclipBoard = function()
+
+        $scope.SetViewMode = function()
         {
-            general.getuserguid().then(function(result){
+            $scope.largeScreens = !$scope.largeScreens;
+            console.log($scope.largeScreens);
+            $cookies.put('largeScreens', $scope.largeScreens ,{expires: cexp});
 
-            }).catch(function(result){
 
-            });
+            if ($stateParams.g != undefined) {
+                general.isValidGuid($stateParams.g).then(function(result)
+                {
+
+                    PerformResults($stateParams.g, $stateParams.id, $stateParams.type);
+
+                }).catch(function(result){
+                    $state.go('/', {}, {
+                        reload: false
+                    });
+                    return;
+                })
+            } else {
+                PerformResults(undefined);
+            }
+
+
         }
-
-
         $scope.UpdateMessageType = function()
         {
 
@@ -159,9 +169,19 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
             }
         }
 
-
-
         $(document).ready(function () {
+
+
+            var l = $cookies.get('largeScreens');
+
+            if (l == undefined)
+                $scope.largeScreens = true;
+            else {
+                if (l == 'true')
+                    $scope.largeScreens = true;
+                else
+                    $scope.largeScreens = false;
+            }
 
             if ($stateParams.g != undefined) {
                 general.isValidGuid($stateParams.g).then(function(result)
@@ -204,12 +224,28 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
                 messagebody += '</div>';
                 general.SendEmailToPerson($scope.emailToperson, $scope.personName, messagebody).then(function (result) {
 
-                    alert('ההודעה נשלחה בהצלחה');
+
+                    var buttonid = 'linktoafriendbtnid' + vm.userMessageId;
+
+                    document.getElementById(buttonid).className = "btn btn-info animated tada";
+                    document.getElementById(buttonid).style.color = 'lightgreen';
+                    document.getElementById(buttonid).innerHTML = 'הודעה נשלחה';
+
+                    cssUpdateTimer = $timeout(function () {
+                        $('#sendAllMessageModal').modal('hide');
+                        document.getElementById(buttonid).innerHTML = 'סגור ושלח';
+                        document.getElementById(buttonid).style.color = 'black';
+                        document.getElementById(buttonid).className = "btn btn-default";
+                    }, 1900);
+
+
                 }).catch(function (result) {
+                    $('#sendAllMessageModal').modal('hide');
                     alert('קרתה שגיאה וההודעה לא נשלחה');
                 })
 
             }).catch(function(result) {
+                $('#sendAllMessageModal').modal('hide');
                 alert('שגיאה בשליחת ההודעה');
                 $state.go('login', {}, {
                     reload: false
@@ -220,8 +256,6 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
 
         $scope.SendLinkToAFriend = function()
         {
-
-
             general.getuserguid().then(function(result){
 
                 var item = vm.cards[vm.userMessageIndex];
@@ -233,12 +267,25 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
 
                 general.SendEmailToPerson($scope.emailToperson, $scope.personName, messagebody).then(function (result) {
 
-                    alert('ההודעה נשלחה בהצלחה');
+
+                    var buttonid = 'linktoafriendbtnid2' + vm.userMessageId;
+
+                    document.getElementById(buttonid).className = "btn btn-info animated tada";
+                    document.getElementById(buttonid).style.color = 'lightgreen';
+                    document.getElementById(buttonid).innerHTML = 'הודעה נשלחה';
+
+                    cssUpdateTimer = $timeout(function () {
+                        $('#sendMessageModal').modal('hide');
+                        document.getElementById(buttonid).innerHTML = 'סגור ושלח';
+                        document.getElementById(buttonid).style.color = 'black';
+                        document.getElementById(buttonid).className = "btn btn-default";
+                    }, 1900);
                 }).catch(function (result) {
+                    $('#sendMessageModal').modal('hide');
                     alert('קרתה שגיאה וההודעה לא נשלחה');
                 })
-
             }).catch(function(result) {
+                $('#sendMessageModal').modal('hide');
                 alert('שגיאה בשליחת ההודעה');
             });
 
@@ -371,6 +418,8 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
 
             })
         })
+
+
 
         function buildSearchSummery()
         {
@@ -562,7 +611,6 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
 
                 //http://stackoverflow.com/questions/17787754/creating-a-net-like-dictionary-object-in-javascript
 
-
                 for (var i = 0; i < vm.cards1.length; i++) {
                     var c = dic.containsKey(vm.cards1[i].id);
                     if (c) {
@@ -575,7 +623,6 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
                         dic.add(vm.cards1[i].id, x);
                     }
                 }
-
 
                 for (var i = 0; i < vm.cards2.length; i++) {
                     var c = dic.containsKey(vm.cards2[i].id);
@@ -603,12 +650,17 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
                     card.sphere360 = [];
                     card.showPictures = 0;
                     card.image360Exists = false;
+                    card.showleftrightfor360 = false;
+                    card.currentvideoplayingStatus = '';
                     card.imageExists = false;
                     card.video360Exists = false;
+                    card.current360ImageStatus = '';
+                    card.currentVideoStatus = '';
                     card.videosourceurl = [];
                     card.video360sourceurl = [];
                     card.videoExists = false;
                     card.showVideo = 0;
+                    card.regularvideoindex = 0;
                     card.showregularvideo = false;
                     card.show360video = false;
                     card.show3dtour = value[0].show;
@@ -619,6 +671,7 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
                     card.slides = [];
                     card.hideheader = false;
                     card.sphere360index = 0;
+                    card.videoRegularindex = 0;
                     vm.cards.push(card);
                     var city = card.city;
                     var area = card.area;
@@ -656,7 +709,7 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
                     card.floor = card.floor.toString();
                     card.fromfloor = card.fromfloor.toString();
                     card.balcony = card.balcony.toString();
-
+                    var firsttime1 = 0;
                     for (var k = 0; k < value.length; k++) {
                         if (value[k].isvideo != null &&
                             value[k].tableid != null &&
@@ -667,9 +720,10 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
 
                             //console.log(value[k]);
                             var imgsrc;
-                            if (k == 0) {
+                            if (firsttime1 == 0) {
                                 card.showPictures++;
                                 card.imageExists = true;
+                                firsttime1 = 1;
                             }
                             var userid = value[k].userid;
                             var imgsrc = './uploadimages/' + userid + directory[iterator] + value[k].tableid + '/' + value[k].filename;
@@ -681,6 +735,7 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
                         }
                     }
                     var firsttime = 0;
+                    var count360image = 0;
                     for (var k = 0; k < value.length; k++) {
                         if (value[k].isvideo != null &&
                             value[k].tableid != null &&
@@ -695,12 +750,15 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
                                 card.image360Exists = true;
                                 firsttime++;
                             }
+                            if (value.length > 1) {
+                                vm.cards[i].showleftrightfor360 = true;
+                            }
 
                             var userid = value[k].userid;
                             var imgsrc = './uploadimages/' + userid + directory[iterator] + value[k].tableid + '/' + value[k].filename;
                             card.sphere360.push(imgsrc);
 
-                            if (card.sphere360index == 0) {
+                            if (count360image == 0) {
                                 setTimeout(function () {
                                     var PSV = new PhotoSphereViewer({
                                         // Panorama, given in base 64
@@ -726,11 +784,13 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
                                     });
                                 }, 10, key);
                             }
-                            card.sphere360index++;
+                            count360image++;
+                            vm.cards[i].current360ImageStatus = card.sphere360.length + ' / 1';
                         }
                     }
 
                     var firsttimevid = 0;
+                    var countvideo = 0;
                     for (var f = 0; f < value.length; f++) {
                         if (value[f].isvideo != null &&
                             value[f].tableid != null &&
@@ -746,7 +806,10 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
                             card.videosourceurl.push(videosrouceurl);
                             card.showregularvideo = true;
                             card.videoexistlable = 'יש גם וידאו - הראה לי';
-                            break;
+                            if (countvideo == 0)
+                                card.currentvideoplayingStatus = value[f].description;
+                            countvideo++;
+                            vm.cards[i].currentVideoStatus = card.videosourceurl.length + ' / 1';
                         }
                     }
 
@@ -783,6 +846,9 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
                 $scope.showerror = result.data;
                 $scope.showerrorenable = true;
                 $scope.showNoResultsMessage = true;
+                $state.go('logout', {}, {
+                    reload: true
+                });
             })
         }
 
@@ -836,7 +902,7 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
         }
 
 
-        $scope.ShowRegularVideo = function(item)
+        $scope.ShowRegularVideo = function(item, index)
         {
             if (item.videoexistlable == 'הסתר וידאו')
             {
@@ -844,7 +910,7 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
                 item.videoexistlable = 'יש גם וידאו - הראה לי';
             } else {
                 document.getElementById('videodiv' + item.id).style.display = 'block';
-                vm.changeSource(item.videosourceurl[0], item.id);
+                vm.changeSource(item.videosourceurl[0], item.id , index);
                 item.videoexistlable = 'הסתר וידאו';
             }
         }
@@ -890,23 +956,93 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
         };
 
 
-        vm.changeSource = function (result, id) {
+        $scope.loadPrev360Image = function (item, index)
+        {
+
+            if (vm.cards[index].sphere360index > 0) {
+                vm.cards[index].sphere360index--;
+            } else {
+                vm.cards[index].sphere360index = vm.cards[index].sphere360.length - 1;
+            }
+
+            vm.cards[index].current360ImageStatus =  (vm.cards[index].sphere360index + 1) + '/' +  vm.cards[index].sphere360.length;
+
+            var PSV = new PhotoSphereViewer({
+                // Panorama, given in base 64
+                panorama: vm.cards[index].sphere360[vm.cards[index].sphere360index],
+
+                // Container
+                container: 'your-pano' + item.id,
+
+                // Deactivate the animation
+                time_anim: false,
+
+                // Display the navigation bar
+                navbar: true,
+
+                // Resize the panorama
+                size: {
+                    width: '100%',
+                    height: video360height
+                },
+
+                // No XMP data
+                usexmpdata: false
+            });
+
+        }
+        $scope.loadNext360Image = function (item, index) {
+            var size = vm.cards[index].sphere360.length;
+            vm.cards[index].sphere360index = (vm.cards[index].sphere360index + 1 ) % size;
+
+            //vm.cards[index].Image360Name = vm.sphere360Description[vm.cards[index].sphere360index];
+
+            var PSV = new PhotoSphereViewer({
+                // Panorama, given in base 64
+                panorama: vm.cards[index].sphere360[vm.cards[index].sphere360index],
+
+                // Container
+                container: 'your-pano' + item.id,
+
+                // Deactivate the animation
+                time_anim: false,
+
+                // Display the navigation bar
+                navbar: true,
+
+                // Resize the panorama
+                size: {
+                    width: '100%',
+                    height: video360height
+                },
+
+                // No XMP data
+                usexmpdata: false
+            });
+        }
+
+
+        vm.changeSource = function (videosrc, id, index) {
 
             document.getElementById('videodiv' + id).style.display = 'block';
-            console.log(result);
 
-            vm.config = {
-                sources: [
-                    {src: $sce.trustAsResourceUrl(result), type: "video/mp4"}
-                ],
-                theme: "bower_components/videogular-themes-default/videogular.css",
-                plugins: {
-                    //poster: "http://www.videogular.com/assets/images/videogular.png"
-                }
-            };
-            vm.config.tracks = undefined;
-            vm.config.loop = false;
-            vm.config.preload = true;
+            if (true) {
+
+                vm.cards[index].config = {
+                    sources: [
+                        {src: $sce.trustAsResourceUrl(videosrc), type: "video/mp4"}
+                    ],
+                    theme: "bower_components/videogular-themes-default/videogular.css",
+                    plugins: {
+                        //poster: "http://www.videogular.com/assets/images/videogular.png"
+                    }
+                };
+                vm.cards[index].config.tracks = undefined;
+                vm.cards[index].config.loop = false;
+                vm.cards[index].config.preload = 'none';
+            } else {
+                vm.cards[index].config.sources[0].src =  $sce.trustAsResourceUrl(videosrc);
+            }
         };
 
 
@@ -914,7 +1050,26 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
         initcrousle();
 
 
+        $scope.loadPrevVideo = function(item, index)
+        {
 
+            if (vm.cards[index].regularvideoindex > 0) {
+                vm.cards[index].regularvideoindex--;
+            } else {
+                vm.cards[index].regularvideoindex = vm.cards[index].videosourceurl.length - 1;
+            }
+
+            var videosrc = vm.cards[index].videosourceurl[vm.cards[index].regularvideoindex];
+            vm.changeSource(videosrc, item.id, index);
+        }
+        $scope.loadNextVideo = function(item, index)
+        {
+            var size =  vm.cards[index].videosourceurl.length;
+            vm.cards[index].regularvideoindex = (vm.cards[index].regularvideoindex + 1 ) % size;
+
+            var videosrc = vm.cards[index].videosourceurl[vm.cards[index].regularvideoindex];
+            vm.changeSource(videosrc, item.id, index);
+        }
 
         $(window).scroll(function () {
             if ($scope.allthumberspictures == false) {
