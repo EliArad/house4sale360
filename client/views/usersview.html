@@ -1,0 +1,28 @@
+<div class="container" ng-controller="usersviewController as vm">
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead>
+                <td>ID</td>
+                <td>User Email</td>
+                <td>Guid</td>
+                <td>Date</td>
+                </thead>
+                <tr ng-repeat="user in vm.users">
+                    <td>
+                        {{ user.id }}
+                    </td>
+                    <td>
+                        {{ user.email }}
+                    </td>
+                    <td>
+                        {{ user.guid }}
+                    </td>
+                    <td>
+                        {{ user.dated }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
