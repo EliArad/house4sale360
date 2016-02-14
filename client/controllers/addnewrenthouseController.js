@@ -3,11 +3,11 @@
 
 app.controller('addnewrenthouseController', ['$scope','general', 'appCookieStore', '$window',
     '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope',
-    'SessionStorageService', '$cookies', 'dboperations', 'fileReader', '$sce','citiesservice','versionReloader',
+    'SessionStorageService', '$cookies', 'dboperations', 'fileReader', '$sce','citiesservice',
     function ($scope, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
               $state, myhttphelper, $rootScope, SessionStorageService,
-              $cookies, dboperations, fileReader, $sce,citiesservice,versionReloader) {
+              $cookies, dboperations, fileReader, $sce,citiesservice) {
 
 
         var vm = this;
@@ -55,11 +55,27 @@ app.controller('addnewrenthouseController', ['$scope','general', 'appCookieStore
         $scope.showvideosingle = false;
         $scope.showvideo360single = false;
 
-        versionReloader.addPage(reloadFunction);
-        function reloadFunction()
-        {
+
+        var pagename = 'addnewrenthouse';
+        var storeVersion = appCookieStore.get(pagename);
+        if (storeVersion == undefined) {
+            appCookieStore.set(pagename, '0');
+            reloadFunction();
+        } else {
+            var si = parseInt(storeVersion);
+            general.checkIfNeedToReload(pagename, si, function (err, version, needToReload) {
+                if (err == 'ok' && needToReload == true) {
+                    appCookieStore.set(pagename, version);
+                    reloadFunction();
+                }
+            });
+        }
+        function reloadFunction() {
             window.location.reload(true);
         }
+
+
+
 
 
         vm.numberfloors.push('קרקע');

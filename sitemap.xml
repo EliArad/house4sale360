@@ -14,6 +14,21 @@
 		<loc>http://apt360.co.il/help</loc>
 	</url>
 	<url>
+		<loc>http://apt360.co.il/advertisehouserent</loc>
+	</url>
+	<url>
 		<loc>http://www.apt360.co.il/contactus</loc>
+	</url>
+	<url>
+		<loc>http://www.apt360.co.il/mypage</loc>
+	</url>
+	<url>
+		<loc>http://www.apt360.co.il/virtualrealityrpage</loc>
+	</url>
+	<url>
+		<loc>http://www.apt360.co.il/register</loc>
+	</url>
+	<url>
+		<loc>http://www.apt360.co.il/siterules</loc>
 	</url>
 </urlset>

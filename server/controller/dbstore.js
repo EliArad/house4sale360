@@ -100,6 +100,64 @@ module.exports = function (sqlserver) {
             });
         },
 
+        MarkReloadToThoseSearchResults: function (req, res, next) {
+            sqlserver.get(function (err, con) {
+                if (!err) {
+
+                    console.log(req.body.reload);
+                    console.log(req.body.idarray);
+
+                    var query = con.query('UPDATE sellhousedetails SET ? WHERE id = ' + con.escape(req.body.id),
+                        [{reload:req.body.reload}], function (err, result) {
+                        console.log(err);
+                        sqlserver.release(con);
+                        if (err)
+                        {
+                            res.status(500);
+                            res.end('error in query');
+                        } else {
+                            res.send('ok');
+                        }
+                    });
+                } else {
+                    res.status(500);
+                    res.end('error get sql connection');
+                }
+            });
+        },
+
+        SaveUserAuthCode: function (req, res, next) {
+            sqlserver.get(function (err, con) {
+                if (!err)
+                {
+                    var query = con.query('DELETE FROM visitoraccess WHERE  guid = ' + con.escape(req.body.data.guid), function (err, rows) {
+                        if (err)
+                        {
+                            console.log(err);
+                            sqlserver.release(con);
+                            res.status(500);
+                            res.end('error in query');
+                        } else {
+                            var query = con.query('INSERT INTO visitoraccess SET ?', req.body.data, function (err, result) {
+                                console.log(err);
+                                sqlserver.release(con);
+                                if (err)
+                                {
+                                    res.status(500);
+                                    res.end('error in query');
+                                } else {
+                                    res.send('ok');
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    res.status(500);
+                    res.end('error get sql connection');
+                }
+            });
+        },
+
         DeletePicture: function (req, res, next) {
             sqlserver.get(function (err, con) {
                 if (!err) {
@@ -229,9 +287,25 @@ module.exports = function (sqlserver) {
         updateSaleHouseDetails: function (req, res, next) {
             sqlserver.get(function (err, con) {
                 if (!err) {
+                    try {
+                        delete req.body.data.privateHouse;
+                        delete req.body.data.showwaitcircle;
+                        delete req.body.data.showwaitcirclevideo360;
+                        delete req.body.data.Image360Name;
+                        delete req.body.data.videoName;
+                        delete req.body.data.video360Name;
+                        delete req.body.data.config;
+                        delete req.body.data.angleToRotate;
+                        delete req.body.data.currentImage360Status;
+
+                    }
+                    catch (e)
+                    {
+
+                    }
                     var condition = {id: req.body.data.id};
                     var query = con.query('UPDATE sellhousedetails SET ? WHERE ?', [req.body.data, condition], function (err, result) {
-                        //console.log(err);
+                        console.log(err);
                         sqlserver.release(con);
                         if (err) {
                             res.sendStatus(500);
@@ -334,20 +408,19 @@ module.exports = function (sqlserver) {
             sqlserver.get(function (err, con) {
                 if (!err) {
                     req.body.data.userid = req.idFromToken;
-                    var datesql = new Date().toISOString().slice(0, 19).replace('T', ' ');
-                    req.body.data.dateEnter = datesql;
                     req.body.data.suspend = 0;
+                    delete req.body.data.privateHouse;
                     var query = con.query('INSERT INTO sellhousedetails SET ?', req.body.data, function (err, result) {
                         sqlserver.release(con);
                         if (err) {
-                            //console.log(err);
+                            console.log(err);
                             res.sendStatus(500);
                         } else {
                             res.send(result);
                         }
                     });
                 } else {
-                    //console.log(err);
+                    console.log(err);
                     res.sendStatus(500);
                 }
             });
@@ -471,8 +544,6 @@ module.exports = function (sqlserver) {
             sqlserver.get(function (err, con) {
                 if (!err) {
                     req.body.data.userid = req.idFromToken;
-                    var datesql = new Date().toISOString().slice(0, 19).replace('T', ' ');
-                    req.body.data.dateEnter = datesql;
                     req.body.data.suspend = 0;
                     var query = con.query('INSERT INTO renthousedetails SET ?', req.body.data, function (err, result) {
                         sqlserver.release(con);
@@ -530,8 +601,44 @@ module.exports = function (sqlserver) {
             });
         },
         deleteMessage: function (req, res, next) {
-            //console.log('deleteMessage');
-            res.send('ok');
+
+            var id = req.body.id;
+                sqlserver.get(function (err, con) {
+
+                    var sql = 'SELECT salehouseblobs.id\
+                       FROM sellhousedetails\
+                       LEFT JOIN salehouseblobs\
+                       ON salehouseblobs.tableid  = sellhousedetails.id\
+                       WHERE sellhousedetails.id = ' + con.escape(id);
+
+                    var query = con.query(sql, function (err, rows) {
+                    if (err) {
+                        sqlserver.release(con);
+                        res.sendStatus(500);
+                    } else {
+                        for (var i = 0; i < rows.length; i++)
+                        {
+                            if (rows[i].filefullpath != null) {
+                                fs.unlink(rows[i].filefullpath, function (err) {
+
+                                });
+                            }
+                            sql = 'DELETE FROM salehouseblobs where id = ' + con.escape(rows[i].id);
+                            con.query(sql, function (err, rows1) {});
+                        }
+                        sql = 'DELETE FROM sellhousedetails where id = ' + con.escape(id);
+                        con.query(sql, function (err, rows1) {
+                            sqlserver.release(con);
+                            if (err)
+                            {
+                                res.sendStatus(500);
+                            } else {
+                                res.send('ok');
+                            }
+                        });
+                    }
+                });
+            });
         },
         getMessageUserInformation: function (req, res, next) {
             var sql;

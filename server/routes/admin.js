@@ -6,15 +6,19 @@ var jwt = require('jsonwebtoken');
 var secret = require('../common/config').secret;
 var jwtauth = require('../common/jwtauth');
 
-module.exports = function (notify) {
+module.exports = function (app,adminController) {
 
-  var adminController = require('../controller/admin')(notify);
+  function init() {
 
-  var router = express.Router();
-  router.get('/logoutAllUsers', jwtauth, adminController.logoutAllUsers);
+    var router = express.Router();
+    router.get('/logoutAllUsers', jwtauth, adminController.logoutAllUsers);
+    router.get('/getUsers', jwtauth, adminController.getUsers);
+    app.use('/api/admin', router);
+
+  }
 
   return {
-    router:router
-  };
+    init:init
+  }
 
 }

@@ -57,6 +57,18 @@ app.factory('dboperations', ['$http', 'myConfig',
             return $http.post(membersAPI, {id: id, index: i, auth: needauth});
         }
 
+
+        function SaveUserAuthCode(data) {
+            var membersAPI = myConfig.url + "/api/dbstore/SaveUserAuthCode";
+            return $http.post(membersAPI, {data: data});
+        }
+
+        function MarkReloadToThoseSearchResults(idarray, reload) {
+            var membersAPI = myConfig.url + "/api/dbstore/MarkReloadToThoseSearchResults";
+            return $http.post(membersAPI, {idarray:idarray, reload: reload});
+        }
+
+
         function getMessageUserInformation(id, type) {
 
             var membersAPI = myConfig.url + "/api/dbstore/getMessageUserInformation";
@@ -153,6 +165,11 @@ app.factory('dboperations', ['$http', 'myConfig',
             return $http.post(membersAPI, {data: data});
         }
 
+        function GetSearchResultByMessageId(id) {
+            var membersAPI = myConfig.url + "/api/dbstore/GetSearchResultByMessageId";
+            return $http.get(membersAPI, {id: id});
+        }
+
 
         return {
             getSaleHousePictureList: getSaleHousePictureList,
@@ -182,7 +199,10 @@ app.factory('dboperations', ['$http', 'myConfig',
             updateImage360Name:updateImage360Name,
             updateVideoName:updateVideoName,
             updateVideo360Name:updateVideo360Name,
-            DeletePicture:DeletePicture
+            DeletePicture:DeletePicture,
+            GetSearchResultByMessageId:GetSearchResultByMessageId,
+            SaveUserAuthCode:SaveUserAuthCode,
+            MarkReloadToThoseSearchResults:MarkReloadToThoseSearchResults
         };
     }
 

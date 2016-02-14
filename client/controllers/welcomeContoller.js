@@ -1,12 +1,36 @@
 'use strict';
 
 app.controller('welcomeController', ['$scope', '$state', 'authToken',
-    'versionReloader', 'citiesservice', '$cookies', 'general', 'communication', 'visitors', '$q', '$timeout',
-    function ($scope, $state, authToken, versionReloader,
-              citiesservice, $cookies, general, communication, visitors, $q, $timeout) {
+     'citiesservice', '$cookies', 'general', 'communication', 'visitors', '$q', '$timeout','appCookieStore',
+    function ($scope, $state, authToken,
+              citiesservice, $cookies, general, communication, visitors, $q, $timeout,appCookieStore) {
         var vm = this;
 
         var start = new Date().getTime();
+
+
+        var pagename = 'addnewblankhouse';
+        var storeVersion = appCookieStore.get(pagename);
+        if (storeVersion == undefined)
+        {
+            appCookieStore.set(pagename, '0');
+            reloadFunction();
+        } else {
+            var si = parseInt(storeVersion);
+            general.checkIfNeedToReload(pagename,si, function(err, version, needToReload){
+                if (err == 'ok' && needToReload == true)
+                {
+                    appCookieStore.set(pagename, version);
+                    reloadFunction();
+                }
+            });
+        }
+
+
+        document.getElementById('homelink').style.backgroundColor = 'lightgray';
+        document.getElementById('searchlink').style.backgroundColor = null;
+        document.getElementById('vrlink').style.backgroundColor = null;
+
 
         vm.search = {};
         $scope.showmessagetype = true;
@@ -29,7 +53,7 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
 
         vm.citiesSelected = [];
 
-        versionReloader.addPage(reloadFunction);
+
         function reloadFunction() {
             window.location.reload(true);
         }
@@ -55,6 +79,8 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
                 reload: false
             });
         }
+
+
 
         $scope.onFastSearch = function () {
 
@@ -212,7 +238,7 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
             $timeout(function () {
 
                 $scope.slides = [];
-                var welcomeImage = ['1.jpg', '2.jpg', '3.jpg', '4.jpg'];
+                var welcomeImage = ['1.jpg', '2.jpg', '3.jpg', '4.jpg','5.jpg','6.jpg','7.jpg',];
                 for (var i = 0; i < welcomeImage.length; i++) {
                     var imgsrc = './uploadimages/welcome/' + welcomeImage[i];
                     $scope.slides.push({
@@ -224,7 +250,17 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
             }, 1);
             return defer.promise;
         }
+        $scope.$on('IdleStart', function() {
+            console.log('start');
+        });
 
+        $scope.$on('IdleEnd', function() {
+            console.log('end');
+        });
+
+        $scope.$on('IdleTimeout', function() {
+            window.location.reload(true);
+        });
 
         function loadPhotoSphere(divid, hight, filename) {
 
@@ -253,5 +289,15 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
         }
 
     }
+]).config(function (IdleProvider, KeepaliveProvider, myConfig) {
+        // configure Idle settings
 
-]);
+        IdleProvider.idle(myConfig.idletimeSeconds); // in seconds
+        IdleProvider.timeout(myConfig.timeoutSeconds); // in seconds
+        KeepaliveProvider.interval(myConfig.keepAliveInterval); // in seconds
+    })
+    .run(function (Idle) {
+        // start watching when the app runs. also starts the Keepalive service by default.
+        Idle.watch();
+    });
+

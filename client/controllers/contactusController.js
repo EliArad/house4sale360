@@ -1,9 +1,32 @@
 'use strict';
 
-app.controller('contactusController', ['$scope', '$state', 'authToken', '$http', 'appCookieStore','myConfig',
-    function ($scope, $state, authToken, $http, appCookieStore,myConfig) {
+app.controller('contactusController', ['$scope', '$state', 'authToken', '$http', 'appCookieStore','myConfig','general',
+    function ($scope, $state, authToken, $http, appCookieStore,myConfig,general) {
 
         var vm = this;
+
+
+        var pagename = 'contactus';
+        var storeVersion = appCookieStore.get(pagename);
+        if (storeVersion == undefined)
+        {
+            appCookieStore.set(pagename, '0');
+            reloadFunction();
+        } else {
+            var si = parseInt(storeVersion);
+            general.checkIfNeedToReload(pagename,si, function(err, version, needToReload){
+                if (err == 'ok' && needToReload == true)
+                {
+                    appCookieStore.set(pagename, version);
+                    reloadFunction();
+                }
+            });
+        }
+
+        function reloadFunction()
+        {
+            window.location.reload(true);
+        }
 
         vm.contactForm = {
             freetext: '',

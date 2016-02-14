@@ -10,41 +10,44 @@
                 </div>
                 <form name="form1" accept-charset="UTF-8">
                     <div class="modal-body">
-
                         <div class="well" style="padding-bottom:50px">
-
-
-                            <div class="form-group" ng-class="{ 'has-error': (form1.personname.$invalid )}">
+                            <div class="form-group"
+                                 ng-class="{ 'has-error': (form1.personname1.$invalid )}">
                                 <label>שמך</label>
-                                <input type="text" name="personname"
+                                <input type="text" name="personname1"
                                        placeholder="שמך בבקשה שיופיע במייל"
                                        required
                                        class="form-control"
                                        ng-model="personName">
 
                             </div>
-
-                            <div class="form-group" ng-class="{ 'has-error': (form1.emailtosend.$invalid )}">
+                            <div class="form-group" ng-class="{ 'has-error': (form1.emailtosend1.$invalid )}">
                                 <label>אמייל</label>
-                                <input type="email" name="emailtosend"
+                                <input type="email" name="emailtosend1"
                                        placeholder="רשום את המייל של מקבל ההודעה כאן"
                                        required
                                        class="form-control"
                                        ng-model="emailToperson">
 
                             </div>
+                            <div class="form-group" ng-class="{ 'has-error': (form1.messagebody1.$invalid )}">
+
+                               <textarea id="msgbody1" required class="form-control"
+                                         rows="5" id="new_message1"
+                                         name="messagebody1"
+                                         ng-model="messagebody"
+                                         placeholder="הוסף כמה מילים אם תרצה למקבל ההודעה. המייל יופיע מכתובת האתר apt360"></textarea>
+                            </div>
                             <div>
-                                       <textarea id="msgbody1" required class="form-control"
-                                                 rows="5" id="new_message1"
-                                                 name="messagebody"
-                                                 ng-model="messagebody"
-                                                 placeholder="הוסף כמה מילים אם תרצה למקבל ההודעה. המייל יופיע מכתובת האתר apt360"></textarea>
+                                <button type="button" class="btn btn-default" ng-click="messagebody = ''" >נקה</button>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" ng-click="SendPageLinkToAFriend()"
-                                ng-disabled="form1.emailtosend.$invalid" data-dismiss="modal">סגור ושלח
+
+                        <button id="sendpagelinkbtnid1" type="button" class="btn btn-default"
+                                ng-click="SendPageLinkToAFriend()"
+                                ng-disabled="form1.$invalid">סגור ושלח
                         </button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">בטל</button>
                     </div>
@@ -62,15 +65,15 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">שלח את המודעה הזו למייל</h4>
                 </div>
-                <form name="form1" accept-charset="UTF-8">
+                <form name="form2" accept-charset="UTF-8">
                     <div class="modal-body">
 
                         <div class="well" style="padding-bottom:50px">
 
 
-                            <div class="form-group" ng-class="{ 'has-error': (form1.personname.$invalid )}">
+                            <div class="form-group" ng-class="{ 'has-error': (form2.personname2.$invalid )}">
                                 <label>שמך</label>
-                                <input type="text" name="personname"
+                                <input type="text" name="personname2"
                                        placeholder="שמך בבקשה שיופיע במייל"
                                        required
                                        class="form-control"
@@ -78,27 +81,30 @@
 
                             </div>
 
-                            <div class="form-group" ng-class="{ 'has-error': (form1.emailtosend.$invalid )}">
+                            <div class="form-group" ng-class="{ 'has-error': (form2.emailtosend2.$invalid )}">
                                 <label>אמייל</label>
-                                <input type="email" name="emailtosend"
+                                <input type="email" name="emailtosend2"
                                        placeholder="רשום את המייל של מקבל ההודעה כאן"
                                        required
                                        class="form-control"
                                        ng-model="emailToperson">
 
                             </div>
+                            <div class="form-group" ng-class="{ 'has-error': (form1.messagebody2.$invalid )}">
+                               <textarea id="msgbody2" required class="form-control"
+                                         rows="5" id="new_message2"
+                                         name="messagebody2"
+                                         ng-model="messagebody"
+                                         placeholder="הוסף כמה מילים אם תרצה למקבל ההודעה. המייל יופיע מכתובת האתר apt360"></textarea>
+                            </div>
                             <div>
-                                       <textarea id="msgbody2" required class="form-control"
-                                                 rows="5" id="new_message2"
-                                                 name="messagebody"
-                                                 ng-model="messagebody"
-                                                 placeholder="הוסף כמה מילים אם תרצה למקבל ההודעה. המייל יופיע מכתובת האתר apt360"></textarea>
+                                <button type="button" class="btn btn-default" ng-click="messagebody = ''" >נקה</button>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" ng-click="SendLinkToAFriend()"
-                                ng-disabled="form1.emailtosend.$invalid" data-dismiss="modal">סגור ושלח
+                                ng-disabled="form2.$invalid" data-dismiss="modal">סגור ושלח
                         </button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">בטל</button>
                     </div>
@@ -155,11 +161,11 @@
                 <div class="modal-body">
 
                     <div class="well" style="padding-bottom:50px">
-                        <form name="form1" accept-charset="UTF-8">
+                        <form name="form3" accept-charset="UTF-8">
                             <div class="form-group">
                                 <textarea id="msgbody" required class="form-control"
-                                          rows="5" id="new_message"
-                                          name="messagebody"
+                                          rows="5" id="new_message3"
+                                          name="messagebody3"
                                           ng-model="messagebody"
                                           placeholder="שלום זה בקשר לדירה"></textarea>
                             </div>
@@ -167,7 +173,7 @@
                             <h6 id="cLeft" class="pull-right">500 אותיות נשארו</h6>
                             <button id="sendButton{{ vm.userMessageId }}"
                                     ng-click="sendEmailToUser(vm.userMessageId )"
-                                    class="btn btn-info pull-left" ng-disabled="form1.$invalid" type="submit">
+                                    class="btn btn-info pull-left" ng-disabled="form3.$invalid" type="submit">
                                 שלח הודעה
                             </button>
                         </form>
@@ -343,8 +349,7 @@
                                             </ui-select>
                                         </div>
                                     </div>
-                                    <div class="form-group" style="white-space:nowrap"
-                                         ng-class="{ 'has-error': form.neighborhood.$error.required }">
+                                    <div class="form-group" style="white-space:nowrap">
                                         <label class="control-label col-sm-3" for="neighborhood">ערים:</label>
 
                                         <div class="col-sm-9">
@@ -352,6 +357,27 @@
                                                 <li class="active"><a ng-click="removeCityFromList($index)">{{ l.name }}<i
                                                         class=" glyphicon glyphicon-remove pull-left"></i></a></li>
                                             </ul>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group" style="white-space:nowrap" ng-if="vm.citiesSelected.length == 1">
+                                        <label class="control-label col-sm-3" for="street">רחוב</label>
+
+                                        <div class="col-sm-9" ng-class="{ 'has-error': form.street.$error.required }">
+                                            <ui-select id="street"
+                                                       name="street"
+                                                       on-select="getstreet(vm.search.street)"
+                                                       theme="bootstrap" ng-model="vm.search.street"
+                                                       required>
+                                                <ui-select-match placeholder="בחר רחוב">
+                                                    <span ng-bind="$select.selected.name"></span>
+                                                </ui-select-match>
+                                                <ui-select-choices
+                                                        repeat="street in vm.streets |filter : $select.search">
+                                                    <span ng-bind-html="street.name | highlight : $select.search"></span>
+                                                </ui-select-choices>
+                                            </ui-select>
                                         </div>
                                     </div>
 
@@ -401,7 +427,7 @@
                                         <label class="control-label col-sm-3" for="floor">קומה</label>
 
                                         <div class="col-sm-4">
-                                            <select name="fromfloor" class="form-control"
+                                            <select name="floor" class="form-control"
                                                     ng-model="vm.search.floor">
                                                 <option ng-repeat="item in vm.numberfloors" value="{{item}}">
                                                     {{item}}
@@ -411,7 +437,7 @@
                                         <label class="control-label col-sm-1" for="fromfloor">מתוך</label>
 
                                         <div class="col-sm-4">
-                                            <select name="floor" class="form-control"
+                                            <select name="fromfloor" class="form-control"
                                                     ng-model="vm.search.fromfloor">
                                                 <option ng-repeat="item in vm.numberfloors" value="{{item}}">
                                                     {{item}}
@@ -703,10 +729,11 @@
 
                             מספר
                         <span style="font-weight: bold">
-                    {{ item.housenumber }}6
+                    {{ item.housenumber }}
                             </span>
 
 
+                    <span ng-if="!item.privateHouse">
                             קומה:
                     <span style="font-weight: bold">
                     {{ item.floor }}
@@ -716,6 +743,16 @@
                         <span style="font-weight: bold">
                         {{ item.fromfloor }}
                         </span>
+
+                    </span>
+
+
+                    <span ng-if="item.privateHouse">
+קומות:
+                    <span style="font-weight: bold">
+                    {{ item.numoffloors }}
+                        </span>
+                    </span>
                             גודל:
                         <span style="font-weight: bold">
                         {{ item.squresize }}
@@ -896,6 +933,67 @@
                         </div>
                     </div>
 
+                    <div class="row" ng-if="!mobile">
+                        <div class="col-sm-1 col-md-1">
+                            <div>
+                                <div class="didd" style="white-space: nowrap">
+                                    <u>
+גודל מירפסת
+                                    </u>
+                                </div>
+                                <div class="didd">
+                                    {{ item.balconysize }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-1 col-md-1">
+                            <div>
+                                <div class="didd" style="white-space: nowrap">
+                                    <u>
+גודל מיגרש
+                                    </u>
+                                </div>
+                                <div class="didd">
+                                    {{ item.fieldsquresize }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-1 col-md-1">
+                            <div>
+                                <div class="didd" style="white-space: nowrap">
+                                    <u>
+מרתף
+                                    </u>
+                                </div>
+                                <div class="didd">
+                                    {{ item.basement }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-1 col-md-1" ng-if="item.immidiate == 1">
+                            <div>
+                                <div class="didd" style="white-space: nowrap">
+                                    <span>
+כניסה מיידית
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-1 col-md-1" ng-if="item.immidiate == 0">
+                            <div>
+                                <div class="didd" style="white-space: nowrap">
+                                    <span>
+תאריך כניסה:
+                                    </span>
+                                    {{item.enteraptdate}}
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
 
                     <div class="row" ng-if="mobile">
                         <div class="col-xs-2">
@@ -1055,7 +1153,10 @@
                     </div>
 
                     <!-- end of the table-->
-                    <div class="row" style="word-wrap: break-word">
+                    <div class="row" style="word-wrap:break-word; margin-right: 5px;margin-top: 15px">
+                        <span  ng-if="item.freedetails != null || item.freedetails != undefined" style="color:gray">
+                            פרטים נוספים:
+</span>
                         {{ item.freedetails}}
                     </div>
                 </div>
@@ -1110,8 +1211,7 @@
                 השתמש באזור זה לגלול את המסך במובייל
             </div>
 
-
-            <div class="row">
+            <div class="row" ng-if="item.image360Exists && item.privacyEnabled == 0">
                 <div class="col-md-3 col-md-offset-3">
 
                     <a ng-click="loadPrev360Image(item, $index)" style="cursor: pointer">
@@ -1127,14 +1227,14 @@
             <div ng-if="largeScreens">
                 <div class="row" ng-show="item.showPictures > 0 && !virtualSearch && item.privacyEnabled == 0">
                     <div ng-class="{ 'col-md-12 col-xs-12 col-lg-12 col-sm-12':  !item.imageExists, 'col-md-7 col-xs-12 col-lg-7 col-sm-12':  item.imageExists}"
-                         ng-show="item.image360Exists">
+                         ng-if="item.image360Exists">
 
                         <div id="your-pano{{ item.id }}" style="height:500px">
 
                         </div>
                     </div>
                     <div ng-class="{ 'col-md-12  col-xs-12 col-lg-12 col-sm-12':  !item.image360Exists, 'col-md-5 col-xs-12 col-lg-5 col-sm-12':  item.image360Exists}"
-                         ng-show="item.imageExists && !virtualSearch">
+                         ng-if="item.imageExists && !virtualSearch">
                         <div style="margin-left: 1px">
                             <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
                                 <uib-slide ng-repeat="slide in item.slides" active="slide.active">

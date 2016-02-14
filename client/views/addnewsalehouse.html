@@ -77,14 +77,14 @@
 
             <div class="row" ng-hide="showstate2">
                 <div class="col-md-4">
-                    <div class="form-group" style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.propertyType.$error.required }">
+                    <div class="form-group" style="white-space:nowrap">
                         <label class="control-label col-sm-3" for="propertyType">סוג הנכס</label>
 
-                        <div class="col-sm-9">
+                        <div class="col-sm-9" ng-class="{ 'has-error': form.propertyType.$error.required }">
                             <select class="form-control" placeholder="בחר את סוג הנכס למכירה"
                                     name="propertyType"
-                                    ng-change="saveModel()"
+                                    required
+                                    ng-change="updateViewOnPropertyType()"
                                     ng-model="vm.card.propertyType">
                                 <option>דירה</option>
                                 <option>דירת גן</option>
@@ -93,6 +93,7 @@
                                 <option>מרתף/פרטר</option>
                                 <option>דופלקס</option>
                                 <option>טריפלקס</option>
+                                <option>קוט'ג טורי</option>
                                 <option>דו משפחתי</option>
                                 <option>יחידת דיור</option>
                             </select>
@@ -100,12 +101,11 @@
                     </div>
 
 
-                    <div class="form-group" style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.city.$error.required }">
+                    <div class="form-group" style="white-space:nowrap">
                         <label class="control-label col-sm-3" for="propertyType">עיר</label>
-
-                        <div class="col-sm-9">
+                        <div class="col-sm-9" ng-class="{ 'has-error': form.city.$error.required }">
                             <ui-select id="city"
+                                       name="city"
                                        on-select="getcity(vm.card.city)"
                                        theme="bootstrap" ng-model="vm.card.city"
                                        required>
@@ -137,12 +137,12 @@
                         </div>
                     </div>
 
-                    <div class="form-group" style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.street.$error.required }">
+                    <div class="form-group" style="white-space:nowrap">
                         <label class="control-label col-sm-3" for="street">רחוב</label>
 
-                        <div class="col-sm-9">
+                        <div class="col-sm-9" ng-class="{ 'has-error': form.street.$error.required }">
                             <ui-select id="street"
+                                       name="street"
                                        on-select="getstreet(vm.card.street)"
                                        theme="bootstrap" ng-model="vm.card.street"
                                        required>
@@ -156,15 +156,13 @@
                             </ui-select>
                         </div>
                     </div>
-                    <div class="form-group" style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.neighborhood.$error.required }">
+                    <div class="form-group" style="white-space:nowrap">
                         <label class="control-label col-sm-3" for="neighborhood">שכונה</label>
 
                         <div class="col-sm-9">
                             <ui-select id="neighborhood"
                                        on-select="saveModel()"
-                                       theme="bootstrap" ng-model="vm.card.neighborhood"
-                                       required>
+                                       theme="bootstrap" ng-model="vm.card.neighborhood">
                                 <ui-select-match placeholder="בחר שכונה">
                                     <span ng-bind="$select.selected.name"></span>
                                 </ui-select-match>
@@ -177,11 +175,10 @@
                     </div>
 
 
-                    <div class="form-group" style="white-space:nowrap"
-                         ng-class="{ 'has-error': (form.housenumber.$error.required )}">
+                    <div class="form-group" style="white-space:nowrap">
                         <label class="control-label col-sm-3" for="housenumber">מספר הבית</label>
 
-                        <div class="col-sm-9">
+                        <div class="col-sm-9" ng-class="{ 'has-error': (form.housenumber.$error.required )}">
                             <input type="number" name="housenumber" required
                                    placeholder="גודל דירה כולל מרפסת וגינה" class="form-control"
                                    ng-change="saveModel()"
@@ -189,11 +186,10 @@
                         </div>
                     </div>
 
-                    <div class="form-group" style="white-space:nowrap"
-                         ng-class="{ 'has-error': (form.yearsofproperty.$error.required )}">
+                    <div class="form-group" style="white-space:nowrap">
                         <label class="control-label col-sm-3" for="yearsofproperty">גיל הנכס</label>
 
-                        <div class="col-sm-9">
+                        <div class="col-sm-9" ng-class="{ 'has-error': (form.yearsofproperty.$error.required )}">
                             <input type="number" ng-max="150" name="yearsofproperty" required
                                    ng-change="saveModel()"
                                    placeholder="כמה שנים הנכס קיים בשנים" class="form-control"
@@ -201,12 +197,14 @@
                             <span style="color:red" ng-show="form.yearsofproperty.$error.max">גיל הנכס גדול מ 150</span>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-3" for="floor">קומה</label>
 
-                        <div class="col-sm-4">
-                            <select name="fromfloor" class="form-control"
+
+                    <div class="form-group" ng-if="!vm.card.privateHouse">
+                        <label class="control-label col-sm-3" for="floor">קומה</label>
+                        <div class="col-sm-4" ng-class="{ 'has-error': (form.floor.$error.required )}">
+                            <select name="floor" class="form-control"
                                     ng-model="vm.card.floor"
+                                    required
                                     ng-change="saveModel()"
                                     ng-class="{ 'has-error': form.fromfloor.$error.required }">
                                 <option ng-repeat="item in vm.numberfloors" value="{{item}}">
@@ -216,9 +214,10 @@
                         </div>
                         <label class="control-label col-sm-1" for="fromfloor">מתוך</label>
 
-                        <div class="col-sm-4">
-                            <select name="floor" class="form-control"
+                        <div class="col-sm-4" ng-class="{ 'has-error': (form.fromfloor.$error.required )}">
+                            <select name="fromfloor" class="form-control"
                                     ng-model="vm.card.fromfloor"
+                                    required
                                     ng-change="saveModel()"
                                     ng-class="{ 'has-error': form.floor.$error.required }">
                                 <option ng-repeat="item in vm.numberfloors" value="{{item}}">
@@ -228,11 +227,36 @@
                         </div>
                     </div>
 
-                    <div class="form-group" style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.squresize.$error.required}">
+
+                    <div class="form-group" ng-if="vm.card.privateHouse">
+                        <label class="control-label col-sm-3" for="numoffloors">קומות</label>
+                        <div class="col-sm-3"  ng-class="{ 'has-error': form.numoffloors.$error.required }">
+                            <select name="numoffloors" class="form-control"
+                                    required
+                                    ng-model="vm.card.numoffloors">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                            </select>
+                        </div>
+
+                        <label class="control-label col-sm-2"  for="basement">מרתף</label>
+                        <div class="col-sm-4" ng-class="{ 'has-error': (form.basement.$error.required )}">
+                            <select name="basement" class="form-control"
+                                    ng-model="vm.card.basement"
+                                    required>
+                                <option>כן</option>
+                                <option>לא</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group" style="white-space:nowrap">
                         <label class="control-label col-sm-3" for="squresize">גודל דירה</label>
 
-                        <div class="col-sm-9">
+                        <div class="col-sm-9" ng-class="{ 'has-error': form.squresize.$error.required}">
                             <input type="number" name="squresize" required
                                    ng-change="saveModel()"
                                    placeholder="גודל דירה כולל מרפסת וגינה" class="form-control"
@@ -240,13 +264,24 @@
                         </div>
                     </div>
 
-                    <div class="form-group" style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.numberofrooms.$error.required }">
+                    <div class="form-group" style="white-space:nowrap">
+                        <label class="control-label col-sm-3" for="fieldsquresize">גודל מגרש</label>
+
+                        <div class="col-sm-9" ng-class="{ 'has-error': form.fieldsquresize.$error.required}">
+                            <input type="number" name="fieldsquresize" required
+                                   ng-change="saveModel()"
+                                   placeholder="גודל המגרש כולו במטר מרובע"כ  class="form-control"
+                                   ng-model="vm.card.fieldsquresize">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="white-space:nowrap">
                         <label class="control-label col-sm-3" for="numberofrooms">מספר חדרים</label>
 
-                        <div class="col-sm-9">
-                            <select name="numberOfRooms"
+                        <div class="col-sm-9" ng-class="{ 'has-error': form.numberofrooms.$error.required }">
+                            <select name="numberofrooms"
                                     ng-change="saveModel()"
+                                    required
                                     class="form-control" ng-model="vm.card.numberofrooms">
 
                                 <option ng-repeat="item in vm.numberOfRooms" value="{{item}}">
@@ -256,13 +291,13 @@
                         </div>
                     </div>
 
-                    <div class="form-group" style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.balcony.$error.required }">
+                    <div class="form-group" style="white-space:nowrap">
                         <label class="control-label col-sm-3" for="balcony">מרפסת</label>
 
-                        <div class="col-sm-9">
+                        <div class="col-sm-9" ng-class="{ 'has-error': form.balcony.$error.required }">
                             <select name="balcony" class="form-control"
                                     ng-change="saveModel()"
+                                    required
                                     ng-model="vm.card.balcony">
                                 <option ng-repeat="item in vm.balconies" value="{{item}}">{{item}}
                                 </option>
@@ -271,11 +306,10 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="form-group"
-                         ng-class="{ 'has-error': form.aircond.$error.required }">
+                    <div class="form-group">
                         <label class="control-label col-sm-3" for="aircond">מזגן </label>
 
-                        <div class="col-sm-9">
+                        <div class="col-sm-9" ng-class="{ 'has-error': form.aircond.$error.required }">
                             <select class="form-control" placeholder="בחר את התצורה של המזגנים בבית"
                                     name="aircond"
                                     required
@@ -294,11 +328,10 @@
                         </div>
                     </div>
 
-                    <div class="form-group"
-                         ng-class="{ 'has-error': form.parking.$error.required }">
+                    <div class="form-group">
                         <label class="control-label col-sm-3" for="parking">חנייה </label>
 
-                        <div class="col-sm-9">
+                        <div class="col-sm-9" ng-class="{ 'has-error': form.parking.$error.required }">
                             <select class="form-control" placeholder="בחר את התצורה של החנייה אם יש"
                                     name="parking"
                                     required
@@ -313,11 +346,10 @@
                     </div>
 
                     <div class="form-group" ng-if="shoparkingoptions"
-                         style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.parkingtype.$error.required  }">
+                         style="white-space:nowrap">
                         <label class="control-label col-sm-3" for="parkingtype">מיקום החנייה</label>
 
-                        <div class="col-sm-9">
+                        <div class="col-sm-9" ng-class="{ 'has-error': form.parkingtype.$error.required  }">
                             <select class="form-control" placeholder="בחר את סוג החנייה"
                                     ng-change="saveModel()"
                                     required
@@ -329,12 +361,11 @@
                         </div>
                     </div>
 
-                    <div class="form-group" ng-if="shoparkingoptions"
-                         style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.parkingtype2.$error.required  }">
+                    <div class="form-group" ng-if="shoparkingoptions2"
+                         style="white-space:nowrap">
                         <label class="control-label col-sm-3" for="parkingtype2">אופי החנייה</label>
 
-                        <div class="col-sm-9">
+                        <div class="col-sm-9" ng-class="{ 'has-error': form.parkingtype2.$error.required  }">
                             <select class="form-control" placeholder="בחר את סוג החנייה"
                                     name="parkingtype2"
                                     required
@@ -348,11 +379,10 @@
                     </div>
 
                     <div class="form-group"
-                         style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.warehouse.$error.required  }">
+                         style="white-space:nowrap">
                         <label class="control-label col-sm-3" for="warehouse">מחסן</label>
 
-                        <div class="col-sm-9">
+                        <div class="col-sm-9" ng-class="{ 'has-error': form.warehouse.$error.required  }">
                             <select class="form-control" placeholder="מספר מחסנים"
                                     ng-change="saveModel()"
                                     required
@@ -365,12 +395,9 @@
                         </div>
                     </div>
 
-                    <div class="form-group"
-                         style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.elevator.$error.required  }">
+                    <div class="form-group"  style="white-space:nowrap" ng-if="!vm.card.privateHouse">
                         <label class="control-label col-sm-3" for="elevator">מעליות</label>
-
-                        <div class="col-sm-9">
+                        <div class="col-sm-9" ng-class="{ 'has-error': form.elevator.$error.required  }">
                             <select class="form-control" placeholder="מספר מעליות"
                                     ng-change="saveModel()"
                                     required
@@ -388,11 +415,9 @@
                     </div>
 
                     <div class="form-group"
-                         style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.mamad.$error.required  }">
+                         style="white-space:nowrap">
                         <label class="control-label col-sm-3" for="elevator">מרחב מוגן</label>
-
-                        <div class="col-sm-9">
+                        <div class="col-sm-9" ng-class="{ 'has-error': form.mamad.$error.required  }">
                             <select class="form-control" placeholder="האם יש בבית מרחב מוגן?"
                                     ng-change="saveModel()"
                                     name="mamad"
@@ -406,11 +431,10 @@
 
 
                     <div class="form-group"
-                         style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.renovated.$error.required  }">
+                         style="white-space:nowrap">
                         <label class="control-label col-sm-3" for="renovated">מצב הדירה</label>
 
-                        <div class="col-sm-9">
+                        <div class="col-sm-9" ng-class="{ 'has-error': form.renovated.$error.required  }">
                             <select class="form-control" placeholder="מצב הדירה"
                                     name="renovated"
                                     required
@@ -427,13 +451,12 @@
                     </div>
 
 
-                    <div class="form-group" ng-show="shoprenovatedexp"
-                         style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.renovatedexplnation.$error.required }">
+                    <div class="form-group" ng-if="shoprenovatedexp"
+                         style="white-space:nowrap">
                         <label class="control-label col-sm-3" for="renovatedexplnation">פרט
                             מצב</label>
 
-                        <div class="col-sm-9">
+                        <div class="col-sm-9" ng-class="{ 'has-error': form.renovatedexplnation.$error.required }">
                             <input type="text" name="renovatedexplnation"
                                    placeholder="מה רצית לומר על מצב הדירה?" class="form-control"
                                    ng-model="vm.card.renovatedexplnation">
@@ -442,34 +465,26 @@
 
 
                     <div class="form-group"
-                         style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.price.$error.required }">
+                         style="white-space:nowrap">
                         <label class="control-label col-sm-3" for="price">מחיר</label>
 
-                        <div class="col-sm-9">
+                        <div class="col-sm-9" ng-class="{ 'has-error': form.price.$error.required }">
                             <input type="number" name="price" required
                                    placeholder="מחיר בשקלים" class="form-control"
                                    ng-model="vm.card.price">
                         </div>
                     </div>
 
-                    <div class="form-group"
-                         style="white-space:nowrap"
-                         ng-class="{ 'has-error': form.handycupt.$error.required }">
+                    <div class="form-group" style="white-space:nowrap">
 
-                        <div class="col-sm-5 col-sm-offset-2">
-                            <label for="handycupt" class="btn btn-info">גישה לנכים
-                                <input type="checkbox" checked="true" id="handycupt"
-                                       class="badgebox"><span
-                                        class="badge">&check;</span></label>
+                        <div class="col-sm-5 col-sm-offset-2" >
+                            <label for="soragim"> גישה לנכים</label>
+                            <input type="checkbox"  id="handycupt" ng-model="vm.card.handycupt">
                         </div>
 
                         <div class="col-sm-5 ">
-                            <label for="soragim" class="btn btn-info"> סורגים
-                                <input type="checkbox" checked="true" id="soragim"
-                                       class="badgebox"><span
-                                        ng-checked="vm.card.soragim"
-                                        class="badge">&check;</span></label>
+                            <label for="soragim"> סורגים</label>
+                            <input type="checkbox"  id="soragim" ng-model="vm.card.soragim">
                         </div>
                     </div>
 
@@ -594,14 +609,30 @@
                                 ng-click="saveChanges(form)"
                                 class="btn btn-primary">שמור נתונים
                         </button>
-                        <span ng-show="showError" style="color:red;font-size: 18pt">
+                        <span ng-if="showError" style="color:red;font-size: 18pt">
                             {{vm.errorToShow }}
                         </span>
                     </div>
                 </div>
 
             </div>
-            <div class="row" ng-show="showstate2">
+            <div class="row" ng-if="showstate2" style="border: inset">
+                    <div style="text-align: center;font-size: 20pt">
+                            תמונות סטילס
+                    </div>
+                    <div>
+                    <span ng-if="isagent" style="margin-right: 15px">
+            יש לכם עד 1GIGA מקום להעלות תמונות, וידאו, סיורים וירטואלים תמונות ,360 לכל  המודעות ביחד
+                    </span>
+                    <span ng-if="!isagent" style="margin-right: 15px">
+יש לכם עד 150 מגה מקום להעלות תמונות, וידאו, סיורים וירטואלים ,תמונות 360 לכל  המודעות ביחד
+                    </span>
+                    </div>
+                    <div ng-if="vm.showwaitcircle" style="font-size:20pt; text-align: center; color: orangered"
+                         class="animated infinite tada">
+                        מעלה קובץ...
+                    </div>
+
                 <div ng-include="'client/templates/pictureupload1.html'">
 
                 </div>
@@ -609,13 +640,60 @@
 
                 </div>
             </div>
-            <div class="row" ng-show="showstate2" style="margin-top: 50px">
+
+
+            <div class="row" ng-if="showstate2" style="margin-top: 50px;border: inset">
+
+                <div style="text-align: center;font-size: 20pt">
+                    תמונות פנורמה 360 מעלות
+                </div>
+                <div style="margin-right: 15px">
+                    <p>
+        <span ng-if="isagent">
+            יש לכם עד 1GIGA מקום להעלות תמונות, וידאו, סיורים וירטואלים תמונות ,360 לכל  המודעות ביחד
+        </span>
+        <span ng-if="!isagent">
+יש לכם עד 150 מגה מקום להעלות תמונות, וידאו, סיורים וירטואלים ,תמונות 360 לכל  המודעות ביחד
+        </span>
+                    </p>
+                </div>
+
+
+                <div ng-if="vm.showwaitcircle360" style="font-size:20pt; text-align: center; color: orangered"
+                     class="animated infinite tada">
+                    מעלה קובץ...
+                </div>
+
                 <div ng-include="'client/templates/image360_single.html'">
 
                 </div>
             </div>
-            <div class="row" ng-show="showstate2"  style="margin-top: 50px">
-                <div class="col-md-4 col-md-offset-3" ng-show="vm.showwaitcircle" ng-include="'/client/templates/waitcircle.html'">
+
+
+
+
+            <div class="row" ng-if="showstate2"  style="margin-top: 50px;border: inset">
+                <div ng-if="vm.showwaitcirclevideo" style="font-size:20pt; text-align: center; color: orangered"
+                     class="animated infinite tada">
+                    מעלה קובץ...
+
+                </div>
+
+                <div style="text-align: center;font-size: 20pt">
+                    וידאו רגיל - אפשר מכל מצלמה כולל נייד
+                </div>
+                <div style="margin-right: 15px">
+                    <br>
+                    שימו לב: בכדי להעלות וידאו שלא יתפוס מקום רב ותוכלו לצלם זמן ארוך יותר בטלפון שלכם
+                    <br>
+                    יש לכוון את ההגדרות של הוידאו למצב VGA.מצב זה יאפשר להקליט זמן ארוך יותר.
+                    אל תשכחו להחזיר חזרה את ההגדרות לאיכות שהייתה קודם למשל full hd
+                    ההגדרה הזו מורידה באיכות התמונה ולפיכך נותנת לכם זמן ארוך יותר באותו גודל.
+                    <br>
+                    <a ui-sref="howto360?recordlongvideo">
+                        להסברים נוספים
+                    </a>
+                    <br>
                 </div>
                 <div ng-include="'client/templates/videoregularloader.html'">
 
@@ -624,9 +702,28 @@
 
                 </div>
             </div>
-            <div class="row" ng-show="showstate2" style="margin-top: 50px">
-                <div class="col-md-4 col-md-offset-3" ng-show="vm.showwaitcircle" ng-include="'/client/templates/waitcircle.html'">
+
+
+            <div class="row" ng-if="showstate2" style="margin-top: 50px;border: inset">
+
+                <div style="text-align: center;font-size: 20pt;margin-right: 15px">
+                    וידאו 360 - וידאו ממצלמת 360 מיוחדת
                 </div>
+                <div style="margin-right: 15px">
+                    וידאו ממצלמת 360 נותן לכם אפשרות לראות בתנועה ולשמוע ב 360 מעלות.
+                    <br>
+                    את הוידאו ניתן לראות גם משקפת וירטואל ראליטי ישירות מהאתר על ידי גלישה מהמשקפת בדפדפן VR
+                    <br>
+                    <a ui-sref="vrpage">ללפרטים נוספים על גלישה ב VR</a>
+                </div>
+
+
+                <div ng-if="item.showwaitcirclevideo360" style="font-size:20pt; text-align: center; color: orangered"
+                     class="animated infinite tada">
+                    מעלה קובץ...
+                </div>
+
+
                 <div ng-include="'client/templates/video360loader.html'">
 
                 </div>

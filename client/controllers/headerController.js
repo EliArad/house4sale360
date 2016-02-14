@@ -15,6 +15,9 @@ app.controller('HeaderController', ['$scope', '$state', 'authToken',
         $scope.isAgent = false;
 
         $scope.partyDetail = function () {
+            document.getElementById('searchlink').style.backgroundColor = 'lightgray';
+            document.getElementById('homelink').style.backgroundColor = null;
+            document.getElementById('vrlink').style.backgroundColor = null;
             $state.go('main', {}, {
                 reload: true
             });
@@ -25,6 +28,27 @@ app.controller('HeaderController', ['$scope', '$state', 'authToken',
             logout();
         });
 
+
+        $scope.paintback = function(id)
+        {
+            switch(id) {
+                case 1:
+                    document.getElementById('homelink').style.backgroundColor = 'lightgray';
+                    document.getElementById('searchlink').style.backgroundColor = null;
+                    document.getElementById('vrlink').style.backgroundColor = null;
+                 break;
+                case 2:
+                    document.getElementById('homelink').style.backgroundColor = null;
+                    document.getElementById('searchlink').style.backgroundColor = null;
+                    document.getElementById('vrlink').style.backgroundColor = 'lightgray';
+                 break;
+                case 3:
+                    document.getElementById('homelink').style.backgroundColor = null;
+                    document.getElementById('searchlink').style.backgroundColor = null;
+                    document.getElementById('vrlink').style.backgroundColor = null;
+                 break;
+            }
+        }
         function logout() {
             authToken.RemoveToken();
             $state.go('login', {}, {

@@ -104,8 +104,6 @@ mkdirp('./uploadvideo/', function (err) {
 //console.log(__dirname);
 
 
-
-
 //var notifyServerModule = require('./server/modules/MailNotify');
 //var notifyServer = new notifyServerModule(io, lastonlineModel, usersFunction, membersModel.membersModel);
 
@@ -136,7 +134,6 @@ app.use(bodyParser.json());
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 
-var commandsRoutes = require('./server/routes/commands')(app, sqlserver);
 var mailverify = require('./server/modules/nodemailer')(app, sqlserver);
 var commandsRoutes = require('./server/routes/commands')(app, sqlserver, mailverify);
 var registerRoutes = require('./server/routes/register')(sqlserver, registerController);
@@ -144,23 +141,26 @@ var dbstoreRoutes = require('./server/routes/dbstore')(app, dbstoreController).i
 
 
 //var dbsearchRoutes = require('./server/routes/dbsearch');
-//var adminRoutes = require('./server/routes/admin')(notifyServer);
 
+var adminController = require('./server/controller/admin')(sqlserver);
 var salequeryController = require('./server/controller/salequery')(sqlserver);
 var mailController = require('./server/controller/mail')(sqlserver, mailverify);
+var utilsController = require('./server/controller/apiutils')();
 var mailRoutes = require('./server/routes/mail')(app, mailController).init();
 var generalController = require('./server/controller/general')(sqlserver);
 var generalRoutes = require('./server/routes/general')(app, generalController).init();
+var utilsRoutes = require('./server/routes/apiutils')(app, utilsController).init();
+
 
 
 var tasksController = require('./server/controller/tasks')(sqlserver);
-var mailRoutes = require('./server/routes/tasks')(app, tasksController).init();
+var tasksRoutes = require('./server/routes/tasks')(app, tasksController).init();
 
+var adminRoutes = require('./server/routes/admin')(app, adminController).init();
 var salequeryRoutes = require('./server/routes/salequery')(app, salequeryController).init();
 app.use('/api/register', registerRoutes.routes);
 
 //app.use('/api/dbsearch', dbsearchRoutes);
-//app.use('/api/admin', adminRoutes.router);
 //app.use('/api/general', jwtauth, getGeneralRoutes);
 
 //var createNewMember = require("./server/modules/createNewMember")(membersModel.membersModel);
@@ -233,7 +233,8 @@ app.post('/api/upload', jwtauth, bodyParser({
                                     is360image: req.body.is360image,
                                     isvideo: false,
                                     is360video: false,
-                                    filesize: req.body.filesize
+                                    filesize: req.body.filesize,
+                                    filefullpath:req.body.filefullpath
                                 };
 
                                 // save the entry to database salehouseblobs
@@ -288,6 +289,8 @@ app.get('/api/deleteVideo', jwtauth, function (req, res) {
     fs.unlink(fileName, function (err) {
 
     });
+
+    res.send('ok');
 
 });
 
@@ -360,7 +363,8 @@ app.post('/api/uploadvideo', jwtauth, bodyParser({
                                             is360image: false,
                                             isvideo: true,
                                             is360video: req.body.is360video,
-                                            filesize: req.body.filesize
+                                            filesize: req.body.filesize,
+                                            filefullpath:req.body.filefullpath
                                         };
 
                                         // save the entry to database salehouseblobs

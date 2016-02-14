@@ -4,28 +4,30 @@
 app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper',
     'appCookieStore', 'socketioservice', 'Idle', '$rootScope',
     'SessionStorageService', 'myConfig', '$http', '$window', '$timeout',
-    'dboperations', 'citiesservice', 'general', '$cookies', '$sce',
-    'versionReloader','communication','visitors','messageToLink','$q',
+    'dboperations', 'citiesservice', 'general', '$cookies', '$sce','communication','visitors','messageToLink','$q','$stateParams',
     function ($scope, $state, authToken, myhttphelper,
               appCookieStore, socketioservice, Idle, $rootScope, SessionStorageService,
               myConfig, $http, $window, $timeout, dboperations,
-              citiesservice, general, $cookies, $sce,versionReloader,communication,
-              visitors,messageToLink,$q) {
+              citiesservice, general, $cookies, $sce,communication,
+              visitors,messageToLink,$q,$stateParams) {
 
 
         var vm = this;
         var video360height = '500px';
         $scope.mobile = true;
         $scope.virtualSearch = false;
-        $scope.UserAuthorizationKey = '';
         $scope.largeScreens = true;
         vm.searchsummery = '';
         vm.search = {};
+        vm.searchFromURL = {};
         var cexp = general.getCookieExp();
         var cssUpdateTimer;
         vm.userMessageId = -1;
         $scope.aptstatus = false;
+        vm.userMessageIndex = 0;
+        vm.userMessageId = 0;
         vm.numberfloors = [];
+        vm.streets = [];
         $scope.showmessagetype = true;
         vm.balconies = ['לא משנה לי', 1, 2, 3, 'יותר משלוש'];
         vm.numberOfRooms = ['הכל', 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 9, 10, 'יותר מעשרה'];
@@ -34,6 +36,8 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             vm.numberfloors.push(i);
         }
         var lastCity = undefined;
+        var lastCity1 = undefined;
+
         vm.citiesSelected = [
             //{name:'תל אביב'}
         ];
@@ -41,6 +45,50 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         vm.schonotSelected = [
             //{name:'תל אביב'}
         ];
+
+        function getallUrlParams()
+        {
+
+            try {
+                var p = $stateParams.city.split(',');
+                vm.searchFromURL.city = [];
+
+                for (var i = 0; i < p.length; i++) {
+                    var x = {
+                        name: p[i]
+                    }
+                    vm.searchFromURL.city.push(x);
+                }
+
+                vm.searchFromURL.agent = $stateParams.agent;
+                vm.searchFromURL.aircond = $stateParams.aircond;
+                vm.searchFromURL.balcony = $stateParams.balcony;
+                vm.searchFromURL.mamad = $stateParams.mamad;
+                vm.searchFromURL.messagetype = $stateParams.messagetype;
+                vm.searchFromURL.numberofrooms = $stateParams.numberofrooms;
+                vm.searchFromURL.neighborhood = $stateParams.neighborhood;
+                vm.searchFromURL.parking = $stateParams.parking;
+                vm.searchFromURL.parkingtype = $stateParams.parkingtype;
+                vm.searchFromURL.parkingtype2 = $stateParams.parkingtype2;
+
+                vm.searchFromURL.warehouse = $stateParams.warehouse;
+                vm.searchFromURL.elevator = $stateParams.elevator;
+                vm.searchFromURL.floor = $stateParams.floor;
+                vm.searchFromURL.fromfloor = $stateParams.fromfloor;
+                vm.searchFromURL.price = $stateParams.price;
+
+                if (vm.searchFromURL.agent != undefined && vm.searchFromURL.messagetype != undefined) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            catch (e)
+            {
+                return false;
+            }
+        }
+
 
         $scope.UpdateMessageType = function()
         {
@@ -90,13 +138,16 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
             var objectData = getCityObject(selectedItem);
 
-
             $scope.shownapa = true;
             if (lastCity == undefined || lastCity != objectData.code) {
                 //console.log('selectedItem.code : ' + objectData.code);
                 general.getSchonot(objectData.code).then(function (result) {
                     vm.search.neighborhood = '';
                     vm.neighborhoods = result.data;
+                })
+
+                general.getStreets(objectData.code).then(function (result) {
+                    vm.streets = result.data;
                 })
             }
             lastCity = objectData.code;
@@ -117,7 +168,6 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
         $scope.mobile = general.isMobile();
 
-        versionReloader.addPage(reloadFunction);
 
         function reloadFunction()
         {
@@ -230,12 +280,6 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                         $scope.largeScreens = false;
                 }
 
-                var uc = $cookies.get('UserAuthCodeToView');
-                if (uc != undefined)
-                    $scope.UserAuthorizationKey = uc;
-                else {
-                    $scope.UserAuthorizationKey = '';
-                }
 
                 initcrousle();
                 var ressearch = $cookies.get('sellhousesearch');
@@ -269,7 +313,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             }
             catch (e) {
                 console.log(e);
-                location.reload();
+                location.reload(true);
                 return;
             }
 
@@ -279,7 +323,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 console.log('fast search');
                 console.log(vm.search);
                 communication.setFastSearch(false);
-                ShowResults(true);
+                ShowResults(1);
                 return;
             }
             if (communication.isAdvancedSearch() == true)
@@ -288,7 +332,14 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 communication.openAdvancedSearch(false);
             } else {
 
-                ShowResults(false);
+                if (getallUrlParams() == true)
+                {
+                    vm.search = angular.copy(vm.searchFromURL);
+                    console.log(vm.search);
+                    ShowResults(2);
+                } else {
+                    ShowResults(0);
+                }
             }
 
         });
@@ -302,6 +353,45 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
             vm.userMessageId = -1;
         });
+
+        $('#myModal').on('show.bs.modal', function () {
+
+
+            if (vm.search.city == undefined )
+                 return;
+            var objectData = getCityObject(vm.search.city);
+            $scope.shownapa = true;
+            if (lastCity == undefined || lastCity != objectData.code) {
+                //console.log('selectedItem.code : ' + objectData.code);
+                general.getSchonot(objectData.code).then(function (result) {
+                    vm.search.neighborhood = '';
+                    vm.neighborhoods = result.data;
+                })
+            }
+            lastCity = objectData.code;
+
+            if (lastCity1 == undefined || lastCity1 != objectData.code) {
+                if (vm.citiesSelected.length == 1) {
+                    general.getStreets(objectData.code).then(function (result) {
+                        vm.streets = result.data;
+                    })
+                }
+            }
+            lastCity1 = objectData.code;
+            if (objectData.area == 'merkaz') {
+                vm.search.area = 'אזור המרכז';
+            } else if (objectData.area == 'darom') {
+                vm.search.area = 'אזור הדרום';
+            } else if (objectData.area == 'jerusalem') {
+                vm.search.area = 'אזור ירושלים';
+            } else if (objectData.area == 'zafon') {
+                vm.search.area = 'אזור הצפון';
+            } else if (objectData.area == 'haifa') {
+                vm.search.area = 'אזור חיפה';
+            }
+         });
+
+
 
         $('#myModal').on('hidden.bs.modal', function () {
 
@@ -318,7 +408,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             s = JSON.stringify(vm.aptstatus);
             $cookies.put('aptstatus', s ,{expires: cexp});
 
-            ShowResults(false);
+            ShowResults(0);
 
             var pstr = '';
             var index = 0;
@@ -391,7 +481,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 vm.searchsummery += ' ללא הגבלת חדרים';
             } else {
                 vm.searchsummery += vm.search.numberofrooms;
-                vm.searchsummery += 'חדרים ';
+                vm.searchsummery += ' חדרים ';
             }
             if (vm.search.toprice != undefined) {
                 vm.searchsummery += ' במחיר עד ';
@@ -412,7 +502,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
                     var buttonid = 'sendButton' + id;
 
-                    document.getElementById(buttonid).className = "btn btn-info pull-left animated tada";
+                    document.getElementById(buttonid).className = "btn btn-info animated tada";
                     document.getElementById(buttonid).style.color = 'lightgreen';
                     document.getElementById(buttonid).innerHTML = 'הודעה נשלחה';
 
@@ -420,13 +510,22 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                         $('#sendMessageModal').modal('hide');
                         document.getElementById(buttonid).innerHTML = 'שלח הודעה';
                         document.getElementById(buttonid).style.color = 'white';
-                        document.getElementById(buttonid).className = "btn btn-info pull-left";
+                        document.getElementById(buttonid).className = "btn btn-info";
                     }, 1900);
                 }).catch(function (result) {
                     vm.msgboxcontent = 'קרתה שגיאה בשליחת ההודעה';
                      
                 })
             }
+        }
+
+
+        $scope.SendToAFriend = function(item, index)
+        {
+
+            vm.userMessageIndex = index;
+            vm.userMessageId = item.id;
+            $('#sendSingleMessageModal').modal('show');
         }
 
         $scope.SendToAFriendAllPosts = function()
@@ -439,8 +538,10 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         $scope.SendPageLinkToAFriend = function()
         {
 
-            var link = messageToLink.BuildLinkFromSearch(vm.search);
-            return;
+
+            var link = messageToLink.BuildLinkFromSearch(vm.search, vm.citiesSelected);
+
+
             var messagebody = '';
             messagebody += '<div style="direction: rtl;text-align: right">';
             messagebody = ' הי<br> ' +
@@ -452,11 +553,21 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             messagebody += '</div>';
             general.SendEmailToPerson($scope.emailToperson, $scope.personName, messagebody).then(function (result) {
 
-                alert('ההודעה נשלחה בהצלחה');
-            }).catch(function (result) {
-                alert('קרתה שגיאה וההודעה לא נשלחה');
-            })
+                var buttonid = 'sendpagelinkbtnid1';
+                document.getElementById(buttonid).className = "btn btn-info animated tada";
+                document.getElementById(buttonid).style.color = 'lightgreen';
+                document.getElementById(buttonid).innerHTML = 'הודעה נשלחה';
 
+                cssUpdateTimer = $timeout(function () {
+                    $('#sendAllMessageModal').modal('hide');
+                    document.getElementById(buttonid).innerHTML = 'שלח הודעה';
+                    document.getElementById(buttonid).style.color = 'white';
+                    document.getElementById(buttonid).className = "btn btn-info";
+                }, 1900);
+            }).catch(function (result) {
+                $('#sendAllMessageModal').modal('hide');
+                alert('שגיאה בשליחת ההודעה');
+            })
         }
 
 
@@ -524,7 +635,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         {
 
             $scope.showNoResultsMessage = false;
-            if (vm.citiesSelected.length == 0 && fast == false) {
+            if (vm.citiesSelected.length == 0 && fast == 0) {
                 vm.msgboxcontent = 'בחר עיר אחת לפחות';
                 return;
             }
@@ -567,16 +678,24 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
             //console.log(vm.search);
             var search = angular.copy(vm.search);
-            if (fast == false) {
-                search.city = vm.citiesSelected;
-            } else {
+            switch (fast)
+            {
+                case 0:
+                    search.city = vm.citiesSelected;
+                break;
+                case 1:
                 search.city = [];
                 var o = {
                     name:vm.search.city
                 }
                 search.city.push(o);
-                //console.log(search.city);
+                break;
+                case 2:
+                    search.city = vm.search.city;
+                break;
             }
+            console.log(vm.search.city);
+            console.log(search.city);
             search.propertyType = vm.search.propertyType;
             search.renovated = vm.search.renovated;
             search.toprice = vm.search.toprice;
@@ -750,11 +869,12 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                     card = value[0];
                     card.id = key;
 
-                    card.UserAuthorizationKey = $scope.UserAuthorizationKey;
 
-                    if (card.UserAuthorizationKey == card.privacyPassword)
+                    if (card.privacyPassword ==  card.accesstoken)
                     {
                         card.privacyEnabled = 0;
+                    } else {
+                        card.privacyEnabled = 1;
                     }
 
                     //card.imageMaxHeight = '400px';
@@ -786,7 +906,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                     if (card.numberofrooms == 1) {
                         card.numberofrooms = 'חדר אחד';
                     } else {
-                        card.numberofrooms = card.numberofrooms + 'חדרים';
+                        card.numberofrooms = card.numberofrooms + ' חדרים ';
                     }
                     var x = {
                         'city': city,
@@ -931,10 +1051,10 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                     //console.log('card.show3dtour ' + card.show3dtour);
                     if (card.show3dtour == 1) {
                         setTimeout(function(index){
-                            var _src = '/virtualtours/' + userid1 + '/' + tableid + '/tour3dvistaplayer.html';
+                            var _src = '/virtualtours/' + card.userid + '/' + card.id + '/tour3dvistaplayer.html';
                             //console.log(_src);
                             document.getElementById('touriframeid' + index).src = _src;
-                        }, 1000, i)
+                        }, 1000, i, card)
                     }
                     i++;
                 });
@@ -974,7 +1094,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         }
         catch (e)
         {
-            location.reload();
+            location.reload(true);
         }
 
 
@@ -1062,11 +1182,25 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         $scope.EnterUserAuthCode = function(item)
         {
 
-            $cookies.put('UserAuthCodeToView', item.UserAuthorizationKey ,{expires: cexp});
             if (item.UserAuthorizationKey == item.privacyPassword)
             {
-                item.privacyEnabled = 0;
 
+
+                var vguid = $cookies.get('apt360visitorguid');
+                if (vguid != null)
+                {
+
+                    var data = {
+                        guid:vguid,
+                        tableid:item.id,
+                        type:item.messagetype,
+                        accesstoken:item.privacyPassword
+                    }
+                    dboperations.SaveUserAuthCode(data).then(function (result) {
+
+                    });
+                }
+                item.privacyEnabled = 0;
 
                 setTimeout(function () {
                     var PSV = new PhotoSphereViewer({
@@ -1148,7 +1282,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             console.log($scope.largeScreens);
             $cookies.put('largeScreens', $scope.largeScreens ,{expires: cexp});
 
-            ShowResults(false);
+            ShowResults(0);
         }
 
         function load360ImageAsync(id, src) {
@@ -1183,6 +1317,19 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             return defer.promise;
         }
 
+
+        $scope.$on('IdleStart', function() {
+            console.log('start');
+        });
+
+        $scope.$on('IdleEnd', function() {
+            console.log('end');
+        });
+
+        $scope.$on('IdleTimeout', function() {
+            window.location.reload(true);
+        });
+
         $(window).scroll(function () {
             if ($scope.allthumberspictures == false) {
                 return;
@@ -1193,14 +1340,14 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             }
         });
     } // the controller closing
-]).
-    config(function (IdleProvider, KeepaliveProvider, myConfig) {
+]).config(function (IdleProvider, KeepaliveProvider, myConfig) {
         // configure Idle settings
         IdleProvider.idle(myConfig.idletimeSeconds); // in seconds
         IdleProvider.timeout(myConfig.timeoutSeconds); // in seconds
-        KeepaliveProvider.interval(2); // in seconds
+        KeepaliveProvider.interval(myConfig.keepAliveInterval); // in seconds
     })
     .run(function (Idle) {
         // start watching when the app runs. also starts the Keepalive service by default.
         Idle.watch();
     });
+

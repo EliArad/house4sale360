@@ -3,12 +3,12 @@
 
 app.controller('kablanhouseController', ['$scope', 'Members', 'general', 'appCookieStore', '$window',
     '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope',
-    'SessionStorageService', '$cookies', 'dboperations', 'fileReader', '$sce', 'citiesservice','versionReloader',
+    'SessionStorageService', '$cookies', 'dboperations', 'fileReader', '$sce', 'citiesservice',
     function ($scope, Members, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
               $state, myhttphelper, $rootScope, SessionStorageService,
               $cookies, dboperations, fileReader, $sce,
-              citiesservice,versionReloader) {
+              citiesservice) {
 
 
         var vm = this;
@@ -44,7 +44,7 @@ app.controller('kablanhouseController', ['$scope', 'Members', 'general', 'appCoo
             vm.numberfloors.push(i);
         }
 
-        versionReloader.addPage(reloadFunction);
+
         function reloadFunction()
         {
             window.location.reload(true);

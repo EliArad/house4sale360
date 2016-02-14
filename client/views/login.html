@@ -26,6 +26,9 @@
                 <div>
                     <h1  id="loginfailureid" ng-show="loginfailure" ng-class="{ 'animated bounce': loginfailure}">{{errorToShow}}</h1></h1>
                 </div>
+                <div>
+                    <a  ng-click="SendAgainMailForConfirm()" ng-show="sendMailToVerify"  class="btn btn-link"> שלח לי שוב מייל לאישור</a>
+                </div>
             </form>
         </div>
         <div class="col-md-8" ng-include="'/client/templates/loginsidetext.html'">

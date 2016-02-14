@@ -16,12 +16,12 @@
 <div class="col-md-12">
     <div class="row">
         <div class="col-md-3">
-        <span class="btn btn-primary btn-file">העלה תמונת 360
-        <input type="file" name="pano" id="pane{{ item.id }}"
-               data-index-type="{{ $index }}"
-               data-animal-type="{{ item }}"
-               onchange="angular.element(this).scope().onOpen360File(this)"/>
-        </span>
+            <span class="btn btn-primary btn-file">העלה תמונת 360
+            <input type="file" name="pano" id="pane{{ item.id }}"
+                   data-index-type="{{ $index }}"
+                   data-animal-type="{{ item }}"
+                   onchange="angular.element(this).scope().onOpen360File(this)"/>
+            </span>
         </div>
         <div class="col-md-3">
             <input type="text" ng-model="item.Image360Name"
@@ -34,21 +34,16 @@
            <input type="button" class="btn btn-default" ng-click="DeleteImage360Picture(item)" value="מחק" />
 
         </div>
-        <div class="col-md-3" id="image360glyps{{item.id}}" style="display: none">
+        <div class="col-md-3" id="image360glyps{{item.id}}">
             <div class="row">
-                <div class="col-md-3 col-md-offset-3">
-                    <p>
+                <div class="col-md-12">
                         <a ng-click="loadPrev360Image(item, $index)" style="cursor: pointer">
-                            <span style="font-size: xx-large" class="glyphicon glyphicon-chevron-right"></span>
+                            <span style="font-size: x-large" class="glyphicon glyphicon-chevron-right"></span>
                         </a>
-                    </p>
-                </div>
-                <div class="col-md-3">
-                    <p>
+                        {{ item.currentImage360Status}}
                         <a ng-click="loadNext360Image(item, $index)" style="cursor: pointer">
-                            <span style="font-size: xx-large" class="glyphicon glyphicon-chevron-left"></span>
+                            <span style="font-size: x-large" class="glyphicon glyphicon-chevron-left"></span>
                         </a>
-                    </p>
                 </div>
             </div>
         </div>

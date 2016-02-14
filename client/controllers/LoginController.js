@@ -3,13 +3,38 @@
 
 app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
                  '$http', '$rootScope', 'myhttphelper', 'PassServiceParams',
-                 'socketioservice', 'SessionStorageService','$timeout','versionReloader',
-    'myConfig','visitors','$stateParams',
+                 'socketioservice', 'SessionStorageService','$timeout',
+    'myConfig','visitors','$stateParams','appCookieStore','general',
     function ($scope, $state, authToken, $cookies, $http, $rootScope,
               myhttphelper, PassServiceParams, socketioservice,
-              SessionStorageService,$timeout,versionReloader,myConfig,visitors,$stateParams)
+              SessionStorageService,$timeout,myConfig,visitors,$stateParams,appCookieStore,general)
     {
 
+
+
+
+
+        var pagename = 'login';
+        var storeVersion = appCookieStore.get(pagename);
+        if (storeVersion == undefined)
+        {
+            appCookieStore.set(pagename, '0');
+            reloadFunction();
+        } else {
+            var si = parseInt(storeVersion);
+            general.checkIfNeedToReload(pagename,si, function(err, version, needToReload){
+                if (err == 'ok' && needToReload == true)
+                {
+                    appCookieStore.set(pagename, version);
+                    reloadFunction();
+                }
+            });
+        }
+
+        function reloadFunction()
+        {
+            window.location.reload(true);
+        }
 
 
         $scope.loginfailure = false;
@@ -24,7 +49,6 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
         };
 
 
-        versionReloader.addPage(reloadFunction);
 
 
         function reloadFunction()
@@ -34,7 +58,6 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
 
         $scope.ForgetPassword = function()
         {
-
             if ($scope.vm.user.email == null || $scope.vm.user.email == undefined)
             {
                 $scope.notifyUserMsg = 'אנא הכנס מייל';
@@ -43,21 +66,43 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
             var email = $scope.vm.user.email;
             var url = myConfig.url + "/api/forgotPassword";
             $http.post(url , {email:email} ).then(function(result){
+                $scope.errorToShow =  'מייל איפוס נשלח';
+                $scope.loginfailure = true;
 
-                console.log(result);
             }).catch(function(err){
                 console.log(err);
             })
         }
-
         $scope.vm.clearError = function () {
             $scope.loginfailure = false;
         }
+        $scope.SendAgainMailForConfirm = function()
+        {
 
-        //$scope.vm.user.email =$cookies.get('login_user_name');
+            alert('לא נתמך עדיין');
+        }
+        function showblizeError()
+        {
+            $scope.loginfailure = true;
+
+            if (cssUpdateTimer != undefined && cssUpdateTimer != null) {
+                $timeout.cancel(cssUpdateTimer);
+                cssUpdateTimer = null;
+            }
+            var x = document.getElementById('loginfailureid');
+            x.className = "animated bounce";
+
+            cssUpdateTimer = $timeout(function () {
+                var x = document.getElementById('loginfailureid');
+                x.className = "";
+            }, 1900);
+        }
+
         function login() {
 
             authToken.RemoveToken();
+            $scope.sendMailToVerify = false;
+            $scope.errorToShow = '';
 
             $scope.vm.user.email = $scope.vm.user.email.toLowerCase();
             myhttphelper.doPost('/api/login', $scope.vm.user).
@@ -70,6 +115,7 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
                 if (response.verified == 0)
                 {
                     $scope.errorToShow = 'עדיין לא אישרת את המייל שלך';
+                    $scope.sendMailToVerify = true;
                     showblizeError();
                     return;
                 }
@@ -95,6 +141,17 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
                     reload: true
                 });
             }
+            $scope.$on('IdleStart', function () {
+                console.log('start');
+            });
+
+            $scope.$on('IdleEnd', function () {
+                console.log('end');
+            });
+
+            $scope.$on('IdleTimeout', function () {
+               // $state.go('/', {}, {reload: true});
+            });
 
             function sendResponseError(response)
             {
@@ -116,5 +173,14 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
             }
         }
     }
+  ]).config(function (IdleProvider, KeepaliveProvider, myConfig) {
+        // configure Idle settings
+        IdleProvider.idle(myConfig.idletimeSeconds); // in seconds
+        IdleProvider.timeout(myConfig.timeoutSeconds); // in seconds
+        KeepaliveProvider.interval(myConfig.keepAliveInterval); // in seconds
+    })
+    .run(function (Idle) {
+        // start watching when the app runs. also starts the Keepalive service by default.
+        Idle.watch();
+    });
 
-  ]);

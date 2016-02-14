@@ -39,8 +39,10 @@ module.exports = function (app) {
             var newlink = link;
             switch (link)
             {
-
-                case ertisehousesale:
+                case 'erules':
+                    newlink = 'siterules';
+                break;
+                case 'ertisehousesale':
                     newlink = 'advertisehousesale';
                 break;
                 case 'vacyinfo':

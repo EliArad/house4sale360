@@ -3,11 +3,11 @@
 
 app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStore', '$window',
     '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope',
-    'SessionStorageService', '$cookies', 'dboperations', 'fileReader', '$sce','citiesservice','versionReloader',
+    'SessionStorageService', '$cookies', 'dboperations', 'fileReader', '$sce','citiesservice',
     function ($scope, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
               $state, myhttphelper, $rootScope, SessionStorageService,
-              $cookies, dboperations, fileReader, $sce,citiesservice,versionReloader) {
+              $cookies, dboperations, fileReader, $sce,citiesservice) {
 
 
         var vm = this;
@@ -19,6 +19,9 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
         vm.city = {};
         vm.volume = 1;
         vm.isCompleted = false;
+        vm.showwaitcircle = false;
+        vm.showwaitcirclevideo= false;
+        vm.showwaitcirclevideo360 = false;
         vm.seeking = {
             currentTime: 0,
             duration: 0
@@ -55,7 +58,23 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
         $scope.showvideosingle = false;
         $scope.showvideo360single = false;
 
-        versionReloader.addPage(reloadFunction);
+        var pagename = 'addnewsalehouse';
+        var storeVersion = appCookieStore.get(pagename);
+        if (storeVersion == undefined)
+        {
+            appCookieStore.set(pagename, '0');
+            reloadFunction();
+        } else {
+            var si = parseInt(storeVersion);
+            general.checkIfNeedToReload(pagename,si, function(err, version, needToReload){
+                if (err == 'ok' && needToReload == true)
+                {
+                    appCookieStore.set(pagename, version);
+                    reloadFunction();
+                }
+            });
+        }
+
         function reloadFunction()
         {
             window.location.reload(true);
@@ -169,6 +188,7 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
         var ajaxUpload = function (result, file , callback) {
 
             if (vm.insertId == -1) {
+                vm.showwaitcircle = false;
                 if (callback)
                     callback("failed", "cannot attached to new message");
                 return;
@@ -186,10 +206,11 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
 
             myhttphelper.doPost('/api/upload', data).
                 then(function (res) {
-                    addPictureToCrousleSlider(result, 'eeeee');
+                    vm.showwaitcircle = false;
+                    addPictureToCrousleSlider(result, '');
                 }).
                 catch(function (res) {
-
+                    vm.showwaitcircle = false;
                 });
         }
 
@@ -241,8 +262,6 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
                 alert('מקסימום גודל קובץ להעלות הוא 50 מגה');
                 return;
             }
-            vm.showwaitcircle = true;
-
             upload360Video(fileInputElement.files[0]);
         }
         function load360Video(fileName)
@@ -277,12 +296,12 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
                 alert('מקסימום גודל קובץ להעלות הוא 50 מגה');
                 return;
             }
-            vm.showwaitcircle = true;
             uploadVideo(fileInputElement.files[0]);
         }
 
 
         function uploadVideo(file) {
+            vm.showwaitcirclevideo = true;
             fileReader.readAsDataUrl(file, $scope)
                 .then(function (result) {
                     ajaxUploadVideo(result, file, function(err, res){
@@ -305,10 +324,8 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
                     ajaxUpload360Video(result, file, function(err, res){
                         if (err != 'ok')
                         {
-                            vm.showwaitcircle = false;
                             alert(err + ' ' + res);
                         } else {
-                            vm.showwaitcircle = false;
                             $scope.showvideo360single = true;
 
                             load360Video(res.filename);
@@ -440,6 +457,7 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
                             alert(msg);
                             return;
                         }
+                        vm.showwaitcircle = true;
                         ajaxUpload(result, file);
                     };
                     i.src = result;
@@ -576,10 +594,22 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
         }
 
         $scope.getparking = function (selectedItem) {
-            if (selectedItem != 'אין') {
-                $scope.shoparkingoptions = true;
-            } else {
+            if (selectedItem == 'אין') {
                 $scope.shoparkingoptions = false;
+                $scope.shoparkingoptions2 = false;
+            } else {
+                $scope.shoparkingoptions = true;
+            }
+
+            switch (selectedItem) {
+                case '1':
+                    $scope.shoparkingoptions2 = false;
+                    break;
+                case '2':
+                case '3':
+                    $scope.shoparkingoptions2 = true;
+                    break;
+
             }
             _saveModel();
         }
@@ -607,7 +637,13 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
                 card.area = 'אזור חיפה';
             }
 
-            card.neighborhood = vm.card.neighborhood.name;
+            try {
+                card.neighborhood = vm.card.neighborhood.name;
+            }
+            catch (ex)
+            {
+                card.neighborhood = '';
+            }
             card.street = vm.card.street.name;
 
 
@@ -659,12 +695,22 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
             {
                 card.fromfloor = 0;
             }
-
+            if (card.floor == undefined || card.floor == null)
+            {
+                card.floor = 0;
+            }
+            if (card.fromfloor == undefined || card.fromfloor == null)
+            {
+                card.fromfloor = 15;
+            }
 
             if (angular.equals(vm.currentCard, card) == true) {
                 alert("כבר קיים");
                 return;
             }
+
+            card.dateenter = mysqlDate();
+            console.log(card.dateenter);
 
             dboperations.saveHouseDetails(card).then(function (result) {
                 vm.insertId = result.data.insertId;
@@ -732,6 +778,29 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
                 }
             }
         }
+        function mysqlDate(date){
+            date = date || new Date();
+            return date.toISOString().split('T')[0];
+        }
+
+        $scope.updateViewOnPropertyType = function()
+        {
+            updatePrivateHouseStatus();
+        }
+        function updatePrivateHouseStatus() {
+
+            switch (vm.card.propertyType) {
+                case 'דו משפחתי':
+                case 'דירת גן':
+                case "קוט'ג טורי":
+                    vm.card.privateHouse = true;
+                    break;
+                default:
+                {
+                    vm.card.privateHouse = false;
+                }
+            }
+        }
 
         $scope.getcity = function (selectedItem) {
 
@@ -769,4 +838,5 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
             _saveModel();
         }
     }
-]);
+])
+

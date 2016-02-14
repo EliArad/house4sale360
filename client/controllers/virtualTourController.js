@@ -1,9 +1,30 @@
 'use strict';
 
-app.controller('virtualTourController', ['$scope', '$state', 'authToken',
-    function ($scope, $state, authToken)
+app.controller('virtualTourController', ['$scope', '$state', 'authToken','general',
+    function ($scope, $state, authToken,general)
     {
 
+        var pagename = 'virtualTour';
+        var storeVersion = appCookieStore.get(pagename);
+        if (storeVersion == undefined)
+        {
+            appCookieStore.set(pagename, '0');
+            reloadFunction();
+        } else {
+            var si = parseInt(storeVersion);
+            general.checkIfNeedToReload(pagename,si, function(err, version, needToReload){
+                if (err == 'ok' && needToReload == true)
+                {
+                    appCookieStore.set(pagename, version);
+                    reloadFunction();
+                }
+            });
+        }
+
+        function reloadFunction()
+        {
+            window.location.reload(true);
+        }
 
         var settings = new TDV.PlayerSettings();
         settings.set(TDV.PlayerSettings.CONTAINER, document.getElementById('viewer'));

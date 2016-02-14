@@ -29,6 +29,7 @@ CREATE TABLE `renthouseblobs` (
   `is360video` int(11) DEFAULT NULL,
   `isvideo` int(11) DEFAULT NULL,
   `filesize` int(11) DEFAULT NULL,
+  `description` varchar(145) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
@@ -111,6 +112,7 @@ CREATE TABLE `salehouseblobs` (
   `is360video` int(11) DEFAULT NULL,
   `isvideo` int(11) DEFAULT NULL,
   `filesize` int(11) DEFAULT NULL,
+  `description` varchar(145) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=150 DEFAULT CHARSET=utf8;

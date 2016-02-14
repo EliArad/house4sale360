@@ -4,12 +4,36 @@
 app.controller('renthouseController', ['$scope', 'general', 'appCookieStore', '$window',
     '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope',
     'SessionStorageService', '$cookieStore', 'dboperations', 'fileReader', '$sce', 'citiesservice',
-    'versionReloader','SchonotBackg',
+    'SchonotBackg',
     function ($scope, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
               $state, myhttphelper, $rootScope, SessionStorageService,
               $cookieStore, dboperations, fileReader, $sce,
-              citiesservice, versionReloader,SchonotBackg) {
+              citiesservice, SchonotBackg) {
+
+
+
+        var pagename = 'renthouse';
+        var storeVersion = appCookieStore.get(pagename);
+        if (storeVersion == undefined)
+        {
+            appCookieStore.set(pagename, '0');
+            reloadFunction();
+        } else {
+            var si = parseInt(storeVersion);
+            general.checkIfNeedToReload(pagename,si, function(err, version, needToReload){
+                if (err == 'ok' && needToReload == true)
+                {
+                    appCookieStore.set(pagename, version);
+                    reloadFunction();
+                }
+            });
+        }
+
+        function reloadFunction()
+        {
+            window.location.reload(true);
+        }
 
 
         var vm = this;
@@ -44,7 +68,7 @@ app.controller('renthouseController', ['$scope', 'general', 'appCookieStore', '$
             vm.numberfloors.push(i);
         }
 
-        versionReloader.addPage(reloadFunction);
+
         function reloadFunction() {
             window.location.reload(true);
         }
@@ -1013,7 +1037,17 @@ app.controller('renthouseController', ['$scope', 'general', 'appCookieStore', '$
 
             });
         }
+        $scope.$on('IdleStart', function() {
+            console.log('start');
+        });
 
+        $scope.$on('IdleEnd', function() {
+            console.log('end');
+        });
+
+        $scope.$on('IdleTimeout', function() {
+            window.location.reload(true);
+        });
         $scope.getcity = function (selectedItem, index) {
 
             var objectData = getCityObject(selectedItem);
@@ -1054,5 +1088,13 @@ app.controller('renthouseController', ['$scope', 'general', 'appCookieStore', '$
 
         }
     }
-])
-;
+]).config(function (IdleProvider, KeepaliveProvider, myConfig) {
+        // configure Idle settings
+        IdleProvider.idle(myConfig.idletimeSeconds); // in seconds
+        IdleProvider.timeout(myConfig.timeoutSeconds); // in seconds
+        KeepaliveProvider.interval(myConfig.keepAliveInterval); // in seconds
+    })
+    .run(function (Idle) {
+        // start watching when the app runs. also starts the Keepalive service by default.
+        Idle.watch();
+    });

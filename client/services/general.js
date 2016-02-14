@@ -13,22 +13,22 @@ app.factory("general", ['$http', '$q', 'myConfig', 'appCookieStore',
             return $http.post(url, {code: code});
         }
 
-        var getVersion = function (needToReload) {
+        var checkIfNeedToReload = function (pageNameToCheck, storeVersion, needToReload) {
             var url = myConfig.url + '/api/getVersion';
-            $http.get(url).then(function (result) {
+            $http.post(url, {pageName:pageNameToCheck}).then(function (result) {
                 var version = result.data;
-                var storeVersion = appCookieStore.get('apt360Version');
-                appCookieStore.set('apt360Version', version);
                 if (storeVersion == undefined) {
-                    needToReload(true);
+                    needToReload('ok',version, true);
                     return;
                 } else if (storeVersion != version) {
-                    needToReload(true);
+                    needToReload('ok',version, true);
                     return;
                 } else {
-                    needToReload(false);
+                    needToReload('ok',version, false);
                 }
-            });
+            }).catch(function(result){
+                needToReload('fail',0, false);
+            })
         }
 
         var SendEmailToPerson = function(email, name, message)
@@ -105,7 +105,7 @@ app.factory("general", ['$http', '$q', 'myConfig', 'appCookieStore',
             getStreets: getStreets,
             getSchonot: getSchonot,
             SendEmailToUser: SendEmailToUser,
-            getVersion: getVersion,
+            checkIfNeedToReload: checkIfNeedToReload,
             getCookieExp: getCookieExp,
             isMobile: isMobile,
             getuserguid:getuserguid,

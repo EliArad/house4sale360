@@ -47,6 +47,14 @@ module.exports = function (app,dbstoreController) {
         app.post('/api/dbstore/updateVideo360Name', jwtauth, dbstoreController.updateVideo360Name);
         app.post('/api/dbstore/DeletePicture', jwtauth, dbstoreController.DeletePicture);
 
+
+        app.post('/api/dbstore/SaveUserAuthCode', dbstoreController.SaveUserAuthCode);
+
+
+        app.post('/api/dbstore/MarkReloadToThoseSearchResults', dbstoreController.MarkReloadToThoseSearchResults);
+
+
+
     }
 
     return {

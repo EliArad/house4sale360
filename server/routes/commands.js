@@ -45,9 +45,61 @@ var routes = function (app, sqlserver,mailer) {
         });
     });
 
-    app.get('/api/getVersion', function (req, res, next) {
+    app.post('/api/getVersion', function (req, res, next) {
 
-        return res.send('1.2');
+        var page = req.body.pageName;
+        console.log(page);
+        var version  = '1';
+        switch (page)
+        {
+            case 'addnewsalehouse':
+                version = '4';
+            break;
+            case 'newresnthouse':
+                version = '2';
+            break;
+            case 'admin':
+                version = '2';
+            break;
+            case 'main':
+                version = '2';
+            break;
+            case 'mypage':
+                version = '2';
+            break;
+            case 'help':
+                version = '2';
+            break;
+            case 'welcome':
+                version = '2';
+            break;
+            case 'deletecard':
+                version = '2';
+            break;
+            case 'login':
+                version = '2';
+            break;
+            case 'logout':
+                version = '2';
+                break;
+            case 'salehouse':
+                version = '2';
+                break;
+            case 'renthouse':
+                version = '2';
+            break;
+            case 'contactus':
+                version = '2';
+            break;
+            case 'virtualTour':
+                version = '2';
+            break;
+            case 'resetpassword':
+                version = '2';
+            break;
+
+        }
+        return res.send(version);
     });
 
     app.post('/api/forgotPassword', function (req, res, next) {
@@ -80,6 +132,7 @@ var routes = function (app, sqlserver,mailer) {
                                 var host = req.get('host');
                                 var link = "http://" + req.get('host') + "/#!/resetpassword?id=" + randomGuid;
                                 var html =  "Hello,<br> לחץ על הקישור הבא לאישור המייל שלך.<br><a href=" + link + ">לחץ כאן לאימות המייל</a>"
+                                console.log(mailer);
                                 mailer.sendEmailToUser(req.body.email, 'איפוס ססמא מאתר apt360', html, function (error, response) {
                                     if (error) {
                                         res.status(500);
@@ -97,10 +150,7 @@ var routes = function (app, sqlserver,mailer) {
         });
     });
 
-
-
     app.post('/api/getcitieschunk', function (req, res, next) {
-
 
         var a = [];
         for (var i = req.body.index; i < (req.body.index + req.body.chunk); i++) {
@@ -112,7 +162,6 @@ var routes = function (app, sqlserver,mailer) {
         //console.log(a);
         res.json({a: a, size: req.body.size, index: req.body.index});
     });
-
 
     app.get('/api/isadmin', jwtauth, function (req, res, next) {
 
@@ -139,12 +188,9 @@ var routes = function (app, sqlserver,mailer) {
                 res.send(403);
             }
         });
-
     });
 
-
     app.get('/api/getcities', function (req, res, next) {
-
 
         cityLoader.basic(function (err, data) {
             if (err) {
@@ -155,12 +201,11 @@ var routes = function (app, sqlserver,mailer) {
                 for (var i = 0; i < data.length; i++) {
                     cities.push(data[i]);
                 }
-                 
+               
                 res.send(s.toString());
             }
         });
     });
-
 
     app.post('/api/isValidGuid', function (req, res, next)
     {
@@ -208,10 +253,15 @@ var routes = function (app, sqlserver,mailer) {
         });
     });
 
-    app.post('/api/deleteuser', function (req, res, next) {
+    app.post('/api/deleteuser',jwtauth,  function (req, res, next) {
 
 
-
+        if (req.idFromToken == undefined)
+        {
+            res.status(500);
+            res.end("לא מורשה!");
+            return;
+        }
         request({
             url: 'https://www.google.com/recaptcha/api/siteverify',
             qs: {secret:'6Lf-zBcTAAAAAEMLlVNjBUKaIgjVfz_akFJ0JMLd',  response:req.body.capdata.response}, //Query string data
@@ -226,18 +276,121 @@ var routes = function (app, sqlserver,mailer) {
                 console.log(error);
                 res.send('not deleted');
             } else {
-
-
                 var s = JSON.parse(body);
-                console.log(s);
+
                 if (s.success == false) {
-                    res.send('not deleted');
+                    res.status(500);
+                    res.end("לא מורשה!");
                 } else {
-                    res.send('deleted');
+                    if (req.body.capdata.userselect == 0)
+                    {
+                        sqlserver.get(function (err, con) {
+                            if (!err) {
+                                con.query('UPDATE users SET ? WHERE ?', [{suspend: 1},{id: req.idFromToken}], function (err, result) {
+                                    sqlserver.release(con);
+                                    console.log(err);
+                                    if (err)
+                                    {
+                                        res.send(403);
+                                    } else {
+                                       res.send('ok');
+                                    }
+                                });
+                            } else {
+                                res.send(500);
+                            }
+                        });
+                    } else {
+                        // erase
+                        console.log('start to erase');
+
+                        sqlserver.get(function (err, con) {
+                            var sql = 'SELECT sellhousedetails.*, users.userguid, salehouseblobs.tableid,salehouseblobs.filename,salehouseblobs.is360image, salehouseblobs.is360video, salehouseblobs.filefullpath, salehouseblobs.isvideo,salehouseblobs.description, salehouseblobs.filesize FROM yad2vr.sellhousedetails\
+                                    inner join users\
+                                    on users.id = sellhousedetails.userid\
+                                    LEFT JOIN salehouseblobs\
+                                    ON salehouseblobs.tableid = sellhousedetails.id\
+                                    WHERE users.id = ' + con.escape(req.idFromToken);
+                            if (!err) {
+                                con.query(sql,function (err, rows) {
+                                    if (err)
+                                    {
+                                        return res.send(500);
+                                    } else {
+                                        for (var i = 0 ; i < rows.length; i++) {
+                                            if (rows[i].filefullpath != undefined || rows[i].filefullpath != null) {
+                                                try {
+                                                    fs.unlink(rows[i].filefullpath, function(err){
+                                                        if (!err)
+                                                            console.log('erase: ' + rows[i].filefullpath);
+                                                    });
+
+                                                }
+                                                catch (e)
+                                                {
+                                                    console.log('failed to delete file: ' + rows[i].filefullpath);
+                                                }
+                                            }
+                                        }
+
+                                        sql = 'SELECT salehouseblobs.id\
+                                        FROM sellhousedetails\
+                                        inner join users\
+                                        on users.id = sellhousedetails.userid\
+                                        LEFT JOIN salehouseblobs\
+                                        ON salehouseblobs.tableid = sellhousedetails.id\
+                                        WHERE users.id = ' + con.escape(req.idFromToken);
+
+                                        con.query(sql,function (err, rows) {
+                                            if (err){
+                                                return res.send(500);
+                                            } else {
+                                                for (var i = 0 ; i < rows.length; i++) {
+                                                    sql = 'DELETE FROM salehouseblobs WHERE id = ' + con.escape(rows[i].id);
+                                                    con.query(sql,function (err, rows)
+                                                    {
+
+                                                    });
+                                                }
+                                                sql = 'SELECT sellhousedetails.id\
+                                                FROM sellhousedetails\
+                                                inner join users\
+                                                on users.id = sellhousedetails.userid\
+                                                WHERE users.id = ' + con.escape(req.idFromToken);
+                                                con.query(sql,function (err, rows) {
+                                                    if (err){
+                                                        return res.send(500);
+                                                    } else {
+                                                        for (var i = 0 ; i < rows.length; i++) {
+                                                            sql = 'DELETE FROM sellhousedetails WHERE id = ' + con.escape(rows[i].id);
+                                                            con.query(sql,function (err, rows)
+                                                            {
+
+                                                            });
+                                                        }
+                                                        sql = 'DELETE FROM users WHERE id = ' + con.escape(req.idFromToken);
+                                                        con.query(sql,function (err, rows) {
+                                                            if (err){
+                                                                return res.send(500);
+                                                            } else {
+                                                                console.log('erase done!');
+                                                                return res.send('ok');
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            } else {
+                                res.send(500);
+                            }
+                        });
+                    }
                 }
             }
         });
-
     });
 
     app.get('/api/getcitiesatonce', function (req, res, next) {

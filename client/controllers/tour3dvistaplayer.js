@@ -1,7 +1,7 @@
 'use strict';
 
-app.controller('tour3dvistaplayerController', ['$scope', '$state', 'authToken','versionReloader',
-    function ($scope, $state, authToken,versionReloader) {
+app.controller('tour3dvistaplayerController', ['$scope', '$state', 'authToken',
+    function ($scope, $state, authToken) {
 
 
 

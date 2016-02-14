@@ -3,11 +3,11 @@
 
 app.controller('addnewblankhouseController', ['$scope', 'general', 'appCookieStore', '$window',
     '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope',
-    'SessionStorageService', '$cookies', 'dboperations', 'fileReader', '$sce','citiesservice','versionReloader',
+    'SessionStorageService', '$cookies', 'dboperations', 'fileReader', '$sce','citiesservice',
     function ($scope, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
               $state, myhttphelper, $rootScope, SessionStorageService,
-              $cookies, dboperations, fileReader, $sce,citiesservice,versionReloader) {
+              $cookies, dboperations, fileReader, $sce,citiesservice) {
 
 
         var vm = this;
@@ -27,6 +27,34 @@ app.controller('addnewblankhouseController', ['$scope', 'general', 'appCookieSto
             currentTime: 0,
             duration: 0
         };
+
+
+        var pagename = 'addnewblankhouse';
+        var storeVersion = appCookieStore.get(pagename);
+        if (storeVersion == undefined)
+        {
+            appCookieStore.set(pagename, '0');
+            reloadFunction();
+        } else {
+            var si = parseInt(storeVersion);
+            general.checkIfNeedToReload(pagename,si, function(err, version, needToReload){
+                if (err == 'ok' && needToReload == true)
+                {
+                    appCookieStore.set(pagename, version);
+                    reloadFunction();
+                }
+            });
+        }
+
+        function reloadFunction()
+        {
+            window.location.reload(true);
+        }
+
+
+
+
+
         function citiesLoaderCallback(data, citiesOnly)
         {
             vm.cities = angular.copy(data);
@@ -56,7 +84,7 @@ app.controller('addnewblankhouseController', ['$scope', 'general', 'appCookieSto
         $scope.showvideosingle = false;
         $scope.showvideo360single = false;
 
-        versionReloader.addPage(reloadFunction);
+
         function reloadFunction()
         {
             window.location.reload(true);

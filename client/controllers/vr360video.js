@@ -1,7 +1,7 @@
 'use strict';
 
-app.controller('vr360videoController', ['$scope', '$state', 'authToken','versionReloader',
-  function ($scope, $state, authToken,versionReloader) {
+app.controller('vr360videoController', ['$scope', '$state', 'authToken',
+  function ($scope, $state, authToken) {
 
 
     $(document).ready(function () {
@@ -9,7 +9,7 @@ app.controller('vr360videoController', ['$scope', '$state', 'authToken','version
     });
 
 
-    versionReloader.addPage(reloadFunction);
+
     function reloadFunction()
     {
       window.location.reload(true);

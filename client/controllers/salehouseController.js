@@ -4,12 +4,37 @@
 app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$window',
     '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope',
     'SessionStorageService', '$cookieStore', 'dboperations', 'fileReader', '$sce', 'citiesservice',
-    'versionReloader','SchonotBackg','$q',
+    'SchonotBackg','$q','apiutils',
     function ($scope, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
               $state, myhttphelper, $rootScope, SessionStorageService,
               $cookieStore, dboperations, fileReader, $sce,
-              citiesservice, versionReloader,SchonotBackg,$q) {
+              citiesservice, SchonotBackg,$q,apiutils) {
+
+
+
+        $scope.allowRotate = 1;
+        var pagename = 'salehouse';
+        var storeVersion = appCookieStore.get(pagename);
+        if (storeVersion == undefined)
+        {
+            appCookieStore.set(pagename, '0');
+            reloadFunction();
+        } else {
+            var si = parseInt(storeVersion);
+            general.checkIfNeedToReload(pagename,si, function(err, version, needToReload){
+                if (err == 'ok' && needToReload == true)
+                {
+                    appCookieStore.set(pagename, version);
+                    reloadFunction();
+                }
+            });
+        }
+
+        function reloadFunction()
+        {
+            window.location.reload(true);
+        }
 
 
         var vm = this;
@@ -20,10 +45,9 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
         vm.sphere360index = 0;
         vm.sphere360Description = [];
         vm.videoDescription = [];
-        vm.currentVideoStatus = '';
         vm.current360VideoStatus = '';
         vm.video360Description = [];
-
+        $scope.slides = [];
         vm.uuu = {};
         vm.card = {};
         vm.cards = {};
@@ -35,7 +59,6 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
         var minHeight = 480;
         var video360height = '600px';
         var msg1 = 'התמונות צריכות להיות בגודל של ' + minWidth + 'x' + minHeight + ' לפחות';
-        var slides = $scope.slides = [];
         $scope.shownapa = false;
         $window.onbeforeunload = $scope.onExit;
         var lastCity = undefined;
@@ -53,11 +76,19 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
             vm.numberfloors.push(i);
         }
 
-        versionReloader.addPage(reloadFunction);
+
         function reloadFunction() {
             window.location.reload(true);
         }
-
+        function mysqlDate(date){
+            date = date || new Date();
+            return date.toISOString().split('T')[0];
+        }
+        function mysqlDate1(date){
+            var strDateTime = "Fri, 18 Oct 2013 11:38:23 GMT";
+            var myDate = new Date(date);
+            return myDate.toLocaleString();
+        }
         myhttphelper.doGet('/api/isauth').
             then(sendResponseData).
             catch(sendResponseError);
@@ -99,9 +130,9 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
         }
         $scope.DeleteMessageComplete = function (id) {
             dboperations.deleteMessage(id, 'sale').then(function (result) {
-
+                getMine();
             }).catch(function (result) {
-
+                alert(result);
             })
         }
 
@@ -156,6 +187,8 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
             } else {
                 xid = id;
             }
+            var filefullpath = './uploadimages/' + vm.userid + '/salehouse/' + xid + '/' + fileName;
+
             var data = {
                 "images": result,
                 "filename": fileName,
@@ -163,7 +196,8 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
                 "insertId": xid,
                 'is360image': false,
                 'isvideo': false,
-                filesize:filesize
+                filesize:filesize,
+                filefullpath:filefullpath
             };
 
 
@@ -175,7 +209,8 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
                     vm.cards[index].showwaitcircle = false;
                     if (res.error == 500)
                     {
-                        alert('אין אפשרות להעלות תמונות יותר.חרגת מה 150 מגה לחשבון זה');
+                        $scope.MessageToUser = 'אין אפשרות להעלות תמונות יותר.חרגת מה 150 מגה לחשבון זה';
+                        $('#apt360msgbox').modal('show');
                     } else {
                         addPictureToCrousleSlider(result, '');
                         vm.carousleNameOnly.push(fileName);
@@ -190,10 +225,13 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
 
         var ajaxUpload2 = function (result, file, id, index, callback) {
 
+
             if (id == -1) {
                 callback("failed", "cannot attached to new message");
                 return;
             }
+
+            var filefullpath = './uploadimages/' + vm.userid + '/salehouse/' + id + '/' + file.name;
 
             var data = {
                 "images": result,
@@ -201,7 +239,8 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
                 "tabletype": "salehouse",
                 "insertId": id,
                 'is360image': true,
-                filesize:file.size
+                filesize:file.size,
+                filefullpath:filefullpath
             };
 
             vm.cards[index].showwaitcircle360 = true;
@@ -241,13 +280,11 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
                 });
         };
 
-
-
-        $scope.DeleteCarouselPicture = function(item)
+        function getActiveFileName(item)
         {
             var active = -1;
-            for (var i = 0 ; i < slides.length;i++) {
-                if (slides[i].active == true) {
+            for (var i = 0 ; i < $scope.slides.length;i++) {
+                if ($scope.slides[i].active == true) {
                     active = i;
                     break;
                 }
@@ -256,7 +293,25 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
                 return;
 
             var fileName = vm.carousleNameOnly[active];
+            return [fileName, active];
+        }
+
+
+        $scope.DeleteCarouselPicture = function(item)
+        {
+            var res = getActiveFileName(item);
+            console.log(res);
+            var fileName = res[0];
+            var active = res[1];
+
+            console.log(fileName);
+            console.log(active);
+
+            if (fileName == -1)
+                return;
+
             var filePath = './uploadimages/' + vm.userid + '/salehouse/' + item.id + '/' + fileName;
+
 
 
             dboperations.DeletePicture(fileName ,
@@ -268,7 +323,7 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
             then(function(result){
                 vm.carousleNameOnly.splice(active, 1);
                 vm.carousleDescription.splice(active, 1);
-                slides.splice(active, 1);
+                $scope.slides.splice(active, 1);
             }).catch(function(result){
                 alert('שגיאה');
                 //$state.go('logout', {}, {
@@ -277,6 +332,26 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
             });
         }
 
+
+        $scope.DeleteVideo360 = function(item)
+        {
+            var fileName = vm.video360NameOnly[vm.video360index];
+            var filePath = vm.video360[vm.video360index];
+
+
+            dboperations.DeletePicture(fileName , false , true, true, filePath, 'salehouseblobs').
+            then(function(result){
+                vm.video360NameOnly.splice(vm.video360index, 1);
+                vm.video360.splice(vm.video360index, 1);
+                vm.video360Description.splice(vm.video360index, 1);
+                alert(result.data);
+            }).catch(function(result){
+                alert('שגיאה');
+                $state.go('logout', {}, {
+                    reload: true
+                });
+            });
+        }
 
         $scope.DeleteVideo = function(item)
         {
@@ -341,6 +416,8 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
             if (vm.lastObjId != obj.id) {
                 vm.accIsOpen = false;
             }
+            $scope.slides = [];
+            obj.angleToRotate = 0;
             vm.lastObjId = obj.id;
             if (vm.accIsOpen == true) {
                 vm.accIsOpen = false;
@@ -349,9 +426,6 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
             vm.uuu[obj.id] = true;
             vm.accIsOpen = true;
 
-            for (var i = 0; i < 10; i++) {
-                slides = $scope.slides = [];
-            }
             //console.log(obj);
             _displayStreets(obj.code, obj.napa, obj.area,index);
 
@@ -387,7 +461,6 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
 
                 setTimeout(function () {
                     if (result.data.rows.length == 0) {
-                        document.getElementById('image360glyps' + obj.id).style.display = 'none';
                         return;
                     }
                 }, 300);
@@ -403,15 +476,14 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
                     vm.sphere360Description.push(result.data.rows[i].description);
                     //console.log(vm.sphere360Description);
 
+                    vm.cards[index].currentImage360Status = '1/' + vm.sphere360.length;
+
                     if (i == 0) {
                         console.log('Loading...');
-                        vm.cards[i].Image360Name = result.data.rows[i].description;
+                        vm.cards[index].Image360Name = result.data.rows[i].description;
                         setTimeout(function () {
 
-                            if (result.data.rows.length > 1)
-                                document.getElementById('image360glyps' + obj.id).style.display = 'block';
-
-                            load360ImageAsync(obj.id, imgsrc);
+                         load360ImageAsync(obj.id, imgsrc);
 
                         }, 300);
                     }
@@ -432,10 +504,6 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
                         return;
                     } else {
                         document.getElementById('videodiv' + obj.id).style.display = 'block';
-
-                        if (result.data.rows.length > 1)
-                            document.getElementById('videoregularglyps' + obj.id).style.display = 'block';
-
                     }
                     for (var i = 0; i < result.data.rows.length; i++) {
                         var imgsrc = './uploadvideo/' + result.data.userid + '/salehouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
@@ -444,10 +512,10 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
                         vm.videoNameOnly.push(result.data.rows[i].filename);
                         vm.videoDescription.push(result.data.rows[i].description);
                         if (i == 0) {
-                            vm.cards[i].videoName = result.data.rows[i].description;
+                            vm.cards[index].videoName = result.data.rows[i].description;
                             vm.changeSource(imgsrc, obj.id, index);
                         }
-                        vm.currentVideoStatus =   '1/' + vm.regularvideo.length;
+                        vm.cards[index].currentVideoStatus =   '1/' + vm.regularvideo.length;
                         //vm.regularvideoindex++;
                     }
                 }, 400);
@@ -462,8 +530,6 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
                 if (result.data.rows.length > 0) {
 
                 }
-                if (result.data.rows.length > 1)
-                    document.getElementById('video360glyps' + obj.id).style.display = 'block';
 
                 for (var i = 0; i < result.data.rows.length; i++) {
                     var imgsrc = './upload360video/' + result.data.userid + '/salehouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
@@ -472,7 +538,7 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
                     vm.video360Description.push(result.data.rows[i].description);
                     if (i == 0)
                     {
-                        vm.cards[i].video360Name = result.data.rows[i].description;
+                        vm.cards[index].video360Name = result.data.rows[i].description;
                     }
                     vm.current360VideoStatus = '1/' + vm.video360.length;
                 }
@@ -480,7 +546,7 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
         }
 
         $scope.removeSlide = function () {
-            slides = $scope.slides = [];
+            $scope.slides = [];
         }
 
         function initcrousle() {
@@ -489,7 +555,7 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
         }
 
         function addPictureToCrousleSlider(imagesrc, text) {
-            slides.push({
+            $scope.slides.push({
                 image: imagesrc,
                 text: text
             });
@@ -497,107 +563,141 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
 
         initcrousle();
 
+        function citiesLoaderCallback(data, citiesOnly)
+        {
+            vm.cities = angular.copy(data);
+            vm.citiesOnly = angular.copy(citiesOnly);
+        }
+        citiesservice.registerCitiesLoaded(citiesLoaderCallback);
+
         vm.cities = citiesservice.getcities_all_ready();
         vm.citiesOnly = citiesservice.getcities_ready();
 
-        dboperations.getAllSellHouseOfMine().then(function (result) {
+        function getMine() {
+            dboperations.getAllSellHouseOfMine().then(function (result) {
 
-            vm.cards = result.data;
-            for (var i = 0; i < vm.cards.length; i++) {
-
-
-                vm.cards[i].shownapa = true;
-                vm.cards[i].showwaitcircle = false;
-                vm.cards[i].showwaitcirclevideo360 = false;
-                vm.cards[i].Image360Name = '';
-                vm.cards[i].videoName = '';
-                vm.cards[i].video360Name = '';
-                vm.cards[i].config = {};
-
-                //console.log(vm.cards[i].code);
-                vm.userid = vm.cards[i].userid;
-
-                var streetName = vm.cards[i].street;
-                var x1 = {
-                    'name': streetName
-                };
-                vm.cards[i].street = x1;
-
-                var neighborhood = vm.cards[i].neighborhood;
-                x1 = {
-                    'name': neighborhood
-                };
-                vm.cards[i].neighborhood = x1;
-
-                if (vm.cards[i].elevator == 0) {
-                    vm.cards[i].elevator = 'אין';
-                } else if (vm.cards[i].elevator == 6) {
-                    vm.cards[i].elevator = 'יותר מחמש';
-                } else {
-                    vm.cards[i].elevator = vm.cards[i].elevator.toString();
-                }
-
-                if (vm.cards[i].parking == 0) {
-                    vm.cards[i].parking = 'אין';
-                } else {
-                    vm.cards[i].parking = vm.cards[i].parking.toString();
-                }
-
-                if (vm.cards[i].warehouse == 0) {
-                    vm.cards[i].warehouse = 'אין';
-                } else {
-                    vm.cards[i].warehouse = vm.cards[i].warehouse.toString();
-                }
-
-                if (vm.cards[i].mamad.data[0] == 0) {
-                    vm.cards[i].mamad = 'לא';
-                } else {
-                    vm.cards[i].mamad = 'כן';
-                }
+                vm.cards = result.data;
+                for (var i = 0; i < vm.cards.length; i++) {
 
 
-                switch (vm.cards[i].balcony) {
-                    case 0:
-                        vm.cards[i].balcony = 'אין';
-                        break;
-                    case 1:
-                    case 2:
-                    case 3:
-                        vm.cards[i].balcony = vm.cards[i].balcony.toString();
-                        break;
-                    case 4:
-                        vm.cards[i].balcony = 'יותר משלוש';
-                        break;
-                }
+                    vm.cards[i].shownapa = true;
+                    vm.cards[i].showwaitcircle = false;
+                    vm.cards[i].showwaitcirclevideo360 = false;
+                    vm.cards[i].Image360Name = '';
+                    vm.cards[i].videoName = '';
+                    vm.cards[i].video360Name = '';
+                    vm.cards[i].config = {};
+                    vm.cards[i].immidiate = vm.cards[i].immidiate == 0 ? false : true;
+                    vm.cards[i].handycupt = vm.cards[i].handycupt == 0 ? false : true;
+                    vm.cards[i].soragim = vm.cards[i].soragim == 0 ? false : true;
 
-                try {
-                    vm.cards[i].numberofrooms = vm.cards[i].numberofrooms.toString();
-                }
-                catch (err)
-                {
-                    console.log(err)
-                }
-                vm.cards[i].floor = vm.cards[i].floor.toString();
-                vm.cards[i].fromfloor = vm.cards[i].fromfloor.toString();
-
-
-            }
-            for (var i = 0; i < vm.cards.length; i++) {
-                setTimeout(function (i) {
-                    if (vm.cards[i].suspend == 1) {
-                        document.getElementById('panellinkid' + vm.cards[i].id).disabled = true;
-                        document.getElementById('panellinkid' + vm.cards[i].id).style.textDecoration = 'line-through';
-                        document.getElementById('suspendLable' + vm.cards[i].id).innerHTML = 'החזר';
-                    } else {
-                        document.getElementById('panellinkid' + vm.cards[i].id).disabled = false;
-                        document.getElementById('panellinkid' + vm.cards[i].id).style.textDecoration = 'none';
-                        document.getElementById('suspendLable' + vm.cards[i].id).innerHTML = 'השעה';
+                    if (vm.cards[i].basement == undefined || vm.cards[i].basement == null) {
+                        vm.cards[i].basement = 'לא';
                     }
-                }, 100,i);
-            }
-        });
 
 
+                    //console.log(vm.cards[i].code);
+                    vm.userid = vm.cards[i].userid;
+
+                    var streetName = vm.cards[i].street;
+                    var x1 = {
+                        'name': streetName
+                    };
+                    vm.cards[i].street = x1;
+
+                    updatePrivateHouseStatus(vm.cards[i]);
+
+                    var neighborhood = vm.cards[i].neighborhood;
+                    x1 = {
+                        'name': neighborhood
+                    };
+                    vm.cards[i].neighborhood = x1;
+
+                    if (vm.cards[i].elevator == 0) {
+                        vm.cards[i].elevator = 'אין';
+                    } else if (vm.cards[i].elevator == 6) {
+                        vm.cards[i].elevator = 'יותר מחמש';
+                    } else {
+                        vm.cards[i].elevator = vm.cards[i].elevator.toString();
+                    }
+
+                    if (vm.cards[i].parking == 0) {
+                        vm.cards[i].parking = 'אין';
+                    } else {
+                        vm.cards[i].parking = vm.cards[i].parking.toString();
+                    }
+
+                    if (vm.cards[i].warehouse == 0) {
+                        vm.cards[i].warehouse = 'אין';
+                    } else {
+                        vm.cards[i].warehouse = vm.cards[i].warehouse.toString();
+                    }
+
+                    if (vm.cards[i].mamad.data[0] == 0) {
+                        vm.cards[i].mamad = 'לא';
+                    } else {
+                        vm.cards[i].mamad = 'כן';
+                    }
+
+                    switch (vm.cards[i].balcony) {
+                        case 0:
+                            vm.cards[i].balcony = 'אין';
+                            break;
+                        case 1:
+                        case 2:
+                        case 3:
+                            vm.cards[i].balcony = vm.cards[i].balcony.toString();
+                            break;
+                        case 4:
+                            vm.cards[i].balcony = 'יותר משלוש';
+                            break;
+                    }
+
+                    try {
+                        vm.cards[i].numberofrooms = vm.cards[i].numberofrooms.toString();
+                    }
+                    catch (err) {
+                        console.log(err)
+                    }
+                    try {
+                        vm.cards[i].numoffloors = vm.cards[i].numoffloors.toString();
+                    }
+                    catch (err) {
+                        console.log(err)
+                    }
+                    try {
+                        vm.cards[i].floor = vm.cards[i].floor.toString();
+                    }
+                    catch (e) {
+                        vm.cards[i].floor = 0;
+                    }
+                    try {
+                        vm.cards[i].fromfloor = vm.cards[i].fromfloor.toString();
+                    }
+                    catch (e) {
+                        vm.cards[i].fromfloor = 15;
+                    }
+
+                }
+                for (var i = 0; i < vm.cards.length; i++) {
+                    setTimeout(function (i) {
+                        if (vm.cards[i].suspend == 1) {
+                            document.getElementById('panellinkid' + vm.cards[i].id).disabled = true;
+                            document.getElementById('panellinkid' + vm.cards[i].id).style.textDecoration = 'line-through';
+                            document.getElementById('suspendLable' + vm.cards[i].id).innerHTML = 'החזר';
+                        } else {
+                            document.getElementById('panellinkid' + vm.cards[i].id).disabled = false;
+                            document.getElementById('panellinkid' + vm.cards[i].id).style.textDecoration = 'none';
+                            document.getElementById('suspendLable' + vm.cards[i].id).innerHTML = 'השעה';
+                        }
+                        console.log(vm.cards[i].enteraptdate);
+                        document.getElementById('datepickid' + vm.cards[i].id).value =   vm.cards[i].enteraptdate;
+                    }, 100, i);
+                }
+            });
+        }
+
+        getMine();
         $scope.onExit = function () {
 
         };
@@ -636,6 +736,11 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
                             alert(err + ' ' + res);
                         } else {
                             vm.cards[index].showwaitcirclevideo360 = false;
+                            var imgsrc = './upload360video/' + vm.userid + '/salehouse/' +id + '/' + file.name;
+                            vm.video360NameOnly.push(file.name);
+                            vm.video360.push(imgsrc);
+                            vm.video360Description.push('');
+                            vm.current360VideoStatus = '1/' + vm.video360.length;
                             $scope.showvideo360single = true;
                             var imgsrc = './upload360video/' + item.userid + '/salehouse/' + id + '/' + file.name;
                             load360Video(imgsrc);
@@ -663,6 +768,7 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
 
             $('.valiant360video').Valiant360(options);
             $.fn['eeeeee']._video.src = fileName;
+            console.log(fileName);
         }
 
         $scope.loadPrev360Video =function(item, index)
@@ -807,11 +913,15 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
                     card.balcony = 4;
                     break;
             }
+            card.dateenter = mysqlDate();
 
-            console.log(card);
+            card.handycupt  = card.handycupt == false ? 0: 1;
+            card.soragim  =   card.soragim == false ? 0: 1;
+            card.immidiate  =   card.immidiate == false ? 0: 1;
+            card.enteraptdate = document.getElementById('datepickid' + card.id).value;
+
 
             dboperations.updateSaleHouseDetails(card).then(function (result) {
-
 
                 dboperations.getSaleHouseDetails(card.id).then(function (result) {
                     console.log(result.data[0]);
@@ -893,7 +1003,7 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
                 vm.regularvideoindex = vm.regularvideo.length - 1;
             }
             var size = vm.regularvideo.length;
-            vm.currentVideoStatus =  (vm.regularvideoindex + 1) + '/' + size;
+            vm.cards[index].currentVideoStatus =  (vm.regularvideoindex + 1) + '/' + size;
             vm.cards[index].videoName = vm.videoDescription[vm.regularvideoindex];
             var videosrc = vm.regularvideo[vm.regularvideoindex];
             vm.changeSource(videosrc, item.id, index);
@@ -905,7 +1015,7 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
 
             var size = vm.regularvideo.length;
             vm.regularvideoindex = (vm.regularvideoindex + 1 ) % size;
-            vm.currentVideoStatus =  (vm.regularvideoindex + 1) + '/' + size;
+            vm.cards[index].currentVideoStatus =  (vm.regularvideoindex + 1) + '/' + size;
             vm.cards[index].videoName = vm.videoDescription[vm.regularvideoindex];
 
             var videosrc = vm.regularvideo[vm.regularvideoindex];
@@ -1031,7 +1141,8 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
                             vm.cards[index].showwaitcirclevideo = false;
                             if (res == 'exceed size')
                             {
-                                alert('חרגת מהמכסה להעלאת קבצים שלך');
+                                $scope.MessageToUser = 'אין אפשרות להעלות תמונות יותר.חרגת מה 150 מגה לחשבון זה';
+                                $('#apt360msgbox').modal('show');
                             }
                         } else {
                             vm.cards[index].showwaitcirclevideo = false;
@@ -1046,17 +1157,40 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
                 });
         }
 
+        $scope.updateViewOnPropertyType = function(item)
+        {
+            updatePrivateHouseStatus(item);
+            saveModel();
+        }
+        function updatePrivateHouseStatus(item) {
+
+            switch (item.propertyType) {
+                case 'דו משפחתי':
+                case 'דירת גן':
+                case "קוט'ג טורי":
+                    item.privateHouse = true;
+                break;
+                default:
+                {
+                    item.privateHouse = false;
+                }
+            }
+        }
+
         function ajaxUploadVideo(result, file, id, callback) {
 
 
+            var filefullpath = './uploadvideo/' + vm.userid + '/salehouse/' + id + '/' + file.name;
             var data = {
                 "video": result,
                 "filename": file.name,
                 "tabletype": "salehouse",
                 "insertId": id,
                 'is360video': false,
-                filesize:file.size
+                filesize:file.size,
+                filefullpath:filefullpath
             };
+
 
             myhttphelper.doPost('/api/uploadvideo', data).
                 then(function (res) {
@@ -1077,13 +1211,16 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
 
         function ajaxUpload360Video(result, file, id, callback) {
 
+            var filefullpath = './upload360video/' + vm.userid + '/salehouse/' + id + '/' + file.name;
+
             var data = {
                 "video": result,
                 "filename": file.name,
                 "tabletype": "salehouse",
                 "insertId": id,
                 'is360video': true,
-                filesize:file.size
+                filesize:file.size,
+                filefullpath:filefullpath
             };
 
             myhttphelper.doPost('/api/uploadvideo', data).
@@ -1118,6 +1255,17 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
 
             reader.onload = function () {
                 ajaxUpload2(reader.result, file, id, index, function (err, results) {
+
+                    if (results.error == 500)
+                    {
+                        if (results.msg == 'exceed size') {
+                            $scope.MessageToUser = 'אין אפשרות להעלות תמונות יותר.חרגת מה 150 מגה לחשבון זה';
+                        } else {
+                            $scope.MessageToUser = results.msg;
+                        }
+                        $('#apt360msgbox').modal('show');
+                        return;
+                    }
                     if (err == "ok") {
                         var PSV = new PhotoSphereViewer({
                             // Panorama, given in base 64
@@ -1142,13 +1290,10 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
                             usexmpdata: false
                         });
 
-
                         var imgsrc = './uploadimages/' + vm.userid + '/salehouse/' + id + '/' + file.name;
                         vm.sphere360nameonly.push(file.name);
                         vm.sphere360.push(imgsrc);
                         vm.sphere360Description.push('');
-                        if (vm.sphere360.length > 1)
-                            document.getElementById('image360glyps' + id).style.display = 'block';
 
                     } else {
                         if (results == 'error from send 401') {
@@ -1177,7 +1322,6 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
                         vm.streets = result.data;
                     })
                     vm.neighborhoods = SchonotBackg.getCollection(code);
-                    console.log(vm.neighborhoods);
                     if (vm.neighborhoods == null) {
                         general.getSchonot(code).then(function (result) {
                             vm.neighborhoods = result.data;
@@ -1194,6 +1338,7 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
 
         function getCityObject(selectedItem)
         {
+
             for (var i = 0 ; i < vm.cities.length ;i++)
             {
                 if (selectedItem == vm.cities[i].city)
@@ -1219,9 +1364,71 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
             });
         }
 
+
+        $scope.RotatePicture = function(item)
+        {
+            var res= getActiveFileName(item);
+
+            console.log(res);
+            var fileName = res[0];
+            var active = res[1];
+
+            if (fileName == -1)
+                return;
+
+            var filePath = './uploadimages/' + vm.userid + '/salehouse/' + item.id + '/' + fileName;
+
+            if ($scope.allowRotate == 0)
+            {
+                return;
+            }
+            var angle = item.angleToRotate += 90;
+/*
+            var srcid = '#img' + id;
+            $(srcid).rotate(
+            {
+                angle : angle
+            });
+*/
+            $scope.allowRotate = 0;
+            apiutils.rotatePicture(filePath, angle).then(function(result){
+
+                var desc = vm.carousleDescription[active];
+                vm.carousleNameOnly.splice(active, 1);
+                vm.carousleDescription.splice(active, 1);
+                $scope.slides.splice(active, 1);
+
+                var num = Math.floor((Math.random()*10000) + 1)
+                var filePath = './uploadimages/' + vm.userid + '/salehouse/' + item.id + '/' + fileName;
+                var randomeImage = filePath + '?' + num;
+
+                addPictureToCrousleSlider(randomeImage, '');
+                vm.carousleNameOnly.push(fileName);
+                vm.carousleDescription.push(desc);
+                $scope.allowRotate = 1;
+            }).catch(function(result){
+                $scope.allowRotate = 1;
+                alert(result);
+            })
+
+        }
+
+        $scope.$on('IdleStart', function() {
+            console.log('start');
+        });
+
+        $scope.$on('IdleEnd', function() {
+            console.log('end');
+        });
+
+        $scope.$on('IdleTimeout', function() {
+            window.location.reload(true);
+        });
+
         $scope.getcity = function (selectedItem, index) {
 
             var objectData = getCityObject(selectedItem);
+            console.log(objectData);
 
             $scope.NAPA = objectData.napa;
             console.log(objectData);
@@ -1259,5 +1466,14 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
 
         }
     }
-])
-;
+]).config(function (IdleProvider, KeepaliveProvider, myConfig) {
+        // configure Idle settings
+        IdleProvider.idle(myConfig.idletimeSeconds); // in seconds
+        IdleProvider.timeout(myConfig.timeoutSeconds); // in seconds
+        KeepaliveProvider.interval(myConfig.keepAliveInterval); // in seconds
+    })
+    .run(function (Idle) {
+        // start watching when the app runs. also starts the Keepalive service by default.
+        Idle.watch();
+    });
+

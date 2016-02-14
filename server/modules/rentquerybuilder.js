@@ -23,6 +23,8 @@ module.exports = function () {
             sql = sql + ') ';
         sql = sql + '\n';
 
+        sql = sql + ' AND (users.suspend = 0) ';
+        sql = sql + '\n';
         sql = sql + 'AND (users.agent = ' + con.escape(opt.agent) + ') ';
         sql = sql + '\n';
 

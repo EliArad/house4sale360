@@ -1,16 +1,40 @@
+
+
 <div class="container-fluid" ng-controller="deletecardController as vm">
     <div class="row">
         <div class="col-md-6 col-md-offset-2">
 
-            <p dir="rtl"><span style="font-family:arial,helvetica,sans-serif;">?????? <u>????? </u>?? ??????.</span></p>
 
-            <p dir="rtl"><span style="font-family:arial,helvetica,sans-serif;">???? <u>?????? </u>?? ?????? ???? ????? ???? ?????? ???? ??????.?????? ?? ??????? ???????? ??? ????? ????? ??? ?? ????? ??? ???? ????? ???</span>
+            <!-- Modal -->
+            <div class="modal fade" id="apt360msgbox" role="dialog">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">apt360 - הודעה </h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>{{MessageToUser}}</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">סגור</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <p dir="rtl"><span style="font-family:arial,helvetica,sans-serif;">החלטתם <u>למחוק </u>את הכרטיס.</span></p>
+
+            <p dir="rtl"><span style="font-family:arial,helvetica,sans-serif;">ניתן <u>להשעות </u>את הכרטיס מבלי למחוק אותו לתקופה בלתי מוגבלת.הכרטיס עם התמונות והנתונים אכן ישארו במאגר אבל לא יוצגו ולא יהיו פעילם כלל</span>
             </p>
 
-            <p dir="rtl"><span style="font-family:arial,helvetica,sans-serif;">???, ?? ????? <u>?????</u> ?? ?????? ?? ??????? ???? ??????? ????? ??????? ????? ????? ???.</span>
+            <p>אם תבחרו להשעות את הכרטיס, בפעם הבאה שתתחברו עם המייל והססמא שלכם הכרטיס יחזור אוטומטית להיות פעיל וכל המודעות הפעילות יופיע שוב בחיפושים</p>
+
+            <p dir="rtl"><span style="font-family:arial,helvetica,sans-serif;">שוב, אם תבחרו <u>למחוק</u> את הכרטיס כל הנתונים כולל התמונות ימחקו ותצטרכו לפתוח כרטיס חדש.</span>
             </p>
 
-            <p dir="rtl"><span style="font-family:arial,helvetica,sans-serif;">??? ?? ?????? ????? ????:</span></p>
+            <p dir="rtl"><span style="font-family:arial,helvetica,sans-serif;">בחר את הפעולה שתרצה לבצע:</span></p>
 
             <p dir="rtl">&nbsp;</p>
 
@@ -18,11 +42,14 @@
             <form name="captchaForm" novalidate ng-submit="submit(captchaForm.$valid)">
                 <div class="row">
                     <div class="form-group col-xs-5">
-                        <label for="sel1">????? ????</label>
-                        <select class="form-control" required ng-model="capdata.userselect" id="sel1">
-                            <option>???? ?? ?????? ???</option>
-                            <option>??? ????? ?? ?????? ???</option>
-                        </select>
+                        <label for="sel1">פעולה לבצע</label>
+                        <div class="radio">
+                            <label><input type="radio" value="0"  ng-model="capdata.userselect" checked name="optradio">השעה את הכרטיס שלי</label>
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" value="1"   ng-model="capdata.userselect"  name="optradio">מחק לגמרי את הכרטיס שלי</label>
+
+                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -33,7 +60,7 @@
 
                     </div>
                 </div>
-                <button type="submit" ng-disabled="captchaForm.$invalid" class="btn btn-primary sss">???</button>
+                <button type="submit" ng-disabled="captchaForm.$invalid" class="btn btn-primary sss">שלח</button>
             </form>
         </div>
     </div>

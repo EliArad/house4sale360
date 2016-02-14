@@ -1,10 +1,7 @@
 'use strict';
 
-//(function() {
-
-
-app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registration', 'general', 'authToken','$state',
-    function ($scope, $cookieStore, Registration, general, authToken,$state) {
+app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registration', 'general', 'authToken','$state','vcRecaptchaService',
+    function ($scope, $cookieStore, Registration, general, authToken,$state,vcRecaptchaService) {
 
 
         //http://odetocode.com/blogs/scott/archive/2014/10/13/confirm-password-validation-in-angularjs.aspx
@@ -34,6 +31,11 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
             currentUser = {};
         }
 
+        function mysqlDate(date){
+            date = date || new Date();
+            return date.toISOString().split('T')[0];
+        }
+
         $scope.save = function (params) {
 
             switch (params.agent)
@@ -49,13 +51,11 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
                 break;
             }
 
+            params.dated = mysqlDate();
             //delete params.confirmPassword;
-
-
             Registration.save(params,
                 function (resp, headers) {
                     //success callback
-
 
                     $scope.showRegistration = false;
 
@@ -104,7 +104,6 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
 
         vm.submit = function (isValid) {
 
-
             if ($scope.passStrength < 1) {
                 $scope.showerrormessage = true;
                 $scope.messagetoshow = 'חוזק הססמא צריל להיות 80.';
@@ -112,6 +111,8 @@ app.controller('RegistrationController', ['$scope', '$cookieStore', 'Registratio
                 $scope.messagetoshow += 'השתמש באחד מהסימנים !@#$%^&*';
                 return;
             }
+
+            vm.user.response = vcRecaptchaService.getResponse(); // returns the string response
 
             if (isValid) {
                 vm.showwaitcircle = true;

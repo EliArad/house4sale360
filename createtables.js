@@ -141,6 +141,7 @@ sqlserver.get(function (err, con) {
     `is360video` int(11) DEFAULT NULL,\
     `isvideo` int(11) DEFAULT NULL,\
     `filesize` int(11) DEFAULT NULL,\
+    `description` varchar(145) DEFAULT NULL,\
         PRIMARY KEY (`id`),\
     UNIQUE KEY `id_UNIQUE` (`id`)\
     ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8";
@@ -173,6 +174,7 @@ sqlserver.get(function (err, con) {
   `is360video` int(11) DEFAULT NULL,\
   `isvideo` int(11) DEFAULT NULL,\
   `filesize` int(11) DEFAULT NULL,\
+   `description` varchar(145) DEFAULT NULL,\
             PRIMARY KEY (`id`),\
         UNIQUE KEY `id_UNIQUE` (`id`)\
     ) ENGINE=InnoDB AUTO_INCREMENT=150 DEFAULT CHARSET=utf8";

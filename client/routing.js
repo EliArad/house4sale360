@@ -11,7 +11,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$locationP
             templateUrl: '/client/views/login.html',
             controller: 'LoginController'
         }).state('main', {
-            url: '/main',
+            url: '/main?agent&aircond=&balcony=&city=&mamad=&messagetype=&numberofrooms=&neighborhood=&parking=&parkingtype=&parkingtype2=&warehouse=&elevator=&floor=&fromfloor=&price=',
             templateUrl: '/client/views/main.html'
         }).state('logout', {
             url: '/logout',
@@ -31,8 +31,8 @@ app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$locationP
         }).state('/', {
             url: '/',
             templateUrl: '/client/views/welcome.html'
-        }).state('kablanref', {
-            url: '/kablanref',
+        }).state('kablanhouse', {
+            url: '/kablanhouse',
             templateUrl: '/client/views/kablanhouse.html'
         }).state('addnewblankhouse', {
             url: '/addnewblankhouse',
@@ -84,6 +84,12 @@ app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$locationP
         }).state('usersview', {
             url: '/usersview',
             templateUrl: '/client/views/usersview.html'
+        }).state('virtualtourexp', {
+            url: '/virtualtourexp',
+            templateUrl: '/client/views/virtualtourexp.html'
+        }).state('virtualtourvrexp', {
+            url: '/virtualtourvrexp',
+            templateUrl: '/client/views/virtualtourvrexp.html'
         });
 
 

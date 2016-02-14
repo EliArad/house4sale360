@@ -5,8 +5,11 @@
                 <thead>
                 <td>ID</td>
                 <td>User Email</td>
+                <td>Agent</td>
                 <td>Guid</td>
-                <td>Date</td>
+                <td>verified</td>
+                <td>Host</td>
+                <td>Dated</td>
                 </thead>
                 <tr ng-repeat="user in vm.users">
                     <td>
@@ -16,7 +19,16 @@
                         {{ user.email }}
                     </td>
                     <td>
-                        {{ user.guid }}
+                        {{ user.agent }}
+                    </td>
+                    <td>
+                        {{ user.userguid }}
+                    </td>
+                    <td>
+                        {{ user.verified }}
+                    </td>
+                    <td>
+                        {{ user.host }}
                     </td>
                     <td>
                         {{ user.dated }}

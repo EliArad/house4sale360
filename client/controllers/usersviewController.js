@@ -1,7 +1,7 @@
 'use strict';
 
-app.controller('usersviewController', ['$scope', '$state', 'authToken','admin','myhttphelper','visitors',
-    function ($scope, $state, authToken,admin,myhttphelper,visitors)
+app.controller('usersviewController', ['$scope', '$state', 'authToken','admin','myhttphelper','visitors','general','appCookieStore',
+    function ($scope, $state, authToken,admin,myhttphelper,visitors,general,appCookieStore)
     {
 
         var vm = this;
@@ -18,11 +18,7 @@ app.controller('usersviewController', ['$scope', '$state', 'authToken','admin','
                 });
             } else {
                 admin.getUsers().then(function(result){
-                    if (vm.users != undefined) {
-                        vm.users = result.data;
-                    } else {
-                        alert('error');
-                    }
+                    vm.users = result.data;
                 }).catch(function(result){
                     alert('error');
                 })

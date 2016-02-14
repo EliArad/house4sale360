@@ -55,7 +55,12 @@ exports.login = function (req, res) {
                         var token = jwt.sign(payload, secret, {
                             expiresInMinutes: 60 * 5
                         });
-
+                        if (rows[0].verified == undefined)
+                        {
+                            res.status(403);
+                            res.end('Verfied is not declare in db');
+                            return;
+                        }
                         if (rows[0].verified == 0)
                         {
                             res.json({
@@ -65,6 +70,17 @@ exports.login = function (req, res) {
                             });
                             return;
                         }
+
+                        sqlServer.get(function (err, con) {
+                            con.query('UPDATE users SET ? WHERE ?', [{suspend: 0}, {id: rows[0].id}], function (err, result) {
+                                sqlServer.release(con);
+                                if (err) {
+                                    res.status(500);
+                                    res.end("שגיאה");
+                                    return;
+                                }
+                            });
+                        });
 
                         res.json({
                             id:rows[0].id,

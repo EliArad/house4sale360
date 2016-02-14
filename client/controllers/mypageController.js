@@ -5,11 +5,11 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
     'appCookieStore', 'socketioservice', 'Idle', '$rootScope',
     'SessionStorageService', 'myConfig', '$http', '$window', '$timeout',
     'dboperations', 'citiesservice', 'general', '$cookies', '$sce',
-    'versionReloader','communication','visitors','$stateParams','messageToLink',
+    'communication','visitors','$stateParams','messageToLink',
     function ($scope, $state, authToken, myhttphelper,
               appCookieStore, socketioservice, Idle, $rootScope, SessionStorageService,
               myConfig, $http, $window, $timeout, dboperations,
-              citiesservice, general, $cookies, $sce,versionReloader,communication,
+              citiesservice, general, $cookies, $sce,communication,
               visitors,$stateParams,messageToLink) {
 
 
@@ -52,10 +52,12 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
             //{name:'תל אביב'}
         ];
 
+
+        document.getElementById('homelink').style.backgroundColor = null;
+        document.getElementById('searchlink').style.backgroundColor = null;
+        document.getElementById('vrlink').style.backgroundColor = null;
+
         $scope.mobile = general.isMobile();
-
-        versionReloader.addPage(reloadFunction);
-
 
         $scope.SetViewMode = function()
         {
@@ -216,7 +218,7 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
                 var messagebody = '';
                 messagebody += '<div style="direction: rtl;text-align: right">';
                 messagebody = ' הי<br> ' +
-                    $scope.personName + ' שלח לך לינק מאתר  apt360 לראות מודעה למכירה או קנייה של בית <br><br> www.apt360.co.il?g=' + userguid;
+                    $scope.personName + ' שלח לך לינק מאתר  apt360 לראות מודעה למכירה או קנייה של בית <br><br> www.apt360.co.il/mypage?g=' + userguid;
 
                 messagebody += '<br><br><br>';
                 messagebody += $scope.messagebody;
@@ -424,8 +426,7 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
         function buildSearchSummery()
         {
             vm.searchsummery = '';
-            vm.searchsummery +=  'מציג את כל המודעות שלךבלבד ';
-
+            vm.searchsummery +=  'מציג את כל המודעות שלך בלבד ';
         }
 
         function getCityObject(selectedItem)
@@ -1071,6 +1072,19 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
             vm.changeSource(videosrc, item.id, index);
         }
 
+        $scope.$on('IdleStart', function() {
+            console.log('start');
+        });
+
+        $scope.$on('IdleEnd', function() {
+            console.log('end');
+        });
+
+        $scope.$on('IdleTimeout', function() {
+            window.location.reload(true);
+        });
+
+
         $(window).scroll(function () {
             if ($scope.allthumberspictures == false) {
                 return;
@@ -1081,12 +1095,11 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
             }
         });
     } // the controller closing
-]).
-    config(function (IdleProvider, KeepaliveProvider, myConfig) {
+]).config(function (IdleProvider, KeepaliveProvider, myConfig) {
         // configure Idle settings
         IdleProvider.idle(myConfig.idletimeSeconds); // in seconds
         IdleProvider.timeout(myConfig.timeoutSeconds); // in seconds
-        KeepaliveProvider.interval(2); // in seconds
+        KeepaliveProvider.interval(myConfig.keepAliveInterval); // in seconds
     })
     .run(function (Idle) {
         // start watching when the app runs. also starts the Keepalive service by default.

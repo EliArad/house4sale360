@@ -1,14 +1,19 @@
 module.exports = function () {
     function build(con, opt) {
 
-        var sql = 'SELECT sellhousedetails.* , salehouseblobs.filename, salehouseblobs.tableid , salehouseblobs.is360image , salehouseblobs.is360video , salehouseblobs.isvideo ,  tours3d.*\
+        var sql = 'SELECT sellhousedetails.* , salehouseblobs.filename, \
+                    salehouseblobs.tableid , salehouseblobs.is360image , \
+                    visitoraccess.accesstoken,\
+                    salehouseblobs.is360video , salehouseblobs.isvideo ,  tours3d.*\
                     FROM sellhousedetails\
                     INNER JOIN users\
                     ON users.id = sellhousedetails.userid\
                     LEFT JOIN salehouseblobs\
                     ON salehouseblobs.tableid  = sellhousedetails.id\
                     LEFT JOIN tours3d\
-                    ON sellhousedetails.id = tours3d.tableid3d ';
+                    ON sellhousedetails.id = tours3d.tableid3d \
+                    LEFT JOIN visitoraccess\
+                    ON visitoraccess.tableid = sellhousedetails.id  AND sellhousedetails.messagetype = visitoraccess.type';
 
         var i = 0;
         sql = sql + '\n';
@@ -24,7 +29,9 @@ module.exports = function () {
             sql = sql + ') ';
         sql = sql + '\n';
 
-        sql = sql + 'AND (users.agent = ' + con.escape(opt.agent) + ') ';
+        sql = sql + ' AND (users.suspend = 0) ';
+
+        sql = sql + ' AND (users.agent = ' + con.escape(opt.agent) + ') ';
         sql = sql + '\n';
 
         i = 0;

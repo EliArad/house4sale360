@@ -203,6 +203,41 @@ module.exports = function (sqlserver) {
                     return res.sendStatus(500);
                 }
             });
+        },
+
+        GetSearchResultByMessageId: function (req, res, next) {
+            id = req.params.id;
+            console.log(id);
+            var sql = 'SELECT sellhousedetails.* , salehouseblobs.filename,\
+            salehouseblobs.tableid ,\
+            salehouseblobs.is360image ,\
+            salehouseblobs.is360video ,\
+            salehouseblobs.isvideo ,\
+            tours3d.*\
+            FROM sellhousedetails\
+            INNER JOIN users\
+            ON users.id = sellhousedetails.userid\
+            LEFT JOIN salehouseblobs\
+            ON salehouseblobs.tableid  = sellhousedetails.id\
+            LEFT JOIN tours3d\
+            ON sellhousedetails.id = tours3d.tableid3d\
+            WHERE sellhousedetails.id = ' + con.escape(id) ;
+
+            sqlserver.get(function (err, con) {
+                if (!err) {
+                    var query = con.query(sql, function (err, rows) {
+                        sqlserver.release(con);
+                        if (err) {
+                            return res.sendStatus(500);
+                        } else {
+                            return res.send(rows);
+                        }
+                    });
+
+                } else {
+                    return res.sendStatus(500);
+                }
+            });
         }
     }
 

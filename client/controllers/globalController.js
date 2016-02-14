@@ -2,14 +2,13 @@
 
 app.controller('GlobalController', ['$scope', '$state', 'authToken', 'PassServiceParams',
     'appCookieStore', '$rootScope',
-    'SessionStorageService', 'socketioservice', 'citiesservice','versionReloader','SchonotBackg','visitors','myConfig',
+    'SessionStorageService', 'socketioservice', 'citiesservice','SchonotBackg','visitors','myConfig',
     function ($scope, $state, authToken, PassServiceParams,
               appCookieStore, $rootScope, SessionStorageService,
-              socketioservice, citiesservice,versionReloader,SchonotBackg,visitors,myConfig) {
+              socketioservice, citiesservice,SchonotBackg,visitors,myConfig) {
 
         var m_vm = this;
         //console.log('global controller started');
-        versionReloader.start();
         SchonotBackg.getStreets(3000);
 
         //var socket = io.connect('80.178.121.130');

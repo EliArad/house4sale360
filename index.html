@@ -31,18 +31,16 @@
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
 
-    <script async src="client/js/lib/tdvplayer.js"></script>
-    <script async src="client/js/lib/player.js"></script>
+
 
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
 
 
-
     <link rel="stylesheet" href="client/styles/min/loginscreen.css"/>
-    <link rel="stylesheet" href="client/styles/min/main.css">
+    <link rel="stylesheet" href="client/styles/main.css">
     <link rel="stylesheet" href="client/styles/min/styles.css">
-    <link rel="stylesheet" href="client/styles/min/waitlogin.css">
+    <link rel="stylesheet" href="client/styles/waitlogin.css">
 
     <!--<link rel="stylesheet" href="client/styles/animation.css">-->
     <!--<link rel="stylesheet" href="client/styles/viewanimation.css">-->
@@ -177,7 +175,7 @@
     <script src="client/controllers/minijs/globalController.js"></script>
     <script src="client/controllers/headerController.js"></script>
     <script src="client/controllers/minijs/LogoutController.js"></script>
-    <script src="client/controllers/minijs/LoginController.js"></script>
+    <script src="client/controllers/LoginController.js"></script>
     <script src="client/controllers/minijs/howto360Controller.js"></script>
     <script src="client/controllers/minijs/verifiedokController.js"></script>
     <script src="client/controllers/RegistrationController.js"></script>
@@ -190,7 +188,7 @@
     <script src="client/controllers/minijs/renthouseController.js"></script>
     <script src="client/controllers/addnewsalehouseController.js"></script>
     <script src="client/controllers/minijs/addnewrenthouseController.js"></script>
-    <script src="client/controllers/minijs/welcomeContoller.js"></script>
+    <script src="client/controllers/welcomeContoller.js"></script>
     <script src="client/controllers/minijs/addnewblankhouseController.js"></script>
     <script src="client/controllers/minijs/kablanhouseController.js"></script>
     <script src="client/controllers/minijs/contactusController.js"></script>
@@ -203,14 +201,14 @@
     <!--<script src="client/controllers/virtualTourController.js"></script>-->
 
 
+    <script src="client/services/apiutils.js"></script>
     <script src="client/services/minijs/communiction.js"></script>
     <script src="client/services/visitors.js"></script>
     <script src="client/services/minijs/GetSchonotBackground.js"></script>
     <script src="client/services/minijs/getcities.js"></script>
     <script src="client/services/dboperations.js"></script>
     <script src="client/services/minijs/Registration.js"></script>
-    <script src="client/services/minijs/general.js"></script>
-    <script src="client/services/minijs/versionReloader.js"></script>
+    <script src="client/services/general.js"></script>
     <script src="client/services/minijs/authIntercepter.js"></script>
     <script src="client/services/minijs/authtoken.js"></script>
     <script src="client/services/minijs/myhttphelper.js"></script>
@@ -236,8 +234,6 @@
     <script src="client/directives/minijs/dynamichomepage.js"></script>
     <script src="client/directives/minijs/fileModel.js"></script>
     <script src="client/directives/minijs/slider1.js"></script>
-
-
 
 
     <!--<script src="require.js" data-main="client/utils/cityloader.js"></script>-->
@@ -276,52 +272,55 @@
 <div ui-view=""></div>
 
 
-<div class="footer" ng-controller="footerController">
-    <div class="row footerdiv">
-        <div class="col-md-10 col-xs-2 col-md-offset-1">
-            <table>
-                <tr>
-                    <td style="width: 100px">
-                        <a class="fc" ui-sref="/">דף הבית</a>
-                    </td>
-                    <td style="width: 100px">
-                        <a class="fc" ui-sref="contactus">צור קשר</a>
-                    </td>
-                    <td style="width: 100px">
-                        <a class="fc" ui-sref="help">עזרה</a>
-                    </td>
-                    <td style="width: 100px">
-                        <a class="fc" ui-sref="privacyinfo">מידע על פרטיות</a>
-                    </td>
-                    <td style="width: 100px">
-                        <a class="fc" ui-sref="siterules">תקנון האתר</a>
-                    </td>
-                    <td style="width: 100px">
-                        <a class="fc" ui-sref="main">חפש דירה למכירה</a>
-                    </td>
-                    <td style="width: 100px">
-                        <a class="fc" ui-sref="main">חפש דירה להשכרה</a>
-                    </td>
-                    <td style="width: 100px">
-                        <a class="fc" ng-show="isAuth"  id="publishsale"  ui-sref="advertisehousecsale">פרסם דירה למכירה</a>
-                    </td>
-                    <td style="width: 100px">
-                        <a class="fc" ng-show="isAuth" id="publishrent"   ui-sref="advertisehouserent">פרסם דירה להשכרה</a>
-                    </td>
-                    <td id="fotdeletaccountid" style="width: 100px" ng-show="isAuth">
-                        <a class="fc" ui-sref="deleteaccount">מחק חשבון</a>
-                    </td>
-                    <td style="width: 100px" id="fotmymessagesid" ng-show="isAuth">
-                        <a class="fc" ui-sref="mypage">המודעות שלי</a>
-                    </td>
-                </tr>
-            </table>
+<div class="footer footerdiv" ng-controller="footerController">
+    <div class="row" style="margin-left: 10px">
+        <div class="col-md-1 col-xs-3 col-md-offset-1">
+            <a class="fc" ui-sref="/">דף הבית</a>
+        </div>
+
+        <div class="col-md-1 col-xs-3">
+            <a class="fc" ui-sref="contactus">צור קשר</a>
+        </div>
+        <div class="col-md-1 col-xs-3">
+            <a class="fc" ui-sref="help">עזרה</a>
+        </div>
+        <div class="col-md-1 col-xs-3">
+            <a class="fc" ui-sref="privacyinfo">מידע על פרטיות</a>
+        </div>
+        <div class="col-md-1 col-xs-3">
+            <a class="fc" ui-sref="siterules">תקנון האתר</a>
+        </div>
+        <div class="col-md-1 col-xs-3">
+            <a class="fc" ui-sref="main">חפש דירה למכירה</a>
+        </div>
+        <div class="col-md-1 col-xs-3">
+            <a class="fc" ui-sref="main">חפש דירה להשכרה</a>
+        </div>
+        <div class="col-md-1 col-xs-3">
+            <a class="fc" id="publishsale" ui-sref="advertisehousecsale">פרסם דירה   למכירה</a>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 10px">
+        <div class="col-md-2 col-xs-3 col-md-offset-1">
+            <a class="fc" style="white-space: nowrap" ui-sref="virtualtourexp">סיור וירטואלי</a>
+        </div>
+        <div class="col-md-2 col-xs-3">
+            <a class="fc" style="white-space: nowrap" ui-sref="virtualtourvrexp">סיור וירטואלי   ב VR</a>
+        </div>
+    </div>
+
+    <div class="row" style="margin-left: 10px;margin-top: 10px">
+        <div class="col-md-2 col-xs-3 col-md-offset-1">
+            <a class="fc"  id="publishrent" style="white-space: nowrap" ui-sref="advertisehouserent">פרסם דירה    להשכרה</a>
+        </div>
+        <div class="col-md-2 col-xs-3" id="fotdeletaccountid" >
+            <a class="fc" ui-sref="deleteaccount">מחק חשבון</a>
+        </div>
+        <div class="col-md-2 col-xs-3" id="fotmymessagesid">
+            <a class="fc" ui-sref="mypage">המודעות שלי</a>
         </div>
     </div>
 </div>
-
-
-
 
 
 </body>

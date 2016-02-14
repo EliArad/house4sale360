@@ -1,0 +1,21 @@
+ CREATE TABLE `salehouseblobs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tableid` int(11) DEFAULT NULL,
+  `filename` varchar(250) NOT NULL,
+  `is360image` int(11) DEFAULT NULL,
+  `is360video` int(11) DEFAULT NULL,
+  `isvideo` int(11) DEFAULT NULL,
+  `filesize` int(11) DEFAULT NULL,
+  `description` varchar(145) DEFAULT NULL,
+  `filefullpath` varchar(245) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `idx_salehouseblobs_filename` (`filename`),
+  KEY `idx_salehouseblobs_is360image` (`is360image`),
+  KEY `idx_salehouseblobs_is360video` (`is360video`),
+  KEY `idx_salehouseblobs_isvideo` (`isvideo`),
+  KEY `idx_salehouseblobs_filesize` (`filesize`),
+  KEY `idx_salehouseblobs_description` (`description`),
+  KEY `idx_salehouseblobs_filefullpath` (`filefullpath`),
+  KEY `idx_salehouseblobs_tableid` (`tableid`)
+) ENGINE=InnoDB AUTO_INCREMENT=217 DEFAULT CHARSET=utf8;

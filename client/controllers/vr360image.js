@@ -1,10 +1,10 @@
 'use strict';
 
-app.controller('vr360imageController', ['$scope', '$state', 'authToken','versionReloader',
-  function ($scope, $state, authToken,versionReloader)
+app.controller('vr360imageController', ['$scope', '$state', 'authToken',
+  function ($scope, $state, authToken)
   {
 
-    versionReloader.addPage(reloadFunction);
+
     function reloadFunction()
     {
       window.location.reload(true);

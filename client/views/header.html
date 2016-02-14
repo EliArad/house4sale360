@@ -1,5 +1,8 @@
 <style>
 
+
+
+
     .navbar-wrapper, .navbar, .navbar-inner{
         margin-left:0;
         margin-right:0;
@@ -10,6 +13,8 @@
     .txt:hover {
         text-decoration: underline;
     }
+
+
 
 </style>
 <div ng-controller="GlobalController as vm">
@@ -27,12 +32,15 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand " style="cursor:pointer" ui-sref="/"><span id="logoanimated"
+            <a class="navbar-brand animated  swing" id="homelink" style="cursor:pointer" ui-sref="/"><span id="logoanimated" ng-click="paintback(1)"
                                                                                    style="font-weight: bold"
-                                                                                   class="txt animated  swing  ">Apt360</span></a>
-            <a class="navbar-brand txt" style="cursor:pointer" ng-click="partyDetail()">חפש דירות ב 360</a>
+                                                                                   class="txt">Apt360</span></a>
 
-            <a class="navbar-brand txt" ui-sref="virtualrealityrpage" style="cursor:pointer" >VR</a>
+            <a class="navbar-brand txt" id="searchlink" style="cursor:pointer" ng-click="partyDetail()">חפש דירות ב 360</a>
+
+            <a  class="navbar-brand txt" id="vrlink"  ng-click="paintback(2)"  ui-sref="virtualrealityrpage" style="cursor:pointer" >VR</a>
+
+
 
         </div>
 
@@ -82,8 +90,6 @@
                             <li ng-show="isAdmin && isAuthenticated" style="cursor: pointer" ui-sref-active="active"><a ui-sref="usersview">Users</a></li>
                         </ul>
                     </li>
-
-
 
 
 
@@ -140,7 +146,7 @@
                         </ul>
                     </li>
 
-                    <li ng-show="isAuthenticated" style="cursor: pointer"  ui-sref-active="active"><a ui-sref="mypage">המודעות שלי</a></li>
+                    <li ng-show="isAuthenticated" ng-click="paintback(3)"  style="cursor: pointer"  ui-sref-active="active"><a ui-sref="mypage">המודעות שלי</a></li>
 
                 </ul>
             </div>

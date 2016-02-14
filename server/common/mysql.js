@@ -8,7 +8,8 @@ var pool = mysql.createPool({
     password: '',
     //password: 'Elianat4414123',
     database: 'yad2vr',
-    debug: false
+    debug: false,
+    dateStrings: 'date'
 });
 
 
