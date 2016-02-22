@@ -11,7 +11,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$locationP
             templateUrl: '/client/views/login.html',
             controller: 'LoginController'
         }).state('main', {
-            url: '/main?agent&aircond=&balcony=&city=&mamad=&messagetype=&numberofrooms=&neighborhood=&parking=&parkingtype=&parkingtype2=&warehouse=&elevator=&floor=&fromfloor=&price=',
+            url: '/main?agent&aircond=&balcony=&city=&mamad=&messagetype=&numberofrooms=&neighborhood=&parking=&parkingtype=&parkingtype2=&warehouse=&elevator=&floor=&fromfloor=&price=&mid=&rdl=',
             templateUrl: '/client/views/main.html'
         }).state('logout', {
             url: '/logout',

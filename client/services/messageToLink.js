@@ -10,19 +10,33 @@ app.factory("messageToLink", ['$cookies',
             return link;
         }
 
-        function BuildLinkFromSearch(search,citiesSelected)
-        {
+        function BuildLinkFromSearch(search, citiesSelected, facebooklink, tour3dlink, agentdetails) {
+
+            var rdl = undefined;
+
+            if (facebooklink == true && agentdetails == false) {
+                rdl = '87e1r7328hccxkjd4822';
+            } else if (tour3dlink == true) {
+                rdl = 'f498f48dkjdd84ks37424';
+            } else if (facebooklink == true && agentdetails == true) {
+                rdl = 'jdknvngj43959gjhdjfj5kfk3';
+            }
+
             var link = 'www.apt360.co.il/main?agent=' + search.agent;
             if (search.aircond != 'הכל')
-                link    += '&aircond=' + search.aircond;
-            var pstr1= '';
+                link += '&aircond=' + search.aircond;
+            var pstr1 = '';
             var index = 0;
-            for (var i = 0 ; i < citiesSelected.length; i++)
-            {
+            for (var i = 0; i < citiesSelected.length; i++) {
                 if (index > 0)
                     pstr1 += ',';
-                pstr1+= citiesSelected[i].name;
+                pstr1 += citiesSelected[i].name;
                 index++;
+            }
+
+            if (rdl != undefined)
+            {
+                link += '&rdl=' + rdl;
             }
 
             if (search.balcony != 'לא משנה לי')
@@ -57,9 +71,9 @@ app.factory("messageToLink", ['$cookies',
             if (search.price != undefined)
                 link    += '&price=' + search.price;
 
-            var replaced = link.split(' ').join('%20');
-
-            return replaced;
+            var euri = encodeURI(link);
+            //var replaced = link.split(' ').join('%20');
+            return euri;
         }
 
         return {

@@ -69,6 +69,22 @@ app.factory('dboperations', ['$http', 'myConfig',
         }
 
 
+        function SaveNotes(notes, id)
+        {
+            var membersAPI = myConfig.url + "/api/dbstore/SaveNotes";
+            return $http.post(membersAPI, {notes:notes, id:id});
+        }
+
+        function getAgentNotes(id)
+        {
+            var membersAPI = myConfig.url + "/api/dbstore/getAgentNotes";
+            return $http({
+                url: membersAPI,
+                method: "GET",
+                params: {id: id}
+            });
+        }
+
         function getMessageUserInformation(id, type) {
 
             var membersAPI = myConfig.url + "/api/dbstore/getMessageUserInformation";
@@ -166,10 +182,13 @@ app.factory('dboperations', ['$http', 'myConfig',
         }
 
         function GetSearchResultByMessageId(id) {
-            var membersAPI = myConfig.url + "/api/dbstore/GetSearchResultByMessageId";
-            return $http.get(membersAPI, {id: id});
+            var membersAPI = myConfig.url + "/api/salequery/GetSearchResultByMessageId";
+            return $http({
+                url: membersAPI,
+                method: "GET",
+                params: {id: id}
+            });
         }
-
 
         return {
             getSaleHousePictureList: getSaleHousePictureList,
@@ -202,7 +221,9 @@ app.factory('dboperations', ['$http', 'myConfig',
             DeletePicture:DeletePicture,
             GetSearchResultByMessageId:GetSearchResultByMessageId,
             SaveUserAuthCode:SaveUserAuthCode,
-            MarkReloadToThoseSearchResults:MarkReloadToThoseSearchResults
+            MarkReloadToThoseSearchResults:MarkReloadToThoseSearchResults,
+            SaveNotes:SaveNotes,
+            getAgentNotes:getAgentNotes
         };
     }
 

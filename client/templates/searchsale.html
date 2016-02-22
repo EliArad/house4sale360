@@ -235,7 +235,7 @@
                     </div>
                 </div>
 
-                <div class="form-group" ng-show="shoparkingoptions"
+                <div class="form-group" ng-if="shoparkingoptions"
                      style="white-space:nowrap"
                      ng-class="{ 'has-error': form.parkingtype.$error.required && form.parkingtype.$dirty }">
                     <label class="control-label col-sm-3" for="parkingtype">מיקום החנייה</label>
@@ -251,7 +251,7 @@
                     </div>
                 </div>
 
-                <div class="form-group" ng-show="shoparkingoptions"
+                <div class="form-group" ng-if="shoparkingoptions"
                      style="white-space:nowrap"
                      ng-class="{ 'has-error': form.parkingtype2.$error.required && form.parkingtype2.$dirty }">
                     <label class="control-label col-sm-3" for="parkingtype2">אופי החנייה</label>

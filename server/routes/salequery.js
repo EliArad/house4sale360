@@ -13,6 +13,8 @@ module.exports = function (app,salequeryController) {
         var router = express.Router();
         router.post('/GetHouseQueryResults', salequeryController.GetHouseQueryResults);
         router.post('/GetAllMyResults',jwtauthnext,  salequeryController.GetAllMyResults);
+        router.get('/GetSearchResultByMessageId', salequeryController.GetSearchResultByMessageId);
+
         app.use('/api/salequery', router);
 
     }

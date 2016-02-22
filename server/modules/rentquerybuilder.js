@@ -1,7 +1,11 @@
 module.exports = function () {
     function build(con, opt) {
 
-        var sql = 'SELECT renthousedetails.* , renthouseblobs.filename, renthouseblobs.tableid , renthouseblobs.is360image , renthouseblobs.is360video , renthouseblobs.isvideo\
+        var sql = 'SELECT renthousedetails.* , renthouseblobs.filename, \
+                    renthouseblobs.tableid , \
+                    renthouseblobs.is360image , \
+                    salehouseblobs.description,\
+                    renthouseblobs.is360video , renthouseblobs.isvideo\
                     FROM renthousedetails\
                     INNER JOIN users\
                     ON users.id = renthousedetails.userid\

@@ -5,12 +5,12 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
     'appCookieStore', 'socketioservice', 'Idle', '$rootScope',
     'SessionStorageService', 'myConfig', '$http', '$window', '$timeout',
     'dboperations', 'citiesservice', 'general', '$cookies', '$sce',
-    'communication','visitors','$stateParams','messageToLink',
+    'communication','visitors','$stateParams','messageToLink','allsite',
     function ($scope, $state, authToken, myhttphelper,
               appCookieStore, socketioservice, Idle, $rootScope, SessionStorageService,
               myConfig, $http, $window, $timeout, dboperations,
               citiesservice, general, $cookies, $sce,communication,
-              visitors,$stateParams,messageToLink) {
+              visitors,$stateParams,messageToLink,allsite) {
 
 
 
@@ -18,6 +18,9 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
         var video360height = '600px';
         $scope.mobile = true;
         $scope.virtualSearch = false;
+        $scope.shownotes = false;
+
+        $scope.isAgent = allsite.getAgent();
 
         var token = authToken.getToken();
         if ($stateParams.g == undefined && token == undefined)
@@ -26,6 +29,27 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
                 reload: false
             });
             return;
+        }
+
+        $scope.ToggleNotes = function(item)
+        {
+            $scope.shownotes = !$scope.shownotes;
+
+            if ($scope.shownotes == true)
+            {
+                dboperations.getAgentNotes(item.id).then(function(result)
+                {
+                    item.agentnotes = result.data;
+                }).catch(function(result){
+                    alert('שגיאה');
+                })
+            }
+        }
+        if (token != undefined || token != null)
+        {
+            $scope.isAuthenticated = true;
+        } else {
+            $scope.isAuthenticated = false;
         }
 
         $scope.largeScreens = true;
@@ -53,7 +77,13 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
         ];
 
 
-        document.getElementById('homelink').style.backgroundColor = null;
+        try {
+            document.getElementById('homelink').style.backgroundColor = null;
+        }
+        catch (e)
+        {
+            console.log(e);
+        }
         document.getElementById('searchlink').style.backgroundColor = null;
         document.getElementById('vrlink').style.backgroundColor = null;
 
@@ -835,11 +865,11 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
                     //vm.cards.push(card);
                     //console.log('card.show3dtour ' + card.show3dtour);
                     if (card.show3dtour == 1) {
-                        setTimeout(function(index){
-                            var _src = '/virtualtours/' + userid1 + '/' + tableid + '/tour3dvistaplayer.html';
+                        setTimeout(function(i, card){
+                            var _src = '/virtualtours/' + card.userid + '/' + card.id + '/tour3dvistaplayer.html';
                             console.log(_src);
-                            document.getElementById('touriframeid' + index).src = _src;
-                        }, 1000, i)
+                            document.getElementById('touriframeid' + i).src = _src;
+                        }, 1000, i, card)
                     }
                     i++;
                 });
@@ -1072,18 +1102,27 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
             vm.changeSource(videosrc, item.id, index);
         }
 
+        /*
         $scope.$on('IdleStart', function() {
-            console.log('start');
+
         });
 
         $scope.$on('IdleEnd', function() {
-            console.log('end');
+
         });
 
         $scope.$on('IdleTimeout', function() {
             window.location.reload(true);
-        });
+        });*/
 
+        $scope.SaveNotes = function(item)
+        {
+            dboperations.SaveNotes(item.agentnotes, item.id).then(function(result){
+                //alert('ok');
+            }).catch(function(result){
+                alert(result.data);
+            })
+        }
 
         $(window).scroll(function () {
             if ($scope.allthumberspictures == false) {
@@ -1095,7 +1134,8 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
             }
         });
     } // the controller closing
-]).config(function (IdleProvider, KeepaliveProvider, myConfig) {
+])
+    /*.config(function (IdleProvider, KeepaliveProvider, myConfig) {
         // configure Idle settings
         IdleProvider.idle(myConfig.idletimeSeconds); // in seconds
         IdleProvider.timeout(myConfig.timeoutSeconds); // in seconds
@@ -1104,4 +1144,4 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
     .run(function (Idle) {
         // start watching when the app runs. also starts the Keepalive service by default.
         Idle.watch();
-    });
+    });*/

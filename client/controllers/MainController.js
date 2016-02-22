@@ -4,7 +4,8 @@
 app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper',
     'appCookieStore', 'socketioservice', 'Idle', '$rootScope',
     'SessionStorageService', 'myConfig', '$http', '$window', '$timeout',
-    'dboperations', 'citiesservice', 'general', '$cookies', '$sce','communication','visitors','messageToLink','$q','$stateParams',
+    'dboperations', 'citiesservice', 'general', '$cookies', '$sce','communication',
+    'visitors','messageToLink','$q','$stateParams',
     function ($scope, $state, authToken, myhttphelper,
               appCookieStore, socketioservice, Idle, $rootScope, SessionStorageService,
               myConfig, $http, $window, $timeout, dboperations,
@@ -18,6 +19,14 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         $scope.virtualSearch = false;
         $scope.largeScreens = true;
         vm.searchsummery = '';
+
+        vm.facebookLink = false;
+        vm.tour3donlyLink = false;
+
+        vm.facebooklink = false;
+        vm.tour3dlink = false;
+        vm.agentdetails = false;
+
         vm.search = {};
         vm.searchFromURL = {};
         var cexp = general.getCookieExp();
@@ -37,6 +46,9 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         }
         var lastCity = undefined;
         var lastCity1 = undefined;
+        vm.sendMailLink = true;
+        vm.sendMessageButton = true;
+        vm.detailsInfoButton = true;
 
         vm.citiesSelected = [
             //{name:'תל אביב'}
@@ -49,7 +61,49 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         function getallUrlParams()
         {
 
+            if ($stateParams.rdl != undefined) {
+                switch($stateParams.rdl)
+                {
+                    case '87e1r7328hccxkjd4822':
+                        vm.facebookLink = true;
+                        vm.tour3donlyLink = false;
+                        vm.sendMailLink = false;
+                        vm.sendMessageButton = false;
+                        vm.detailsInfoButton = false;
+                    break;
+                    case 'f498f48dkjdd84ks37424':
+                        vm.facebookLink = true;
+                        vm.tour3donlyLink = true;
+                        vm.sendMailLink = false;
+                        vm.sendMessageButton = false;
+                        vm.detailsInfoButton = false;
+                    break;
+                    case 'jdknvngj43959gjhdjfj5kfk3':
+                        vm.facebookLink = true;
+                        vm.tour3donlyLink = false;
+                        vm.sendMailLink = false;
+                        vm.sendMessageButton = false;
+                        vm.detailsInfoButton = true;
+                    break;
+                    default:
+                    {
+                        vm.facebookLink = true;
+                        vm.tour3donlyLink = true;
+                        vm.sendMailLink = false;
+                        vm.sendMessageButton = false;
+                        vm.detailsInfoButton = false;
+                    }
+                }
+            }
+
+            if (vm.facebookLink == true || vm.tour3donlyLink == true) {
+                document.getElementById('headerid').style.display = "none";
+                document.getElementById('footerid').style.display = "none";
+            }
+
+
             try {
+                vm.citiesSelected = [];
                 var p = $stateParams.city.split(',');
                 vm.searchFromURL.city = [];
 
@@ -58,6 +112,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                         name: p[i]
                     }
                     vm.searchFromURL.city.push(x);
+                    vm.citiesSelected.push(x);
                 }
 
                 vm.searchFromURL.agent = $stateParams.agent;
@@ -117,6 +172,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         }
         function getCityObject(selectedItem)
         {
+
             for (var i = 0 ; i < vm.cities.length ;i++)
             {
                 if (selectedItem == vm.cities[i].city)
@@ -176,7 +232,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
 
         //$('#switch-change').on('switchChange.bootstrapSwitch', function (event, state) {
-          //
+        //
         //});
 
         function citiesLoaderCallback(data, citiesOnly)
@@ -188,7 +244,6 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         citiesservice.registerCitiesLoaded(citiesLoaderCallback);
         vm.cities = citiesservice.getcities_all_ready();
         vm.citiesOnly = citiesservice.getcities_ready();
-
 
 
         $scope.removeSchonaFromList = function (index) {
@@ -332,16 +387,19 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 communication.openAdvancedSearch(false);
             } else {
 
-                if (getallUrlParams() == true)
+                if ($stateParams.mid != null)
                 {
-                    vm.search = angular.copy(vm.searchFromURL);
-                    console.log(vm.search);
-                    ShowResults(2);
+                    var mid = $stateParams.mid;
+                    ShowSpecificMessageId(mid);
                 } else {
-                    ShowResults(0);
+                    if (getallUrlParams() == true) {
+                        vm.search = angular.copy(vm.searchFromURL);
+                        ShowResults(2);
+                    } else {
+                        ShowResults(0);
+                    }
                 }
             }
-
         });
 
         $scope.getschona = function (selectedItem) {
@@ -354,59 +412,67 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             vm.userMessageId = -1;
         });
 
+
+
+
         $('#myModal').on('show.bs.modal', function () {
 
 
-            if (vm.search.city == undefined )
-                 return;
-            var objectData = getCityObject(vm.search.city);
-            $scope.shownapa = true;
-            if (lastCity == undefined || lastCity != objectData.code) {
-                //console.log('selectedItem.code : ' + objectData.code);
-                general.getSchonot(objectData.code).then(function (result) {
-                    vm.search.neighborhood = '';
-                    vm.neighborhoods = result.data;
-                })
-            }
-            lastCity = objectData.code;
-
-            if (lastCity1 == undefined || lastCity1 != objectData.code) {
-                if (vm.citiesSelected.length == 1) {
-                    general.getStreets(objectData.code).then(function (result) {
-                        vm.streets = result.data;
+            try {
+                if (vm.search.city == undefined)
+                    return;
+                var objectData = getCityObject(vm.search.city);
+                $scope.shownapa = true;
+                if (lastCity == undefined || lastCity != objectData.code) {
+                    //console.log('selectedItem.code : ' + objectData.code);
+                    general.getSchonot(objectData.code).then(function (result) {
+                        vm.search.neighborhood = '';
+                        vm.neighborhoods = result.data;
                     })
                 }
+                lastCity = objectData.code;
+
+                if (lastCity1 == undefined || lastCity1 != objectData.code) {
+                    if (vm.citiesSelected.length == 1) {
+                        general.getStreets(objectData.code).then(function (result) {
+                            vm.streets = result.data;
+                        })
+                    }
+                }
+                lastCity1 = objectData.code;
+                if (objectData.area == 'merkaz') {
+                    vm.search.area = 'אזור המרכז';
+                } else if (objectData.area == 'darom') {
+                    vm.search.area = 'אזור הדרום';
+                } else if (objectData.area == 'jerusalem') {
+                    vm.search.area = 'אזור ירושלים';
+                } else if (objectData.area == 'zafon') {
+                    vm.search.area = 'אזור הצפון';
+                } else if (objectData.area == 'haifa') {
+                    vm.search.area = 'אזור חיפה';
+                }
             }
-            lastCity1 = objectData.code;
-            if (objectData.area == 'merkaz') {
-                vm.search.area = 'אזור המרכז';
-            } else if (objectData.area == 'darom') {
-                vm.search.area = 'אזור הדרום';
-            } else if (objectData.area == 'jerusalem') {
-                vm.search.area = 'אזור ירושלים';
-            } else if (objectData.area == 'zafon') {
-                vm.search.area = 'אזור הצפון';
-            } else if (objectData.area == 'haifa') {
-                vm.search.area = 'אזור חיפה';
+            catch (e)
+            {
+                console.log(e);
             }
          });
-
 
 
         $('#myModal').on('hidden.bs.modal', function () {
 
             var s = JSON.stringify(vm.search);
-            $cookies.put('sellhousesearch', s ,{expires: cexp});
+            $cookies.put('sellhousesearch', s, {expires: cexp});
 
 
             s = JSON.stringify(vm.citiesSelected);
-            $cookies.put('citiesSelected', s ,{expires: cexp});
+            $cookies.put('citiesSelected', s, {expires: cexp});
 
             s = JSON.stringify(vm.schonotSelected);
-            $cookies.put('schonotSelected', s ,{expires: cexp});
+            $cookies.put('schonotSelected', s, {expires: cexp});
 
             s = JSON.stringify(vm.aptstatus);
-            $cookies.put('aptstatus', s ,{expires: cexp});
+            $cookies.put('aptstatus', s, {expires: cexp});
 
             ShowResults(0);
 
@@ -424,20 +490,19 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 });
             }
 
-            var pstr1= '';
+            var pstr1 = '';
             index = 0;
 
-            for (var i = 0 ; i < vm.citiesSelected.length; i++)
-            {
+            for (var i = 0; i < vm.citiesSelected.length; i++) {
                 if (index > 0)
                     pstr1 += ',';
-                pstr1+= vm.citiesSelected[i].name;
+                pstr1 += vm.citiesSelected[i].name;
                 index++;
             }
 
 
             var userguid = $cookies.get('apt360visitorguid');
-            var  userSearch = {
+            var userSearch = {
                 city: pstr1,
                 type: vm.search.messagetype,
                 propertytype: pstr,
@@ -445,38 +510,35 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 numofrooms: vm.search.numberofrooms,
             }
 
-            visitors.saveVisitorSearch(userSearch).then(function(result){
+            visitors.saveVisitorSearch(userSearch).then(function (result) {
 
-            }).catch(function(result){
+            }).catch(function (result) {
 
             })
         })
 
-        function buildSearchSummery()
-        {
+        function buildSearchSummery() {
             vm.searchsummery = '';
-            vm.searchsummery +=  'מציג ';
+            vm.searchsummery += 'מציג ';
 
-            if (vm.search.agent == 'מתווך')
-            {
+            if (vm.search.agent == 'מתווך') {
                 vm.searchTitle = 'מתיווך';
             } else {
                 vm.searchTitle = vm.search.agent;
             }
 
 
-            if (vm.search.propertyType == undefined || vm.search.propertyType.length == 0)
-            {
+            if (vm.search.propertyType == undefined || vm.search.propertyType.length == 0) {
                 vm.searchsummery += 'כל סוגי הדירות' + '  ב ';
             } else {
                 vm.searchsummery += vm.search.propertyType + ' ב';
             }
 
 
-            vm.citiesSelected.forEach(function(en){
+            vm.citiesSelected.forEach(function (en) {
                 vm.searchsummery += en.name + ',';
             })
-            vm.searchsummery+= '  ';
+            vm.searchsummery += '  ';
             if (vm.search.numberofrooms == 'הכל') {
                 vm.searchsummery += ' ללא הגבלת חדרים';
             } else {
@@ -489,7 +551,6 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             } else {
                 vm.searchsummery += ' בכל מחיר';
             }
-
 
 
         }
@@ -514,32 +575,66 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                     }, 1900);
                 }).catch(function (result) {
                     vm.msgboxcontent = 'קרתה שגיאה בשליחת ההודעה';
-                     
+
                 })
             }
         }
 
 
-        $scope.SendToAFriend = function(item, index)
-        {
+        $scope.SendToAFriend = function (item, index) {
 
             vm.userMessageIndex = index;
             vm.userMessageId = item.id;
             $('#sendSingleMessageModal').modal('show');
         }
 
-        $scope.SendToAFriendAllPosts = function()
-        {
+        $scope.SendToAFriendAllPosts = function () {
 
             $('#sendAllMessageModal').modal('show');
         }
 
+        $scope.SendLinkToAFriend = function ()
+        {
+
+            var link = 'www.apt360.co.il/main?mid=' + vm.userMessageId;
+            var messagebody = '';
+            messagebody += '<div style="direction: rtl;text-align: right">';
+            messagebody = ' הי<br> ' +
+                $scope.personName + ' שלח לך לינק מאתר  apt360 לראות מודעה למכירה או קנייה של בית <br><br> ' + link;
+
+            messagebody += '<br><br><br>';
+            messagebody += $scope.messagebody;
+
+            messagebody += '</div>';
+            general.SendEmailToPerson($scope.emailToperson, $scope.personName, messagebody).then(function (result) {
+
+                var buttonid = 'sendpagelinkbtnid2';
+                document.getElementById(buttonid).className = "btn btn-info animated tada";
+                document.getElementById(buttonid).style.color = 'lightgreen';
+                document.getElementById(buttonid).innerHTML = 'הודעה נשלחה';
+
+                cssUpdateTimer = $timeout(function () {
+                    $('#sendSingleMessageModal').modal('hide');
+                    document.getElementById(buttonid).innerHTML = 'שלח הודעה';
+                    document.getElementById(buttonid).style.color = 'white';
+                    document.getElementById(buttonid).className = "btn btn-info";
+                }, 1900);
+            }).catch(function (result) {
+                $('#sendSingleMessageModal').modal('hide');
+                alert('שגיאה בשליחת ההודעה');
+            })
+        }
 
         $scope.SendPageLinkToAFriend = function()
         {
 
 
-            var link = messageToLink.BuildLinkFromSearch(vm.search, vm.citiesSelected);
+            var link = messageToLink.BuildLinkFromSearch(vm.search,
+                                                         vm.citiesSelected,
+                                                         vm.facebooklink,
+                                                         vm.tour3dlink,
+                                                         vm.agentdetails);
+
 
 
             var messagebody = '';
@@ -631,11 +726,273 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         };
 
 
+        function ShowSpecificMessageId(mid)
+        {
+
+            dboperations.GetSearchResultByMessageId(mid).then(function (result) {
+
+                var directory = '';
+                if (result.data.length > 0)
+                    directory = result.data[0].messagetype == 0 ? '/salehouse/' : '/renthouse/';
+                PreviewQueryResults(result, directory);
+            });
+        }
+
+        $scope.clearselect = function(sel)
+        {
+            switch (sel)
+            {
+                case 0:
+                    vm.search.street = '';
+                break;
+                case 1:
+                    vm.search.neighborhood = '';
+                break;
+            }
+        }
+
+        function PreviewQueryResults(result, directory)
+        {
+            $scope.showerrorenable = false;
+            if (result.data.length == 0) {
+                $scope.showNoResultsMessage = true;
+                vm.cards = [];
+                vm.cards1 = [];
+            } else {
+                $scope.showNoResultsMessage = false;
+            }
+
+            vm.cards1 = result.data;
+            var dic = new Dictionary();
+
+            //http://stackoverflow.com/questions/17787754/creating-a-net-like-dictionary-object-in-javascript
+
+            for (var i = 0; i < vm.cards1.length; i++) {
+                var c = dic.containsKey(vm.cards1[i].id);
+                if (c) {
+                    var x = dic.lookup(vm.cards1[i].id);
+                    x.push(vm.cards1[i]);
+                    dic.add(vm.cards1[i].id, x);
+                } else {
+                    var x = [];
+                    x.push(vm.cards1[i]);
+                    dic.add(vm.cards1[i].id, x);
+                }
+            }
+
+            vm.cards = [];
+            i = 0;
+            dic.forEach(function (key, value) {
+
+                //console.log(vm.cards[i].id);
+                var card = {};
+                //console.log(value);
+                card = value[0];
+                card.id = key;
+
+
+                if (card.privacyEnabled == 1) {
+                    if (card.privacyPassword == card.accesstoken) {
+                        card.privacyEnabled = 0;
+                    } else {
+                        card.privacyEnabled = 1;
+                    }
+                }
+
+                //card.imageMaxHeight = '400px';
+                card.sphere360 = [];
+                card.showPictures = 0;
+                card.image360Exists = false;
+                card.imageExists = false;
+                card.video360Exists = false;
+                card.videosourceurl = [];
+                card.video360sourceurl = [];
+                card.videoExists = false;
+                card.showVideo = 0;
+                card.showregularvideo = false;
+                card.show360video = false;
+                card.show3dtour = value[0].show;
+                if (card.show3dtour == undefined)
+                    card.show3dtour = false;
+                card.videoExists = false;
+                card.slides = [];
+                card.hideheader = false;
+                card.sphere360index = 0;
+                card.sphere360Description = [];
+                vm.cards.push(card);
+                var city = card.city;
+                var area = card.area;
+                var napa = card.napa;
+                var code = card.code;
+                updatePrivateHouseStatus(card);
+
+                if (card.numberofrooms == 1) {
+                    card.numberofrooms = 'חדר אחד';
+                } else {
+                    card.numberofrooms = card.numberofrooms + ' חדרים ';
+                }
+                var x = {
+                    'city': city,
+                    'area': area,
+                    'napa': napa,
+                    'code': code
+                };
+                card.city = x;
+
+                var streetName = card.street;
+                var x1 = {
+                    'name': streetName
+                };
+                card.street = x1;
+
+                var neighborhood = card.neighborhood;
+                x1 = {
+                    'name': neighborhood
+                };
+                card.neighborhood = x1;
+
+                card.numberofrooms = card.numberofrooms.toString();
+                card.floor = card.floor.toString();
+                card.fromfloor = card.fromfloor.toString();
+                card.balcony = card.balcony.toString();
+                var firsttime1 = 0;
+                for (var k = 0; k < value.length; k++) {
+                    if (value[k].isvideo != null &&
+                        value[k].tableid != null &&
+                        value[k].filename != null &&
+                        value[k].is360image != null &&
+                        value[k].isvideo == 0 &&
+                        value[k].is360image == 0) {
+
+                        //console.log(value[k]);
+                        var imgsrc;
+                        if (firsttime1 == 0) {
+                            card.showPictures++;
+                            card.imageExists = true;
+                            firsttime1 = 1;
+                        }
+                        var userid = value[k].userid;
+                        var imgsrc = './uploadimages/' + userid + directory + value[k].tableid + '/' + value[k].filename;
+                        //console.log(imgsrc);
+                        card.slides.push({
+                            image: imgsrc,
+                            text: ''
+                        });
+                    }
+                }
+                var firsttime = 0;
+                for (var k = 0; k < value.length; k++) {
+                    if (value[k].isvideo != null &&
+                        value[k].tableid != null &&
+                        value[k].filename != null &&
+                        value[k].is360image != null &&
+                        value[k].isvideo == 0 &&
+                        value[k].is360image == 1) {
+
+                        var imgsrc;
+                        if (firsttime == 0) {
+                            card.showPictures++;
+                            card.image360Exists = true;
+                            card.image360Name = value[k].description;
+                            firsttime++;
+                        }
+
+                        var userid = value[k].userid;
+                        var imgsrc = './uploadimages/' + userid + directory + value[k].tableid + '/' + value[k].filename;
+                        card.sphere360.push(imgsrc);
+                        card.sphere360Description.push(value[k].description);
+
+
+                        if (card.sphere360index == 0) {
+                            setTimeout(function () {
+                                var PSV = new PhotoSphereViewer({
+                                    // Panorama, given in base 64
+                                    panorama: imgsrc,
+
+                                    // Container
+                                    container: 'your-pano' + key,
+
+                                    // Deactivate the animation
+                                    time_anim: false,
+
+                                    // Display the navigation bar
+                                    navbar: true,
+
+                                    // Resize the panorama
+                                    size: {
+                                        width: '100%',
+                                        height: video360height
+                                    },
+
+                                    // No XMP data
+                                    usexmpdata: false
+                                });
+                            }, 10, key);
+                        }
+                        card.sphere360index++;
+                    }
+                }
+
+                var firsttimevid = 0;
+                for (var f = 0; f < value.length; f++) {
+                    if (value[f].isvideo != null &&
+                        value[f].tableid != null &&
+                        value[f].filename != null &&
+                        value[f].is360image != null &&
+                        value[f].isvideo == 1 &&
+                        value[f].is360video == 0 &&
+                        value[f].is360image == 0) {
+                        var userid1 = value[f].userid;
+                        var tableid = value[f].tableid;
+                        var videofilename = value[f].filename;
+                        var videosrouceurl = './uploadvideo/' + userid1 + directory + tableid + '/' + videofilename;
+                        card.videosourceurl.push(videosrouceurl);
+                        card.showregularvideo = true;
+                        card.videoexistlable = 'יש גם וידאו - הראה לי';
+                        break;
+                    }
+                }
+
+
+                for (var f = 0; f < value.length; f++) {
+                    if (value[f].isvideo != null &&
+                        value[f].tableid != null &&
+                        value[f].filename != null &&
+                        value[f].is360image != null &&
+                        value[f].isvideo == 1 &&
+                        value[f].is360video == 1 &&
+                        value[f].is360image == 0) {
+                        var userid1 = value[f].userid;
+                        var tableid = value[f].tableid;
+                        var videofilename = value[f].filename;
+                        var videosrouceurl = './upload360video/' + userid1 + directory+ tableid + '/' + videofilename;
+                        card.video360sourceurl.push(videosrouceurl);
+                        card.show360video = true;
+                        card.video360existlable = 'יש גם וידאו 360  - הראה לי';
+                        break;
+                    }
+                }
+                //vm.cards.push(card);
+                //console.log('card.show3dtour ' + card.show3dtour);
+                if (card.show3dtour == 1) {
+                    setTimeout(function(index){
+                        var _src = '/virtualtours/' + card.userid + '/' + card.id + '/tour3dvistaplayer.html';
+                        //console.log(_src);
+                        document.getElementById('touriframeid' + index).src = _src;
+                    }, 1000, i, card)
+                }
+                i++;
+            });
+        }
+
         function ShowResults(fast)
         {
 
             $scope.showNoResultsMessage = false;
             if (vm.citiesSelected.length == 0 && fast == 0) {
+                vm.cards = [];
+                vm.cards1 = [];
+                $('#msgbox').modal('show');
                 vm.msgboxcontent = 'בחר עיר אחת לפחות';
                 return;
             }
@@ -682,6 +1039,8 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             {
                 case 0:
                     search.city = vm.citiesSelected;
+                    search.citysel = vm.citiesSelected[0].name;
+                    vm.search.citysel = vm.citiesSelected[0].name;
                 break;
                 case 1:
                 search.city = [];
@@ -689,13 +1048,17 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                     name:vm.search.city
                 }
                 search.city.push(o);
+                search.citysel = o.name;
+                vm.search.citysel = o.name;
                 break;
                 case 2:
                     search.city = vm.search.city;
+                    search.citysel = vm.search.city[0].name;
+                    vm.search.citysel = vm.search.city[0].name;
                 break;
             }
-            console.log(vm.search.city);
-            console.log(search.city);
+            //console.log(vm.search.city);
+            //console.log(search.city);
             search.propertyType = vm.search.propertyType;
             search.renovated = vm.search.renovated;
             search.toprice = vm.search.toprice;
@@ -832,232 +1195,9 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             }
             dboperations.GetHouseQueryResults(search, false,type).then(function (result) {
 
-                $scope.showerrorenable = false;
-                if (result.data.length == 0) {
-                    $scope.showNoResultsMessage = true;
-                    vm.cards = [];
-                    vm.cards1 = [];
-                } else {
-                    $scope.showNoResultsMessage = false;
-                }
 
-                vm.cards1 = result.data;
-                var dic = new Dictionary();
-
-                //http://stackoverflow.com/questions/17787754/creating-a-net-like-dictionary-object-in-javascript
-
-                for (var i = 0; i < vm.cards1.length; i++) {
-                    var c = dic.containsKey(vm.cards1[i].id);
-                    if (c) {
-                        var x = dic.lookup(vm.cards1[i].id);
-                        x.push(vm.cards1[i]);
-                        dic.add(vm.cards1[i].id, x);
-                    } else {
-                        var x = [];
-                        x.push(vm.cards1[i]);
-                        dic.add(vm.cards1[i].id, x);
-                    }
-                }
-
-                vm.cards = [];
-                i = 0;
-                dic.forEach(function (key, value) {
-
-                    //console.log(vm.cards[i].id);
-                    var card = {};
-                    //console.log(value);
-                    card = value[0];
-                    card.id = key;
-
-
-                    if (card.privacyPassword ==  card.accesstoken)
-                    {
-                        card.privacyEnabled = 0;
-                    } else {
-                        card.privacyEnabled = 1;
-                    }
-
-                    //card.imageMaxHeight = '400px';
-                    card.sphere360 = [];
-                    card.showPictures = 0;
-                    card.image360Exists = false;
-                    card.imageExists = false;
-                    card.video360Exists = false;
-                    card.videosourceurl = [];
-                    card.video360sourceurl = [];
-                    card.videoExists = false;
-                    card.showVideo = 0;
-                    card.showregularvideo = false;
-                    card.show360video = false;
-                    card.show3dtour = value[0].show;
-                    if (card.show3dtour == undefined)
-                        card.show3dtour = false;
-                    card.videoExists = false;
-                    card.slides = [];
-                    card.hideheader = false;
-                    card.sphere360index = 0;
-                    card.sphere360Description = [];
-                    vm.cards.push(card);
-                    var city = card.city;
-                    var area = card.area;
-                    var napa = card.napa;
-                    var code = card.code;
-
-                    if (card.numberofrooms == 1) {
-                        card.numberofrooms = 'חדר אחד';
-                    } else {
-                        card.numberofrooms = card.numberofrooms + ' חדרים ';
-                    }
-                    var x = {
-                        'city': city,
-                        'area': area,
-                        'napa': napa,
-                        'code': code
-                    };
-                    card.city = x;
-
-                    var streetName = card.street;
-                    var x1 = {
-                        'name': streetName
-                    };
-                    card.street = x1;
-
-                    var neighborhood = card.neighborhood;
-                    x1 = {
-                        'name': neighborhood
-                    };
-                    card.neighborhood = x1;
-
-                    card.numberofrooms = card.numberofrooms.toString();
-                    card.floor = card.floor.toString();
-                    card.fromfloor = card.fromfloor.toString();
-                    card.balcony = card.balcony.toString();
-                    var firsttime1 = 0;
-                    for (var k = 0; k < value.length; k++) {
-                        if (value[k].isvideo != null &&
-                            value[k].tableid != null &&
-                            value[k].filename != null &&
-                            value[k].is360image != null &&
-                            value[k].isvideo == 0 &&
-                            value[k].is360image == 0) {
-
-                            //console.log(value[k]);
-                            var imgsrc;
-                            if (firsttime1 == 0) {
-                                card.showPictures++;
-                                card.imageExists = true;
-                                firsttime1 = 1;
-                            }
-                            var userid = value[k].userid;
-                            var imgsrc = './uploadimages/' + userid + directory + value[k].tableid + '/' + value[k].filename;
-                            //console.log(imgsrc);
-                            card.slides.push({
-                                image: imgsrc,
-                                text: ''
-                            });
-                        }
-                    }
-                    var firsttime = 0;
-                    for (var k = 0; k < value.length; k++) {
-                        if (value[k].isvideo != null &&
-                            value[k].tableid != null &&
-                            value[k].filename != null &&
-                            value[k].is360image != null &&
-                            value[k].isvideo == 0 &&
-                            value[k].is360image == 1) {
-
-                            var imgsrc;
-                            if (firsttime == 0) {
-                                card.showPictures++;
-                                card.image360Exists = true;
-                                firsttime++;
-                            }
-
-                            var userid = value[k].userid;
-                            var imgsrc = './uploadimages/' + userid + directory + value[k].tableid + '/' + value[k].filename;
-                            card.sphere360.push(imgsrc);
-                            card.sphere360Description.push(value[k].description);
-
-                            if (card.sphere360index == 0) {
-                                setTimeout(function () {
-                                    var PSV = new PhotoSphereViewer({
-                                        // Panorama, given in base 64
-                                        panorama: imgsrc,
-
-                                        // Container
-                                        container: 'your-pano' + key,
-
-                                        // Deactivate the animation
-                                        time_anim: false,
-
-                                        // Display the navigation bar
-                                        navbar: true,
-
-                                        // Resize the panorama
-                                        size: {
-                                            width: '100%',
-                                            height: video360height
-                                        },
-
-                                        // No XMP data
-                                        usexmpdata: false
-                                    });
-                                }, 10, key);
-                            }
-                            card.sphere360index++;
-                        }
-                    }
-
-                    var firsttimevid = 0;
-                    for (var f = 0; f < value.length; f++) {
-                        if (value[f].isvideo != null &&
-                            value[f].tableid != null &&
-                            value[f].filename != null &&
-                            value[f].is360image != null &&
-                            value[f].isvideo == 1 &&
-                            value[f].is360video == 0 &&
-                            value[f].is360image == 0) {
-                            var userid1 = value[f].userid;
-                            var tableid = value[f].tableid;
-                            var videofilename = value[f].filename;
-                            var videosrouceurl = './uploadvideo/' + userid1 + directory + tableid + '/' + videofilename;
-                            card.videosourceurl.push(videosrouceurl);
-                            card.showregularvideo = true;
-                            card.videoexistlable = 'יש גם וידאו - הראה לי';
-                            break;
-                        }
-                    }
-
-
-                    for (var f = 0; f < value.length; f++) {
-                        if (value[f].isvideo != null &&
-                            value[f].tableid != null &&
-                            value[f].filename != null &&
-                            value[f].is360image != null &&
-                            value[f].isvideo == 1 &&
-                            value[f].is360video == 1 &&
-                            value[f].is360image == 0) {
-                            var userid1 = value[f].userid;
-                            var tableid = value[f].tableid;
-                            var videofilename = value[f].filename;
-                            var videosrouceurl = './upload360video/' + userid1 + directory+ tableid + '/' + videofilename;
-                            card.video360sourceurl.push(videosrouceurl);
-                            card.show360video = true;
-                            card.video360existlable = 'יש גם וידאו 360  - הראה לי';
-                            break;
-                        }
-                    }
-                    //vm.cards.push(card);
-                    //console.log('card.show3dtour ' + card.show3dtour);
-                    if (card.show3dtour == 1) {
-                        setTimeout(function(index){
-                            var _src = '/virtualtours/' + card.userid + '/' + card.id + '/tour3dvistaplayer.html';
-                            //console.log(_src);
-                            document.getElementById('touriframeid' + index).src = _src;
-                        }, 1000, i, card)
-                    }
-                    i++;
-                });
+                var directory = vm.search.messagetype == 'מכירה'  ? '/salehouse/' : '/renthouse/';
+                PreviewQueryResults(result, directory);
             }).catch(function (result) {
                 $scope.showerror = result.data;
                 $scope.showerrorenable = true;
@@ -1262,17 +1402,16 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             } else {
                 vm.cards[index].sphere360index = vm.cards[index].sphere360.length - 1;
             }
-
-            vm.cards[index].Image360Name = vm.cards[index].sphere360Description[vm.cards[index].sphere360index];
-
             load360ImageAsync(item.id, vm.cards[index].sphere360[vm.cards[index].sphere360index]);
+            item.image360Name = item.sphere360Description[vm.cards[index].sphere360index];
 
         }
         $scope.loadNext360Image = function (item, index) {
             var size = vm.cards[index].sphere360.length;
             vm.cards[index].sphere360index = (vm.cards[index].sphere360index + 1 ) % size;
-            vm.cards[index].Image360Name = vm.cards[index].sphere360Description[vm.cards[index].sphere360index];
             load360ImageAsync(item.id, vm.cards[index].sphere360[vm.cards[index].sphere360index]);
+            item.image360Name = item.sphere360Description[vm.cards[index].sphere360index];
+
         }
 
 
@@ -1284,6 +1423,22 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
             ShowResults(0);
         }
+
+        function updatePrivateHouseStatus(item) {
+
+            switch (item.propertyType) {
+                case 'דו משפחתי':
+                case 'דירת גן':
+                case "קוט'ג טורי":
+                    item.privateHouse = true;
+                    break;
+                default:
+                {
+                    item.privateHouse = false;
+                }
+            }
+        }
+
 
         function load360ImageAsync(id, src) {
             var defer = $q.defer()
@@ -1317,19 +1472,19 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             return defer.promise;
         }
 
-
+        /*
         $scope.$on('IdleStart', function() {
-            console.log('start');
+
         });
 
         $scope.$on('IdleEnd', function() {
-            console.log('end');
+
         });
 
         $scope.$on('IdleTimeout', function() {
             window.location.reload(true);
         });
-
+        */
         $(window).scroll(function () {
             if ($scope.allthumberspictures == false) {
                 return;
@@ -1340,7 +1495,8 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             }
         });
     } // the controller closing
-]).config(function (IdleProvider, KeepaliveProvider, myConfig) {
+])
+    /*.config(function (IdleProvider, KeepaliveProvider, myConfig) {
         // configure Idle settings
         IdleProvider.idle(myConfig.idletimeSeconds); // in seconds
         IdleProvider.timeout(myConfig.timeoutSeconds); // in seconds
@@ -1349,5 +1505,5 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
     .run(function (Idle) {
         // start watching when the app runs. also starts the Keepalive service by default.
         Idle.watch();
-    });
+    });*/
 

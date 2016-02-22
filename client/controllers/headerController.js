@@ -2,8 +2,20 @@
 
 
 app.controller('HeaderController', ['$scope', '$state', 'authToken',
-    'PassServiceParams', 'appCookieStore', 'socketioservice', '$rootScope', 'SessionStorageService',
-    function ($scope, $state, authToken, PassServiceParams, appCookieStore, socketioservice, $rootScope, SessionStorageService) {
+                                    'PassServiceParams',
+                                    'appCookieStore',
+                                    'socketioservice',
+                                    '$rootScope',
+                                    'SessionStorageService',
+                                    'allsite',
+    function ($scope, $state,
+              authToken,
+              PassServiceParams,
+              appCookieStore,
+              socketioservice,
+              $rootScope,
+              SessionStorageService,
+              allsite) {
 
         $scope.isAuthenticated = authToken.isAuthenticated();
 
@@ -13,6 +25,7 @@ app.controller('HeaderController', ['$scope', '$state', 'authToken',
         }
 
         $scope.isAgent = false;
+        allsite.setAgent(false);
 
         $scope.partyDetail = function () {
             document.getElementById('searchlink').style.backgroundColor = 'lightgray';
@@ -27,7 +40,6 @@ app.controller('HeaderController', ['$scope', '$state', 'authToken',
 
             logout();
         });
-
 
         $scope.paintback = function(id)
         {
@@ -79,6 +91,7 @@ app.controller('HeaderController', ['$scope', '$state', 'authToken',
             } else {
                 $scope.isAgent = false;
             }
+            allsite.setAgent($scope.isAgent);
 
             if (agent == 'kablan') {
                 $scope.showagentpages = true;

@@ -4,7 +4,7 @@ app.controller('resetpasswordController', ['$scope', '$state', 'authToken','$sta
     function ($scope, $state, authToken,$stateParams)
     {
 
-
+        /*
         var pagename = 'resetpassword';
         var storeVersion = appCookieStore.get(pagename);
         if (storeVersion == undefined)
@@ -21,7 +21,7 @@ app.controller('resetpasswordController', ['$scope', '$state', 'authToken','$sta
                 }
             });
         }
-
+        */
         function reloadFunction()
         {
             window.location.reload(true);

@@ -231,6 +231,12 @@ var routes = function (app, sqlserver,mailer) {
         });
     });
 
+    app.get('/api/getuserid', jwtauth, function (req, res, next) {
+
+        console.log(req.idFromToken);
+        return res.send(req.idFromToken.toString());
+    });
+
     app.get('/api/getuserguid', jwtauth, function (req, res, next)
     {
         var id = req.idFromToken;

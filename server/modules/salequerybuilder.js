@@ -3,6 +3,7 @@ module.exports = function () {
 
         var sql = 'SELECT sellhousedetails.* , salehouseblobs.filename, \
                     salehouseblobs.tableid , salehouseblobs.is360image , \
+                    salehouseblobs.description,\
                     visitoraccess.accesstoken,\
                     salehouseblobs.is360video , salehouseblobs.isvideo ,  tours3d.*\
                     FROM sellhousedetails\
@@ -19,8 +20,7 @@ module.exports = function () {
         sql = sql + '\n';
         sql = sql + 'WHERE (';
         for (i = 0; i < opt.city.length; i++) {
-            if (i > 0)
-            {
+            if (i > 0) {
                 sql = sql + 'OR '
             }
             sql = sql + ' sellhousedetails.city = ' + con.escape(opt.city[i].name) + ' ';
@@ -35,15 +35,12 @@ module.exports = function () {
         sql = sql + '\n';
 
         i = 0;
-        if (opt.propertyType != undefined)
-        {
+        if (opt.propertyType != undefined) {
             for (i = 0; i < opt.propertyType.length; i++) {
-                if (i == 0)
-                {
+                if (i == 0) {
                     sql = sql + ' AND (';
                 }
-                if (i > 0)
-                {
+                if (i > 0) {
                     sql = sql + 'OR '
                 }
                 sql = sql + ' sellhousedetails.propertyType = ' + con.escape(opt.propertyType[i]) + ' ';
@@ -56,25 +53,34 @@ module.exports = function () {
 
         i = 0;
 
-        if (opt.renovated != undefined)
-        {
-        for (i = 0; i < opt.renovated.length; i++) {
+        if (opt.renovated != undefined) {
+            for (i = 0; i < opt.renovated.length; i++) {
 
-            if (i == 0)
-            {
-                sql = sql + ' AND (';
+                if (i == 0) {
+                    sql = sql + ' AND (';
+                }
+                if (i > 0) {
+                    sql = sql + 'OR '
+                }
+                sql = sql + ' sellhousedetails.renovated = ' + con.escape(opt.renovated[i]) + ' ';
             }
-            if (i > 0)
-            {
-                sql = sql + 'OR '
-            }
-            sql = sql + ' sellhousedetails.renovated = ' + con.escape(opt.renovated[i]) + ' ';
+            if (opt.renovated.length > 0)
+                sql = sql + ') ';
+            sql = sql + '\n';
         }
-        if (opt.renovated.length > 0)
-            sql = sql + ') ';
-        sql = sql + '\n';
-      }
 
+        if (opt.street.name != undefined &&opt.street.name != null && opt.street.name != '')
+        {
+            sql = sql + ' AND ( street = ' + con.escape(opt.street.name) + ')' ;
+            sql = sql + '\n';
+        }
+
+
+        if (opt.neighborhood.name != undefined &&opt.neighborhood.name != null && opt.neighborhood.name != '')
+        {
+            sql = sql + ' AND ( neighborhood = ' + con.escape(opt.neighborhood.name) + ')' ;
+            sql = sql + '\n';
+        }
 
         if (opt.fromprice != undefined) {
 

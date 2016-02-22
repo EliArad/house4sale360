@@ -10,7 +10,7 @@
 </style>
 
 <div class="videogular-container">
-    <div style="margin-top:10px" id="videodiv" ng-show="showvideosingle">
+    <div style="margin-top:10px" id="videodiv" ng-if="showvideosingle">
         <videogular vg-player-ready="vm.onPlayerReady($API)"
                     vg-theme="vm.config.theme">
             <vg-media vg-src="vm.config.sources"

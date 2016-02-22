@@ -6,6 +6,7 @@ app.controller('LogoutController', ['$scope', '$state', 'authToken', '$rootScope
     {
 
 
+        /*
         var pagename = 'logout';
         var storeVersion = appCookieStore.get(pagename);
         if (storeVersion == undefined)
@@ -22,7 +23,7 @@ app.controller('LogoutController', ['$scope', '$state', 'authToken', '$rootScope
                 }
             });
         }
-
+        */
         function reloadFunction()
         {
             window.location.reload(true);

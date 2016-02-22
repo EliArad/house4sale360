@@ -99,14 +99,70 @@ module.exports = function (sqlserver) {
                 }
             });
         },
+        getAgentNotes: function (req, res, next) {
+            sqlserver.get(function (err, con) {
+                if (!err) {
+                    console.log(req.query.id);
+                    con.query('SELECT * FROM notes WHERE notetableid = ' + con.escape(req.query.id), function (err, rows) {
+                        sqlserver.release(con);
+                        if (err) {
+                            console.log('select error: ' + err);
+                            res.status(500);
+                            res.end('error');
+                        } else {
+                            res.send(rows[0].note);
+                        }
+                    });
+                }
+            });
+        },
+
+        SaveNotes: function (req, res, next) {
+            sqlserver.get(function (err, con) {
+                if (!err) {
+                    con.query('SELECT * FROM notes WHERE notetableid = ' + con.escape(req.body.id), function (err, rows) {
+                        if (err)
+                        {
+                            sqlserver.release(con);
+                            console.log( 'select error: ' + err);
+                            res.status(500);
+                            res.end('error');
+                        } else {
+                            if (rows.length == 0)
+                            {
+                                con.query('INSERT INTO notes SET ?' , [{note:req.body.notes, notetableid:req.body.id}], function (err, result) {
+                                    sqlserver.release(con);
+                                    if (err)
+                                    {
+                                        console.log(err);
+                                        res.status(500);
+                                        res.end('error');
+                                    } else {
+                                        res.send('ok');
+                                    }
+                                });
+                            } else {
+                                con.query('UPDATE notes SET ? WHERE notetableid = ' + con.escape(req.body.id), [{note:req.body.notes}], function (err, result) {
+                                    sqlserver.release(con);
+                                    if (err)
+                                    {
+                                        console.log(err);
+                                        res.status(500);
+                                        res.end('error');
+                                    } else {
+                                        res.send('ok');
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        },
 
         MarkReloadToThoseSearchResults: function (req, res, next) {
             sqlserver.get(function (err, con) {
                 if (!err) {
-
-                    console.log(req.body.reload);
-                    console.log(req.body.idarray);
-
                     var query = con.query('UPDATE sellhousedetails SET ? WHERE id = ' + con.escape(req.body.id),
                         [{reload:req.body.reload}], function (err, result) {
                         console.log(err);
@@ -416,7 +472,7 @@ module.exports = function (sqlserver) {
                             console.log(err);
                             res.sendStatus(500);
                         } else {
-                            res.send(result);
+                            res.json({result:result , userid:req.idFromToken});
                         }
                     });
                 } else {

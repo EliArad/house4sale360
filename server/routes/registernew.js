@@ -15,6 +15,7 @@ module.exports = function (app,registerController) {
         router.post('/destroy', registerController.destroy);
         router.post('/show',  registerController.show);
         router.get('/all',  registerController.all);
+
         app.use('/api/register', router);
 
     }

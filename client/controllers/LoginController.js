@@ -4,7 +4,7 @@
 app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
                  '$http', '$rootScope', 'myhttphelper', 'PassServiceParams',
                  'socketioservice', 'SessionStorageService','$timeout',
-    'myConfig','visitors','$stateParams','appCookieStore','general',
+                 'myConfig','visitors','$stateParams','appCookieStore','general',
     function ($scope, $state, authToken, $cookies, $http, $rootScope,
               myhttphelper, PassServiceParams, socketioservice,
               SessionStorageService,$timeout,myConfig,visitors,$stateParams,appCookieStore,general)
@@ -13,7 +13,7 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
 
 
 
-
+        /*
         var pagename = 'login';
         var storeVersion = appCookieStore.get(pagename);
         if (storeVersion == undefined)
@@ -30,7 +30,7 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
                 }
             });
         }
-
+        */
         function reloadFunction()
         {
             window.location.reload(true);
@@ -47,8 +47,6 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
             password: "",
             email: ""
         };
-
-
 
 
         function reloadFunction()
@@ -100,6 +98,7 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
 
         function login() {
 
+
             authToken.RemoveToken();
             $scope.sendMailToVerify = false;
             $scope.errorToShow = '';
@@ -141,6 +140,7 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
                     reload: true
                 });
             }
+            /*
             $scope.$on('IdleStart', function () {
                 console.log('start');
             });
@@ -152,7 +152,7 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
             $scope.$on('IdleTimeout', function () {
                // $state.go('/', {}, {reload: true});
             });
-
+            */
             function sendResponseError(response)
             {
 
@@ -173,7 +173,8 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
             }
         }
     }
-  ]).config(function (IdleProvider, KeepaliveProvider, myConfig) {
+  ])
+    /*.config(function (IdleProvider, KeepaliveProvider, myConfig) {
         // configure Idle settings
         IdleProvider.idle(myConfig.idletimeSeconds); // in seconds
         IdleProvider.timeout(myConfig.timeoutSeconds); // in seconds
@@ -183,4 +184,4 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
         // start watching when the app runs. also starts the Keepalive service by default.
         Idle.watch();
     });
-
+    */

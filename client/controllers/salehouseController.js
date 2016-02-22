@@ -14,6 +14,7 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
 
 
         $scope.allowRotate = 1;
+        /*
         var pagename = 'salehouse';
         var storeVersion = appCookieStore.get(pagename);
         if (storeVersion == undefined)
@@ -30,7 +31,7 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
                 }
             });
         }
-
+        */
         function reloadFunction()
         {
             window.location.reload(true);
@@ -679,8 +680,8 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
                     }
 
                 }
-                for (var i = 0; i < vm.cards.length; i++) {
-                    setTimeout(function (i) {
+                setTimeout(function () {
+                    for (var i = 0; i < vm.cards.length; i++) {
                         if (vm.cards[i].suspend == 1) {
                             document.getElementById('panellinkid' + vm.cards[i].id).disabled = true;
                             document.getElementById('panellinkid' + vm.cards[i].id).style.textDecoration = 'line-through';
@@ -690,10 +691,10 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
                             document.getElementById('panellinkid' + vm.cards[i].id).style.textDecoration = 'none';
                             document.getElementById('suspendLable' + vm.cards[i].id).innerHTML = 'השעה';
                         }
-                        console.log(vm.cards[i].enteraptdate);
-                        document.getElementById('datepickid' + vm.cards[i].id).value =   vm.cards[i].enteraptdate;
-                    }, 100, i);
-                }
+                        if (vm.cards[i].enteraptdate != null)
+                            document.getElementById('datepickid' + vm.cards[i].id).value =   vm.cards[i].enteraptdate;
+                    }
+                }, 100);
             });
         }
 
@@ -704,7 +705,6 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
 
         $(function (j) {
             j(document).on('keyup', '#new_message', function () {
-                console.log('eee');
                 if (this.value.length > 500) {
                     return false;
                 }
@@ -918,7 +918,9 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
             card.handycupt  = card.handycupt == false ? 0: 1;
             card.soragim  =   card.soragim == false ? 0: 1;
             card.immidiate  =   card.immidiate == false ? 0: 1;
-            card.enteraptdate = document.getElementById('datepickid' + card.id).value;
+            if (card.immidiate == false) {
+                card.enteraptdate = document.getElementById('datepickid' + card.id).value;
+            }
 
 
             dboperations.updateSaleHouseDetails(card).then(function (result) {
@@ -1160,7 +1162,6 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
         $scope.updateViewOnPropertyType = function(item)
         {
             updatePrivateHouseStatus(item);
-            saveModel();
         }
         function updatePrivateHouseStatus(item) {
 
@@ -1413,18 +1414,30 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
 
         }
 
+        /*
         $scope.$on('IdleStart', function() {
-            console.log('start');
         });
 
         $scope.$on('IdleEnd', function() {
-            console.log('end');
         });
 
         $scope.$on('IdleTimeout', function() {
             window.location.reload(true);
         });
+        */
 
+        $scope.clearselect = function(sel)
+        {
+            switch(sel)
+            {
+                case 0:
+                    vm.card.neighborhood = '';
+                    break;
+                case 1:
+                    vm.card.street = '';
+                    break;
+            }
+        }
         $scope.getcity = function (selectedItem, index) {
 
             var objectData = getCityObject(selectedItem);
@@ -1466,7 +1479,8 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
 
         }
     }
-]).config(function (IdleProvider, KeepaliveProvider, myConfig) {
+])
+    /*.config(function (IdleProvider, KeepaliveProvider, myConfig) {
         // configure Idle settings
         IdleProvider.idle(myConfig.idletimeSeconds); // in seconds
         IdleProvider.timeout(myConfig.timeoutSeconds); // in seconds
@@ -1475,5 +1489,5 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
     .run(function (Idle) {
         // start watching when the app runs. also starts the Keepalive service by default.
         Idle.watch();
-    });
+    });*/
 

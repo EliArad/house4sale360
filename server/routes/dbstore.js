@@ -52,8 +52,8 @@ module.exports = function (app,dbstoreController) {
 
 
         app.post('/api/dbstore/MarkReloadToThoseSearchResults', dbstoreController.MarkReloadToThoseSearchResults);
-
-
+        app.post('/api/dbstore/SaveNotes', dbstoreController.SaveNotes);
+        app.get('/api/dbstore/getAgentNotes', dbstoreController.getAgentNotes);
 
     }
 

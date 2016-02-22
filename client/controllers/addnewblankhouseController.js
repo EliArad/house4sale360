@@ -28,7 +28,7 @@ app.controller('addnewblankhouseController', ['$scope', 'general', 'appCookieSto
             duration: 0
         };
 
-
+        /*
         var pagename = 'addnewblankhouse';
         var storeVersion = appCookieStore.get(pagename);
         if (storeVersion == undefined)
@@ -45,7 +45,7 @@ app.controller('addnewblankhouseController', ['$scope', 'general', 'appCookieSto
                 }
             });
         }
-
+        */
         function reloadFunction()
         {
             window.location.reload(true);

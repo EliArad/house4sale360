@@ -1,7 +1,9 @@
-<form id="uploadForm1"
-      enctype="multipart/form-data"
-      action="/api/photo"
-      method="post">
+<div class="row">
+    <div class="col-md-3">
+        <form id="uploadForm1"
+              enctype="multipart/form-data"
+              action="/api/photo"
+              method="post">
 
               <span class="btn btn-primary btn-file">
 
@@ -15,8 +17,25 @@
                      multiple="false"
                      data-ng-model="theFile1"
                      onchange="angular.element(this).scope().fileNameChanged1(null)"
-                      />
+              />
                   </span>
 
 
-</form>
+        </form>
+        </div>
+        <div class="col-md-3">
+            <input type="text" ng-model="item.videoName"
+                   placeholder="ניתן לתת ,מיקום שם לתמונה " class="form-control" id="nameofimage">
+        </div>
+        <div class="col-md-3">
+
+            <input type="button" class="btn btn-default" ng-click="SaveVideoName()" value="שמור שם"/>
+
+            <input type="button" class="btn btn-default" ng-click="DeleteCarouselPicture()" value="מחק"/>
+
+            <input type="button" class="btn btn-default" ng-click="RotatePicture()" value="הפוך כיוון"/>
+
+
+        </div>
+    </div>
+</div>

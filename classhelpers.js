@@ -23,7 +23,7 @@ Sitehelper.prototype = function () {
                 return;
             } else {
                 var c = [];
-                for (var i = 0; i < rows.length; i++) {
+                for (var i = 1; i < rows.length; i++) {
                     c.push({
                         name: rows[i][0]
                     });

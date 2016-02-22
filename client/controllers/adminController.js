@@ -6,6 +6,7 @@ app.controller('adminController', ['$scope', '$state', 'authToken', 'admin',
 
         var vm = this;
 
+        /*
         var pagename = 'admin';
         var storeVersion = appCookieStore.get(pagename);
         if (storeVersion == undefined) {
@@ -20,6 +21,7 @@ app.controller('adminController', ['$scope', '$state', 'authToken', 'admin',
                 }
             });
         }
+        */
         function reloadFunction() {
             window.location.reload(true);
         }

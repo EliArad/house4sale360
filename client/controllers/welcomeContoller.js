@@ -8,7 +8,7 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
 
         var start = new Date().getTime();
 
-
+        /*
         var pagename = 'addnewblankhouse';
         var storeVersion = appCookieStore.get(pagename);
         if (storeVersion == undefined)
@@ -25,7 +25,7 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
                 }
             });
         }
-
+        */
 
         document.getElementById('homelink').style.backgroundColor = 'lightgray';
         document.getElementById('searchlink').style.backgroundColor = null;
@@ -250,6 +250,8 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
             }, 1);
             return defer.promise;
         }
+
+        /*
         $scope.$on('IdleStart', function() {
             console.log('start');
         });
@@ -260,7 +262,7 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
 
         $scope.$on('IdleTimeout', function() {
             window.location.reload(true);
-        });
+        });*/
 
         function loadPhotoSphere(divid, hight, filename) {
 
@@ -289,7 +291,7 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
         }
 
     }
-]).config(function (IdleProvider, KeepaliveProvider, myConfig) {
+])/*.config(function (IdleProvider, KeepaliveProvider, myConfig) {
         // configure Idle settings
 
         IdleProvider.idle(myConfig.idletimeSeconds); // in seconds
@@ -299,5 +301,5 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
     .run(function (Idle) {
         // start watching when the app runs. also starts the Keepalive service by default.
         Idle.watch();
-    });
+    });*/
 

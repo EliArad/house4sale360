@@ -15,7 +15,6 @@ module.exports = function (app,mailController) {
         router.post('/SendEmailToUser', mailController.SendEmailToUser);
         router.post('/SendEmail', jwtauth, mailController.SendEmail);
         router.post('/SendEmailToPerson', mailController.SendEmailToPerson);
-
         app.use('/api/mail', router);
 
     }

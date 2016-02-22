@@ -4,6 +4,7 @@
       function($scope,$state, authToken,myhttphelper,general,appCookieStore)
       {
 
+        /*
         var pagename = 'help';
         var storeVersion = appCookieStore.get(pagename);
         if (storeVersion == undefined)
@@ -20,7 +21,7 @@
             }
           });
         }
-
+        */
         function reloadFunction()
         {
           window.location.reload(true);
@@ -46,7 +47,7 @@
           $state.go('login', {}, {reload: true});
         }
 
-
+        /*
         $scope.$on('IdleStart', function() {
           console.log('start');
         });
@@ -57,11 +58,11 @@
 
         $scope.$on('IdleTimeout', function() {
           window.location.reload(true);
-        });
+        });*/
 
       }
 
-  ]).config(function (IdleProvider, KeepaliveProvider, myConfig) {
+  ])/*.config(function (IdleProvider, KeepaliveProvider, myConfig) {
         // configure Idle settings
         IdleProvider.idle(myConfig.idletimeSeconds); // in seconds
         IdleProvider.timeout(myConfig.timeoutSeconds); // in seconds
@@ -70,6 +71,6 @@
       .run(function (Idle) {
         // start watching when the app runs. also starts the Keepalive service by default.
         Idle.watch();
-      });
+      });*/
 
 

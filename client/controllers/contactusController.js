@@ -6,6 +6,7 @@ app.controller('contactusController', ['$scope', '$state', 'authToken', '$http',
         var vm = this;
 
 
+        /*
         var pagename = 'contactus';
         var storeVersion = appCookieStore.get(pagename);
         if (storeVersion == undefined)
@@ -22,7 +23,7 @@ app.controller('contactusController', ['$scope', '$state', 'authToken', '$http',
                 }
             });
         }
-
+        */
         function reloadFunction()
         {
             window.location.reload(true);

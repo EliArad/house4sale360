@@ -12,7 +12,7 @@ app.controller('renthouseController', ['$scope', 'general', 'appCookieStore', '$
               citiesservice, SchonotBackg) {
 
 
-
+        /*
         var pagename = 'renthouse';
         var storeVersion = appCookieStore.get(pagename);
         if (storeVersion == undefined)
@@ -29,6 +29,7 @@ app.controller('renthouseController', ['$scope', 'general', 'appCookieStore', '$
                 }
             });
         }
+        */
 
         function reloadFunction()
         {
@@ -1037,6 +1038,7 @@ app.controller('renthouseController', ['$scope', 'general', 'appCookieStore', '$
 
             });
         }
+        /*
         $scope.$on('IdleStart', function() {
             console.log('start');
         });
@@ -1048,6 +1050,8 @@ app.controller('renthouseController', ['$scope', 'general', 'appCookieStore', '$
         $scope.$on('IdleTimeout', function() {
             window.location.reload(true);
         });
+
+        */
         $scope.getcity = function (selectedItem, index) {
 
             var objectData = getCityObject(selectedItem);
@@ -1088,7 +1092,7 @@ app.controller('renthouseController', ['$scope', 'general', 'appCookieStore', '$
 
         }
     }
-]).config(function (IdleProvider, KeepaliveProvider, myConfig) {
+])/*.config(function (IdleProvider, KeepaliveProvider, myConfig) {
         // configure Idle settings
         IdleProvider.idle(myConfig.idletimeSeconds); // in seconds
         IdleProvider.timeout(myConfig.timeoutSeconds); // in seconds
@@ -1098,3 +1102,4 @@ app.controller('renthouseController', ['$scope', 'general', 'appCookieStore', '$
         // start watching when the app runs. also starts the Keepalive service by default.
         Idle.watch();
     });
+*/

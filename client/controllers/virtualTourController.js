@@ -4,6 +4,7 @@ app.controller('virtualTourController', ['$scope', '$state', 'authToken','genera
     function ($scope, $state, authToken,general)
     {
 
+        /*
         var pagename = 'virtualTour';
         var storeVersion = appCookieStore.get(pagename);
         if (storeVersion == undefined)
@@ -20,7 +21,7 @@ app.controller('virtualTourController', ['$scope', '$state', 'authToken','genera
                 }
             });
         }
-
+        */
         function reloadFunction()
         {
             window.location.reload(true);

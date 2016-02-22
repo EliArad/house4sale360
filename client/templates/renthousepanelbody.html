@@ -306,7 +306,7 @@
             </div>
         </div>
 
-        <div class="form-group" ng-show="shoparkingoptions"
+        <div class="form-group" ng-if="shoparkingoptions"
              style="white-space:nowrap"
              ng-class="{ 'has-error': form.parkingType.$error.required && form.parkingType.$dirty }">
             <label class="control-label col-sm-3" for="parkingType">מיקום החנייה</label>
@@ -321,7 +321,7 @@
             </div>
         </div>
 
-        <div class="form-group" ng-show="shoparkingoptions2"
+        <div class="form-group" ng-if="shoparkingoptions2"
              style="white-space:nowrap"
              ng-class="{ 'has-error': form.parkingtype2.$error.required && form.parkingtype2.$dirty }">
             <label class="control-label col-sm-3" for="parkingtype2">אופי החנייה</label>
@@ -409,7 +409,7 @@
         </div>
 
 
-        <div class="form-group" ng-show="shoprenovatedexp"
+        <div class="form-group" ng-if="shoprenovatedexp"
              style="white-space:nowrap"
              ng-class="{ 'has-error': form.renovatedexplnation.$error.required && form.renovatedexplnation.$dirty}">
             <label class="control-label col-sm-3" for="renovatedexplnation">פרט
@@ -582,7 +582,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-4 col-md-offset-3" ng-show="vm.showwaitcircle"
+    <div class="col-md-4 col-md-offset-3" ng-if="vm.showwaitcircle"
          ng-include="'/client/templates/waitcircle.html'">
     </div>
     <div ng-include="'client/templates/videoregularloadermultiple.html'">
@@ -593,7 +593,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-4 col-md-offset-3" ng-show="vm.showwaitcircle" ng-include="'/client/templates/waitcircle.html'">
+    <div class="col-md-4 col-md-offset-3" ng-if="vm.showwaitcircle" ng-include="'/client/templates/waitcircle.html'">
     </div>
     <div ng-include="'client/templates/video360loader2.html'">
 

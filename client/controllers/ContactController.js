@@ -19,17 +19,18 @@ app.controller('ContactController', ['$scope', '$state', 'authToken', '$http', '
             $state.go('login', {}, {reload: true});
         }
 
+        /*
         $scope.$on('IdleStart', function () {
-            console.log('start');
+
         });
 
         $scope.$on('IdleEnd', function () {
-            console.log('end');
+
         });
 
         $scope.$on('IdleTimeout', function () {
             window.location.reload(true);
-        });
+        });*/
 
         $scope.ContactForm = {};
         $scope.showErrorMessage = false;
@@ -62,7 +63,8 @@ app.controller('ContactController', ['$scope', '$state', 'authToken', '$http', '
             });
         };
     }
-]).config(function (IdleProvider, KeepaliveProvider, myConfig) {
+])
+    /*.config(function (IdleProvider, KeepaliveProvider, myConfig) {
         // configure Idle settings
         IdleProvider.idle(myConfig.idletimeSeconds); // in seconds
         IdleProvider.timeout(myConfig.timeoutSeconds); // in seconds
@@ -71,5 +73,5 @@ app.controller('ContactController', ['$scope', '$state', 'authToken', '$http', '
     .run(function (Idle) {
         // start watching when the app runs. also starts the Keepalive service by default.
         Idle.watch();
-    });
+    });*/
 

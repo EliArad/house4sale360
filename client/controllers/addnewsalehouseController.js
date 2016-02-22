@@ -3,11 +3,11 @@
 
 app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStore', '$window',
     '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope',
-    'SessionStorageService', '$cookies', 'dboperations', 'fileReader', '$sce','citiesservice',
+    'SessionStorageService', '$cookies', 'dboperations', 'fileReader', '$sce','citiesservice','apiutils',
     function ($scope, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
               $state, myhttphelper, $rootScope, SessionStorageService,
-              $cookies, dboperations, fileReader, $sce,citiesservice) {
+              $cookies, dboperations, fileReader, $sce,citiesservice,apiutils) {
 
 
         var vm = this;
@@ -22,6 +22,9 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
         vm.showwaitcircle = false;
         vm.showwaitcirclevideo= false;
         vm.showwaitcirclevideo360 = false;
+        vm.carousleNameOnly = [];
+        vm.carousleDescription = [];
+        vm.angleToRotate = 0;
         vm.seeking = {
             currentTime: 0,
             duration: 0
@@ -30,10 +33,61 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
             currentTime: 0,
             duration: 0
         };
+        $scope.clearselect = function(sel)
+        {
+            switch(sel)
+            {
+                case 0:
+                    vm.card.neighborhood = '';
+                break;
+                case 1:
+                    vm.card.street = '';
+                break;
+            }
+        }
         function citiesLoaderCallback(data, citiesOnly)
         {
             vm.cities = angular.copy(data);
             vm.citiesOnly = angular.copy(citiesOnly);
+
+            try {
+                try {
+                    var s = $cookies.get('sellhouseform');
+                    vm.card = JSON.parse(s);
+
+                    vm.card.neighborhood = '';
+                    vm.card.street = '';
+
+                    var s = $cookies.get('sellhousecurrentcard');
+                    vm.currentCard = JSON.parse(s);
+
+                    $scope.getcity(vm.card.city);
+
+
+                    if (vm.card.immidiate == undefined)
+                    {
+                        vm.card.immidiate = true;
+                    }
+                }
+                catch (e) {
+
+                }
+
+                if (vm.card.code != undefined && vm.card.area != undefined) {
+                    _displayStreets(vm.card.code, vm.card.area);
+                    vm.city.napa = vm.card.napa;
+                }
+
+                if (vm.card.parking != 'אין') {
+                    $scope.shoparkingoptions = true;
+                } else {
+                    $scope.shoparkingoptions = false;
+                }
+            }
+            catch (e) {
+
+            }
+
         }
         citiesservice.registerCitiesLoaded(citiesLoaderCallback);
 
@@ -58,6 +112,7 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
         $scope.showvideosingle = false;
         $scope.showvideo360single = false;
 
+        /*
         var pagename = 'addnewsalehouse';
         var storeVersion = appCookieStore.get(pagename);
         if (storeVersion == undefined)
@@ -74,10 +129,62 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
                 }
             });
         }
+        */
+        function getCityObject(selectedItem)
+        {
+            for (var i = 0 ; i < vm.cities.length ;i++)
+            {
+                if (selectedItem == vm.cities[i].city)
+                {
+                    return vm.cities[i];
+                }
+            }
+        }
+        function mysqlDate(date){
+            date = date || new Date();
+            return date.toISOString().split('T')[0];
+        }
+
 
         function reloadFunction()
         {
             window.location.reload(true);
+        }
+
+        $scope.getcity = function (selectedItem) {
+
+
+            var objectData = getCityObject(selectedItem);
+            vm.card.napa = objectData.napa;
+            vm.card.code = objectData.code;
+            vm.card.city = selectedItem;
+            $scope.NAPA = vm.card.napa;
+            $scope.shownapa = true;
+            if (lastCity == undefined || lastCity != objectData.code) {
+                general.getStreets(objectData.code).then(function (result) {
+                    vm.card.street = '';
+                    vm.streets = result.data;
+                })
+                general.getSchonot(objectData.code).then(function (result) {
+                    vm.card.neighborhood = '';
+                    vm.neighborhoods = result.data;
+                })
+            }
+            lastCity = objectData.code;
+
+
+            if (objectData.area == 'merkaz') {
+                $scope.AREA = 'אזור המרכז';
+            } else if (objectData.area == 'darom') {
+                $scope.AREA = 'אזור הדרום';
+            } else if (objectData.area == 'jerusalem') {
+                $scope.AREA = 'אזור ירושלים';
+            } else if (objectData.area == 'zafon') {
+                $scope.AREA = 'אזור הצפון';
+            } else if (objectData.area == 'haifa') {
+                $scope.AREA = 'אזור חיפה';
+            }
+            _saveModel();
         }
 
 
@@ -208,6 +315,8 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
                 then(function (res) {
                     vm.showwaitcircle = false;
                     addPictureToCrousleSlider(result, '');
+                    vm.carousleNameOnly.push(file.name);
+                    vm.carousleDescription.push('');
                 }).
                 catch(function (res) {
                     vm.showwaitcircle = false;
@@ -495,35 +604,6 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
                 });
         };
 
-        $(document).ready(function () {
-            try {
-                try {
-                    var s = $cookies.get('sellhouseform');
-                    vm.card = JSON.parse(s);
-
-                    var s = $cookies.get('sellhousecurrentcard');
-                    vm.currentCard = JSON.parse(s);
-                }
-                catch (e) {
-
-                }
-
-                if (vm.card.code != undefined && vm.card.area != undefined) {
-                    _displayStreets(vm.card.code, vm.card.area);
-                    vm.city.napa = vm.card.napa;
-                }
-
-                if (vm.card.parking != 'אין') {
-                    $scope.shoparkingoptions = true;
-                } else {
-                    $scope.shoparkingoptions = false;
-                }
-            }
-            catch (e) {
-
-            }
-        });
-
         function _saveModel() {
             try {
                 vm.card.neighborhood = vm.neighborhood.name;
@@ -710,10 +790,15 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
             }
 
             card.dateenter = mysqlDate();
-            console.log(card.dateenter);
+            card.immidiate  = card.immidiate == false ? 0: 1;
+            if (card.immidiate == false) {
+                card.enteraptdate = document.getElementById('datepickid').value;
+                console.log(card.enteraptdate);
+            }
 
             dboperations.saveHouseDetails(card).then(function (result) {
-                vm.insertId = result.data.insertId;
+                vm.insertId = result.data.result.insertId;
+                vm.userid = result.data.userid;
 
                 vm.currentCard = card;
                 var s = JSON.stringify(vm.currentCard);
@@ -768,19 +853,102 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
             }
         }
 
-        function getCityObject(selectedItem)
+        $scope.SaveVideoName = function()
         {
-            for (var i = 0 ; i < vm.cities.length ;i++)
-            {
-                if (selectedItem == vm.cities[i].city)
-                {
-                    return vm.cities[i];
+
+        }
+        $scope.DeleteCarouselPicture = function()
+        {
+            var res = getActiveFileName();
+            var fileName = res[0];
+            var active = res[1];
+
+
+
+            if (fileName == -1)
+                return;
+
+
+            var url = myConfig.url + '/api/getuserid';
+            $http.get(url).then(function(result){
+                vm.userid = parseInt(result.data);
+                var filePath = './uploadimages/' + vm.userid + '/salehouse/' + vm.insertId + '/' + fileName;
+
+                dboperations.DeletePicture(fileName ,
+                    false ,
+                    false,
+                    false,
+                    filePath,
+                    'salehouseblobs').
+                then(function(result){
+                    vm.carousleNameOnly.splice(active, 1);
+                    vm.carousleDescription.splice(active, 1);
+                    $scope.slides.splice(active, 1);
+                }).catch(function(result){
+                    alert('שגיאה');
+                    //$state.go('logout', {}, {
+                    //  reload: true
+                    //});
+                });
+
+            }).catch(function(result){
+                console.log(result);
+            })
+        }
+        function getActiveFileName()
+        {
+            var active = -1;
+            for (var i = 0 ; i < $scope.slides.length;i++) {
+                if ($scope.slides[i].active == true) {
+                    active = i;
+                    break;
                 }
             }
+            if (active == -1)
+                return;
+
+            var fileName = vm.carousleNameOnly[active];
+            return [fileName, active];
         }
-        function mysqlDate(date){
-            date = date || new Date();
-            return date.toISOString().split('T')[0];
+        $scope.RotatePicture = function()
+        {
+            var res= getActiveFileName();
+
+            console.log(res);
+            var fileName = res[0];
+            var active = res[1];
+
+            if (fileName == -1)
+                return;
+
+            var filePath = './uploadimages/' + vm.userid + '/salehouse/' + vm.insertId + '/' + fileName;
+
+            if ($scope.allowRotate == 0)
+            {
+                return;
+            }
+            var angle = vm.angleToRotate += 90;
+
+            $scope.allowRotate = 0;
+            apiutils.rotatePicture(filePath, angle).then(function(result){
+
+                var desc = vm.carousleDescription[active];
+                vm.carousleNameOnly.splice(active, 1);
+                vm.carousleDescription.splice(active, 1);
+                $scope.slides.splice(active, 1);
+
+                var num = Math.floor((Math.random()*10000) + 1)
+                var filePath = './uploadimages/' + vm.userid + '/salehouse/' + vm.insertId + '/' + fileName;
+                var randomeImage = filePath + '?' + num;
+
+                addPictureToCrousleSlider(randomeImage, '');
+                vm.carousleNameOnly.push(fileName);
+                vm.carousleDescription.push(desc);
+                $scope.allowRotate = 1;
+            }).catch(function(result){
+                $scope.allowRotate = 1;
+                alert(result);
+            })
         }
 
         $scope.updateViewOnPropertyType = function()
@@ -802,41 +970,6 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
             }
         }
 
-        $scope.getcity = function (selectedItem) {
-
-
-            var objectData = getCityObject(selectedItem);
-            vm.card.napa = objectData.napa;
-            vm.card.code = objectData.code;
-            vm.card.city = selectedItem;
-            $scope.NAPA = vm.card.napa;
-            $scope.shownapa = true;
-            if (lastCity == undefined || lastCity != objectData.code) {
-                general.getStreets(objectData.code).then(function (result) {
-                    vm.card.street = '';
-                    vm.streets = result.data;
-                })
-                general.getSchonot(objectData.code).then(function (result) {
-                    vm.card.neighborhood = '';
-                    vm.neighborhoods = result.data;
-                })
-            }
-            lastCity = objectData.code;
-
-
-            if (objectData.area == 'merkaz') {
-                $scope.AREA = 'אזור המרכז';
-            } else if (objectData.area == 'darom') {
-                $scope.AREA = 'אזור הדרום';
-            } else if (objectData.area == 'jerusalem') {
-                $scope.AREA = 'אזור ירושלים';
-            } else if (objectData.area == 'zafon') {
-                $scope.AREA = 'אזור הצפון';
-            } else if (objectData.area == 'haifa') {
-                $scope.AREA = 'אזור חיפה';
-            }
-            _saveModel();
-        }
     }
 ])
 

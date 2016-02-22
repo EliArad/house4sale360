@@ -5,7 +5,7 @@ app.controller('deletecardController', ['$scope','$state','authToken','myhttphel
     function($scope,$state,authToken,myhttphelper,vcRecaptchaService,general,appCookieStore)
     {
 
-
+      /*
       var pagename = 'deletecard';
       var storeVersion = appCookieStore.get(pagename);
       if (storeVersion == undefined)
@@ -22,7 +22,7 @@ app.controller('deletecardController', ['$scope','$state','authToken','myhttphel
           }
         });
       }
-
+      */
       function reloadFunction()
       {
         window.location.reload(true);
@@ -54,6 +54,8 @@ app.controller('deletecardController', ['$scope','$state','authToken','myhttphel
 
           $state.go('logout', {}, {reload: true});
       });
+
+      /*
       $scope.$on('IdleStart', function() {
         console.log('start');
       });
@@ -61,7 +63,7 @@ app.controller('deletecardController', ['$scope','$state','authToken','myhttphel
       $scope.$on('IdleEnd', function() {
         console.log('end');
       });
-
+      */
       $scope.$on('IdleTimeout', function() {
         $state.go('/', {}, {reload: true});
       });
@@ -115,7 +117,8 @@ app.controller('deletecardController', ['$scope','$state','authToken','myhttphel
       }
     }
 
-  ]).config(function (IdleProvider, KeepaliveProvider, myConfig) {
+  ])
+    /*.config(function (IdleProvider, KeepaliveProvider, myConfig) {
       // configure Idle settings
       IdleProvider.idle(myConfig.idletimeSeconds); // in seconds
       IdleProvider.timeout(myConfig.timeoutSeconds); // in seconds
@@ -124,5 +127,5 @@ app.controller('deletecardController', ['$scope','$state','authToken','myhttphel
     .run(function (Idle) {
       // start watching when the app runs. also starts the Keepalive service by default.
       Idle.watch();
-    });
+    });*/
 
