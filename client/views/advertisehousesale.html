@@ -164,6 +164,12 @@
                                    id="panellinkid{{ item.id }}" style="cursor :pointer"
                                    ng-click="accordionIsOpen(item, $index)"
                                    data-parent="#accordion" data-target="#collapse{{ $index}}">
+
+                                    <span style="text-decoration: underline">
+                                    {{ item.id }}
+                                    </span>
+                                    &nbsp;
+
                                     {{ item.propertyType }}
                                     ב
                                     {{ item.city }}
@@ -200,12 +206,13 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label for="default" class="btn btn-primary">אשר לכולם לראות את הסיור
-                                                הוירטואלי, תמונות 360 ווידאן 360<input ng-model="item.privacyEnabled"
-                                                                                       type="checkbox" id="default"
-                                                                                       class="badgebox"><span
-                                                        class="badge">&check;</span></label>
+                                                הוירטואלי, תמונות 360 ווידאן 360
+                                                </label>
+                                                <input ng-model="item.privacyEnabled1"
+                                                       ng-click="SavePrivacyCode1(item)"
+                                                       type="checkbox" id="default">
                                         </div>
-                                        <div class="col-md-6" ng-show="item.privacyEnabled">
+                                        <div class="col-md-6" ng-if="!item.privacyEnabled1">
                                             <form class="form-inline" role="form">
                                                 <div class="form-group">
                                                     <div class="col-sm-3">

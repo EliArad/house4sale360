@@ -1,0 +1,6 @@
+SELECT sellhousedetails.* , salehouseblobs.filename,                     salehouseblobs.tableid , salehouseblobs.is360image ,                     salehouseblobs.description,                    visitoraccess.accesstoken,                    visitoraccess.guid,                    salehouseblobs.is360video , salehouseblobs.isvideo ,  tours3d.*                    FROM sellhousedetails                    INNER JOIN users                    ON users.id = sellhousedetails.userid                    LEFT JOIN salehouseblobs                    ON salehouseblobs.tableid  = sellhousedetails.id                    LEFT JOIN tours3d                    ON sellhousedetails.id = tours3d.tableid3d                     LEFT JOIN visitoraccess                    ON visitoraccess.tableid = sellhousedetails.id  AND sellhousedetails.messagetype = visitoraccess.type AND visitoraccess.guid = '7ee8f09c-285b-48f4-2005-8791ef1d8026'
+WHERE ( sellhousedetails.city = 'חיפה' ) 
+ AND (users.suspend = 0)  AND (users.agent = 'agent') 
+ AND ( sellhousedetails.propertyType = 'דירה' ) 
+ AND ( sellhousedetails.suspend = 0 ) 
+ AND (sellhousedetails.numberofrooms = 3 ) 

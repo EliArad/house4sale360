@@ -211,55 +211,55 @@ body {
     font-size: 22pt;
     font-family: arial, sans-serif;
 }
-
+/*
 .footerdiv {
     color: black;
     text-align: center;
     width: auto;
     height: 180px;
-    background: white; /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(#FFFFFF, #FBEEB9); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#FFFFFF, #FBEEB9); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#FFFFFF, #FBEEB9); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#FFFFFF, #FBEEB9); /* Standard syntax (must be last) */
+    background: white;
+    background: -webkit-linear-gradient(#FFFFFF, #FBEEB9);
+    background: -o-linear-gradient(#FFFFFF, #FBEEB9);
+    background: -moz-linear-gradient(#FFFFFF, #FBEEB9);
+    background: linear-gradient(#FFFFFF, #FBEEB9);
 }
 
 #grad1 {
     margin-top: -20px;
     height: 50%;
     width: auto;
-    background: white; /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(#FFFFFF, #FBEEB9); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#FFFFFF, #FBEEB9); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#FFFFFF, #FBEEB9); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#FFFFFF, #FBEEB9); /* Standard syntax (must be last) */
+    background: white;
+    background: -webkit-linear-gradient(#FFFFFF, #FBEEB9);
+    background: -o-linear-gradient(#FFFFFF, #FBEEB9);
+    background: -moz-linear-gradient(#FFFFFF, #FBEEB9);
+    background: linear-gradient(#FFFFFF, #FBEEB9);
 }
 
 .fastsearch {
-    background: white; /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(#FBEEB9, #FFFFFF); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#FBEEB9, #FFFFFF); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#FBEEB9, #FFFFFF); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#FBEEB9, #FFFFFF); /* Standard syntax (must be last) */
+    background: white;
+    background: -webkit-linear-gradient(#FBEEB9, #FFFFFF);
+    background: -o-linear-gradient(#FBEEB9, #FFFFFF);
+    background: -moz-linear-gradient(#FBEEB9, #FFFFFF);
+    background: linear-gradient(#FBEEB9, #FFFFFF);
 }
 
 .searchpanel {
-    background: white; /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(#FBEEB9, #FFFFFF); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#FBEEB9, #FFFFFF); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#FBEEB9, #FFFFFF); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#FBEEB9, #FFFFFF); /* Standard syntax (must be last) */
+    background: white;
+    background: -webkit-linear-gradient(#FBEEB9, #FFFFFF);
+    background: -o-linear-gradient(#FBEEB9, #FFFFFF);
+    background: -moz-linear-gradient(#FBEEB9, #FFFFFF);
+    background: linear-gradient(#FBEEB9, #FFFFFF);
 }
 
 
 .contback {
-    background: white; /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(#FAF6E3, #FFFFFF); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#FAF6E3, #FFFFFF); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#FAF6E3, #FFFFFF); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#FAF6E3, #FFFFFF); /* Standard syntax (must be last) */
+    background: white;
+    background: -webkit-linear-gradient(#FAF6E3, #FFFFFF);
+    background: -o-linear-gradient(#FAF6E3, #FFFFFF);
+    background: -moz-linear-gradient(#FAF6E3, #FFFFFF);
+    background: linear-gradient(#FAF6E3, #FFFFFF);
 }
-
+*/
 
 .pointer
 {
@@ -271,4 +271,9 @@ body {
 {
     outline:none;
     border: 0;
+}
+
+
+.tourheightpc{
+    height: 900px;
 }

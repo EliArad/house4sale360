@@ -1,0 +1,2 @@
+jpegoptim  $1    -v  --max=20 --strip-all --preserve --totals
+chmod 777 $1

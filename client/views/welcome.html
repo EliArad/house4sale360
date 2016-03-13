@@ -47,26 +47,24 @@
     <div class="row" id="grad1">
         <div class="col-md-4" ng-if="!iframeFullScreen">
             <div class="row">
-                <img src="/client/images/logo.png">
+                <img class="img-responsive" src="/client/images/logo.png">
             </div>
             <div class="row" style="font-size: 24pt;margin-right: 20px">
 
-                ברוכים הבאים למנוע חיפוש דירות למכירה וקנייה
-                ב 360 מעלות
+                תיווך דירות ב 360 מעלות הוא הדור הבא של מכירה והשכרה.
 
             </div>
             <div class="row" style="margin-top:5px;word-wrap: break-word;font-size:12pt;margin-right: 20px">
-                סיור וירטואלי בדירה לפני שמגיעים
-                וידאו ב 360 מעלות , תמונות גדולות
-                אפשרות להעלות עד 150 מגה למפרסמים פרטיים
-                ועד 1 GIGA למתווכים וקבלנים.
-                שרותי צילום וסיור וירטואלי לדירה
+                מצלמים את הדירה ב 360 מעלות, יוצרים סיור וירטואלי , וידאו ב 360 ותמונות רבות.
                 <br>
-                <a target="_blank"  style="text-decoration: none;color:black"  ui-sref="privacyinfo">
-                אנחנו שמים לב לפרטיות שלכם:
-                לא מפרסמים את הפרטים שלכם.
-                תמונות וסיורים וירטואלים יכולים להיות נגישים רק לפי הרשאה שלכם או בגישה פתוחה- תלוי בכם
-                .
+                אנו דואגים להראות קודם את הדירה באינטרנט וכך להביא את המעונינים באמת בדירה אליכם המוכרים.
+                <br>
+
+                <a target="_blank" style="text-decoration: none;color:black" ui-sref="privacyinfo">
+                    אנחנו שמים לב לפרטיות שלכם:
+                    לא מפרסמים את הפרטים שלכם.
+                    תמונות וסיורים וירטואלים יכולים להיות נגישים רק לפי הרשאה שלכם או בגישה פתוחה- תלוי בכם
+                    .
                 </a>
                 <br>
 
@@ -76,7 +74,7 @@
         <div class="col-md-8" id="Idiframetour3d">
             <div class="h_iframe">
                 <img class="ratio" src="/client/images/placeholder.png"/>
-                <iframe width="100%" src="/client/views/tour3dvistaplayer.html" allowfullscreen
+                <iframe width="100%" src="/virtualtours/home/tour3dvistaplayer.html" allowfullscreen
                         frameborder="0"></iframe>
             </div>
             <div class="row" style="margin-right: 1px">
@@ -105,6 +103,8 @@
                             ng-change="UpdateMessageType()"
                             ng-model="vm.search.agent">
                         <option>פרטי</option>
+
+
                         <option>מתווך</option>
                         <option>קבלן</option>
                     </select>
@@ -144,16 +144,17 @@
                         <select class="form-control "
                                 id="selectPropertyType" multiple="multiple"
                                 placeholder="בחר את סוג הנכס למכירה"
-                                required
                                 name="propertyType"
                                 ng-model="vm.search.propertyType">
                             <option>דירה</option>
                             <option>דירת גן</option>
                             <option>דירת גג/פנטהאוז</option>
+                            <option>בית פרטי</option>
                             <option>סטודיו</option>
                             <option>מרתף/פרטר</option>
                             <option>דופלקס</option>
                             <option>טריפלקס</option>
+                            <option>קוט'ג טורי</option>
                             <option>דו משפחתי</option>
                             <option>יחידת דיור</option>
                         </select>
@@ -199,40 +200,54 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <p class="ltxtcol">
-                דירות ב 360 מציעה לכם לפרסם ממודעות עם כיתוב בלבד, תמונות סטילס, וידאו ממצלמה
-                תמונות 360 , וידאו ב 360
-                וסיור וירטואלי מלא בבית.
+                תיווך ב 360 היא השיטה שמוכרים דירות בארצות הברית והיא שיטה נוחה לכל הצדדים.
+                אנחנו גובים אחוז מהמוכרים בלבד.
                 <br>
-                האתר מותאם לכל המסכים, ממחשב ועד טלפון נייד
-                <br>
-                <a  target="_blank" ui-sref="virtualrealityrpage">
-                למי שיש Gear VR או oculus rift - virtual reality , יכול לגלוש ישירות לאתר שלנו ולראות את ה סיורים בבית, הוידאו והתמונות
-                כאילו שאתם שם!
-                </a>
-            </p>
-            <p>
-                מתווכים מקבלים 1 GIGA חינם לפרסם דירות.
-                100 המצטרפים ראשונים מקבלים סיור וירטואלי חינם לדירה ו 10 צילומי 360,תמונות ווידאו
-                <br>
-                 הדרכה חינם ותמיכה אישית למפרסמים בית למכירה עם כל הטכנולוגיות.
-                <br>
-                ישנה אפשרות לקבל עמוד אישי שבו אפשר לפרסם מודעות עם כל סוגי הטכנולוגיה ב 360 ממש כמו בפייסבוק
-                ובאמצעות קישור לשלוח ללקוחות שיפתחו ישירות את העמוד
-                <br>
-                קבלנים - אנו מציעים לכם כמה פתרונות:
-                <br>
-                <ul>
-                <li type="square"> לפרסם דירות חדשות באתר באזור אישי</li>
-                <li type="square"> 1 GIGA של כל סוגי המדיה שקיימים</li>
-                <li type="square"> הדרכה על סיורים וירטואלים במשקפת VR שנותנת הרגשה כאילו אתם בדירה!</li>
-                <li type="square">הקמת שרת פרטי עם האתר עליו לניהול כל הנכסים שלכם למי במיוחד להדגמות</li>
-                </ul>
+                חשבו כמה זמן אנחנו חוסכים לכם לפני שאנחנו מביאים אנשים לראות את הדירה, המטרה שלנו היא למצוא את
+
+                האנשים הרציניים ביותר ואז להפנות למוכרים.
 
             </p>
         </div>
     </div>
+
+
     <div class="row">
-        <div class="col-md-offset-1 col-md-4">
+        <div class="col-md-10 col-md-offset-1">
+            <p style="color:orange;font-size: 16pt">
+                בקרוב צילום איכותי ביותר עם הטכנולוגיה הכי מתקדמת בעולם על מנת להציג את ביתכם ללקוחות
+                סיור וירטואלי מדהים באיכותו
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="h_iframe" style="margin-right: 5px;margin-left: 1px">
+                <img class="ratio" src="http://placehold.it/16x9"/>
+                <iframe width="883"
+                        height="480"
+                        src="http://my.matterport.com/show/?m=qmuYVfLrBD9&utm_source=hit-content-embed"
+                        frameborder="0"
+                        allowfullscreen></iframe>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row" style="margin-top:10px">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="h_iframe" style="margin-right: 5px;margin-left: 1px">
+                <img class="ratio" src="http://placehold.it/16x9"/>
+                <iframe width='883' height='480' src='https://my.matterport.com/webgl_player/#model=JFdHyZdKqRh'
+                        frameborder='0' allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-offset-1 col-md-10">
             תמונת 360 מעלות. אפשר לראות את כל האזור על ידי לחיצה על העכבר והזזה.
             <br>
             ניתן להעלות כמה תמונות שרוצים עד המיכסה שלכם
@@ -243,7 +258,9 @@
             אנחנו נותנים שרותי צילום, הדרכה איך לצלם למי שצריך לפרסם הרבה דירות
 
         </div>
-        <div class="col-md-6">
+    </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
 
             <div id="welcome360imageid" class="welcome360image" style="height: 580px">
 
@@ -251,8 +268,8 @@
             </div>
         </div>
     </div>
-    <div class="row" style="margin-top: 10px">
-        <div class="col-md-offset-1 col-md-4" ng-show="!mobile">
+    <div class="row" style="margin-top: 10px" ng-if="false">
+        <div class="col-md-offset-1 col-md-10" ng-show="!mobile">
             <div dir="rtl"><span style="color:#B22222;">וידאו ב 360</span> הוא וידאו אשר מצלמים במצלמה מיוחדת.</div>
 
 
@@ -263,7 +280,9 @@
             הוידאו מוגן בפרטיות והחלטה היא שלכם האם להציג אותו ברבים או
             להפיק קוד סודי אשר תוכלו למסור למתעניין בדירה ברגע שתצרו קשר.
         </div>
-        <div class="col-md-6" ng-show="!mobile">
+    </div>
+    <div class="row" style="margin-top: 10px" ng-if="false">
+        <div class="col-md-10 col-md-offset-1" ng-show="!mobile">
             <div id="welcomevideodiv" class="valiant360video" style="height: 400px">
 
             </div>
@@ -271,7 +290,7 @@
     </div>
 
     <div class="row" style="margin-top: 10px">
-        <div class="col-md-offset-1 col-md-4">
+        <div class="col-md-offset-1 col-md-10">
             תמונות סטילס ניתן להעלות כמה שרוצים.
             התמונות יופיעו בסגנון שנקרא קרוסלה.
             <br>
@@ -289,7 +308,9 @@
 
 
         </div>
-        <div class="col-md-6">
+    </div>
+    <div class="row" style="margin-top: 10px">
+        <div class="col-md-10 col-md-offset-1">
 
             <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
                 <uib-slide ng-repeat="slide in slides" active="slide.active">
@@ -306,6 +327,5 @@
             </uib-carousel>
         </div>
     </div>
-
 </div>
 

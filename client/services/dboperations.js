@@ -156,9 +156,10 @@ app.factory('dboperations', ['$http', 'myConfig',
             return $http.post(membersAPI, {id: id, index: i, auth: needauth});
         }
 
-        function GetHouseQueryResults(query, needauth, type) {
+        function GetHouseQueryResults(query, needauth, type,vguid) {
+            console.log(vguid);
             var membersAPI = myConfig.url + "/api/salequery/GetHouseQueryResults";
-            return $http.post(membersAPI, {query: query, auth: needauth, type: type});
+            return $http.post(membersAPI, {query: query, auth: needauth, type: type , vguid:vguid});
         }
 
         function GetAllMyResults(userguid, msgid, type) {
@@ -181,14 +182,15 @@ app.factory('dboperations', ['$http', 'myConfig',
             return $http.post(membersAPI, {data: data});
         }
 
-        function GetSearchResultByMessageId(id) {
+        function GetSearchResultByMessageId(id,vguid) {
             var membersAPI = myConfig.url + "/api/salequery/GetSearchResultByMessageId";
             return $http({
                 url: membersAPI,
                 method: "GET",
-                params: {id: id}
+                params: {id: id, vguid:vguid}
             });
         }
+
 
         return {
             getSaleHousePictureList: getSaleHousePictureList,

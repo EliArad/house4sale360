@@ -596,6 +596,9 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
                         vm.cards[i].basement = 'לא';
                     }
 
+                    vm.cards[i].privacyEnabled = vm.cards[i].privacyEnabled == 0 ? false : true;
+                    vm.cards[i].privacyEnabled1 = vm.cards[i].privacyEnabled == 0 ? true : false;
+
 
                     //console.log(vm.cards[i].code);
                     vm.userid = vm.cards[i].userid;
@@ -917,6 +920,9 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
 
             card.handycupt  = card.handycupt == false ? 0: 1;
             card.soragim  =   card.soragim == false ? 0: 1;
+
+            card.privacyEnabled = card.privacyEnabled == false? 0 : 1;
+
             card.immidiate  =   card.immidiate == false ? 0: 1;
             if (card.immidiate == false) {
                 card.enteraptdate = document.getElementById('datepickid' + card.id).value;
@@ -1165,8 +1171,10 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
         }
         function updatePrivateHouseStatus(item) {
 
+            console.log(item);
             switch (item.propertyType) {
                 case 'דו משפחתי':
+                case 'בית פרטי':
                 case 'דירת גן':
                 case "קוט'ג טורי":
                     item.privateHouse = true;
@@ -1353,16 +1361,38 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
         {
             //console.log(item.privacyPassword);
             //console.log(item.privacyEnabled);
+
+            var c = item.privacyEnabled1 == true? 0 : 1;
+            console.log(c);
             var data = {
                 tablename:'sellhousedetails',
                 privacyPassword : item.privacyPassword,
                 id: item.id,
-                privacyEnabled:item.privacyEnabled
+                privacyEnabled : c
 
             }
             dboperations.SavePrivacyCode(data).then(function (result) {
 
             });
+        }
+
+        $scope.SavePrivacyCode1 = function(item)
+        {
+
+            var c = item.privacyEnabled1 == true ? 0 : 1;
+            console.log(c);
+            if (c == 0) {
+                var data = {
+                    tablename: 'sellhousedetails',
+                    privacyPassword: item.privacyPassword,
+                    id: item.id,
+                    privacyEnabled: c
+
+                }
+                dboperations.SavePrivacyCode(data).then(function (result) {
+
+                });
+            }
         }
 
 
@@ -1415,10 +1445,10 @@ app.controller('salehouseController', ['$scope', 'general', 'appCookieStore', '$
         }
 
         /*
-        $scope.$on('IdleStart', function() {
+        $scope.$on('IdleStart', function() {          
         });
 
-        $scope.$on('IdleEnd', function() {
+        $scope.$on('IdleEnd', function() {           
         });
 
         $scope.$on('IdleTimeout', function() {

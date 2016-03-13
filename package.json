@@ -57,6 +57,7 @@
     "node-mutex": "^0.1.4",
     "nodemailer": "^2.0.0",
     "nodemon": "^1.8.1",
+    "optimage": "^0.2.0",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "phantomjs": "^1.9.19",

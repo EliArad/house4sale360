@@ -30,6 +30,18 @@
                                        ng-model="emailToperson">
 
                             </div>
+
+                            <div>
+                                <input type="checkbox" ng-model="vm.facebooklink">קישור פייסבוק
+                                &nbsp;
+                                &nbsp;
+                                <input type="checkbox" ng-model="vm.tour3dlink">קישור לסיור בלבד
+                                &nbsp;
+                                &nbsp;
+                                <input type="checkbox" ng-model="vm.agentdetails">פרטי המתווך
+                            </div>
+
+
                             <div class="form-group" ng-class="{ 'has-error': (form1.messagebody1.$invalid )}">
 
                                <textarea id="msgbody1" required class="form-control"
@@ -39,7 +51,7 @@
                                          placeholder="הוסף כמה מילים אם תרצה למקבל ההודעה. המייל יופיע מכתובת האתר apt360"></textarea>
                             </div>
                             <div>
-                                <button type="button" class="btn btn-default" ng-click="messagebody = ''" >נקה</button>
+                                <button type="button" class="btn btn-default" ng-click="messagebody = ''">נקה</button>
                             </div>
                         </div>
                     </div>
@@ -90,6 +102,18 @@
                                        ng-model="emailToperson">
 
                             </div>
+
+                            <div>
+                                <input type="checkbox" ng-model="vm.facebooklink">קישור פייסבוק
+                                &nbsp;
+                                &nbsp;
+                                <input checked type="checkbox" ng-model="vm.tour3dlink">קישור לסיור בלבד
+                                &nbsp;
+                                &nbsp;
+                                <input type="checkbox" ng-model="vm.agentdetails">פרטי המתווך
+                            </div>
+
+
                             <div class="form-group" ng-class="{ 'has-error': (form1.messagebody2.$invalid )}">
                                <textarea id="msgbody2" required class="form-control"
                                          rows="5" id="new_message2"
@@ -98,13 +122,14 @@
                                          placeholder="הוסף כמה מילים אם תרצה למקבל ההודעה. המייל יופיע מכתובת האתר apt360"></textarea>
                             </div>
                             <div>
-                                <button type="button" class="btn btn-default" ng-click="messagebody = ''" >נקה</button>
+                                <button type="button" class="btn btn-default" ng-click="messagebody = ''">נקה</button>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" ng-click="SendLinkToAFriend()"
-                                ng-disabled="form2.$invalid" data-dismiss="modal">סגור ושלח
+                        <button id="sendpagelinkbtnid2" type="button" class="btn btn-default"
+                                ng-click="SendLinkToAFriend()"
+                                ng-disabled="form2.$invalid">סגור ושלח
                         </button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">בטל</button>
                     </div>
@@ -261,8 +286,6 @@
             </div>
         </div>
     </div>
-
-
     <!-- Modal -->
     <div class="modal" id="myModal" role="dialog">
         <div class="modal-dialog modal-lg">
@@ -301,14 +324,11 @@
                 <div class="modal-body">
                     <div class="form-horizontal">
                         <form name="form">
-
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group" style="white-space:nowrap"
                                          ng-class="{ 'has-error': form.propertyType.$error.required && form.propertyType.$dirty }">
                                         <label class="control-label col-sm-3" for="propertyType">סוג הנכס</label>
-
-
                                         <div class="col-sm-9">
                                             <select class="form-control"
                                                     id="selectPropertyType" multiple="multiple"
@@ -318,17 +338,17 @@
                                                 <option>דירה</option>
                                                 <option>דירת גן</option>
                                                 <option>דירת גג/פנטהאוז</option>
+                                                <option>בית פרטי</option>
                                                 <option>סטודיו</option>
                                                 <option>מרתף/פרטר</option>
                                                 <option>דופלקס</option>
                                                 <option>טריפלקס</option>
+                                                <option>קוט'ג טורי</option>
                                                 <option>דו משפחתי</option>
                                                 <option>יחידת דיור</option>
                                             </select>
                                         </div>
                                     </div>
-
-
                                     <div class="form-group" style="white-space:nowrap"
                                          ng-class="{ 'has-error': form.city.$error.required }">
                                         <label class="control-label col-sm-3" for="propertyType">עיר</label>
@@ -336,8 +356,8 @@
 
                                         <div class="col-sm-9">
                                             <ui-select id="city"
-                                                       on-select="getcity(vm.search.city)"
-                                                       theme="bootstrap" ng-model="vm.search.city"
+                                                       on-select="getcity(vm.search.citysel)"
+                                                       theme="bootstrap" ng-model="vm.search.citysel"
                                                        required>
                                                 <ui-select-match placeholder="בחר עיר">
                                                     <span ng-bind="$select.selected"></span>
@@ -361,15 +381,17 @@
                                     </div>
 
 
-                                    <div class="form-group" style="white-space:nowrap" ng-if="vm.citiesSelected.length == 1">
-                                        <label class="control-label col-sm-3" for="street">רחוב</label>
+                                    <div class="form-group" style="white-space:nowrap"
+                                         ng-if="vm.citiesSelected.length == 1">
+                                        <label data-toggle="tooltip" title="לחץ לנקות רחוב"
+                                               class="control-label col-sm-3 removeoutline" ng-click="clearselect(0)"
+                                               for="street">רחוב</label>
 
                                         <div class="col-sm-9" ng-class="{ 'has-error': form.street.$error.required }">
                                             <ui-select id="street"
                                                        name="street"
                                                        on-select="getstreet(vm.search.street)"
-                                                       theme="bootstrap" ng-model="vm.search.street"
-                                                       required>
+                                                       theme="bootstrap" ng-model="vm.search.street">
                                                 <ui-select-match placeholder="בחר רחוב">
                                                     <span ng-bind="$select.selected.name"></span>
                                                 </ui-select-match>
@@ -382,8 +404,12 @@
                                     </div>
 
                                     <div class="form-group" style="white-space:nowrap"
+                                         ng-if="vm.citiesSelected.length == 1"
                                          ng-class="{ 'has-error': form.neighborhood.$error.required }">
-                                        <label class="control-label col-sm-3" for="neighborhood">שכונה</label>
+                                        <label ng-click="clearselect(1)"
+                                               data-toggle="tooltip" title="לחץ לנקות שכונה"
+                                               class="control-label col-sm-3 removeoutline"
+                                               for="neighborhood">שכונה</label>
 
                                         <div class="col-sm-9">
                                             <ui-select id="neighborhood"
@@ -401,7 +427,8 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group" style="white-space:nowrap">
+                                    <div class="form-group" style="white-space:nowrap"
+                                         ng-if="vm.citiesSelected.length == 1">
                                         <label class="control-label col-sm-3" for="neighborhood">שכונות</label>
 
                                         <div class="col-sm-9">
@@ -636,7 +663,7 @@
         </div>
     </div>
 
-    <div class="row" style="margin-right:1px">
+    <div class="row" style="margin-right:1px" ng-hide="vm.facebookLink || vm.tour3donlyLink">
         <div class="col-md-3 col-xs-12">
             <button type="button" class="btn btn-default" style="color:orange" data-toggle="modal"
                     data-target="#myModal">
@@ -650,33 +677,35 @@
                 <div class="col-md-9 col-xs-12">
             <span style="font-size: 14pt" ng-hide="showNoResultsMessage">
             <span style="font-weight: bold;text-decoration: underline">
-            {{vm.searchTitle}}:
-             </span>
-            {{ vm.searchsummery}}
 
+            <!--{{vm.searchTitle}}:-->
+             </span>
+                <!--{{ vm.searchsummery}}-->
             </span>
                 </div>
                 <div class="col-md-3 col-xs-12">
                     <button type="button" style="color:orange;float:left" ng-click="SendToAFriendAllPosts()"
-                            class="btn btn-sm btn-default">שלח קישור למייל לכל ההודעות
+                            class="btn btn-sm btn-default">שלח קישור למייל לכל המודעות
                     </button>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row" ng-hide="vm.facebookLink || vm.tour3donlyLink">
         <div class="col-md-12 col-xs-12">
-        <div style="font-size: 10pt">
-            חיפוש במשקפת VR
-            <input type="checkbox"    id="vrcheckboxid"  name="my-checkbox">
+            <div style="font-size: 10pt">
+                <span ng-if="false">
+                  חיפוש במשקפת VR
+                  <input type="checkbox" id="vrcheckboxid" name="my-checkbox">
+               </span>
 
-            <span style="margin-right: 30px">
+            <span style="margin-right: 30px" ng-if="!mobile">
             תצוגה רחבה
             <input type="checkbox" id="large-video" ng-checked="largeScreens" ng-click="SetViewMode()"
                    name="largeViewCheckbox" checked>
 
             </span>
-        </div>
+            </div>
         </div>
     </div>
 
@@ -690,6 +719,8 @@
         </div>
     </div>
 
+
+
     <div class="row" ng-show="showerrorenable">
         <div class="col-md-10 col-md-offset-2">
             <h2 class="animated infinite bounce">{{ showerror }}</h2>
@@ -697,10 +728,17 @@
         </div>
     </div>
 
+    <div class="row" ng-if="vm.tour3donlyLink">
+        <p style="text-align: center">
+            Apt360 סיור וירטואלי
+        </p>
+    </div>
 
     <div ng-repeat="item in vm.cards">
         <div class="row" ng-hide="item.hideheader">
-            <div class="panel searchpanel" ng-hide="virtualSearch && item.video360sourceurl.length == 0">
+            <div class="panel searchpanel"
+                 ng-if="!vm.tour3donlyLink"
+                 ng-hide="virtualSearch && item.video360sourceurl.length == 0">
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-sm-12 col-lg-12 col-xs-12 col-md-12">
@@ -727,12 +765,13 @@
                              </span>
 
 
-                            מספר
+                            <!--מספר-->
                         <span style="font-weight: bold">
                     {{ item.housenumber }}
                             </span>
 
 
+                    <br>
                     <span ng-if="!item.privateHouse">
                             קומה:
                     <span style="font-weight: bold">
@@ -753,12 +792,19 @@
                     {{ item.numoffloors }}
                         </span>
                     </span>
+
+
+                            &nbsp;
+                            &nbsp;
+                            &nbsp;
+
                             גודל:
                         <span style="font-weight: bold">
                         {{ item.squresize }}
                             </span>
                             מ"ר
 
+                            <br>
                             מחיר:
                         <span style="font-weight: bold">
                         {{ item.price }}
@@ -766,19 +812,8 @@
                         </span>
                         </div>
                     </div>
-                    <div class="row">
+                    <br>
 
-                        <button type="button" style="color:orange;float:left" ng-click="SendUserMessage(item)"
-                                class="btn btn-sm btn-default">שלח הודעה
-                        </button>
-                        <button type="button" style="color:orange;float:left" ng-click="ShowCommDetails(item)"
-                                class="btn btn-sm btn-default">פרטי בעל הנכס
-                        </button>
-
-                        <button type="button" style="color:orange;float:left" ng-click="SendToAFriend(item, $index)"
-                                class="btn btn-sm btn-default"> שלח קישור למייל
-                        </button>
-                    </div>
                     <div class="row" ng-if="!mobile">
                         <div class="col-sm-1 col-md-1">
                             <div>
@@ -934,11 +969,11 @@
                     </div>
 
                     <div class="row" ng-if="!mobile">
-                        <div class="col-sm-1 col-md-1">
+                        <div class="col-sm-1 col-md-1" ng-if="item.balcony > 0">
                             <div>
                                 <div class="didd" style="white-space: nowrap">
                                     <u>
-גודל מירפסת
+                                        גודל מירפסת
                                     </u>
                                 </div>
                                 <div class="didd">
@@ -951,7 +986,7 @@
                             <div>
                                 <div class="didd" style="white-space: nowrap">
                                     <u>
-גודל מיגרש
+                                        גודל מיגרש
                                     </u>
                                 </div>
                                 <div class="didd">
@@ -963,7 +998,7 @@
                             <div>
                                 <div class="didd" style="white-space: nowrap">
                                     <u>
-מרתף
+                                        מרתף
                                     </u>
                                 </div>
                                 <div class="didd">
@@ -990,7 +1025,6 @@
                                 </div>
                             </div>
                         </div>
-
 
 
                     </div>
@@ -1152,17 +1186,99 @@
                         </div>
                     </div>
 
+                    <div class="row" ng-if="mobile">
+                        <div class="col-sm-1  col-xs-3 col-md-1" ng-if="item.balcony > 0">
+                            <div>
+                                <div class="didd" style="white-space: nowrap">
+                                    <u>
+                                        גודל מירפסת
+                                    </u>
+                                </div>
+                                <div class="didd">
+                                    {{ item.balconysize }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-1 col-xs-2 col-md-1">
+                            <div>
+                                <div class="didd" style="white-space: nowrap">
+                                    <u>
+                                        גודל מיגרש
+                                    </u>
+                                </div>
+                                <div class="didd">
+                                    {{ item.fieldsquresize }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-1 col-xs-2 col-md-1">
+                            <div>
+                                <div class="didd" style="white-space: nowrap">
+                                    <u>
+                                        מרתף
+                                    </u>
+                                </div>
+                                <div class="didd">
+                                    {{ item.basement }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-1 col-md-1 col-xs-2" ng-if="item.immidiate == 1">
+                            <div>
+                                <div class="didd" style="white-space: nowrap">
+                                    <span>
+כניסה מיידית
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-1 col-xs-2 col-md-1" ng-if="item.immidiate == 0">
+                            <div>
+                                <div class="didd" style="white-space: nowrap">
+                                    <span>
+תאריך כניסה:
+                                    </span>
+                                    {{item.enteraptdate}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- end of the table-->
                     <div class="row" style="word-wrap:break-word; margin-right: 5px;margin-top: 15px">
-                        <span  ng-if="item.freedetails != null || item.freedetails != undefined" style="color:gray">
+                        <div class="col-md-12">
+                        <span ng-if="item.freedetails != null || item.freedetails != undefined" style="color:gray">
                             פרטים נוספים:
 </span>
-                        {{ item.freedetails}}
+                            {{ item.freedetails}}
+                        </div>
                     </div>
                 </div>
             </div>
+
+
+            <div class="row">
+                <div class="col-md-12 col-xs-12">
+                    <button type="button" style="color:orange;float:left" ng-click="SendUserMessage(item)"
+                            ng-if="vm.sendMessageButton"
+                            class="btn btn-sm btn-default">שלח הודעה
+                    </button>
+                    <button type="button" style="color:orange;float:left" ng-click="ShowCommDetails(item)"
+                            ng-if="vm.detailsInfoButton"
+                            class="btn btn-sm btn-default">פרטי בעל הנכס
+                    </button>
+
+                    <button type="button" style="color:orange;float:left" ng-click="SendToAFriend(item, $index)"
+                            ng-if="vm.sendMailLink"
+                            class="btn btn-sm btn-default"> שלח קישור למייל
+                    </button>
+                </div>
+            </div>
+
+
             <div class="row" ng-show="item.show3dtour && !virtualSearch && item.privacyEnabled == 0">
-                <div class="h_iframe" style="margin-left: 18px">
+                <div class="h_iframe"   ng-class="{tourheightpc : !mobile}"  style="margin-left: 18px">
                     <img class="ratio" src="/client/images/placeholder.png"/>
                     <iframe id="touriframeid{{ $index }}" width="100%" allowfullscreen
                             frameborder="0"></iframe>
@@ -1211,14 +1327,18 @@
                 השתמש באזור זה לגלול את המסך במובייל
             </div>
 
-            <div class="row" ng-if="item.image360Exists && item.privacyEnabled == 0">
+            <div class="row" ng-if="item.image360Exists && item.privacyEnabled == 0" style="font-size: x-large">
                 <div class="col-md-3 col-md-offset-3">
 
-                    <a ng-click="loadPrev360Image(item, $index)" style="cursor: pointer">
+                    <a ng-click="loadPrev360Image(item, $index)" style="cursor: pointer"
+                       ng-if="item.sphere360.length > 1">
                         <span class="glyphicon glyphicon-chevron-right"></span>
                     </a>
-                    {{ item.current360ImageStatus}}
-                    <a ng-click="loadNext360Image(item, $index)" style="cursor: pointer">
+                    <span style="font-size: large">
+                    {{ item.image360Name}}
+                    </span>
+                    <a ng-click="loadNext360Image(item, $index)" style="cursor: pointer"
+                       ng-if="item.sphere360.length > 1">
                         <span class="glyphicon glyphicon-chevron-left"></span>
                     </a>
                 </div>
@@ -1242,7 +1362,7 @@
                                          class="img-responsive"
                                          ng-mouseover="mo()"
                                          ng-mouseleave="ml()"
-                                         style="margin:auto;max-height: 400px">
+                                         style="margin:auto;max-height: 600px;min-width: 70%">
 
                                     <div class="carousel-caption">
                                         <!--<h4>Slide {{$index}}</h4>-->
@@ -1258,7 +1378,6 @@
                 <div class="row" ng-show="item.showPictures > 0 && !virtualSearch && item.privacyEnabled == 0">
                     <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12"
                          ng-show="item.image360Exists">
-
                         <div id="your-pano{{ item.id }}" style="height:500px">
 
                         </div>
@@ -1310,9 +1429,22 @@
                 <div class="col-md-12">
                     <div class="h_iframe" style="margin-right: 5px;margin-left: 1px">
                         <!-- a transparent image is preferable -->
-                        <img class="ratio" src="http://placehold.it/16x9"/>
+                        <img class="ratio" src="/client/images/placeholder.png"/>
                         <iframe id="vriframeid{{ $index }}"
                                 src="{{item.video360sourceurl[0]}}" frameborder="0" allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" ng-if="item.mpshow == 1 && item.privacyEnabled == 0">
+                <div class="col-md-12">
+                    <div class="h_iframe" style="margin-right: 5px;margin-left: 1px">
+                        <!-- a transparent image is preferable -->
+                        <img class="ratio" src="/client/images/placeholder.png"/>
+                        <iframe id="mpiframeid{{ $index }}"
+                                frameborder="0"
+                                allowfullscreen>
                         </iframe>
                     </div>
                 </div>

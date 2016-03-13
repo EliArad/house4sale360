@@ -603,7 +603,6 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
                     i.src = result;
                 });
         };
-
         function _saveModel() {
             try {
                 vm.card.neighborhood = vm.neighborhood.name;
@@ -960,6 +959,7 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
             switch (vm.card.propertyType) {
                 case 'דו משפחתי':
                 case 'דירת גן':
+                case 'בית פרטי':
                 case "קוט'ג טורי":
                     vm.card.privateHouse = true;
                     break;
@@ -969,7 +969,6 @@ app.controller('addnewsalehouseController', ['$scope', 'general', 'appCookieStor
                 }
             }
         }
-
     }
 ])
 

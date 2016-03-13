@@ -72,6 +72,21 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
         }
 
 
+        function loadImage(src) {
+            return $q(function(resolve,reject) {
+                var image = new Image();
+                image.src = src;
+                image.onload = function() {
+                    //console.log("loaded image: "+src);
+                    resolve(image);
+                };
+                image.onerror = function(e) {
+                    reject(e);
+                };
+            })
+        }
+
+
         $scope.AdvancedSearch = function () {
             communication.setFastSearch(false);
             communication.openAdvancedSearch(true);
@@ -84,6 +99,7 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
 
         $scope.onFastSearch = function () {
 
+            /*
             if (vm.search.propertyType == undefined) {
                 document.getElementById('protypeid').style.color = "red";
                 document.getElementById('protypeid').className = 'animated pulse';
@@ -95,7 +111,7 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
                 }, 3000)
                 return;
             }
-
+            */
             var s = JSON.stringify(vm.search);
             $cookies.put('apt360fastsearch', s, {expires: cexp});
 
@@ -108,14 +124,16 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
 
             var pstr = '';
             var index = 0;
-            vm.search.propertyType.forEach(function (t) {
-                if (index > 0)
-                    pstr += ',';
-                else {
-                    pstr += t;
-                }
-                index++;
-            });
+            if (vm.search.propertyType != undefined) {
+                vm.search.propertyType.forEach(function (t) {
+                    if (index > 0)
+                        pstr += ',';
+                    else {
+                        pstr += t;
+                    }
+                    index++;
+                });
+            }
 
             var userSearch = {
                 city: vm.search.city,
@@ -176,12 +194,14 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
             try {
                 $('#selectPropertyType').multiselect('select', vm.search.propertyType);
 
+                /*
                 if ($scope.mobile == false) {
                     var promise1 = load360VideoAsync()
                         .then(function (string) {
                             console.log('then: ' + string);
                     });
                 }
+                */
 
                 var promise2 = loadPhotoSphereAsync()
                     .then(function (string) {
@@ -224,7 +244,7 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
 
             // simulated async function
             $timeout(function () {
-                loadPhotoSphere('welcome360imageid', '400px', './uploadimages/welcome360.jpg');
+                loadPhotoSphere('welcome360imageid', '500px', './uploadimages/welcome360.jpg');
                 defer.resolve('Image 360 loaded');
             }, 1);
             return defer.promise;
@@ -238,7 +258,7 @@ app.controller('welcomeController', ['$scope', '$state', 'authToken',
             $timeout(function () {
 
                 $scope.slides = [];
-                var welcomeImage = ['1.jpg', '2.jpg', '3.jpg', '4.jpg','5.jpg','6.jpg','7.jpg',];
+                var welcomeImage = ['1.jpg', '2.jpg', '3.jpg', '4.jpg','5.jpg','6.jpg'];
                 for (var i = 0; i < welcomeImage.length; i++) {
                     var imgsrc = './uploadimages/welcome/' + welcomeImage[i];
                     $scope.slides.push({

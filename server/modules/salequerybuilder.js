@@ -1,10 +1,11 @@
 module.exports = function () {
-    function build(con, opt) {
+    function build(con, opt, vguid) {
 
         var sql = 'SELECT sellhousedetails.* , salehouseblobs.filename, \
                     salehouseblobs.tableid , salehouseblobs.is360image , \
                     salehouseblobs.description,\
                     visitoraccess.accesstoken,\
+                    visitoraccess.guid,\
                     salehouseblobs.is360video , salehouseblobs.isvideo ,  tours3d.*\
                     FROM sellhousedetails\
                     INNER JOIN users\
@@ -14,7 +15,7 @@ module.exports = function () {
                     LEFT JOIN tours3d\
                     ON sellhousedetails.id = tours3d.tableid3d \
                     LEFT JOIN visitoraccess\
-                    ON visitoraccess.tableid = sellhousedetails.id  AND sellhousedetails.messagetype = visitoraccess.type';
+                    ON visitoraccess.tableid = sellhousedetails.id  AND sellhousedetails.messagetype = visitoraccess.type AND visitoraccess.guid = ' + con.escape(vguid);
 
         var i = 0;
         sql = sql + '\n';
@@ -35,12 +36,15 @@ module.exports = function () {
         sql = sql + '\n';
 
         i = 0;
-        if (opt.propertyType != undefined) {
+        if (opt.propertyType != undefined)
+        {
             for (i = 0; i < opt.propertyType.length; i++) {
-                if (i == 0) {
+                if (i == 0)
+                {
                     sql = sql + ' AND (';
                 }
-                if (i > 0) {
+                if (i > 0)
+                {
                     sql = sql + 'OR '
                 }
                 sql = sql + ' sellhousedetails.propertyType = ' + con.escape(opt.propertyType[i]) + ' ';
@@ -69,14 +73,14 @@ module.exports = function () {
             sql = sql + '\n';
         }
 
-        if (opt.street.name != undefined &&opt.street.name != null && opt.street.name != '')
+        if (opt.street != undefined && opt.street.name != undefined &&opt.street.name != null && opt.street.name != '')
         {
             sql = sql + ' AND ( street = ' + con.escape(opt.street.name) + ')' ;
             sql = sql + '\n';
         }
 
 
-        if (opt.neighborhood.name != undefined &&opt.neighborhood.name != null && opt.neighborhood.name != '')
+        if (opt.neighborhood != undefined &&  opt.neighborhood.name != undefined &&opt.neighborhood.name != null && opt.neighborhood.name != '')
         {
             sql = sql + ' AND ( neighborhood = ' + con.escape(opt.neighborhood.name) + ')' ;
             sql = sql + '\n';

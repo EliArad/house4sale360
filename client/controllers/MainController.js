@@ -14,11 +14,13 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
 
         var vm = this;
-        var video360height = '500px';
+        var Image360height = '600px';
         $scope.mobile = true;
+        $scope.UserAuthorizationKey = '';
         $scope.virtualSearch = false;
-        $scope.largeScreens = true;
+        $scope.largeScreens = false;
         vm.searchsummery = '';
+        $scope.showCodeToEnter = false;
 
         vm.facebookLink = false;
         vm.tour3donlyLink = false;
@@ -49,6 +51,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         vm.sendMailLink = true;
         vm.sendMessageButton = true;
         vm.detailsInfoButton = true;
+
 
         vm.citiesSelected = [
             //{name:'תל אביב'}
@@ -103,36 +106,40 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
 
             try {
-                vm.citiesSelected = [];
-                var p = $stateParams.city.split(',');
-                vm.searchFromURL.city = [];
-
-                for (var i = 0; i < p.length; i++) {
-                    var x = {
-                        name: p[i]
-                    }
-                    vm.searchFromURL.city.push(x);
-                    vm.citiesSelected.push(x);
-                }
 
                 vm.searchFromURL.agent = $stateParams.agent;
-                vm.searchFromURL.aircond = $stateParams.aircond;
-                vm.searchFromURL.balcony = $stateParams.balcony;
-                vm.searchFromURL.mamad = $stateParams.mamad;
                 vm.searchFromURL.messagetype = $stateParams.messagetype;
-                vm.searchFromURL.numberofrooms = $stateParams.numberofrooms;
-                vm.searchFromURL.neighborhood = $stateParams.neighborhood;
-                vm.searchFromURL.parking = $stateParams.parking;
-                vm.searchFromURL.parkingtype = $stateParams.parkingtype;
-                vm.searchFromURL.parkingtype2 = $stateParams.parkingtype2;
-
-                vm.searchFromURL.warehouse = $stateParams.warehouse;
-                vm.searchFromURL.elevator = $stateParams.elevator;
-                vm.searchFromURL.floor = $stateParams.floor;
-                vm.searchFromURL.fromfloor = $stateParams.fromfloor;
-                vm.searchFromURL.price = $stateParams.price;
 
                 if (vm.searchFromURL.agent != undefined && vm.searchFromURL.messagetype != undefined) {
+                    vm.citiesSelected = [];
+                    var p = $stateParams.city.split(',');
+                    vm.searchFromURL.city = [];
+
+                    for (var i = 0; i < p.length; i++) {
+                        var x = {
+                            name: p[i]
+                        }
+                        vm.searchFromURL.city.push(x);
+                        vm.citiesSelected.push(x);
+                    }
+
+                    vm.searchFromURL.agent = $stateParams.agent;
+                    vm.searchFromURL.aircond = $stateParams.aircond;
+                    vm.searchFromURL.balcony = $stateParams.balcony;
+                    vm.searchFromURL.mamad = $stateParams.mamad;
+                    vm.searchFromURL.messagetype = $stateParams.messagetype;
+                    vm.searchFromURL.numberofrooms = $stateParams.numberofrooms;
+                    vm.searchFromURL.neighborhood = $stateParams.neighborhood;
+                    vm.searchFromURL.parking = $stateParams.parking;
+                    vm.searchFromURL.parkingtype = $stateParams.parkingtype;
+                    vm.searchFromURL.parkingtype2 = $stateParams.parkingtype2;
+
+                    vm.searchFromURL.warehouse = $stateParams.warehouse;
+                    vm.searchFromURL.elevator = $stateParams.elevator;
+                    vm.searchFromURL.floor = $stateParams.floor;
+                    vm.searchFromURL.fromfloor = $stateParams.fromfloor;
+                    vm.searchFromURL.price = $stateParams.price;
+
                     return true;
                 } else {
                     return false;
@@ -188,6 +195,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             //vm.search.napa = selectedItem.napa;
             //vm.search.code = selectedItem.code;
 
+
             vm.search.city = selectedItem;
 
             vm.citiesSelected.push({name: vm.search.city});
@@ -232,7 +240,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
 
         //$('#switch-change').on('switchChange.bootstrapSwitch', function (event, state) {
-        //
+          //
         //});
 
         function citiesLoaderCallback(data, citiesOnly)
@@ -244,6 +252,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         citiesservice.registerCitiesLoaded(citiesLoaderCallback);
         vm.cities = citiesservice.getcities_all_ready();
         vm.citiesOnly = citiesservice.getcities_ready();
+
 
 
         $scope.removeSchonaFromList = function (index) {
@@ -327,7 +336,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 var l = $cookies.get('largeScreens');
 
                 if (l == undefined)
-                    $scope.largeScreens = true;
+                    $scope.largeScreens = false;
                 else {
                     if (l == 'true')
                         $scope.largeScreens = true;
@@ -343,8 +352,16 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
                 ressearch = $cookies.get('citiesSelected');
 
-                if (ressearch != undefined)
-                    vm.citiesSelected = JSON.parse(ressearch);
+                if (ressearch != undefined) {
+                    try {
+                        vm.citiesSelected = JSON.parse(ressearch);
+                        console.log(vm.citiesSelected);
+                    }
+                    catch(e)
+                    {
+                        console.log(e);
+                    }
+                }
 
 
                 ressearch = $cookies.get('schonotSelected');
@@ -390,6 +407,45 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 if ($stateParams.mid != null)
                 {
                     var mid = $stateParams.mid;
+                    if ($stateParams.rdl != undefined) {
+                        switch($stateParams.rdl)
+                        {
+                            case '87e1r7328hccxkjd4822':
+                                vm.facebookLink = true;
+                                vm.tour3donlyLink = false;
+                                vm.sendMailLink = false;
+                                vm.sendMessageButton = false;
+                                vm.detailsInfoButton = false;
+                                break;
+                            case 'f498f48dkjdd84ks37424':
+                                vm.facebookLink = true;
+                                vm.tour3donlyLink = true;
+                                vm.sendMailLink = false;
+                                vm.sendMessageButton = false;
+                                vm.detailsInfoButton = false;
+                                break;
+                            case 'jdknvngj43959gjhdjfj5kfk3':
+                                vm.facebookLink = true;
+                                vm.tour3donlyLink = false;
+                                vm.sendMailLink = false;
+                                vm.sendMessageButton = false;
+                                vm.detailsInfoButton = true;
+                                break;
+                            default:
+                            {
+                                vm.facebookLink = true;
+                                vm.tour3donlyLink = true;
+                                vm.sendMailLink = false;
+                                vm.sendMessageButton = false;
+                                vm.detailsInfoButton = false;
+                            }
+                        }
+                    }
+
+                    if (vm.facebookLink == true || vm.tour3donlyLink == true) {
+                        document.getElementById('headerid').style.display = "none";
+                        document.getElementById('footerid').style.display = "none";
+                    }
                     ShowSpecificMessageId(mid);
                 } else {
                     if (getallUrlParams() == true) {
@@ -411,9 +467,6 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
 
             vm.userMessageId = -1;
         });
-
-
-
 
         $('#myModal').on('show.bs.modal', function () {
 
@@ -459,20 +512,21 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
          });
 
 
+
         $('#myModal').on('hidden.bs.modal', function () {
 
             var s = JSON.stringify(vm.search);
-            $cookies.put('sellhousesearch', s, {expires: cexp});
+            $cookies.put('sellhousesearch', s ,{expires: cexp});
 
 
             s = JSON.stringify(vm.citiesSelected);
-            $cookies.put('citiesSelected', s, {expires: cexp});
+            $cookies.put('citiesSelected', s ,{expires: cexp});
 
             s = JSON.stringify(vm.schonotSelected);
-            $cookies.put('schonotSelected', s, {expires: cexp});
+            $cookies.put('schonotSelected', s ,{expires: cexp});
 
             s = JSON.stringify(vm.aptstatus);
-            $cookies.put('aptstatus', s, {expires: cexp});
+            $cookies.put('aptstatus', s ,{expires: cexp});
 
             ShowResults(0);
 
@@ -490,19 +544,20 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 });
             }
 
-            var pstr1 = '';
+            var pstr1= '';
             index = 0;
 
-            for (var i = 0; i < vm.citiesSelected.length; i++) {
+            for (var i = 0 ; i < vm.citiesSelected.length; i++)
+            {
                 if (index > 0)
                     pstr1 += ',';
-                pstr1 += vm.citiesSelected[i].name;
+                pstr1+= vm.citiesSelected[i].name;
                 index++;
             }
 
 
             var userguid = $cookies.get('apt360visitorguid');
-            var userSearch = {
+            var  userSearch = {
                 city: pstr1,
                 type: vm.search.messagetype,
                 propertytype: pstr,
@@ -510,35 +565,38 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 numofrooms: vm.search.numberofrooms,
             }
 
-            visitors.saveVisitorSearch(userSearch).then(function (result) {
+            visitors.saveVisitorSearch(userSearch).then(function(result){
 
-            }).catch(function (result) {
+            }).catch(function(result){
 
             })
         })
 
-        function buildSearchSummery() {
+        function buildSearchSummery()
+        {
             vm.searchsummery = '';
-            vm.searchsummery += 'מציג ';
+            vm.searchsummery +=  'מציג ';
 
-            if (vm.search.agent == 'מתווך') {
+            if (vm.search.agent == 'מתווך')
+            {
                 vm.searchTitle = 'מתיווך';
             } else {
                 vm.searchTitle = vm.search.agent;
             }
 
 
-            if (vm.search.propertyType == undefined || vm.search.propertyType.length == 0) {
+            if (vm.search.propertyType == undefined || vm.search.propertyType.length == 0)
+            {
                 vm.searchsummery += 'כל סוגי הדירות' + '  ב ';
             } else {
                 vm.searchsummery += vm.search.propertyType + ' ב';
             }
 
 
-            vm.citiesSelected.forEach(function (en) {
+            vm.citiesSelected.forEach(function(en){
                 vm.searchsummery += en.name + ',';
             })
-            vm.searchsummery += '  ';
+            vm.searchsummery+= '  ';
             if (vm.search.numberofrooms == 'הכל') {
                 vm.searchsummery += ' ללא הגבלת חדרים';
             } else {
@@ -551,6 +609,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             } else {
                 vm.searchsummery += ' בכל מחיר';
             }
+
 
 
         }
@@ -575,20 +634,22 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                     }, 1900);
                 }).catch(function (result) {
                     vm.msgboxcontent = 'קרתה שגיאה בשליחת ההודעה';
-
+                     
                 })
             }
         }
 
 
-        $scope.SendToAFriend = function (item, index) {
+        $scope.SendToAFriend = function(item, index)
+        {
 
             vm.userMessageIndex = index;
             vm.userMessageId = item.id;
             $('#sendSingleMessageModal').modal('show');
         }
 
-        $scope.SendToAFriendAllPosts = function () {
+        $scope.SendToAFriendAllPosts = function()
+        {
 
             $('#sendAllMessageModal').modal('show');
         }
@@ -596,7 +657,24 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         $scope.SendLinkToAFriend = function ()
         {
 
+
+            var rdl = undefined;
+
+
+
+            if (vm.facebooklink == true && vm.agentdetails == false) {
+                rdl = '87e1r7328hccxkjd4822';
+            } else if (vm.tour3dlink == true) {
+                rdl = 'f498f48dkjdd84ks37424';
+            } else if (vm.agentdetails == true && vm.agentdetails == true) {
+                rdl = 'jdknvngj43959gjhdjfj5kfk3';
+            }
+
             var link = 'www.apt360.co.il/main?mid=' + vm.userMessageId;
+            if (rdl != undefined)
+            {
+                link += '&rdl=' + rdl;
+            }
             var messagebody = '';
             messagebody += '<div style="direction: rtl;text-align: right">';
             messagebody = ' הי<br> ' +
@@ -729,12 +807,14 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
         function ShowSpecificMessageId(mid)
         {
 
-            dboperations.GetSearchResultByMessageId(mid).then(function (result) {
+            var vguid = $cookies.get('apt360visitorguid');
+            dboperations.GetSearchResultByMessageId(mid,vguid).then(function (result) {
 
                 var directory = '';
-                if (result.data.length > 0)
+                if (result.data.length > 0) {
                     directory = result.data[0].messagetype == 0 ? '/salehouse/' : '/renthouse/';
-                PreviewQueryResults(result, directory);
+                    PreviewQueryResults(result, directory);
+                }
             });
         }
 
@@ -749,6 +829,36 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                     vm.search.neighborhood = '';
                 break;
             }
+        }
+
+        function loadImage(src) {
+            return $q(function(resolve,reject) {
+                var image = new Image();
+                image.src = src;
+                image.onload = function() {
+                    //console.log("loaded image: "+src);
+                    resolve(image);
+                };
+                image.onerror = function(e) {
+                    reject(e);
+                };
+            })
+        }
+
+        function loadCarouselSlidesAsync(card , arr) {
+            var defer = $q.defer();
+            console.log(card);
+            $timeout(function () {
+
+                for (var i = 0; i < arr.length; i++) {
+                    card.slides.push({
+                        image: arr[i],
+                        text: ''
+                    });
+                }
+                defer.resolve('Slides were loaded');
+            }, 1, card);
+            return defer.promise;
         }
 
         function PreviewQueryResults(result, directory)
@@ -780,6 +890,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 }
             }
 
+            var vguid = $cookies.get('apt360visitorguid');
             vm.cards = [];
             i = 0;
             dic.forEach(function (key, value) {
@@ -811,6 +922,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 card.showVideo = 0;
                 card.showregularvideo = false;
                 card.show360video = false;
+                card.mpshow = 0;
                 card.show3dtour = value[0].show;
                 if (card.show3dtour == undefined)
                     card.show3dtour = false;
@@ -856,6 +968,8 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 card.fromfloor = card.fromfloor.toString();
                 card.balcony = card.balcony.toString();
                 var firsttime1 = 0;
+                var tempArray = [];
+                tempArray = [];
                 for (var k = 0; k < value.length; k++) {
                     if (value[k].isvideo != null &&
                         value[k].tableid != null &&
@@ -864,7 +978,6 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                         value[k].isvideo == 0 &&
                         value[k].is360image == 0) {
 
-                        //console.log(value[k]);
                         var imgsrc;
                         if (firsttime1 == 0) {
                             card.showPictures++;
@@ -873,13 +986,30 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                         }
                         var userid = value[k].userid;
                         var imgsrc = './uploadimages/' + userid + directory + value[k].tableid + '/' + value[k].filename;
-                        //console.log(imgsrc);
+
+                        /*
                         card.slides.push({
                             image: imgsrc,
                             text: ''
-                        });
+                        });*/
+                        tempArray.push(imgsrc);
+
+                         /*
+                        loadImage(imgsrc).then(function(result){
+
+                            //console.log(result.src);
+                            card.slides.push({
+                                image: result.src,
+                                text: ''
+                            });
+
+                        });*/
                     }
                 }
+                card.slides = [];
+                loadCarouselSlidesAsync(card, tempArray);
+
+
                 var firsttime = 0;
                 for (var k = 0; k < value.length; k++) {
                     if (value[k].isvideo != null &&
@@ -921,7 +1051,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                                     // Resize the panorama
                                     size: {
                                         width: '100%',
-                                        height: video360height
+                                        height: Image360height
                                     },
 
                                     // No XMP data
@@ -981,6 +1111,14 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                         document.getElementById('touriframeid' + index).src = _src;
                     }, 1000, i, card)
                 }
+
+                if (card.mpshow == 1) {
+                    setTimeout(function(index, card){
+                        card.embedlink = 'https://my.matterport.com/show/?m=XibG5gZ1kzy';
+                        document.getElementById('mpiframeid' + index).src = card.embedlink;
+                    }, 1000, i, card)
+                }
+
                 i++;
             });
         }
@@ -1193,7 +1331,11 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             } else {
                 type = 0;
             }
-            dboperations.GetHouseQueryResults(search, false,type).then(function (result) {
+            var vguid = $cookies.get('apt360visitorguid');
+            dboperations.GetHouseQueryResults(search,
+                                              false,
+                                              type,
+                                              vguid).then(function (result) {
 
 
                 var directory = vm.search.messagetype == 'מכירה'  ? '/salehouse/' : '/renthouse/';
@@ -1358,7 +1500,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                         // Resize the panorama
                         size: {
                             width: '100%',
-                            height: video360height
+                            height: Image360height
                         },
 
                         // No XMP data
@@ -1367,6 +1509,30 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                 }, 100);
             } else {
                 item.privacyEnabled = 1;
+            }
+        }
+
+
+        $scope.EnterUserAuthCode1 = function()
+        {
+
+            var vguid = $cookies.get('apt360visitorguid');
+            if (vguid != null)
+            {
+                console.log($scope.UserAuthorizationKey);
+                var tblid = $stateParams.mid;
+                var mtype = $stateParams.messagetype;
+                var data = {
+                    guid:vguid,
+                    tableid:tblid,
+                    type:mtype,
+                    accesstoken:$scope.UserAuthorizationKey
+                }
+                dboperations.SaveUserAuthCode(data).then(function (result) {
+                    window.location.reload(true);
+                }).catch (function(result){
+                    alert(result.data);
+                })
             }
         }
 
@@ -1429,6 +1595,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
             switch (item.propertyType) {
                 case 'דו משפחתי':
                 case 'דירת גן':
+                case 'בית פרטי':
                 case "קוט'ג טורי":
                     item.privateHouse = true;
                     break;
@@ -1461,7 +1628,7 @@ app.controller('MainController', ['$scope', '$state', 'authToken', 'myhttphelper
                     // Resize the panorama
                     size: {
                         width: '100%',
-                        height: video360height
+                        height: Image360height
                     },
                     // No XMP data
                     usexmpdata: false

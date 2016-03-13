@@ -22,8 +22,11 @@ app.factory("visitors", ['$cookies', '$http', 'myConfig',
 
 
         function mysqlDate(date){
-            date = date || new Date();
-            return date.toISOString().split('T')[0];
+            //date = date || new Date();
+            //var d = date.toISOString().split('T')[0];
+            var d = new Date().toISOString().slice(0, 19).replace('T', ' ');
+            console.log('visitor: ' + d);
+            return d;
         }
         function determineVisit(ip) {
 

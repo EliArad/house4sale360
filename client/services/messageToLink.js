@@ -1,7 +1,7 @@
 'use strict';
 
 app.factory("messageToLink", ['$cookies',
-    function($cookies) {
+    function ($cookies) {
 
 
         function buildLink(userguid, id, type) {
@@ -40,37 +40,38 @@ app.factory("messageToLink", ['$cookies',
             }
 
             if (search.balcony != 'לא משנה לי')
-                link    += '&balcony=' + search.balcony;
-            link    += '&city=' + pstr1;
+                link += '&balcony=' + search.balcony;
+            link += '&city=' + pstr1;
             if (search.mamad != 'לא משנה לי')
-                link    += '&mamad=' + search.mamad;
-            link    += '&messagetype=' + search.messagetype;
+                link += '&mamad=' + search.mamad;
+            link += '&messagetype=' + search.messagetype;
 
             if (search.numberofrooms != 'הכל')
-                link    += '&numberofrooms=' + search.numberofrooms;
+                link += '&numberofrooms=' + search.numberofrooms;
 
             if (search.neighborhood != '' && search.neighborhood != undefined)
-                link    += '&neighborhood=' + search.neighborhood;
+                link += '&neighborhood=' + search.neighborhood;
             if (search.parking != 'לא משנה לי')
-                link    += '&parking=' + search.parking;
+                link += '&parking=' + search.parking;
 
             if (search.parkingtype != 'לא משנה לי')
-                link    += '&parkingtype=' + search.parkingtype;
+                link += '&parkingtype=' + search.parkingtype;
 
             if (search.parkingtype2 != 'לא משנה לי')
-                link    += '&parkingtype2=' + search.parkingtype2;
+                link += '&parkingtype2=' + search.parkingtype2;
 
             if (search.warehouse != 'לא משנה לי')
-                link    += '&warehouse=' + search.warehouse;
+                link += '&warehouse=' + search.warehouse;
             if (search.elevator != 'לא משנה לי')
-                link    += '&elevator=' + search.elevator;
+                link += '&elevator=' + search.elevator;
             if (search.floor != undefined)
-                link    += '&floor=' + search.floor;
+                link += '&floor=' + search.floor;
             if (search.fromfloor != undefined)
-                link    += '&fromfloor=' + search.fromfloor;
+                link += '&fromfloor=' + search.fromfloor;
             if (search.price != undefined)
-                link    += '&price=' + search.price;
+                link += '&price=' + search.price;
 
+            
             var euri = encodeURI(link);
             //var replaced = link.split(' ').join('%20');
             return euri;
@@ -78,7 +79,7 @@ app.factory("messageToLink", ['$cookies',
 
         return {
             buildLink: buildLink,
-            BuildLinkFromSearch:BuildLinkFromSearch
+            BuildLinkFromSearch: BuildLinkFromSearch
         };
     }
 ]);

@@ -1,5 +1,5 @@
 module.exports = function () {
-    function build(con, opt) {
+    function build(con, opt, vguid) {
 
         var sql = 'SELECT renthousedetails.* , renthouseblobs.filename, \
                     renthouseblobs.tableid , \

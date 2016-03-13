@@ -4,7 +4,7 @@
 app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
                  '$http', '$rootScope', 'myhttphelper', 'PassServiceParams',
                  'socketioservice', 'SessionStorageService','$timeout',
-                 'myConfig','visitors','$stateParams','appCookieStore','general',
+    'myConfig','visitors','$stateParams','appCookieStore','general',
     function ($scope, $state, authToken, $cookies, $http, $rootScope,
               myhttphelper, PassServiceParams, socketioservice,
               SessionStorageService,$timeout,myConfig,visitors,$stateParams,appCookieStore,general)
@@ -47,6 +47,8 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
             password: "",
             email: ""
         };
+
+
 
 
         function reloadFunction()
@@ -97,7 +99,6 @@ app.controller('LoginController', ['$scope', '$state', 'authToken', '$cookies',
         }
 
         function login() {
-
 
             authToken.RemoveToken();
             $scope.sendMailToVerify = false;

@@ -54,7 +54,6 @@ app.controller('deletecardController', ['$scope','$state','authToken','myhttphel
 
           $state.go('logout', {}, {reload: true});
       });
-
       /*
       $scope.$on('IdleStart', function() {
         console.log('start');

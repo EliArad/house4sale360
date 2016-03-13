@@ -163,6 +163,8 @@ module.exports = function (sqlserver) {
         MarkReloadToThoseSearchResults: function (req, res, next) {
             sqlserver.get(function (err, con) {
                 if (!err) {
+
+
                     var query = con.query('UPDATE sellhousedetails SET ? WHERE id = ' + con.escape(req.body.id),
                         [{reload:req.body.reload}], function (err, result) {
                         console.log(err);
@@ -353,7 +355,7 @@ module.exports = function (sqlserver) {
                         delete req.body.data.config;
                         delete req.body.data.angleToRotate;
                         delete req.body.data.currentImage360Status;
-
+                        delete req.body.data.privacyEnabled1;
                     }
                     catch (e)
                     {
@@ -723,8 +725,10 @@ module.exports = function (sqlserver) {
             //console.log(req.body.data);
             sqlserver.get(function (err, con) {
                 var condition = {'id': req.body.data.id};
-                var query = con.query('UPDATE ' + tablename + ' SET ? WHERE ?', [req.body.data, condition], function (err, result) {
-                    //console.log(err);
+                console.log(req.body.data);
+                var query = con.query('UPDATE ' + tablename + ' SET ? WHERE ?',
+                    [req.body.data, condition], function (err, result) {
+                    console.log(err);
                     sqlserver.release(con);
                     if (err) {
                         res.sendStatus(500);

@@ -10,8 +10,8 @@
 
     .carousel-control.left, .carousel-control.right {
         background: none !important;
-        color:red;
-        filter: progid: none !important;
+        color: red;
+        filter: progid:none !important;
         outline: 0;
     }
 
@@ -89,6 +89,7 @@
                                 <option>דירה</option>
                                 <option>דירת גן</option>
                                 <option>דירת גג/פנטהאוז</option>
+                                <option>בית פרטי</option>
                                 <option>סטודיו</option>
                                 <option>מרתף/פרטר</option>
                                 <option>דופלקס</option>
@@ -138,14 +139,13 @@
                     </div>
 
                     <div class="form-group" style="white-space:nowrap">
-                        <label class="control-label col-sm-3" for="street">רחוב</label>
+                        <label class="control-label col-sm-3 removeoutline" ng-click="clearselect(1)"   for="street">רחוב</label>
 
                         <div class="col-sm-9" ng-class="{ 'has-error': form.street.$error.required }">
                             <ui-select id="street"
                                        name="street"
                                        on-select="getstreet(vm.card.street)"
-                                       theme="bootstrap" ng-model="vm.card.street"
-                                       required>
+                                       theme="bootstrap" ng-model="vm.card.street">
                                 <ui-select-match placeholder="בחר רחוב">
                                     <span ng-bind="$select.selected.name"></span>
                                 </ui-select-match>
@@ -157,7 +157,7 @@
                         </div>
                     </div>
                     <div class="form-group" style="white-space:nowrap">
-                        <label class="control-label col-sm-3" for="neighborhood">שכונה</label>
+                        <label  ng-click="clearselect(0)" class="control-label col-sm-3 removeoutline" for="neighborhood">שכונה</label>
 
                         <div class="col-sm-9">
                             <ui-select id="neighborhood"
@@ -179,7 +179,7 @@
                         <label class="control-label col-sm-3" for="housenumber">מספר הבית</label>
 
                         <div class="col-sm-9" ng-class="{ 'has-error': (form.housenumber.$error.required )}">
-                            <input type="number" name="housenumber" required
+                            <input type="number" name="housenumber"
                                    placeholder="גודל דירה כולל מרפסת וגינה" class="form-control"
                                    ng-change="saveModel()"
                                    ng-model="vm.card.housenumber">
@@ -230,7 +230,7 @@
 
                     <div class="form-group" ng-if="vm.card.privateHouse">
                         <label class="control-label col-sm-3" for="numoffloors">קומות</label>
-                        <div class="col-sm-3"  ng-class="{ 'has-error': form.numoffloors.$error.required }">
+                        <div class="col-sm-3" ng-class="{ 'has-error': form.numoffloors.$error.required }">
                             <select name="numoffloors" class="form-control"
                                     required
                                     ng-model="vm.card.numoffloors">
@@ -241,7 +241,7 @@
                             </select>
                         </div>
 
-                        <label class="control-label col-sm-2"  for="basement">מרתף</label>
+                        <label class="control-label col-sm-2" for="basement">מרתף</label>
                         <div class="col-sm-4" ng-class="{ 'has-error': (form.basement.$error.required )}">
                             <select name="basement" class="form-control"
                                     ng-model="vm.card.basement"
@@ -304,6 +304,18 @@
                             </select>
                         </div>
                     </div>
+                    <div class="form-group" style="white-space:nowrap" ng-if="vm.card.balcony != 'אין'"
+                         ng-class="{ 'has-error': form.balconysize.$error.required}">
+                        <label class="control-label col-sm-3" for="balconysize">גודל מירפסת</label>
+
+                        <div class="col-sm-9">
+                            <input type="number" name="balconysize" required
+                                   ng-change="saveModel()"
+                                   placeholder="גודל מירפסת"
+                                   class="form-control"
+                                   ng-model="vm.card.balconysize">
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
@@ -320,7 +332,7 @@
                                 <option>שני מיני מרכזיים</option>
                                 <option>מזגן יחיד בסלון</option>
                                 <option>מזגן יחיד בחדר שינה הורים</option>
-                                <option>מזגן עצמאי בכל חדר</option>
+                                <option>בכל חדר</option>
                                 <option>שני מזגנים</option>
                                 <option>שלושה מזגנים</option>
                                 <option>יש מזגן רק לא מצאתי ברשימה</option>
@@ -395,7 +407,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group"  style="white-space:nowrap" ng-if="!vm.card.privateHouse">
+                    <div class="form-group" style="white-space:nowrap" ng-if="!vm.card.privateHouse">
                         <label class="control-label col-sm-3" for="elevator">מעליות</label>
                         <div class="col-sm-9" ng-class="{ 'has-error': form.elevator.$error.required  }">
                             <select class="form-control" placeholder="מספר מעליות"
@@ -477,16 +489,28 @@
 
                     <div class="form-group" style="white-space:nowrap">
 
-                        <div class="col-sm-5 col-sm-offset-2" >
+                        <div class="col-sm-5 col-sm-offset-2">
                             <label for="soragim"> גישה לנכים</label>
-                            <input type="checkbox"  id="handycupt" ng-model="vm.card.handycupt">
+                            <input type="checkbox" id="handycupt" ng-model="vm.card.handycupt">
                         </div>
 
                         <div class="col-sm-5 ">
                             <label for="soragim"> סורגים</label>
-                            <input type="checkbox"  id="soragim" ng-model="vm.card.soragim">
+                            <input type="checkbox" id="soragim" ng-model="vm.card.soragim">
                         </div>
                     </div>
+
+                    <div class="form-group" style="white-space:nowrap">
+
+                        <div class="col-sm-5">
+                            <label for="immidiate"> כניסה מיידית</label>
+                            <input type="checkbox" id="immidiate" ng-model="vm.card.immidiate">
+                        </div>
+                        <div class="col-sm-7" ng-if="vm.card.immidiate == false">
+                            <input id="datepickid" type=date class="form-control">
+                        </div>
+                    </div>
+
 
                     <div class="form-group"
                          style="white-space:nowrap;margin-top: 50px">
@@ -601,7 +625,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row"  ng-hide="showstate2" style="margin-top: 30px">
+            <div class="row" ng-hide="showstate2" style="margin-top: 30px">
                 <div class="form-group">
                     <div class="col-sm-3 col-sm-offset-6">
                         <button type="submit"
@@ -617,27 +641,29 @@
 
             </div>
             <div class="row" ng-if="showstate2" style="border: inset">
-                    <div style="text-align: center;font-size: 20pt">
-                            תמונות סטילס
-                    </div>
-                    <div>
+                <div style="text-align: center;font-size: 20pt">
+                    תמונות סטילס
+                </div>
+                <div>
                     <span ng-if="isagent" style="margin-right: 15px">
             יש לכם עד 1GIGA מקום להעלות תמונות, וידאו, סיורים וירטואלים תמונות ,360 לכל  המודעות ביחד
                     </span>
                     <span ng-if="!isagent" style="margin-right: 15px">
 יש לכם עד 150 מגה מקום להעלות תמונות, וידאו, סיורים וירטואלים ,תמונות 360 לכל  המודעות ביחד
                     </span>
-                    </div>
-                    <div ng-if="vm.showwaitcircle" style="font-size:20pt; text-align: center; color: orangered"
-                         class="animated infinite tada">
-                        מעלה קובץ...
-                    </div>
-
-                <div ng-include="'client/templates/pictureupload1.html'">
-
                 </div>
-                <div ng-include="'client/templates/newhousecrousle.html'">
+                <div ng-if="vm.showwaitcircle" style="font-size:20pt; text-align: center; color: orangered"
+                     class="animated infinite tada">
+                    מעלה קובץ...
+                </div>
 
+                <div class="col-md-12">
+                    <div ng-include="'client/templates/pictureupload1.html'">
+
+                    </div>
+                    <div ng-include="'client/templates/newhousecrousle.html'">
+
+                    </div>
                 </div>
             </div>
 
@@ -670,9 +696,7 @@
             </div>
 
 
-
-
-            <div class="row" ng-if="showstate2"  style="margin-top: 50px;border: inset">
+            <div class="row" ng-if="showstate2" style="margin-top: 50px;border: inset">
                 <div ng-if="vm.showwaitcirclevideo" style="font-size:20pt; text-align: center; color: orangered"
                      class="animated infinite tada">
                     מעלה קובץ...

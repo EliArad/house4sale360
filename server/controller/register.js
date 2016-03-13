@@ -56,15 +56,15 @@ module.exports = function (sqlserver) {
                 if(error) {
                     console.log(error);
                     res.status(500);
-                    res.end('שגיאה באישור מול מוודא הרובוט')
+                    res.end('שגיאה באישור מול מוודא הרובוט');
                 } else {
                     var s = JSON.parse(body);
                     if (s.success == false) {
                         console.log(error);
                         res.status(500);
-                        res.end('שגיאה באישור מול מוודא הרובוט')
+                        res.end('שגיאה באישור מול מוודא הרובוט');
                     } else {
-                        console.log('no robot');
+                        //console.log('no robot');
                         sqlserver.get(function (err, con) {
                             if (!err) {
                                 mypasswordhash.encrypt(req.body.password, function (err, hash) {

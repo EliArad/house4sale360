@@ -5,12 +5,12 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
     'appCookieStore', 'socketioservice', 'Idle', '$rootScope',
     'SessionStorageService', 'myConfig', '$http', '$window', '$timeout',
     'dboperations', 'citiesservice', 'general', '$cookies', '$sce',
-    'communication','visitors','$stateParams','messageToLink','allsite',
+    'communication','visitors','$stateParams','messageToLink','allsite','$q',
     function ($scope, $state, authToken, myhttphelper,
               appCookieStore, socketioservice, Idle, $rootScope, SessionStorageService,
               myConfig, $http, $window, $timeout, dboperations,
               citiesservice, general, $cookies, $sce,communication,
-              visitors,$stateParams,messageToLink,allsite) {
+              visitors,$stateParams,messageToLink,allsite,$q) {
 
 
 
@@ -614,6 +614,20 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
 
         }
 
+        function loadImage(src) {
+            return $q(function(resolve,reject) {
+                var image = new Image();
+                image.src = src;
+                image.onload = function() {
+                    //console.log("loaded image: "+src);
+                    resolve(image);
+                };
+                image.onerror = function(e) {
+                    reject(e);
+                };
+            })
+        }
+
 
         function ShowResults(userguid, msgid, type) {
 
@@ -759,9 +773,20 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
                             var userid = value[k].userid;
                             var imgsrc = './uploadimages/' + userid + directory[iterator] + value[k].tableid + '/' + value[k].filename;
                             //console.log(imgsrc);
+                            /*
                             card.slides.push({
                                 image: imgsrc,
                                 text: ''
+                            });
+                            */
+
+                            loadImage(imgsrc).then(function(result){
+
+                                //console.log(result.src);
+                                card.slides.push({
+                                    image: result.src,
+                                    text: ''
+                                });
                             });
                         }
                     }
@@ -871,6 +896,8 @@ app.controller('mypageController', ['$scope', '$state', 'authToken', 'myhttphelp
                             document.getElementById('touriframeid' + i).src = _src;
                         }, 1000, i, card)
                     }
+
+
                     i++;
                 });
             }).catch(function (result) {

@@ -12,7 +12,7 @@ var cityLoaderobject = require('../../classhelpers').siteHelper;
 var cityLoader = new cityLoaderobject();
 var cors = require('../common/cors');
 var request = require('request');
-
+var mypasswordhash = require('../modules/password')();
 
 var cities = [];
 
@@ -21,7 +21,7 @@ var membersModelCount = 0;
 var routes = function (app, sqlserver,mailer) {
 
 
-    app.post('/api/getStreets', jwtauth, function (req, res, next) {
+    app.post('/api/getStreets', function (req, res, next) {
 
 
         cityLoader.getStreets(req.body.code, function (err, data) {
@@ -257,6 +257,36 @@ var routes = function (app, sqlserver,mailer) {
                 res.send(500);
             }
         });
+    });
+
+    app.post('/api/updateuserpassword', function (req, res, next) {
+
+
+
+        sqlserver.get(function (err, con) {
+            if (!err) {
+                mypasswordhash.encrypt(req.body.user.password, function (err, hash) {
+                    if (!err) {
+                        var query = con.query('UPDATE users SET ? WHERE userguid = ' + con.escape(req.body.user.guid),
+                                               [{password:hash, verified:1}],
+                                               function (err, result) {
+                            sqlserver.release(con);
+                            if (err) {
+                                console.log(err);
+                                res.send(500, {error: err});
+                            } else {
+                                res.send('ok');
+                            }
+                        });
+                    } else {
+                        res.sendStatus(500);
+                    }
+                });
+            } else {
+                res.sendStatus(500);
+            }
+        });
+
     });
 
     app.post('/api/deleteuser',jwtauth,  function (req, res, next) {

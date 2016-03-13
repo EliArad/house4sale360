@@ -164,11 +164,12 @@ app.use('/api/register', registerRoutes.routes);
 //app.use('/api/general', jwtauth, getGeneralRoutes);
 
 //var createNewMember = require("./server/modules/createNewMember")(membersModel.membersModel);
-
+/*
 app.use(
     "/", //the URL throught which you want to access to you static content
     express.static(__dirname) //where your static content is located in your filesystem
 );
+*/
 
 var loginCtrl = require('./server/controller/login');
 loginCtrl.setsqlServer(sqlserver);

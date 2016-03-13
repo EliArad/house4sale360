@@ -150,15 +150,18 @@
             &nbsp;
             &nbsp;
             <div>
+                <!--
                 חיפוש במשקפת VR
                 <input type="checkbox" id="switch-change" ng-model="virtualSearch" name="my-checkbox" checked>
+                -->
 
                 &nbsp;
                 &nbsp;
                 &nbsp;
                 &nbsp;
                 תצוגה רחבה
-                <input type="checkbox" id="large-video" ng-checked="largeScreens" ng-click="SetViewMode()" name="largeViewCheckbox" checked>
+                <input type="checkbox" id="large-video" ng-checked="largeScreens" ng-click="SetViewMode()"
+                       name="largeViewCheckbox" checked>
 
             </div>
         </div>
@@ -225,15 +228,20 @@
                     {{ item.street.name }}
                             </span>
 
-                            בשכונת
-                            {{ item.neighborhood.name }}
-
-
-                            מספר
                         <span style="font-weight: bold">
-                    {{ item.housenumber }}6
+                    {{ item.housenumber }}
                             </span>
 
+
+                     <span ng-if="item.neighborhood.name != undefined">
+                    בשכונת
+                    {{ item.neighborhood.name }}
+
+                     </span>
+
+
+
+                    <br>
 
                             קומה:
                     <span style="font-weight: bold">
@@ -249,6 +257,8 @@
                         {{ item.squresize }}
                             </span>
                             מ"ר
+
+                            <br>
 
                             מחיר:
                         <span style="font-weight: bold">
@@ -619,7 +629,7 @@
                                          class="img-responsive"
                                          ng-mouseover="mo()"
                                          ng-mouseleave="ml()"
-                                         style="margin:auto;max-height: 600px">
+                                         style="margin:auto;max-height: 600px;min-width: 70%">
 
                                     <div class="carousel-caption">
                                         <!--<h4>Slide {{$index}}</h4>-->
@@ -637,7 +647,7 @@
 
                         </div>
                     </div>
-                    <div class="col-md-12  col-xs-12 col-lg-12 col-sm-12"  ng-show="item.imageExists && !virtualSearch">
+                    <div class="col-md-12  col-xs-12 col-lg-12 col-sm-12" ng-show="item.imageExists && !virtualSearch">
                         <div style="margin-left: 1px">
                             <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
                                 <uib-slide ng-repeat="slide in item.slides" active="slide.active">
@@ -700,6 +710,38 @@
                     </div>
                 </div>
             </div>
+            <div class="row" style="margin-top:15px;" ng-if="isAuthenticated && isAgent">
+                <div class="col-md-12">
+                    <button type="button" ng-click="ToggleNotes(item)" class="btn btn-default btn-sm">הערות שלך לגבי
+                        דירה זו..
+                    </button>
+                    &nbsp;
+                    &nbsp;
+                    &nbsp;
+                    <button type="button" ng-if="shownotes" ng-click="SaveNotes(item)" class="btn btn-default btn-sm">
+                        שמור הערות
+                    </button>
+                    <div class="form-group" ng-if="shownotes">
+                        <textarea placeholder="שמרנו לכם מקום לרשום כל הערה שתרצו על הדירה הזו"
+                                  ng-model="item.agentnotes"
+                                  style="margin-top: 10px;
+                                         margin-right: 10px;margin-left: 40px"
+                                  class="form-control"
+                                  rows="25">
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+            <!--
+            <div class="row">
+                <div class="h_iframe" style="margin-left: 18px">
+                    <img class="ratio" src="/client/images/placeholder.png"/>
+                    <iframe  src="client/js/image-gallery1/no-jquery.html"
+                            width="100%" allowfullscreen
+                            frameborder="0"></iframe>
+                </div>
+            </div>
+            -->
         </div>
     </div>
 </div>

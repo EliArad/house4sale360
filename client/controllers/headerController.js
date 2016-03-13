@@ -41,6 +41,7 @@ app.controller('HeaderController', ['$scope', '$state', 'authToken',
             logout();
         });
 
+
         $scope.paintback = function(id)
         {
             switch(id) {

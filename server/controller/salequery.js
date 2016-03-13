@@ -213,9 +213,9 @@ module.exports = function (sqlserver) {
                 if (!err) {
                     var sql;
                     if (req.body.type == 0)
-                        sql = builder_sale.build(con, req.body.query);
+                        sql = builder_sale.build(con, req.body.query, req.body.vguid);
                     else if (req.body.type == 1)
-                        sql = builder_rent.build(con, req.body.query);
+                        sql = builder_rent.build(con, req.body.query, req.body.vguid);
 	                fs.writeFile('./sql.txt', sql, function (err) {
                         if (err)
                             console.log(err);
@@ -246,38 +246,95 @@ module.exports = function (sqlserver) {
         GetSearchResultByMessageId: function (req, res, next) {
 
             var id = parseInt(req.query.id);
-            sqlserver.get(function (err, con) {
-                var sql = 'SELECT sellhousedetails.* , salehouseblobs.filename,\
-                            salehouseblobs.tableid ,\
-                            salehouseblobs.is360image ,\
-                            salehouseblobs.is360video ,\
-                            salehouseblobs.description,\
-                            salehouseblobs.isvideo ,\
-                            visitoraccess.accesstoken,\
-                            tours3d.*\
-                            FROM sellhousedetails\
-                            INNER JOIN users\
-                            ON users.id = sellhousedetails.userid\
-                            LEFT JOIN salehouseblobs\
-                            ON salehouseblobs.tableid  = sellhousedetails.id\
-                            LEFT JOIN tours3d\
-                            ON sellhousedetails.id = tours3d.tableid3d\
-                            LEFT JOIN visitoraccess\
-                            ON visitoraccess.tableid = sellhousedetails.id  AND sellhousedetails.messagetype = visitoraccess.type \
-                            WHERE sellhousedetails.id = ' + con.escape(id) ;
-                if (!err) {
-                    var query = con.query(sql, function (err, rows) {
-                        sqlserver.release(con);
-                        if (err) {
-                            return res.sendStatus(500);
-                        } else {
-                            return res.send(rows);
-                        }
-                    });
+            var vguid = req.query.vguid;
 
-                } else {
-                    return res.sendStatus(500);
-                }
+
+            sqlserver.get(function (err, con) {
+
+                var sql = 'SELECT * FROM visitoraccess WHERE guid = '  + con.escape(vguid)  + ' AND visitoraccess.tableid = ' + con.escape(id);
+                var query = con.query(sql, function (err, rows) {
+                    console.log(rows.length);
+                    if (rows.length == 0)
+                    {
+                        var data = {
+                            guid: vguid,
+                            accesstoken:'',
+                            tableid:id,
+                            type:0
+                        }
+                        var query = con.query('INSERT INTO visitoraccess SET ?', data, function (err, result) {
+                            console.log('error: ' + err);
+                            sql = 'SELECT sellhousedetails.* , \
+                               salehouseblobs.filename,\
+                               salehouseblobs.tableid ,\
+                               salehouseblobs.is360image ,\
+                               salehouseblobs.is360video ,\
+                               salehouseblobs.description,\
+                               salehouseblobs.isvideo ,\
+                               visitoraccess.accesstoken,\
+                               tours3d.*\
+                               FROM sellhousedetails\
+                               INNER JOIN users\
+                               ON users.id = sellhousedetails.userid\
+                               LEFT JOIN salehouseblobs\
+                               ON salehouseblobs.tableid  = sellhousedetails.id\
+                               LEFT JOIN tours3d\
+                               ON sellhousedetails.id = tours3d.tableid3d\
+                               LEFT JOIN visitoraccess\
+                               ON visitoraccess.tableid = sellhousedetails.id  AND sellhousedetails.messagetype = visitoraccess.type \
+                               WHERE sellhousedetails.id = ' + con.escape(id)  + ' \
+                               AND visitoraccess.tableid = ' + con.escape(id)  + ' \
+                               AND visitoraccess.guid = ' + con.escape(vguid);
+                            if (!err) {
+                                console.log(err);
+                                var query = con.query(sql, function (err, rows) {
+                                    sqlserver.release(con);
+                                    if (err) {
+                                        return res.sendStatus(500);
+                                    } else {
+                                        return res.send(rows);
+                                    }
+                                });
+
+                            } else {
+                                return res.sendStatus(500);
+                            }
+                        });
+                    } else {
+                        console.log('eeee');
+                        sql = 'SELECT sellhousedetails.* , \
+                               salehouseblobs.filename,\
+                               salehouseblobs.tableid ,\
+                               salehouseblobs.is360image ,\
+                               salehouseblobs.is360video ,\
+                               salehouseblobs.description,\
+                               salehouseblobs.isvideo ,\
+                               visitoraccess.accesstoken,\
+                               tours3d.*\
+                               FROM sellhousedetails\
+                               INNER JOIN users\
+                               ON users.id = sellhousedetails.userid\
+                               LEFT JOIN salehouseblobs\
+                               ON salehouseblobs.tableid  = sellhousedetails.id\
+                               LEFT JOIN tours3d\
+                               ON sellhousedetails.id = tours3d.tableid3d\
+                               LEFT JOIN visitoraccess\
+                               ON visitoraccess.tableid = sellhousedetails.id  AND sellhousedetails.messagetype = visitoraccess.type \
+                               WHERE sellhousedetails.id = ' + con.escape(id)  + ' \
+                               AND visitoraccess.tableid = ' + con.escape(id)  + ' \
+                               AND visitoraccess.guid = ' + con.escape(vguid);
+                        console.log('errr');
+                            var query = con.query(sql, function (err, rows) {
+                                console.log(err);
+                                sqlserver.release(con);
+                                if (err) {
+                                    return res.sendStatus(500);
+                                } else {
+                                    return res.send(rows);
+                                }
+                            });
+                    }
+                });
             });
         }
     }
