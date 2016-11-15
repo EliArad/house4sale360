@@ -10,6 +10,8 @@ app.controller('addnewrenthouseController', ['$scope','general', 'appCookieStore
               $cookies, dboperations, fileReader, $sce,citiesservice) {
 
 
+
+
         var vm = this;
         var cexp = general.getCookieExp();
         vm.card = {};
@@ -707,6 +709,45 @@ app.controller('addnewrenthouseController', ['$scope','general', 'appCookieStore
                 console.log(result.data);
             });
 
+        }
+
+
+        $scope.DeleteCarouselPicture = function()
+        {
+            var res = getActiveFileName();
+            var fileName = res[0];
+            var active = res[1];
+
+            if (fileName == -1)
+                return;
+
+
+
+            var url = myConfig.url + '/api/getuserid';
+            $http.get(url).then(function(result){
+                vm.userid = parseInt(result.data);
+                var filePath = './uploadimages/' + vm.userid + '/renthouse/' + vm.insertId + '/' + fileName;
+
+                dboperations.DeletePicture(fileName ,
+                    false ,
+                    false,
+                    false,
+                    filePath,
+                    'renthouseblobs').
+                    then(function(result){
+                        vm.carousleNameOnly.splice(active, 1);
+                        vm.carousleDescription.splice(active, 1);
+                        $scope.slides.splice(active, 1);
+                    }).catch(function(result){
+                        alert('שגיאה');
+                        //$state.go('logout', {}, {
+                        //  reload: true
+                        //});
+                    });
+
+            }).catch(function(result){
+                console.log(result);
+            })
         }
 
         function formErrors(form) {

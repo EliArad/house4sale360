@@ -517,7 +517,7 @@ app.get('*', function (req, res) {
 
 
 //server.listen(port);
-server.listen(port, '192.168.22.32');
+server.listen(port, '192.168.1.13');
 //server.listen(port, '192.168.22.28'); // at work
 //server.listen(port, '192.168.1.16');// at home
 console.log("Running on port " + port);

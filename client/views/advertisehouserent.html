@@ -1,6 +1,16 @@
 <style>
 
 
+    #newsale {
+        -webkit-animation-duration: 2s;
+        -moz-animation-duration: 2s;
+        animation-duration: 2s;
+        -webkit-animation-fill-mode: both;
+        -moz-animation-fill-mode: both;
+        animation-fill-mode: both;
+    }
+
+
     input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button {
         -webkit-appearance: none;
@@ -82,7 +92,12 @@
     <div ng-show="vm.showwaitcircle" ng-include="'/client/templates/waitcircle.html'">
     </div>
 
-    <a ui-sref="addnewrenthouse">הוסף חדש</a>
+    <h2 style="text-align:center;color:orangered">השכרה</h2>
+
+    <a style="font-size: x-large"
+       id="newsale"
+       class="animated infinite flash"
+       ui-sref="addnewrenthouse">הוסף חדש</a>
 
 
     <div class="form-horizontal">

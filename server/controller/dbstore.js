@@ -226,7 +226,7 @@ module.exports = function (sqlserver) {
                             sqlserver.release(con);
                             res.sendStatus(500);
                         } else {
-                            var sql = 'DELETE FROM yad2vr.salehouseblobs WHERE id = ' + con.escape(rows[0].id);
+                            var sql = 'DELETE FROM ' + req.body.tablename + ' WHERE id = ' + con.escape(rows[0].id);
                             con.query(sql, function (err, rows) {
                                 sqlserver.release(con);
                                 if (err)

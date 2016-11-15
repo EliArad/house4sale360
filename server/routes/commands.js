@@ -261,12 +261,14 @@ var routes = function (app, sqlserver,mailer) {
 
     app.post('/api/updateuserpassword', function (req, res, next) {
 
-
+        console.log('updateuserpassword');
 
         sqlserver.get(function (err, con) {
             if (!err) {
+                console.log('req.body.user.password:' + req.body.user.password);
                 mypasswordhash.encrypt(req.body.user.password, function (err, hash) {
                     if (!err) {
+                        console.log('req.body.user.guid = ' + req.body.user.guid);
                         var query = con.query('UPDATE users SET ? WHERE userguid = ' + con.escape(req.body.user.guid),
                                                [{password:hash, verified:1}],
                                                function (err, result) {

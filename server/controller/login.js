@@ -53,7 +53,7 @@ exports.login = function (req, res) {
 
 
                         var token = jwt.sign(payload, secret, {
-                            expiresInMinutes: 60 * 5
+                            expiresIn: 60 * 5
                         });
                         if (rows[0].verified == undefined)
                         {

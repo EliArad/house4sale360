@@ -4,12 +4,13 @@
 app.controller('renthouseController', ['$scope', 'general', 'appCookieStore', '$window',
     '$http', 'authToken', '$timeout', 'myConfig', '$state', 'myhttphelper', '$rootScope',
     'SessionStorageService', '$cookieStore', 'dboperations', 'fileReader', '$sce', 'citiesservice',
-    'SchonotBackg',
+    'SchonotBackg','apiutils',
     function ($scope, general, appCookieStore, $window,
               $http, authToken, $timeout, myConfig,
               $state, myhttphelper, $rootScope, SessionStorageService,
               $cookieStore, dboperations, fileReader, $sce,
-              citiesservice, SchonotBackg) {
+              citiesservice, SchonotBackg,apiutils) {
+
 
 
         /*
@@ -142,6 +143,59 @@ app.controller('renthouseController', ['$scope', 'general', 'appCookieStore', '$
 
         }
 
+        function getActiveFileName(item)
+        {
+            var active = -1;
+            for (var i = 0 ; i < $scope.slides.length;i++) {
+                if ($scope.slides[i].active == true) {
+                    active = i;
+                    break;
+                }
+            }
+            if (active == -1)
+                return;
+
+            var fileName = vm.carousleNameOnly[active];
+            return [fileName, active];
+        }
+        $scope.DeleteCarouselPicture = function(item)
+        {
+
+
+            var res = getActiveFileName(item);
+
+
+            var fileName = res[0];
+            var active = res[1];
+
+            console.log(fileName);
+            console.log(active);
+
+            if (fileName == -1)
+                return;
+
+            var filePath = './uploadimages/' + vm.userid + '/renthouse/' + item.id + '/' + fileName;
+
+
+
+            dboperations.DeletePicture(fileName ,
+                false ,
+                false,
+                false,
+                filePath,
+                'renthouseblobs').
+                then(function(result){
+                    vm.carousleNameOnly.splice(active, 1);
+                    vm.carousleDescription.splice(active, 1);
+                    $scope.slides.splice(active, 1);
+                }).catch(function(result){
+                    alert('שגיאה');
+                    //$state.go('logout', {}, {
+                    //  reload: true
+                    //});
+                });
+        }
+
 
         $scope.mo = function () {
             $scope.myInterval = 0;
@@ -184,10 +238,62 @@ app.controller('renthouseController', ['$scope', 'general', 'appCookieStore', '$
             myhttphelper.doPost('/api/upload', data).
                 then(function (res) {
                     addPictureToCrousleSlider(result, 'eeeee');
+                    vm.carousleNameOnly.push(fileName);
+                    vm.carousleDescription.push(result);
                 }).
                 catch(function (res) {
 
                 });
+        }
+
+
+        $scope.RotatePicture = function(item)
+        {
+            var res= getActiveFileName(item);
+
+            console.log(res);
+            var fileName = res[0];
+            var active = res[1];
+
+
+            if (fileName == -1)
+                return;
+
+            var filePath = './uploadimages/' + vm.userid + '/renthouse/' + item.id + '/' + fileName;
+
+            if ($scope.allowRotate == 0)
+            {
+                return;
+            }
+            var angle = item.angleToRotate += 90;
+            /*
+             var srcid = '#img' + id;
+             $(srcid).rotate(
+             {
+             angle : angle
+             });
+             */
+            $scope.allowRotate = 0;
+            apiutils.rotatePicture(filePath, angle).then(function(result){
+
+                var desc = vm.carousleDescription[active];
+                vm.carousleNameOnly.splice(active, 1);
+                vm.carousleDescription.splice(active, 1);
+                $scope.slides.splice(active, 1);
+
+                var num = Math.floor((Math.random()*10000) + 1)
+                var filePath = './uploadimages/' + vm.userid + '/renthouse/' + item.id + '/' + fileName;
+                var randomeImage = filePath + '?' + num;
+
+                addPictureToCrousleSlider(randomeImage, '');
+                vm.carousleNameOnly.push(fileName);
+                vm.carousleDescription.push(desc);
+                $scope.allowRotate = 1;
+            }).catch(function(result){
+                $scope.allowRotate = 1;
+                alert(result);
+            })
+
         }
 
         var ajaxUpload2 = function (result, fileName, id, filesize,callback) {
@@ -243,6 +349,7 @@ app.controller('renthouseController', ['$scope', 'general', 'appCookieStore', '$
         $scope.accordionIsOpen = function (obj, index) {
 
 
+            obj.angleToRotate = 0;
             if (vm.lastObjId != obj.id) {
                 vm.accIsOpen = false;
             }
@@ -266,10 +373,15 @@ app.controller('renthouseController', ['$scope', 'general', 'appCookieStore', '$
 
             dboperations.getRentHousePictureList(obj.id).then(function (result) {
 
+                vm.carousleNameOnly = [];
+                vm.carousleDescription = [];
+
                 setTimeout(function () {
                     var imgsrc;
                     for (var i = 0; i < result.data.rows.length; i++) {
                         var imgsrc = './uploadimages/' + result.data.userid + '/renthouse/' + result.data.rows[i].tableid + '/' + result.data.rows[i].filename;
+                        vm.carousleNameOnly[i] = result.data.rows[i].filename;
+                        vm.carousleDescription[i] = result.data.rows[i].description;
                         addPictureToCrousleSlider(imgsrc, '');
                     }
                 }, 1);
@@ -414,6 +526,8 @@ app.controller('renthouseController', ['$scope', 'general', 'appCookieStore', '$
                     'name': neighborhood
                 };
                 vm.cards[i].neighborhood = x1;
+
+                vm.userid = vm.cards[i].userid;
 
                 if (vm.cards[i].elevator == 0) {
                     vm.cards[i].elevator = 'אין';

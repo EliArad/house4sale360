@@ -1,6 +1,15 @@
 <style>
 
 
+    #newsale {
+        -webkit-animation-duration: 2s;
+        -moz-animation-duration: 2s;
+        animation-duration: 2s;
+        -webkit-animation-fill-mode: both;
+        -moz-animation-fill-mode: both;
+        animation-fill-mode: both;
+    }
+
     /* Hiding the checkbox, but allowing it to be focused */
     .badgebox {
         opacity: 0;
@@ -128,10 +137,14 @@
         </div>
     </div>
 
+    <h2 style="text-align:center;color:orangered">מכירה</h2>
 
 
 
-    <a ui-sref="addnewsalehouse">הוסף חדש</a>
+    <a id="newsale" style="font-size: x-large"
+       class="animated infinite flash"
+       ui-sref="addnewsalehouse">הוסף חדש</a>
+
 
 
     <div id="myModal360video" class="modal" role="dialog">
